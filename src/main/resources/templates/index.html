@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: main-layout(
+        'StudyHub AI - Quản Lý Môn Học & RAG Giáo Trình',
+        ~{::section}
+      )}">
+<body>
+<section class="space-y-8">
+
+    <!-- Hero Header Banner -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white p-8 md:p-12 shadow-xl border border-white/10">
+        <div class="relative z-10 max-w-3xl space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-indigo-200 text-xs font-bold border border-white/20">
+                <i class="fa-solid fa-sparkles text-amber-300"></i> HSF302 Assignment Demo Platform
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+                Học Tập Vừa Sức Cùng <span class="bg-gradient-to-r from-amber-300 to-indigo-200 bg-clip-text text-transparent">Trợ Lý AI RAG</span>
+            </h1>
+            <p class="text-indigo-100/80 text-sm md:text-base leading-relaxed">
+                Tạo môn học, tải lên tài liệu PDF giáo trình để tự động Chunking, đàm thoại thông minh với AI, lập lịch học vừa sức và luyện đề trắc nghiệm tức thì.
+            </p>
+            <div class="pt-2 flex flex-wrap gap-3">
+                <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
+                </button>
+                <a th:href="@{/settings}" class="btn btn-outline border-white/30 text-white hover:bg-white/10">
+                    <i class="fa-solid fa-key mr-1"></i> Cấu Hình API Key
+                </a>
+            </div>
+        </div>
+        <!-- Decorative Circle -->
+        <div class="absolute -right-12 -bottom-12 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-book-bookmark"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-base-content/60 uppercase">Tổng Số Môn</p>
+                <h4 class="text-2xl font-black text-base-content" th:text="${totalCourses}">2</h4>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-database"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-base-content/60 uppercase">Database</p>
+                <h4 class="text-sm font-bold text-emerald-600 flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> H2 File-based
+                </h4>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-brain"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-base-content/60 uppercase">Mô Hình AI</p>
+                <h4 class="text-sm font-bold text-base-content">Gemini 1.5 & Groq</h4>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-xl font-bold">
+                <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <div>
+                <p class="text-xs font-semibold text-base-content/60 uppercase">UI Toolkit</p>
+                <h4 class="text-sm font-bold text-base-content">Tailwind + DaisyUI</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Management Section -->
+    <div class="space-y-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-extrabold text-base-content flex items-center gap-2">
+                    <i class="fa-solid fa-shapes text-indigo-600"></i> Danh Sách Môn Học
+                </h2>
+                <p class="text-sm text-base-content/60">Chọn môn học để nạp giáo trình PDF, chat RAG hoặc lập kế hoạch học tập</p>
+            </div>
+            <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-sm btn-primary">
+                <i class="fa-solid fa-plus"></i> Thêm Môn
+            </button>
+        </div>
+
+        <!-- Course Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="course : ${courses}" class="glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group border border-base-200">
+                <div class="space-y-4">
+                    <!-- Card Top Header -->
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr text-white flex items-center justify-center font-bold shadow-md shadow-indigo-500/20"
+                                 th:classappend="${course.color} ?: 'from-indigo-600 to-purple-600'">
+                                <i class="fa-solid" th:classappend="${course.icon} ?: 'fa-book-open'"></i>
+                            </div>
+                            <div>
+                                <span class="badge badge-sm font-bold text-white bg-slate-800" th:text="${course.code}">HSF302</span>
+                                <span class="text-[11px] block text-base-content/60 font-medium" th:text="${course.semester} + ' • ' + ${course.credits} + ' tín chỉ'">Fall 2026 • 3 tín chỉ</span>
+                            </div>
+                        </div>
+                        <a th:href="@{'/courses/delete/' + ${course.id}}"
+                           onclick="return confirm('Bạn có chắc muốn xóa môn học này không? Mọi tài liệu PDF, đoạn chunks và lịch sử chat sẽ tự động dọn sạch.')"
+                           class="btn btn-ghost btn-circle btn-xs text-base-content/40 hover:text-error"
+                           title="Xóa môn học">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    </div>
+
+                    <!-- Course Title & Description -->
+                    <div>
+                        <h3 class="text-lg font-bold text-base-content group-hover:text-indigo-600 transition-colors" th:text="${course.name}">
+                            JPA and Spring Framework
+                        </h3>
+                        <p class="text-xs text-base-content/70 mt-1 line-clamp-2" th:text="${course.description}">
+                            Mô tả môn học...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons for the Course (3 Feature Modules) -->
+                <div class="pt-6 border-t border-base-200/60 mt-6 grid grid-cols-3 gap-2">
+                    <a th:href="@{'/courses/' + ${course.id} + '/chat'}" class="btn btn-sm btn-primary text-xs font-bold w-full" title="Chatbot RAG Giáo trình (Bình)">
+                        <i class="fa-solid fa-comments"></i> RAG
+                    </a>
+                    <a th:href="@{'/planner?courseId=' + ${course.id}}" class="btn btn-sm btn-outline text-xs font-bold w-full" title="Kế hoạch học tập vừa sức (Thắng)">
+                        <i class="fa-solid fa-calendar-days"></i> Lịch
+                    </a>
+                    <a th:href="@{'/quiz?courseId=' + ${course.id}}" class="btn btn-sm btn-secondary text-xs font-bold w-full" title="Đề thi trắc nghiệm AI (Nhật)">
+                        <i class="fa-solid fa-circle-question"></i> Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tạo Môn Học Mới -->
+    <dialog id="modal-create-course" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box glass-card p-6 rounded-3xl border border-white/20">
+            <h3 class="font-bold text-lg text-base-content flex items-center gap-2">
+                <i class="fa-solid fa-folder-plus text-indigo-600"></i> Thêm Môn Học Mới
+            </h3>
+            <p class="text-xs text-base-content/60 mt-1">Nhập thông tin môn học để bắt đầu nạp tài liệu và học tập</p>
+
+            <form th:action="@{/courses/create}" th:object="${newCourse}" method="post" class="space-y-4 mt-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold text-xs">Mã Môn Học *</span></label>
+                        <input type="text" th:field="*{code}" required placeholder="Ví dụ: HSF302" class="input input-bordered w-full rounded-xl" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold text-xs">Học Kỳ</span></label>
+                        <input type="text" th:field="*{semester}" placeholder="Fall 2026" class="input input-bordered w-full rounded-xl" />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold text-xs">Tên Môn Học *</span></label>
+                    <input type="text" th:field="*{name}" required placeholder="Ví dụ: JPA and Spring Framework..." class="input input-bordered w-full rounded-xl" />
+                </div>
+
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold text-xs">Mô Tả Ngắn</span></label>
+                    <textarea th:field="*{description}" rows="2" placeholder="Tóm tắt nội dung chính của môn học..." class="textarea textarea-bordered w-full rounded-xl"></textarea>
+                </div>
+
+                <div class="modal-action mt-6">
+                    <button type="button" onclick="document.getElementById('modal-create-course').close()" class="btn btn-ghost rounded-xl">Hủy</button>
+                    <button type="submit" class="btn btn-primary rounded-xl">Lưu Môn Học</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+</section>
+</body>
+</html>

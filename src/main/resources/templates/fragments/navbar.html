@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="navbar" class="navbar glass-card sticky top-0 z-50 px-4 md:px-8 border-b shadow-sm">
+    <!-- Mobile Drawer Open Button -->
+    <div class="flex-none lg:hidden">
+        <label for="main-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
+            <i class="fa-solid fa-bars text-xl"></i>
+        </label>
+    </div>
+
+    <!-- Brand Logo -->
+    <div class="flex-1 items-center gap-3">
+        <a th:href="@{/}" class="flex items-center gap-3 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+            </div>
+            <div>
+                <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">StudyHub AI</span>
+                <span class="badge badge-sm badge-outline badge-primary ml-2 hidden sm:inline-flex">HSF302</span>
+            </div>
+        </a>
+    </div>
+
+    <!-- Quick Navigation Links -->
+    <div class="flex-none hidden md:flex items-center gap-2">
+        <a th:href="@{/}" class="btn btn-ghost btn-sm font-semibold">
+            <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Môn Học
+        </a>
+        <a th:href="@{/planner}" class="btn btn-ghost btn-sm font-semibold">
+            <i class="fa-solid fa-calendar-check mr-1 text-emerald-500"></i> Lịch Học Vừa Sức
+        </a>
+        <a th:href="@{/quiz}" class="btn btn-ghost btn-sm font-semibold">
+            <i class="fa-solid fa-list-check mr-1 text-amber-500"></i> Luyện Đề Trắc Nghiệm
+        </a>
+        <a th:href="@{/settings}" class="btn btn-ghost btn-sm font-semibold">
+            <i class="fa-solid fa-key mr-1 text-purple-500"></i> API Key
+        </a>
+    </div>
+
+    <!-- Theme Controller (DaisyUI) -->
+    <div class="flex-none ml-3">
+        <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
+            <!-- this hidden checkbox controls the state -->
+            <input type="checkbox" class="theme-controller" value="synthwave" />
+            <!-- sun icon -->
+            <i class="swap-off fa-solid fa-sun text-amber-500 text-lg"></i>
+            <!-- moon icon -->
+            <i class="swap-on fa-solid fa-moon text-indigo-400 text-lg"></i>
+        </label>
+        
+        <!-- H2 Console Quick Link -->
+        <a th:href="@{/h2-console}" target="_blank" title="Mở H2 Database Console" class="btn btn-ghost btn-circle btn-sm ml-1 text-slate-500 hover:text-indigo-600">
+            <i class="fa-solid fa-database"></i>
+        </a>
+    </div>
+</div>
+</body>
+</html>
