@@ -24,6 +24,14 @@
         <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
     </div>
 
+    <div th:if="${param.error != null and param.error[0] == 'unauthorized'}" class="alert alert-warning shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-amber-500">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-lock text-xl"></i>
+            <span class="font-bold text-xs md:text-sm">Vui lòng đăng nhập để truy cập tính năng học tập và bảo mật của bạn!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
     <!-- Login Card Glassmorphism -->
     <div class="glass-card rounded-3xl p-8 shadow-2xl border border-white/20 space-y-6">
         <div class="text-center space-y-2">

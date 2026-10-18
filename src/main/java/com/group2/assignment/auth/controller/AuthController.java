@@ -1,7 +1,9 @@
 package com.group2.assignment.auth.controller;
 
+import com.group2.assignment.auth.dto.ChangePasswordDto;
 import com.group2.assignment.auth.dto.LoginRequestDto;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
+import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.auth.service.AuthService;
 import com.group2.assignment.auth.service.JwtService;
@@ -55,6 +57,12 @@ public class AuthController {
 
             redirectAttributes.addFlashAttribute("successMessage",
                     "Xin chào mừng " + (user != null ? user.getFullName() : dto.getUsername()) + " đã đăng nhập thành công!");
+
+            String redirectUrl = (String) session.getAttribute("authRedirectUrl");
+            if (redirectUrl != null && !redirectUrl.isBlank()) {
+                session.removeAttribute("authRedirectUrl");
+                return "redirect:" + redirectUrl;
+            }
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -110,6 +118,52 @@ public class AuthController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
+        if (!model.containsAttribute("updateProfileDto")) {
+            model.addAttribute("updateProfileDto", UpdateProfileDto.builder()
+                    .fullName(user.getFullName())
+                    .avatar(user.getAvatar())
+                    .build());
+        }
+        if (!model.containsAttribute("changePasswordDto")) {
+            model.addAttribute("changePasswordDto", new ChangePasswordDto());
+        }
         return "auth/profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(
+            @ModelAttribute("updateProfileDto") UpdateProfileDto dto,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        try {
+            User updatedUser = authService.updateProfile(currentUser.getUsername(), dto);
+            session.setAttribute(SESSION_USER, updatedUser);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thông tin hồ sơ thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(
+            @ModelAttribute("changePasswordDto") ChangePasswordDto dto,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        try {
+            authService.changePassword(currentUser.getUsername(), dto);
+            redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công! Mật khẩu mới đã được cập nhật.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
     }
 }

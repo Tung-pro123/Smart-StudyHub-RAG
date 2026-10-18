@@ -1,7 +1,9 @@
 package com.group2.assignment.auth;
 
+import com.group2.assignment.auth.dto.ChangePasswordDto;
 import com.group2.assignment.auth.dto.LoginRequestDto;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
+import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.auth.service.AuthService;
 import com.group2.assignment.auth.service.JwtService;
@@ -29,7 +31,7 @@ class AuthServiceTest {
         RegisterRequestDto dto = RegisterRequestDto.builder()
                 .username("truongfpt")
                 .email("truongfpt@fpt.edu.vn")
-                .fullName("Đinh Nhật Trường")
+                .fullName("Ngô Nhật Trường")
                 .password("password123")
                 .confirmPassword("password123")
                 .build();
@@ -76,5 +78,64 @@ class AuthServiceTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> authService.login(dto));
+    }
+
+    @Test
+    @DisplayName("Cập nhật thông tin hồ sơ thành công")
+    void testUpdateProfileSuccess() {
+        UpdateProfileDto dto = UpdateProfileDto.builder()
+                .fullName("Ngô Nhật Trường Pro")
+                .avatar("https://api.dicebear.com/7.x/bottts/svg?seed=truong_updated")
+                .build();
+
+        User updatedUser = authService.updateProfile("truong", dto);
+        assertEquals("Ngô Nhật Trường Pro", updatedUser.getFullName());
+        assertEquals("https://api.dicebear.com/7.x/bottts/svg?seed=truong_updated", updatedUser.getAvatar());
+    }
+
+    @Test
+    @DisplayName("Đổi mật khẩu thành công và xác thực được với mật khẩu mới")
+    void testChangePasswordSuccess() {
+        ChangePasswordDto dto = ChangePasswordDto.builder()
+                .oldPassword("123456")
+                .newPassword("newSecretPassword2026")
+                .confirmPassword("newSecretPassword2026")
+                .build();
+
+        authService.changePassword("student", dto);
+
+        // Đăng nhập lại với mật khẩu mới
+        LoginRequestDto loginDto = LoginRequestDto.builder()
+                .username("student")
+                .password("newSecretPassword2026")
+                .build();
+
+        String token = authService.login(loginDto);
+        assertNotNull(token);
+        assertTrue(jwtService.validateToken(token));
+    }
+
+    @Test
+    @DisplayName("Đổi mật khẩu sai mật khẩu cũ phải ném ngoại lệ")
+    void testChangePasswordWrongOldPasswordThrows() {
+        ChangePasswordDto dto = ChangePasswordDto.builder()
+                .oldPassword("wrongOldPass")
+                .newPassword("newSecretPassword2026")
+                .confirmPassword("newSecretPassword2026")
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> authService.changePassword("student", dto));
+    }
+
+    @Test
+    @DisplayName("Đổi mật khẩu xác nhận không khớp phải ném ngoại lệ")
+    void testChangePasswordMismatchedConfirmThrows() {
+        ChangePasswordDto dto = ChangePasswordDto.builder()
+                .oldPassword("123456")
+                .newPassword("newSecretPassword2026")
+                .confirmPassword("mismatchPassword")
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> authService.changePassword("student", dto));
     }
 }
