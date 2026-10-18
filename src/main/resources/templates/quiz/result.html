@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: main-layout(
+        'StudyHub AI - Kết Quả Bài Thi Trắc Nghiệm',
+        ~{::section}
+      )}">
+<body>
+<section class="space-y-8 max-w-4xl mx-auto pb-16">
+
+    <!-- Card Tổng Điểm (Scorecard với Radial Progress) -->
+    <div class="bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden border border-white/10">
+        <div class="absolute -right-10 -bottom-10 w-56 h-56 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+                <span class="badge badge-warning font-bold text-xs">BẢNG ĐIỂM CHI TIẾT</span>
+                <h1 class="text-2xl md:text-3xl font-black tracking-tight" th:text="${result.quizTitle}">Đề thi trắc nghiệm AI</h1>
+                <p class="text-xs text-indigo-200">
+                    Thí sinh: <strong class="text-white" th:text="${result.studentName}">Sinh viên</strong> |
+                    Môn: <strong class="text-white" th:text="${result.courseName}">HSF302</strong> |
+                    Hoàn thành lúc: <span th:text="${#temporals.format(result.completedAt, 'dd/MM/yyyy HH:mm')}">19/10/2026</span>
+                </p>
+            </div>
+
+            <!-- Radial Progress Biểu Thị Điểm Số Tròn Trực Quan -->
+            <div class="flex items-center gap-6 bg-white/10 backdrop-blur-md px-6 py-5 rounded-3xl border border-white/15">
+                <!-- DaisyUI Radial Progress -->
+                <div class="radial-progress font-mono font-black text-2xl shadow-inner"
+                     th:classappend="${result.totalScore >= 8.0 ? 'text-emerald-400' : (result.totalScore >= 5.0 ? 'text-amber-400' : 'text-rose-400')}"
+                     th:style="'--value:' + ${result.totalScore * 10} + '; --size:6.5rem; --thickness: 8px;'"
+                     role="progressbar">
+                    <span th:text="${result.totalScore}">8.0</span>
+                </div>
+
+                <div class="w-px h-14 bg-white/20"></div>
+
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+                        <span>Đúng: <strong class="text-white font-bold" th:text="${result.correctCount}">4</strong>/<span th:text="${result.totalCount}">5</span> câu</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-xmark text-rose-400 text-sm"></i>
+                        <span>Sai: <strong class="text-white font-bold" th:text="${result.totalCount - result.correctCount}">1</strong> câu</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-stopwatch text-indigo-300 text-sm"></i>
+                        <span>Thời gian: <strong class="text-white font-bold" th:text="${result.timeSpentSeconds}">120</strong> giây</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thanh nhận xét & Hành động -->
+        <div class="mt-6 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+            <div class="text-xs text-indigo-200">
+                <span th:if="${result.totalScore >= 8.0}" class="text-emerald-300 font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-medal text-amber-400 text-sm"></i> Xuất sắc! Bạn đã nắm rất vững kiến thức bài học.
+                </span>
+                <span th:if="${result.totalScore >= 5.0 && result.totalScore < 8.0}" class="text-amber-300 font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-thumbs-up text-amber-400 text-sm"></i> Khá tốt! Hãy đọc kỹ lời giải các câu sai để cải thiện thêm.
+                </span>
+                <span th:if="${result.totalScore < 5.0}" class="text-rose-300 font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm"></i> Cần ôn tập lại slide giáo trình trước khi làm lại đề nhé!
+                </span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a th:href="@{'/quiz/' + ${result.quizId}}" class="btn btn-sm btn-outline text-white hover:bg-white hover:text-indigo-900 rounded-xl text-xs font-bold gap-1.5">
+                    <i class="fa-solid fa-rotate-right"></i> Làm lại đề này
+                </a>
+                <a th:href="@{/quiz}" class="btn btn-sm bg-white text-indigo-900 hover:bg-slate-100 font-bold rounded-xl text-xs border-none gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-list"></i> Danh sách đề
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thanh Lọc Câu Hỏi Tức Thì (Instant Client-side Filter Tabs) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-3xl border border-slate-200 shadow-sm">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-filter text-indigo-600 ml-2"></i>
+            <span class="text-xs font-bold text-slate-700">Bộ lọc câu hỏi:</span>
+        </div>
+
+        <div class="join bg-slate-100 p-1 rounded-2xl">
+            <button id="filter-btn-all" onclick="filterQuestions('all')" class="join-item btn btn-xs btn-active bg-white font-bold rounded-xl border-none shadow-sm">
+                Tất cả ([[${#lists.size(result.details)}]])
+            </button>
+            <button id="filter-btn-wrong" onclick="filterQuestions('wrong')" class="join-item btn btn-xs btn-ghost text-rose-600 font-bold rounded-xl">
+                <i class="fa-solid fa-circle-xmark mr-1"></i> Chỉ câu SAI ([[${result.totalCount - result.correctCount}]])
+            </button>
+            <button id="filter-btn-correct" onclick="filterQuestions('correct')" class="join-item btn btn-xs btn-ghost text-emerald-600 font-bold rounded-xl">
+                <i class="fa-solid fa-circle-check mr-1"></i> Chỉ câu ĐÚNG ([[${result.correctCount}]])
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty State khi lọc câu sai mà điểm 10/10 -->
+    <div id="empty-filter-state" class="hidden bg-emerald-50 border border-emerald-200 p-10 rounded-3xl text-center space-y-2">
+        <div class="text-4xl">🎉</div>
+        <h3 class="font-extrabold text-base text-emerald-800">Không có câu sai nào!</h3>
+        <p class="text-xs text-emerald-600">Bạn đã trả lời chính xác toàn bộ câu hỏi của đề thi này.</p>
+    </div>
+
+    <!-- Danh Sách Chi Tiết Từng Câu Hỏi -->
+    <div id="questions-container" class="space-y-4">
+        <div th:each="d : ${result.details}"
+             th:attr="data-status=${d.correct ? 'correct' : 'wrong'}"
+             class="question-item card bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 transition-all">
+
+            <!-- Tiêu đề câu hỏi & Huy hiệu trạng thái -->
+            <div class="flex items-start justify-between gap-3">
+                <div class="flex items-start gap-3">
+                    <span class="w-8 h-8 rounded-xl font-black text-sm flex items-center justify-center flex-shrink-0"
+                          th:classappend="${d.correct ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}"
+                          th:text="${d.sortOrder}">1</span>
+                    <h3 class="text-base font-bold text-slate-800 leading-relaxed" th:text="${d.questionText}">Nội dung câu hỏi?</h3>
+                </div>
+
+                <span class="badge font-bold text-xs"
+                      th:classappend="${d.correct ? 'badge-success text-white' : 'badge-error text-white'}"
+                      th:text="${d.correct ? 'ĐÚNG' : 'SAI'}">ĐÚNG</span>
+            </div>
+
+            <!-- 4 Lựa chọn kèm trạng thái tô màu -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <!-- Option A -->
+                <div class="p-4 rounded-2xl border transition-colors"
+                     th:classappend="${d.correctAnswer == 'A' ? 'border-emerald-500 bg-emerald-50/60 text-emerald-900 font-bold ring-1 ring-emerald-400' : (d.selectedAnswer == 'A' ? 'border-rose-400 bg-rose-50/60 text-rose-800 font-semibold ring-1 ring-rose-400' : 'border-slate-200 text-slate-600')}">
+                    <div class="flex items-center justify-between">
+                        <span><strong class="mr-1.5 font-bold">A.</strong> <span th:text="${d.optionA}">Option A</span></span>
+                        <span th:if="${d.correctAnswer == 'A'}" class="badge badge-success badge-xs text-white font-bold">Đáp án đúng</span>
+                        <span th:if="${d.selectedAnswer == 'A' && !d.correct}" class="badge badge-error badge-xs text-white font-bold">Bạn chọn</span>
+                    </div>
+                </div>
+
+                <!-- Option B -->
+                <div class="p-4 rounded-2xl border transition-colors"
+                     th:classappend="${d.correctAnswer == 'B' ? 'border-emerald-500 bg-emerald-50/60 text-emerald-900 font-bold ring-1 ring-emerald-400' : (d.selectedAnswer == 'B' ? 'border-rose-400 bg-rose-50/60 text-rose-800 font-semibold ring-1 ring-rose-400' : 'border-slate-200 text-slate-600')}">
+                    <div class="flex items-center justify-between">
+                        <span><strong class="mr-1.5 font-bold">B.</strong> <span th:text="${d.optionB}">Option B</span></span>
+                        <span th:if="${d.correctAnswer == 'B'}" class="badge badge-success badge-xs text-white font-bold">Đáp án đúng</span>
+                        <span th:if="${d.selectedAnswer == 'B' && !d.correct}" class="badge badge-error badge-xs text-white font-bold">Bạn chọn</span>
+                    </div>
+                </div>
+
+                <!-- Option C -->
+                <div class="p-4 rounded-2xl border transition-colors"
+                     th:classappend="${d.correctAnswer == 'C' ? 'border-emerald-500 bg-emerald-50/60 text-emerald-900 font-bold ring-1 ring-emerald-400' : (d.selectedAnswer == 'C' ? 'border-rose-400 bg-rose-50/60 text-rose-800 font-semibold ring-1 ring-rose-400' : 'border-slate-200 text-slate-600')}">
+                    <div class="flex items-center justify-between">
+                        <span><strong class="mr-1.5 font-bold">C.</strong> <span th:text="${d.optionC}">Option C</span></span>
+                        <span th:if="${d.correctAnswer == 'C'}" class="badge badge-success badge-xs text-white font-bold">Đáp án đúng</span>
+                        <span th:if="${d.selectedAnswer == 'C' && !d.correct}" class="badge badge-error badge-xs text-white font-bold">Bạn chọn</span>
+                    </div>
+                </div>
+
+                <!-- Option D -->
+                <div class="p-4 rounded-2xl border transition-colors"
+                     th:classappend="${d.correctAnswer == 'D' ? 'border-emerald-500 bg-emerald-50/60 text-emerald-900 font-bold ring-1 ring-emerald-400' : (d.selectedAnswer == 'D' ? 'border-rose-400 bg-rose-50/60 text-rose-800 font-semibold ring-1 ring-rose-400' : 'border-slate-200 text-slate-600')}">
+                    <div class="flex items-center justify-between">
+                        <span><strong class="mr-1.5 font-bold">D.</strong> <span th:text="${d.optionD}">Option D</span></span>
+                        <span th:if="${d.correctAnswer == 'D'}" class="badge badge-success badge-xs text-white font-bold">Đáp án đúng</span>
+                        <span th:if="${d.selectedAnswer == 'D' && !d.correct}" class="badge badge-error badge-xs text-white font-bold">Bạn chọn</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khung Lời Giải Thích Nổi Bật -->
+            <div th:if="${d.explanation != null && !d.explanation.isBlank()}" class="bg-amber-50/80 border border-amber-200 p-4 rounded-2xl text-xs text-amber-950 flex items-start gap-3 shadow-sm">
+                <div class="w-8 h-8 rounded-xl bg-amber-200/60 text-amber-700 flex items-center justify-center flex-shrink-0 text-sm">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div>
+                    <strong class="text-amber-900 block mb-0.5 font-extrabold">Giải thích kiến thức:</strong>
+                    <p class="leading-relaxed" th:text="${d.explanation}">Giải thích...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Bộ Lọc Tương Tác Câu Hỏi -->
+    <script>
+        function filterQuestions(type) {
+            const items = document.querySelectorAll('.question-item');
+            const emptyState = document.getElementById('empty-filter-state');
+            const btnAll = document.getElementById('filter-btn-all');
+            const btnWrong = document.getElementById('filter-btn-wrong');
+            const btnCorrect = document.getElementById('filter-btn-correct');
+
+            [btnAll, btnWrong, btnCorrect].forEach(btn => {
+                btn.classList.remove('btn-active', 'bg-white', 'shadow-sm');
+                btn.classList.add('btn-ghost');
+            });
+
+            if (type === 'all') {
+                btnAll.classList.add('btn-active', 'bg-white', 'shadow-sm');
+                btnAll.classList.remove('btn-ghost');
+            } else if (type === 'wrong') {
+                btnWrong.classList.add('btn-active', 'bg-white', 'shadow-sm');
+                btnWrong.classList.remove('btn-ghost');
+            } else if (type === 'correct') {
+                btnCorrect.classList.add('btn-active', 'bg-white', 'shadow-sm');
+                btnCorrect.classList.remove('btn-ghost');
+            }
+
+            let visibleCount = 0;
+            items.forEach(item => {
+                const status = item.getAttribute('data-status');
+                if (type === 'all' || status === type) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+    </script>
+
+</section>
+</body>
+</html>
