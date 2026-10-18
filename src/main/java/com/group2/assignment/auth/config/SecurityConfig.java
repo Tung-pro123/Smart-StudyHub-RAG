@@ -1,5 +1,6 @@
 package com.group2.assignment.auth.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${spring.security.oauth2.client.registration.google.client-id:}")
+    private String googleClientId;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,17 +34,19 @@ public class SecurityConfig {
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 // Tất cả các request khác cần xác thực (JWT interceptor xử lý)
                 .anyRequest().authenticated()
-            )
+            );
 
-            // Cấu hình OAuth2 Login
-            .oauth2Login(oauth2 -> oauth2
+        // Chỉ bật OAuth2 nếu có credentials hợp lệ
+        if (googleClientId != null && !googleClientId.isBlank() && !googleClientId.equals("YOUR_GOOGLE_CLIENT_ID")) {
+            http.oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
                 .defaultSuccessUrl("/oauth2/success", true)
                 .failureUrl("/login?error=oauth2_failed")
-            )
+            );
+        }
 
-            // Tắt HTTP Basic và Form Login (dùng custom controller)
-            .httpBasic(basic -> basic.disable())
+        // Tắt HTTP Basic và Form Login (dùng custom controller)
+        http.httpBasic(basic -> basic.disable())
             .formLogin(form -> form.disable());
 
         return http.build();
