@@ -49,7 +49,7 @@ Tất cả các nhánh tính năng đều phải được rẽ nhánh (checkout)
 | **ÂN** | `feature/settings-security` | Giao diện cài đặt API Key, Test Ping kết nối, Lưu `HttpSession` |
 | **THẮNG** | `feature/study-planner` | Form nhập lịch rảnh & ngày thi, AI Study Planner Timeline |
 | **NHẬT** 🚀 | `feature/quiz-generator` | Bộ lọc chọn chương & độ khó, AI Multiple Choice, Chấm điểm |
-| **TRƯỜNG** | `docs/user-guide-and-slides` | Biên soạn User Guide Word/PDF, Thiết kế Slide PowerPoint |
+| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | Đăng ký, Đăng nhập, Xác thực JWT & Cá nhân hóa sinh viên |
 | **Khi sửa Bug** | `fix/<tên-lỗi-ngắn-gọn>` | Ví dụ: `fix/api-key-null-pointer`, `fix/css-card-overflow` |
 
 ---
@@ -67,7 +67,9 @@ Khi mở Pull Request trên GitHub, tiêu đề PR **bắt buộc** phải tuân
   * *Ví dụ*: `feat(planner): form chọn ngày rảnh và timeline kế hoạch ôn thi DaisyUI`
 * `feat(quiz): ...` $\rightarrow$ Tính năng thuộc Module Quiz Generator của Nhật.
   * *Ví dụ*: `feat(quiz): bộ sinh đề trắc nghiệm 4 đáp án theo chương và chấm điểm tức thì`
-* `docs(guide): ...` $\rightarrow$ Tài liệu và Slide của Trường.
+* `feat(auth): ...` $\rightarrow$ Tính năng thuộc Module Xác thực & JWT của Trường.
+  * *Ví dụ*: `feat(auth): hoàn thiện xác thực jwt và trang hồ sơ sinh viên`
+* `docs(guide): ...` $\rightarrow$ Tài liệu và Slide của nhóm.
   * *Ví dụ*: `docs(guide): bổ sung tài liệu User Guide Word và Slide PowerPoint 15 trang`
 * `fix(<module>): ...` $\rightarrow$ Sửa lỗi phát sinh.
   * *Ví dụ*: `fix(core): sửa lỗi validate trùng mã môn học khi tạo mới`
