@@ -2,6 +2,7 @@ package com.group2.assignment.auth.controller;
 
 import com.group2.assignment.auth.dto.ChangePasswordDto;
 import com.group2.assignment.auth.dto.LoginRequestDto;
+import com.group2.assignment.auth.dto.OAuth2UserInfo;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
 import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
@@ -11,7 +12,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -165,5 +169,54 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "redirect:/profile";
+    }
+
+    /**
+     * OAuth2 Login Success Handler
+     * Xử lý khi đăng nhập Google thành công
+     */
+    @GetMapping("/oauth2/success")
+    public String handleOAuth2Success(
+            @AuthenticationPrincipal OAuth2User oauth2User,
+            HttpServletResponse response,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        try {
+            if (oauth2User == null) {
+                return "redirect:/login?error=oauth2_failed";
+            }
+
+            // Trích xuất thông tin từ Google
+            OAuth2UserInfo userInfo = OAuth2UserInfo.builder()
+                    .googleId(oauth2User.getName())
+                    .email(oauth2User.getAttribute("email"))
+                    .fullName(oauth2User.getAttribute("name"))
+                    .avatarUrl(oauth2User.getAttribute("picture"))
+                    .provider("google")
+                    .build();
+
+            // Xử lý đăng nhập OAuth2
+            User user = authService.processOAuth2Login(userInfo);
+
+            // Tạo JWT token
+            String token = jwtService.generateToken(user.getUsername(), user.getRole(), user.getFullName());
+
+            // Lưu JWT vào Cookie
+            Cookie cookie = new Cookie(AUTH_COOKIE_NAME, token);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60);
+            response.addCookie(cookie);
+
+            // Lưu user vào session
+            session.setAttribute(SESSION_USER, user);
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đăng nhập Google thành công! Chào mừng " + user.getFullName());
+
+            return "redirect:/";
+        } catch (Exception e) {
+            return "redirect:/login?error=oauth2_failed";
+        }
     }
 }
