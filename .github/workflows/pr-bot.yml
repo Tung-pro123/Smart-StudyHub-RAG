@@ -1,0 +1,116 @@
+name: PR Verification & Auto-Merge Bot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+    branches: [dev, main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  verify:
+    name: 🔍 Verify PR Compliance & Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🌿 Check Branch Naming Convention
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "=========================================="
+          echo "🔍 Đang kiểm tra tên nhánh: $BRANCH_NAME"
+          echo "=========================================="
+          
+          # Hỗ trợ các nhánh chuẩn: feature/..., fix/..., docs/..., refactor/...
+          PATTERN="^(feature|feat|fix|hotfix|docs|refactor|test|chore)/[a-zA-Z0-9._/-]+$"
+          
+          if [[ ! "$BRANCH_NAME" =~ $PATTERN ]]; then
+            echo "❌ LỖI: Tên nhánh '$BRANCH_NAME' không đúng quy chuẩn nhóm!"
+            echo "👉 Định dạng yêu cầu: <loại>/<tên-chức-năng>"
+            echo "Ví dụ hợp lệ:"
+            echo "  - feature/rag-engine"
+            echo "  - feature/settings-security"
+            echo "  - feature/study-planner"
+            echo "  - feature/quiz-generator"
+            echo "  - docs/user-guide-and-slides"
+            echo "  - fix/null-pointer-exception"
+            exit 1
+          else
+            echo "✅ Tên nhánh hợp lệ chuẩn mực!"
+          fi
+
+      - name: 📝 Check PR Title Convention (Conventional Commits)
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "=========================================="
+          echo "🔍 Đang kiểm tra tiêu đề PR: $PR_TITLE"
+          echo "=========================================="
+          
+          shopt -s nocasematch
+          # Cú pháp: feat(scope): mô tả hoặc feat: mô tả
+          PATTERN="^(feat|feature|fix|hotfix|docs|refactor|test|style|chore)(\([a-zA-Z0-9_-]+\))?:[[:space:]]*.+$"
+          
+          if [[ ! "$PR_TITLE" =~ $PATTERN ]]; then
+            echo "❌ LỖI: Tiêu đề PR '$PR_TITLE' chưa đúng chuẩn Conventional Commits!"
+            echo "👉 Định dạng yêu cầu: <loại>(<module>): <mô tả ngắn gọn>"
+            echo "Ví dụ hợp lệ:"
+            echo "  - feat(rag): tích hợp PDFBox chunking và chat giáo trình"
+            echo "  - feat(planner): giao diện chọn lịch rảnh và sinh timeline học"
+            echo "  - feat(quiz): tạo đề trắc nghiệm và chức năng chấm điểm"
+            echo "  - feat(settings): lưu API key vào session và ping test"
+            echo "  - docs(guide): hoàn thiện User Guide và Slide PowerPoint"
+            echo "  - fix(core): sửa lỗi validate mã môn học"
+            exit 1
+          else
+            echo "✅ Tiêu đề PR hợp lệ chuẩn mực!"
+          fi
+          shopt -u nocasematch
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: 🧪 Run Maven Build & Tests
+        run: mvn clean test
+
+  auto-approve-and-merge:
+    name: 🤖 Auto-Approve, Squash-Merge & Delete Branch
+    needs: [verify]
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ✅ Auto Approve PR
+        run: |
+          echo "Tiến hành tự động Approve PR #${{ github.event.pull_request.number }}..."
+          gh pr review "${{ github.event.pull_request.html_url }}" --approve --body "🤖 **StudyHub Bot Auto-Verify**: Đã kiểm tra tự động thành công (Tên nhánh chuẩn, Tiêu đề PR chuẩn Conventional Commits, Build & Unit Tests xanh 100%). Đang tiến hành Squash & Merge tự động và xóa nhánh feature!"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔀 Auto Squash-Merge & Delete Branch
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+
+          # Chuẩn hóa commit title kèm (# số PR) theo chuẩn GitHub
+          CLEAN_TITLE="$PR_TITLE (#${{ github.event.pull_request.number }})"
+          echo "Tiêu đề commit squash: $CLEAN_TITLE"
+
+          echo "Đang thực hiện Squash & Merge và xóa nhánh tự động cho PR: $PR_URL"
+          gh pr merge "$PR_URL" --squash --subject "$CLEAN_TITLE" --delete-branch || \
+          gh pr merge "$PR_URL" --squash --subject "$CLEAN_TITLE" --auto --delete-branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
