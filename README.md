@@ -29,7 +29,7 @@
 Dự án áp dụng mô hình kiến trúc **Package-by-Feature (Vertical Slice Architecture)** chuẩn mực doanh nghiệp (tương tự đồ án SWP/Capstone), giúp 6 thành viên trong nhóm làm việc độc lập 100%, gần như không bao giờ bị xung đột mã nguồn (Git Conflict):
 
 ```
-com.tung.assignment/
+com.group2.assignment/
 │
 ├── 👑 core/                           <-- Module 1: TÙNG (Leader)
 │   ├── entity/                        Course.java, Chunk.java (Dữ liệu nền tảng dùng chung)

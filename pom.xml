@@ -8,7 +8,7 @@
         <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.tung.assignment</groupId>
+    <groupId>com.group2.assignment</groupId>
     <artifactId>Assignment</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Assignment</name>

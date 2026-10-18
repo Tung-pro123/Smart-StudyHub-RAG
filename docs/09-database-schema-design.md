@@ -173,7 +173,7 @@ erDiagram
 ---
 
 ### 1️⃣ BẢNG `courses` & `chunks` (Dữ Liệu Nền Tảng Dùng Chung - TÙNG & CORE)
-- **Package**: `com.tung.assignment.core`
+- **Package**: `com.group2.assignment.core`
 - **File Entities**: [`Course.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/entity/Course.java), [`Chunk.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/entity/Chunk.java)
 - **Repositories**: [`CourseRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/repository/CourseRepository.java), [`ChunkRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/repository/ChunkRepository.java)
 - **Controller & Service**: [`CourseService.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/service/CourseService.java), [`HomeController.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/controller/HomeController.java)
@@ -209,7 +209,7 @@ erDiagram
 ---
 
 ### 2️⃣ BẢNG `documents`, `chat_sessions` & `chat_messages` (RAG Engine - BÌNH)
-- **Package**: `com.tung.assignment.rag`
+- **Package**: `com.group2.assignment.rag`
 - **File Entities**: [`Document.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/rag/entity/Document.java), [`ChatSession.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/rag/entity/ChatSession.java), [`ChatMessage.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/rag/entity/ChatMessage.java)
 - **Repositories**: [`DocumentRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/rag/repository/DocumentRepository.java), [`ChatSessionRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/rag/repository/ChatSessionRepository.java), [`ChatMessageRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/rag/repository/ChatMessageRepository.java)
 - **Vai trò**: Quản lý file PDF tải lên và các phiên trò chuyện hỏi đáp tài liệu bám sát trích dẫn Citations.
@@ -232,7 +232,7 @@ erDiagram
 ---
 
 ### 3️⃣ BẢNG `study_plans` & `study_tasks` (Lập Kế Hoạch Học Tập Vừa Sức - THẮNG)
-- **Package**: `com.tung.assignment.planner`
+- **Package**: `com.group2.assignment.planner`
 - **File Entities**: [`StudyPlan.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/planner/entity/StudyPlan.java), [`StudyTask.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/planner/entity/StudyTask.java)
 - **Repositories**: [`StudyPlanRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/planner/repository/StudyPlanRepository.java), [`StudyTaskRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/planner/repository/StudyTaskRepository.java)
 - **Vai trò**: Lập kế hoạch học tập vừa sức và quản lý các task theo tuần/ngày.
@@ -240,7 +240,7 @@ erDiagram
 ---
 
 ### 4️⃣ BẢNG `quizzes`, `quiz_questions` & `quiz_attempts` (Đề Thi & Chấm Điểm - NHẬT)
-- **Package**: `com.tung.assignment.quiz`
+- **Package**: `com.group2.assignment.quiz`
 - **File Entities**: [`Quiz.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/quiz/entity/Quiz.java), [`QuizQuestion.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/quiz/entity/QuizQuestion.java), [`QuizAttempt.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/quiz/entity/QuizAttempt.java)
 - **Repositories**: [`QuizRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/quiz/repository/QuizRepository.java), [`QuizQuestionRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/quiz/repository/QuizQuestionRepository.java), [`QuizAttemptRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/quiz/repository/QuizAttemptRepository.java)
 - **Vai trò**: Sinh đề thi trắc nghiệm theo chương, chấm điểm và lưu vết bài thi của sinh viên.
@@ -250,22 +250,22 @@ erDiagram
 ## 🚀 3. BẢNG TỔNG KẾT REPOSITORIES THEO FEATURE PACKAGES
 
 ```java
-// 1. Module Course (TÙNG) - package com.tung.assignment.course
+// 1. Module Course (TÙNG) - package com.group2.assignment.course
 courseRepository.findAll();
 courseRepository.findByCodeIgnoreCase("HSF302");
 
-// 2. Module RAG (BÌNH) - package com.tung.assignment.rag
+// 2. Module RAG (BÌNH) - package com.group2.assignment.rag
 documentRepository.findAllByCourseIdOrderByUploadedAtDesc(courseId);
 chunkRepository.findAllByCourseIdAndHasEmbeddingTrue(courseId); // Lấy toàn bộ vector của môn để tính Cosine Similarity
 chatSessionRepository.findAllByCourseIdOrderByUpdatedAtDesc(courseId);
 chatMessageRepository.findAllBySessionIdOrderBySentAtAsc(sessionId);
 
-// 3. Module Study Planner (THẮNG) - package com.tung.assignment.planner
+// 3. Module Study Planner (THẮNG) - package com.group2.assignment.planner
 studyPlanRepository.findFirstByCourseIdOrderByCreatedAtDesc(courseId);
 studyTaskRepository.findAllByPlanIdOrderByWeekNumberAscSortOrderAsc(planId);
 studyTaskRepository.countByPlanIdAndIsCompletedTrue(planId);
 
-// 4. Module Quiz Generator (NHẬT) - package com.tung.assignment.quiz
+// 4. Module Quiz Generator (NHẬT) - package com.group2.assignment.quiz
 quizRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId);
 quizQuestionRepository.findAllByQuizIdOrderBySortOrderAsc(quizId);
 quizAttemptRepository.findAllByQuizIdOrderByCompletedAtDesc(quizId);
