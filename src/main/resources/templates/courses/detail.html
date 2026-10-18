@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: main-layout(
+        'StudyHub AI - Chi Tiết Môn Học ' + ${course.code},
+        ~{::section}
+      )}">
+<body>
+<section class="space-y-8">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            <span class="font-bold text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <!-- Breadcrumbs Navigation -->
+    <div class="text-xs breadcrumbs text-base-content/60">
+        <ul>
+            <li><a th:href="@{/}"><i class="fa-solid fa-house mr-1"></i> Trang Chủ</a></li>
+            <li><span>Danh Sách Môn Học</span></li>
+            <li class="font-bold text-primary" th:text="${course.code}">HSF302</li>
+        </ul>
+    </div>
+
+    <!-- Course Banner Hub Header -->
+    <div class="glass-card rounded-3xl p-8 md:p-10 shadow-xl border border-white/20 relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <!-- Course Identity -->
+            <div class="flex items-start gap-5">
+                <div class="w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-gradient-to-tr text-white flex items-center justify-center font-black text-2xl md:text-3xl shadow-xl shadow-indigo-500/30 flex-shrink-0"
+                     th:classappend="${course.color} ?: 'from-indigo-600 to-purple-600'">
+                    <i class="fa-solid" th:classappend="${course.icon} ?: 'fa-book-open'"></i>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="badge badge-primary font-black text-xs px-3 py-2" th:text="${course.code}">HSF302</span>
+                        <span class="badge badge-outline text-xs font-semibold" th:text="${course.semester}">Fall 2026</span>
+                        <span class="badge badge-ghost text-xs font-semibold" th:text="${course.credits} + ' Tín chỉ'">3 Tín chỉ</span>
+                        <span class="badge badge-outline badge-secondary text-xs font-bold">
+                            <i class="fa-solid fa-puzzle-piece mr-1"></i> <span th:text="${course.chunkCount}">0</span> Chunks
+                        </span>
+                    </div>
+                    <h1 class="text-2xl md:text-4xl font-extrabold text-base-content tracking-tight mt-1" th:text="${course.name}">
+                        JPA and Spring Framework
+                    </h1>
+                    <p class="text-xs md:text-sm text-base-content/70 max-w-2xl mt-2 leading-relaxed" th:text="${course.description}">
+                        Mô tả chi tiết nội dung chương trình học của môn...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Header Action Buttons -->
+            <div class="flex flex-wrap md:flex-col gap-2 flex-shrink-0">
+                <button onclick="document.getElementById('modal-edit-course-detail').showModal()" class="btn btn-sm btn-outline rounded-xl font-bold">
+                    <i class="fa-solid fa-pen-to-square text-amber-500 mr-1"></i> Chỉnh Sửa
+                </button>
+                <a th:href="@{'/courses/delete/' + ${course.id}}"
+                   onclick="return confirm('Bạn có chắc muốn xóa môn học này không? Mọi dữ liệu liên quan sẽ bị xóa vĩnh viễn!')"
+                   class="btn btn-sm btn-ghost text-rose-500 hover:bg-rose-500/10 rounded-xl font-bold">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Xóa Môn
+                </a>
+            </div>
+        </div>
+        <!-- Decorative Glow -->
+        <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+
+    <!-- 4 Feature Gateway Hub Cards (Connecting All 5 Team Modules) -->
+    <div class="space-y-4">
+        <h2 class="text-xl font-extrabold text-base-content flex items-center gap-2">
+            <i class="fa-solid fa-compass text-indigo-600"></i> Các Phân Hệ Chức Năng Của Môn Học
+        </h2>
+        <p class="text-xs text-base-content/60">Chọn một trong 4 phân hệ dưới đây để tiếp tục học tập và ôn luyện</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- 1. RAG Chatbot Gateway (Bình) -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl hover:border-indigo-500/40 transition-all group">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <h3 class="font-bold text-base text-base-content group-hover:text-indigo-600 transition-colors">
+                        Trợ Lý RAG Giáo Trình
+                    </h3>
+                    <p class="text-xs text-base-content/70 leading-relaxed">
+                        Đàm thoại thông minh với AI bám sát 100% tài liệu giáo trình của môn học.
+                    </p>
+                </div>
+                <div class="pt-5 mt-4 border-t border-base-200/50">
+                    <a th:href="@{'/courses/' + ${course.id} + '/chat'}" class="btn btn-sm btn-primary w-full rounded-xl text-xs font-bold">
+                        Vào Khung Chat <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. PDF Documents & Chunks Gateway (Bình) -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl hover:border-purple-500/40 transition-all group">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <h3 class="font-bold text-base text-base-content group-hover:text-purple-600 transition-colors">
+                        Tài Liệu & Cắt Chunks
+                    </h3>
+                    <p class="text-xs text-base-content/70 leading-relaxed">
+                        Kéo thả tải lên slide/giáo trình PDF và xem kết quả cắt Chunks tự động bằng PDFBox.
+                    </p>
+                </div>
+                <div class="pt-5 mt-4 border-t border-base-200/50">
+                    <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-sm btn-outline border-purple-500 text-purple-600 hover:bg-purple-600 hover:text-white w-full rounded-xl text-xs font-bold">
+                        Quản Lý Tài Liệu <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. Study Planner Gateway (Thắng) -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl hover:border-emerald-500/40 transition-all group">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <h3 class="font-bold text-base text-base-content group-hover:text-emerald-600 transition-colors">
+                        Lịch Học Vừa Sức
+                    </h3>
+                    <p class="text-xs text-base-content/70 leading-relaxed">
+                        Phân bổ lộ trình ôn thi theo Chunks tài liệu, lịch rảnh trong tuần và ngày thi cuối kỳ.
+                    </p>
+                </div>
+                <div class="pt-5 mt-4 border-t border-base-200/50">
+                    <a th:href="@{'/planner?courseId=' + ${course.id}}" class="btn btn-sm btn-outline border-emerald-500 text-emerald-600 hover:bg-emerald-600 hover:text-white w-full rounded-xl text-xs font-bold">
+                        Lập Kế Hoạch <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 4. Quiz Generator Gateway (Nhật) -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl hover:border-amber-500/40 transition-all group">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h3 class="font-bold text-base text-base-content group-hover:text-amber-600 transition-colors">
+                        Luyện Đề Trắc Nghiệm AI
+                    </h3>
+                    <p class="text-xs text-base-content/70 leading-relaxed">
+                        Sinh đề thi trắc nghiệm 4 đáp án theo độ khó từ tài liệu môn học và chấm điểm tức thì.
+                    </p>
+                </div>
+                <div class="pt-5 mt-4 border-t border-base-200/50">
+                    <a th:href="@{'/quiz?courseId=' + ${course.id}}" class="btn btn-sm btn-outline border-amber-500 text-amber-600 hover:bg-amber-600 hover:text-white w-full rounded-xl text-xs font-bold">
+                        Tạo Đề Thi Thử <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chunks Knowledge Base Section -->
+    <div class="glass-card rounded-3xl p-6 md:p-8 space-y-4 border border-base-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-base-content flex items-center gap-2">
+                    <i class="fa-solid fa-puzzle-piece text-indigo-600"></i> Kho Dữ Liệu Chunks Của Môn
+                </h3>
+                <p class="text-xs text-base-content/60">Các đoạn trích xuất tri thức dùng để nạp ngữ cảnh cho RAG Chatbot và sinh đề thi Quiz</p>
+            </div>
+            <span class="badge badge-neutral font-bold text-xs" th:text="${chunks.size()} + ' Chunks đã nạp'">0 Chunks</span>
+        </div>
+
+        <!-- Empty Chunks State -->
+        <div th:if="${chunks.empty}" class="p-8 text-center space-y-3 bg-base-100/40 rounded-2xl border border-dashed border-base-300">
+            <div class="w-12 h-12 rounded-full bg-base-200 text-base-content/40 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-file-circle-question"></i>
+            </div>
+            <p class="text-xs text-base-content/60 max-w-md mx-auto">
+                Môn học này hiện chưa có đoạn Chunks nào. Hãy vào phân hệ <strong>Tài Liệu & Cắt Chunks</strong> của bạn Bình để upload file PDF giáo trình đầu tiên nhé!
+            </p>
+            <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-sm btn-primary rounded-xl text-xs">
+                <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Upload Tài Liệu Ngay
+            </a>
+        </div>
+
+        <!-- Chunks List Accordion -->
+        <div th:unless="${chunks.empty}" class="space-y-2">
+            <div th:each="chunk, iter : ${chunks}" class="collapse collapse-arrow bg-base-100/60 border border-base-200 rounded-2xl">
+                <input type="checkbox" />
+                <div class="collapse-title text-xs font-bold flex items-center gap-3">
+                    <span class="badge badge-sm badge-primary text-[10px]" th:text="'Chunk #' + ${chunk.chunkIndex}">#1</span>
+                    <span class="text-base-content/80 font-mono text-[11px]" th:text="${chunk.charCount} + ' ký tự'">1200 ký tự</span>
+                    <span class="text-base-content/60 font-normal line-clamp-1 truncate" th:text="${chunk.content}">Trích đoạn nội dung...</span>
+                </div>
+                <div class="collapse-content text-xs text-base-content/80 leading-relaxed bg-base-200/30 p-4 rounded-b-2xl font-mono whitespace-pre-wrap">
+                    <p th:text="${chunk.content}">Nội dung đầy đủ của đoạn chunk...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chỉnh Sửa Môn Học Trong Trang Chi Tiết -->
+    <dialog id="modal-edit-course-detail" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box glass-card p-6 rounded-3xl border border-white/20 max-w-lg">
+            <h3 class="font-extrabold text-xl text-base-content flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-amber-500"></i> Chỉnh Sửa Môn Học
+            </h3>
+            <p class="text-xs text-base-content/60 mt-1">Cập nhật thông tin chi tiết môn học</p>
+
+            <form th:action="@{'/courses/' + ${course.id} + '/edit'}" th:object="${editCourse}" method="post" class="space-y-4 mt-5">
+                <input type="hidden" name="redirect" value="detail" />
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text font-bold text-xs">Mã Môn Học *</span></label>
+                        <input type="text" th:field="*{code}" required class="input input-sm input-bordered w-full rounded-xl uppercase font-bold" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text font-bold text-xs">Học Kỳ</span></label>
+                        <input type="text" th:field="*{semester}" class="input input-sm input-bordered w-full rounded-xl" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-2 form-control">
+                        <label class="label py-1"><span class="label-text font-bold text-xs">Tên Môn Học *</span></label>
+                        <input type="text" th:field="*{name}" required class="input input-sm input-bordered w-full rounded-xl" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text font-bold text-xs">Số Tín Chỉ</span></label>
+                        <input type="number" th:field="*{credits}" min="1" max="10" class="input input-sm input-bordered w-full rounded-xl" />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text font-bold text-xs">Mô Tả</span></label>
+                    <textarea th:field="*{description}" rows="2" class="textarea textarea-bordered textarea-sm w-full rounded-xl"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text font-bold text-xs">Màu Sắc Đại Diện</span></label>
+                        <select th:field="*{color}" class="select select-sm select-bordered rounded-xl text-xs">
+                            <option value="from-indigo-600 to-purple-600">Indigo & Purple</option>
+                            <option value="from-emerald-600 to-teal-600">Emerald & Teal</option>
+                            <option value="from-amber-500 to-rose-600">Amber & Rose</option>
+                            <option value="from-blue-600 to-cyan-600">Blue & Cyan</option>
+                            <option value="from-purple-600 to-pink-600">Purple & Pink</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text font-bold text-xs">Icon Biểu Tượng</span></label>
+                        <select th:field="*{icon}" class="select select-sm select-bordered rounded-xl text-xs">
+                            <option value="fa-laptop-code">Laptop Code</option>
+                            <option value="fa-book-open">Sách Giáo Trình</option>
+                            <option value="fa-chart-pie">Biểu Đồ Thống Kê</option>
+                            <option value="fa-cubes-stacked">Khối Dự Án</option>
+                            <option value="fa-brain">Trí Tuệ Nhân Tạo</option>
+                            <option value="fa-database">Cơ Sở Dữ Liệu</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-action mt-6">
+                    <button type="button" onclick="document.getElementById('modal-edit-course-detail').close()" class="btn btn-sm btn-ghost rounded-xl">Hủy</button>
+                    <button type="submit" class="btn btn-sm btn-warning rounded-xl px-5 font-bold">Lưu Cập Nhật</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+</section>
+</body>
+</html>

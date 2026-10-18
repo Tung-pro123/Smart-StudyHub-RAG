@@ -1,11 +1,15 @@
 package com.tung.assignment.core.controller;
 
+import com.tung.assignment.core.dto.CourseCardDto;
 import com.tung.assignment.core.entity.Course;
 import com.tung.assignment.core.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -14,24 +18,21 @@ public class HomeController {
     private final CourseService courseService;
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
+    public String index(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "semester", required = false) String semester,
+            Model model) {
+
+        List<CourseCardDto> courses = courseService.getAllCoursesWithStats(keyword, semester);
+        List<String> semesters = courseService.getAllSemesters();
+
+        model.addAttribute("courses", courses);
         model.addAttribute("totalCourses", courseService.countCourses());
+        model.addAttribute("semesters", semesters);
+        model.addAttribute("currentKeyword", keyword != null ? keyword : "");
+        model.addAttribute("currentSemester", semester != null ? semester : "ALL");
         model.addAttribute("newCourse", new Course());
+
         return "index";
-    }
-
-    @PostMapping("/courses/create")
-    public String createCourse(@ModelAttribute("newCourse") Course course) {
-        if (course.getCode() != null && !course.getCode().isBlank()) {
-            courseService.saveCourse(course);
-        }
-        return "redirect:/";
-    }
-
-    @GetMapping("/courses/delete/{id}")
-    public String deleteCourse(@PathVariable("id") Long id) {
-        courseService.deleteCourse(id);
-        return "redirect:/";
     }
 }

@@ -47,6 +47,23 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 4: DÙNG AI NÂNG CẤP TÌM KIẾM, COURSE DETAIL HUB VÀ BỘ TEST CHUẨN MỰC
+* **Mục tiêu**: Xây dựng bộ lọc tìm kiếm theo từ khóa và học kỳ, Modal chỉnh sửa môn học, trang Course Hub (`/courses/{id}`) làm cổng kết nối 4 phân hệ của nhóm và viết bộ 6 Unit Test toàn diện.
+* **Câu Prompt đã dùng**:
+  ```text
+  Nâng cấp CourseService và CourseController trong Spring Boot 3:
+  1. Hỗ trợ tìm kiếm môn học theo từ khóa (name, code) và lọc theo semester.
+  2. Tạo CourseCardDto đóng gói dữ liệu và đếm số lượng Chunks của môn học.
+  3. Xây dựng trang Course Hub chi tiết /courses/{id} với 4 gateway card dẫn sang RAG, Documents, Planner và Quiz.
+  4. Viết bộ 6 test case JUnit 5 kiểm tra đầy đủ nghiệp vụ CRUD và validation trùng mã code.
+  ```
+* **Kết quả nhận được từ AI**:
+  - `CourseServiceTest.java` chạy 6 test case xanh 100% không lỗi.
+  - Giao diện có thanh tìm kiếm linh hoạt, Toast thông báo alert và trang Hub chi tiết môn học hiện đại.
+* **Đánh giá & Điều chỉnh của bản thân**: Bổ sung cơ chế cascade delete để khi xóa môn học sẽ tự động dọn dẹp các Chunks liên quan trong cơ sở dữ liệu.
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM CỦA LEADER
-* **AI hỗ trợ tốt nhất**: Tự động sinh boilerplate code, cấu trúc SQL migration và viết regex kiểm tra chuẩn mực CI/CD.
+* **AI hỗ trợ tốt nhất**: Tự động sinh boilerplate code, cấu trúc SQL migration, viết regex kiểm tra chuẩn mực CI/CD và sinh nhanh các ca kiểm thử Unit Test.
 * **Kinh nghiệm chỉ huy**: Phải luôn phân rõ ranh giới Package trước khi cho các thành viên code thì AI mới sinh ra code khớp nhau 100%.

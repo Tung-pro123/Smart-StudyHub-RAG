@@ -54,6 +54,22 @@
             <i class="fa-solid fa-database"></i>
         </a>
     </div>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('studyhub_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const toggle = document.querySelector('.theme-controller');
+            if (toggle) {
+                toggle.checked = (savedTheme === 'synthwave');
+                toggle.addEventListener('change', function(e) {
+                    const theme = e.target.checked ? 'synthwave' : 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                    localStorage.setItem('studyhub_theme', theme);
+                });
+            }
+        })();
+    </script>
 </div>
 </body>
 </html>
