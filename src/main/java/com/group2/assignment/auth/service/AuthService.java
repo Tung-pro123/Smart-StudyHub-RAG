@@ -103,6 +103,7 @@ public class AuthService {
             if (oauth2UserInfo.getAvatarUrl() != null && !oauth2UserInfo.getAvatarUrl().isBlank()) {
                 user.setAvatar(oauth2UserInfo.getAvatarUrl());
             }
+            user.setProvider("google");
         } else {
             // User mới - tạo tài khoản mới
             String username = extractUsernameFromEmail(oauth2UserInfo.getEmail());
@@ -123,6 +124,7 @@ public class AuthService {
                             oauth2UserInfo.getAvatarUrl() :
                             "https://api.dicebear.com/7.x/bottts/svg?seed=" + username)
                     .role("ROLE_STUDENT")
+                    .provider("google")
                     .createdAt(LocalDateTime.now())
                     .build();
         }
