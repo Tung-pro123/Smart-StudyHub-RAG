@@ -132,3 +132,5 @@ Toàn bộ quy trình và đặc tả kỹ thuật chi tiết được lưu tron
 ## 📄 BẢN QUYỀN & GIẢNG VIÊN HƯỚNG DẪN
 Dự án được thực hiện phục vụ học phần **HSF302 - JPA and Spring Framework** tại **Đại học FPT**.  
 © Fall 2026 - Nhóm sinh viên thực hiện: Tùng (Leader), Bình, Nhật, Thắng, Ân, Trường.
+
+<!-- Test PR verification bot -->
