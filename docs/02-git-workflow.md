@@ -28,11 +28,14 @@ Tài liệu này thiết lập các **Business Rules (Quy tắc bắt buộc)** 
 
 ---
 
-### 📌 QUY TẮC 3: QUY CHUẨN ĐẶT TÊN NHÁNH & TIÊU ĐỀ PULL REQUEST (PR TITLE)
-* Tên nhánh và tiêu đề PR phải viết theo chuẩn quốc tế **Conventional Commits**:
+### 📌 QUY TẮC 3: ĐỒNG NHẤT 100% TIẾNG VIỆT CHO TIÊU ĐỀ (PR TITLE) VÀ MÔ TẢ (PR DESCRIPTION)
+* **Quy tắc ngôn ngữ**: Toàn bộ **Tiêu đề PR (Title)** và **Nội dung mô tả (Description)** **BẮT BUỘC ĐỒNG NHẤT 100% BẰNG TIẾNG VIỆT** (có dấu, rõ nghĩa, không nửa nạc nửa mỡ Anh - Việt).
+* **Định dạng Title PR**: Viết theo chuẩn **Conventional Commits**:
   ```text
-  <loại>(<phạm-vi>): <mô tả ngắn gọn bằng tiếng Việt có nghĩa>
+  <loại>(<phạm-vi>): <mô tả ngắn gọn tính năng bằng tiếng Việt có dấu>
   ```
+  *Ví dụ chuẩn*: `feat(quiz): hoàn thiện bộ sinh trắc nghiệm và chấm điểm tự động`
+* **Nội dung Description**: Phải điền đầy đủ theo mẫu chuẩn Tiếng Việt (GitHub đã tự động điền sẵn mẫu trong `.github/pull_request_template.md`).
 
 ---
 
@@ -68,6 +71,26 @@ Khi mở Pull Request trên GitHub, tiêu đề PR **bắt buộc** phải tuân
   * *Ví dụ*: `docs(guide): bổ sung tài liệu User Guide Word và Slide PowerPoint 15 trang`
 * `fix(<module>): ...` $\rightarrow$ Sửa lỗi phát sinh.
   * *Ví dụ*: `fix(core): sửa lỗi validate trùng mã môn học khi tạo mới`
+
+### 📋 Mẫu nội dung mô tả PR (PR Description Template) - 100% Tiếng Việt
+*(Mỗi khi mở PR trên GitHub, hệ thống sẽ tự động chèn sẵn mẫu này, thành viên chỉ cần tick chọn và điền thông tin)*:
+```markdown
+## 📌 Mô tả công việc
+- [Mô tả chi tiết những gì bạn đã làm trong nhánh này]
+
+## 🎯 Module phụ trách
+- [ ] `rag`: Trích xuất PDF, RAG Engine và Chatbot hỏi đáp (Bình)
+- [ ] `settings`: Giao diện cấu hình API Key và kiểm tra kết nối AI (Ân)
+- [ ] `planner`: Lên kế hoạch ôn tập thông minh Study Planner (Thắng)
+- [ ] `quiz`: Bộ sinh trắc nghiệm tự động và chấm điểm tức thì (Nhật)
+- [ ] `docs`: Tài liệu hướng dẫn User Guide và Slide thuyết trình (Trường)
+
+## 📋 Checklist kiểm tra trước khi tạo PR
+- [x] Tiêu đề PR tuân thủ đúng chuẩn Conventional Commits bằng **100% Tiếng Việt**
+- [x] Tên nhánh đúng chuẩn: feature/<tên-chức-năng> hoặc fix/<tên-lỗi>
+- [x] Đã chạy mvn clean test ở máy local và BUILD SUCCESS
+- [x] Không sửa đổi các file ngoài phạm vi module được phân công
+```
 
 ---
 
