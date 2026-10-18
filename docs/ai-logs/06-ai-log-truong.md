@@ -1,7 +1,7 @@
 # 📝 NHẬT KÝ THỰC NGHIỆM AI - TRƯỜNG (MODULE XÁC THỰC, JWT & CÁ NHÂN HÓA)
 
 **Thành viên thực hiện**: Đinh Nhật Trường  
-**Phạm vi phụ trách**: Module Auth & JWT Security (`com.tung.assignment.auth`)  
+**Phạm vi phụ trách**: Module Auth & JWT Security (`com.group2.assignment.auth`)  
 - Entity `User.java` và cơ sở dữ liệu tài khoản người dùng trong H2.  
 - Thuật toán băm mật khẩu an toàn `BCryptPasswordEncoder`.  
 - Sinh và xác thực JSON Web Token bằng thư viện `JJWT 0.12.x` (`JwtService.java`).  

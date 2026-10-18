@@ -40,7 +40,7 @@ Bản quy tắc này được lập ra nhằm giúp 6 thành viên phối hợp 
 ### Đối với Java / Spring Boot:
 * **Tên Class**: Viết hoa chữ cái đầu theo PascalCase (`ChatController`, `GeminiAiService`, `MessageDto`).
 * **Tên Hàm & Biến**: Viết theo camelCase (`sendMessage`, `apiKey`, `isSuccess`).
-* **Tên Package**: Toàn bộ viết chữ thường (`com.tung.assignment.controller`, `com.tung.assignment.service`).
+* **Tên Package**: Toàn bộ viết chữ thường (`com.group2.assignment.controller`, `com.group2.assignment.service`).
 * **Cấu trúc tầng rõ ràng**:
   * Controller: Chỉ điều hướng, không viết logic nặng tại đây.
   * Service: Chứa logic gọi API và xử lý dữ liệu.

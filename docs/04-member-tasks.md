@@ -18,12 +18,12 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 | Thành viên | Tên nhánh Git | Package Backend | Thư mục Giao diện | Nhiệm vụ chính |
 |:---|:---|:---|:---|:---|
-| **TÙNG** (Lead) 👑 | `feature/core-courses` | `com.tung.assignment.core` | `templates/`, `fragments/` | Nền móng dự án, CRUD Môn học, Layout Glassmorphism |
-| **BÌNH** 🌟 | `feature/rag-engine` | `com.tung.assignment.rag` | `templates/rag/` | Upload PDF, Cắt Chunks (PDFBox), RAG Chatbot giáo trình |
-| **ÂN** | `feature/settings-security`| `com.tung.assignment.settings` | `templates/settings/` | Cài đặt API Key, Nút Test Ping kết nối, Lưu Session |
-| **THẮNG** | `feature/study-planner` | `com.tung.assignment.planner` | `templates/planner/` | Form chọn lịch rảnh, AI Study Planner Timeline theo Chunks |
-| **NHẬT** 🚀 | `feature/quiz-generator` | `com.tung.assignment.quiz` | `templates/quiz/` | Bộ lọc độ khó, Sinh đề trắc nghiệm AI JSON, Chấm điểm tự động |
-| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | `com.tung.assignment.auth` | `templates/auth/` | Đăng ký, Đăng nhập, Bảo mật JWT, Hồ sơ cá nhân & User Guide/Slide |
+| **TÙNG** (Lead) 👑 | `feature/core-courses` | `com.group2.assignment.core` | `templates/`, `fragments/` | Nền móng dự án, CRUD Môn học, Layout Glassmorphism |
+| **BÌNH** 🌟 | `feature/rag-engine` | `com.group2.assignment.rag` | `templates/rag/` | Upload PDF, Cắt Chunks (PDFBox), RAG Chatbot giáo trình |
+| **ÂN** | `feature/settings-security`| `com.group2.assignment.settings` | `templates/settings/` | Cài đặt API Key, Nút Test Ping kết nối, Lưu Session |
+| **THẮNG** | `feature/study-planner` | `com.group2.assignment.planner` | `templates/planner/` | Form chọn lịch rảnh, AI Study Planner Timeline theo Chunks |
+| **NHẬT** 🚀 | `feature/quiz-generator` | `com.group2.assignment.quiz` | `templates/quiz/` | Bộ lọc độ khó, Sinh đề trắc nghiệm AI JSON, Chấm điểm tự động |
+| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | `com.group2.assignment.auth` | `templates/auth/` | Đăng ký, Đăng nhập, Bảo mật JWT, Hồ sơ cá nhân & User Guide/Slide |
 
 ---
 
@@ -33,7 +33,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ### 👑 1. LEADER TÙNG: MODULE CORE & QUẢN LÝ MÔN HỌC (COURSES)
 * **Nhánh làm việc**: `feature/core-courses`
-* **Package phụ trách**: `com.tung.assignment.core`
+* **Package phụ trách**: `com.group2.assignment.core`
 * **Thư mục View**: `src/main/resources/templates/` (`index.html`, `courses/`, `fragments/`)
 * **Các file Java trọng tâm**:
   - `entity/Course.java`, `entity/Chunk.java` *(đã tạo sẵn tại core)*
@@ -57,7 +57,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ### 🌟 2. BÌNH: MODULE RAG CHATBOT - TÀI LIỆU, CHUNKING & CHAT GIÁO TRÌNH
 * **Nhánh làm việc**: `feature/rag-engine`
-* **Package phụ trách**: `com.tung.assignment.rag`
+* **Package phụ trách**: `com.group2.assignment.rag`
 * **Thư mục View**: `src/main/resources/templates/rag/` (`documents.html`, `chat.html`)
 * **Các file Java cần tạo/code**:
   - `entity/Document.java`, `entity/ChatSession.java`, `entity/ChatMessage.java` *(đã tạo khung sẵn)*
@@ -84,7 +84,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ### 👤 3. ÂN: MODULE CÀI ĐẶT & BẢO MẬT API KEY (SETTINGS & SECURITY)
 * **Nhánh làm việc**: `feature/settings-security`
-* **Package phụ trách**: `com.tung.assignment.settings`
+* **Package phụ trách**: `com.group2.assignment.settings`
 * **Thư mục View**: `src/main/resources/templates/settings/` (`index.html`)
 * **Các file Java cần tạo/code**:
   - `SettingsConstants.java` *(đã tạo sẵn chứa hằng số key session)*
@@ -108,7 +108,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ### 👤 4. THẮNG: MODULE AI STUDY PLANNER - LẬP KẾ HOẠCH HỌC TẬP VỪA SỨC
 * **Nhánh làm việc**: `feature/study-planner`
-* **Package phụ trách**: `com.tung.assignment.planner`
+* **Package phụ trách**: `com.group2.assignment.planner`
 * **Thư mục View**: `src/main/resources/templates/planner/` (`index.html`, `view.html`)
 * **Các file Java cần tạo/code**:
   - `entity/StudyPlan.java`, `entity/StudyTask.java` *(đã tạo khung sẵn)*
@@ -134,7 +134,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ### 🚀 5. NHẬT: MODULE AI QUIZ GENERATOR - SINH ĐỀ TRẮC NGHIỆM VÀ CHẤM ĐIỂM
 * **Nhánh làm việc**: `feature/quiz-generator`
-* **Package phụ trách**: `com.tung.assignment.quiz`
+* **Package phụ trách**: `com.group2.assignment.quiz`
 * **Thư mục View**: `src/main/resources/templates/quiz/` (`index.html`, `take.html`, `result.html`)
 * **Các file Java cần tạo/code**:
   - `entity/Quiz.java`, `entity/QuizQuestion.java`, `entity/QuizAttempt.java` *(đã tạo khung sẵn)*
@@ -160,7 +160,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ### 🛡️ 6. TRƯỜNG: MODULE XÁC THỰC, JWT SECURITY & CÁ NHÂN HÓA NGƯỜI DÙNG (AUTH & JWT MODULE)
 * **Nhánh làm việc**: `feature/auth-jwt-security`
-* **Package phụ trách**: `com.tung.assignment.auth`
+* **Package phụ trách**: `com.group2.assignment.auth`
 * **Thư mục View**: `src/main/resources/templates/auth/` (`login.html`, `register.html`, `profile.html`)
 * **Các file Java trọng tâm**:
   - `entity/User.java`: Entity người dùng (`id`, `username`, `email`, `password`, `fullName`, `role`, `avatar`, `createdAt`, `updatedAt`).
