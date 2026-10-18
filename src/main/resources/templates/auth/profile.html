@@ -5,14 +5,31 @@
         ~{::section}
       )}">
 <body>
-<section class="max-w-2xl mx-auto my-6 space-y-6">
+<section class="max-w-4xl mx-auto my-6 space-y-6">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span class="font-bold text-xs md:text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            <span class="font-bold text-xs md:text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
 
     <!-- Profile Header Card -->
     <div class="glass-card rounded-3xl p-8 shadow-xl border border-white/20 relative overflow-hidden">
         <div class="flex flex-col sm:flex-row items-center gap-6 relative z-10">
             <div class="avatar">
-                <div class="w-24 h-24 rounded-3xl ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden shadow-lg shadow-indigo-500/20">
-                    <img th:src="${user.avatar}" alt="Avatar Sinh Viên" />
+                <div class="w-24 h-24 rounded-3xl ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden shadow-lg shadow-indigo-500/20 bg-base-100">
+                    <img id="current-avatar-img" th:src="${user.avatar}" alt="Avatar Sinh Viên" />
                 </div>
             </div>
             <div class="space-y-1 text-center sm:text-left flex-1">
@@ -36,12 +53,133 @@
         <div class="absolute -right-16 -bottom-16 w-56 h-56 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
     </div>
 
+    <!-- Forms Grid: Update Profile & Change Password -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Form 1: Cập Nhật Thông Tin Cá Nhân -->
+        <div class="glass-card rounded-3xl p-6 shadow-sm border border-base-200 space-y-4">
+            <div class="flex items-center gap-2 border-b border-base-200 pb-3">
+                <div class="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-user-pen"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-sm text-base-content">Cập Nhật Hồ Sơ</h3>
+                    <p class="text-[11px] text-base-content/60">Thay đổi họ tên hiển thị và ảnh đại diện</p>
+                </div>
+            </div>
+
+            <form th:action="@{/profile/update}" th:object="${updateProfileDto}" method="post" class="space-y-4">
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text font-bold text-xs">Họ và Tên</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <input type="text" th:field="*{fullName}" required placeholder="Nhập họ và tên đầy đủ" 
+                               class="input input-bordered pl-9 w-full rounded-xl text-xs" />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text font-bold text-xs">Đường Dẫn Avatar</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-image absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <input type="text" id="avatar-input" th:field="*{avatar}" required placeholder="https://..." 
+                               oninput="document.getElementById('current-avatar-img').src = this.value"
+                               class="input input-bordered pl-9 w-full rounded-xl text-xs font-mono" />
+                    </div>
+                </div>
+
+                <!-- Avatar Presets Selection -->
+                <div class="space-y-1.5">
+                    <label class="label-text font-bold text-[11px] text-base-content/70">Chọn nhanh avatar mẫu sinh viên:</label>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=student')"
+                                class="w-10 h-10 rounded-xl border-2 border-indigo-200 hover:border-indigo-500 p-0.5 overflow-hidden transition-all hover:scale-105" title="Robot Student">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=student" alt="Avatar 1" />
+                        </button>
+                        <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=Felix')"
+                                class="w-10 h-10 rounded-xl border-2 border-indigo-200 hover:border-indigo-500 p-0.5 overflow-hidden transition-all hover:scale-105" title="Dev Felix">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar 2" />
+                        </button>
+                        <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=truong')"
+                                class="w-10 h-10 rounded-xl border-2 border-indigo-200 hover:border-indigo-500 p-0.5 overflow-hidden transition-all hover:scale-105" title="Tech Master">
+                            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=truong" alt="Avatar 3" />
+                        </button>
+                        <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka')"
+                                class="w-10 h-10 rounded-xl border-2 border-indigo-200 hover:border-indigo-500 p-0.5 overflow-hidden transition-all hover:scale-105" title="Scholar Aneka">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" alt="Avatar 4" />
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 border-none text-white shadow-md shadow-indigo-500/20 mt-2">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Cập Nhật
+                </button>
+            </form>
+        </div>
+
+        <!-- Form 2: Đổi Mật Khẩu Bảo Mật -->
+        <div class="glass-card rounded-3xl p-6 shadow-sm border border-base-200 space-y-4">
+            <div class="flex items-center gap-2 border-b border-base-200 pb-3">
+                <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold text-sm">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-sm text-base-content">Đổi Mật Khẩu</h3>
+                    <p class="text-[11px] text-base-content/60">Bảo mật tài khoản với thuật toán BCrypt</p>
+                </div>
+            </div>
+
+            <form th:action="@{/profile/change-password}" th:object="${changePasswordDto}" method="post" class="space-y-4">
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text font-bold text-xs">Mật Khẩu Hiện Tại</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <input type="password" id="old-pass" th:field="*{oldPassword}" required placeholder="••••••••" 
+                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
+                        <button type="button" onclick="togglePass('old-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text font-bold text-xs">Mật Khẩu Mới (Tối thiểu 6 ký tự)</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-shield-halved absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <input type="password" id="new-pass" th:field="*{newPassword}" required minlength="6" placeholder="••••••••" 
+                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
+                        <button type="button" onclick="togglePass('new-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text font-bold text-xs">Xác Nhận Mật Khẩu Mới</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-check-double absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <input type="password" id="confirm-pass" th:field="*{confirmPassword}" required minlength="6" placeholder="••••••••" 
+                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
+                        <button type="button" onclick="togglePass('confirm-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning w-full rounded-xl text-xs font-bold text-amber-950 shadow-md shadow-amber-500/20 mt-2">
+                    <i class="fa-solid fa-lock mr-1"></i> Xác Nhận Đổi Mật Khẩu
+                </button>
+            </form>
+        </div>
+
+    </div>
+
     <!-- Security & JWT Status Card -->
     <div class="glass-card rounded-3xl p-6 shadow-sm border border-base-200 space-y-4">
         <h3 class="font-extrabold text-base text-base-content flex items-center gap-2">
             <i class="fa-solid fa-shield-halved text-emerald-500"></i> Trạng Thái Bảo Mật & JWT Token
         </h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
             <div class="bg-base-100/50 p-4 rounded-2xl border border-base-200">
                 <p class="text-base-content/60 font-semibold">Thuật toán băm mật khẩu:</p>
                 <p class="font-bold text-emerald-600 mt-1">BCrypt 10 Rounds</p>
@@ -62,5 +200,26 @@
     </div>
 
 </section>
+
+<script>
+    function selectAvatar(url) {
+        document.getElementById('avatar-input').value = url;
+        document.getElementById('current-avatar-img').src = url;
+    }
+
+    function togglePass(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
 </body>
 </html>

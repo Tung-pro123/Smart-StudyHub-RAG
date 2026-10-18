@@ -1,7 +1,9 @@
 package com.group2.assignment.auth.service;
 
+import com.group2.assignment.auth.dto.ChangePasswordDto;
 import com.group2.assignment.auth.dto.LoginRequestDto;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
+import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.auth.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -83,6 +85,55 @@ public class AuthService {
     }
 
     /**
+     * Cập nhật thông tin hồ sơ (Họ tên, Avatar)
+     */
+    public User updateProfile(String username, UpdateProfileDto dto) {
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng: " + username));
+
+        if (dto.getFullName() != null && !dto.getFullName().trim().isBlank()) {
+            user.setFullName(dto.getFullName().trim());
+        }
+
+        if (dto.getAvatar() != null && !dto.getAvatar().trim().isBlank()) {
+            user.setAvatar(dto.getAvatar().trim());
+        }
+
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    /**
+     * Đổi mật khẩu tài khoản sinh viên
+     */
+    public void changePassword(String username, ChangePasswordDto dto) {
+        if (dto.getOldPassword() == null || dto.getOldPassword().isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập mật khẩu hiện tại!");
+        }
+        if (dto.getNewPassword() == null || dto.getNewPassword().length() < 6) {
+            throw new IllegalArgumentException("Mật khẩu mới phải có tối thiểu 6 ký tự!");
+        }
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Mật khẩu xác nhận không trùng khớp!");
+        }
+
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng: " + username));
+
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu hiện tại không chính xác!");
+        }
+
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+    /**
      * Khởi tạo tài khoản sinh viên mẫu mặc định để demo
      */
     @PostConstruct
@@ -100,7 +151,7 @@ public class AuthService {
             userRepository.save(User.builder()
                     .username("truong")
                     .email("truong@fpt.edu.vn")
-                    .fullName("Đinh Nhật Trường")
+                    .fullName("Ngô Nhật Trường")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_ADMIN")
                     .createdAt(LocalDateTime.now())
