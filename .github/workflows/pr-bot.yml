@@ -3,7 +3,7 @@ name: PR Verification & Auto-Merge Bot
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review, edited]
-    branches: [dev, main]
+    branches: [main]
 
 permissions:
   contents: write

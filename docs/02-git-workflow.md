@@ -1,44 +1,47 @@
 # 02. QUY CHUẨN LÀM VIỆC GIT & BUSINESS RULES CHO NHÓM (GIT WORKFLOW SPECIFICATION)
 **Dự án**: **Smart Multi-Course Study Hub & RAG AI**  
 **Repository**: [https://github.com/Tung-pro123/Smart-StudyHub-RAG](https://github.com/Tung-pro123/Smart-StudyHub-RAG)  
-**Tác giả**: Leader Tùng (Project Manager & Tech Lead)
+**Tác giả**: Leader Tùng (Project Manager & Tech Lead)  
+**Mô hình áp dụng**: **GitHub Flow Tinh Gọn (Single Trunk - Feature Branches $\rightarrow$ `main`)**
 
-Tài liệu này thiết lập các **Business Rules (Quy tắc bắt buộc)** và quy trình làm việc trên Git/GitHub dành cho toàn bộ 6 thành viên trong nhóm, nhằm đảm bảo **lịch sử commit sạch đẹp 100%, không commit rác và loại trừ hoàn toàn xung đột mã nguồn (Merge Conflict)**.
+Tài liệu này thiết lập các **Business Rules (Quy tắc bắt buộc)** và quy trình làm việc trên Git/GitHub dành cho toàn bộ 6 thành viên trong nhóm. Dự án sử dụng mô hình tinh gọn tập trung vào **duy nhất 1 nhánh chính `main`**, đảm bảo **lịch sử commit sạch đẹp 100%, không commit rác và loại trừ hoàn toàn xung đột mã nguồn (Merge Conflict)**.
 
 ---
 
 ## 🛑 1. BA QUY TẮC BẤT DI BẤT DỊCH (CORE BUSINESS RULES)
 
-### 📌 QUY TẮC 1: CẤM TUYỆT ĐỐI PUSH TRỰC TIẾP VÀO `main` VÀ `dev`
+### 📌 QUY TẮC 1: CẤM TUYỆT ĐỐI PUSH TRỰC TIẾP VÀO `main`
 * **Mọi thành viên (kể cả Leader)** đều **KHÔNG ĐƯỢC PHÉP** chạy lệnh:
   ```bash
-  git push origin dev    # ❌ BỊ CẤM HOÀN TOÀN
   git push origin main   # ❌ BỊ CẤM HOÀN TOÀN
   ```
-* Bất kỳ dòng code nào muốn đưa vào dự án đều **bắt buộc phải đi qua 1 Pull Request (PR)** từ nhánh tính năng (`feature/`) vào nhánh `dev`.
+* Bất kỳ dòng code nào muốn đưa vào dự án đều **bắt buộc phải đi qua 1 Pull Request (PR)** từ nhánh tính năng (`feature/`) vào nhánh `main`.
 
 ---
 
-### 📌 QUY TẮC 2: BẮT BUỘC DÙNG "SQUASH AND MERGE" KHI DUYỆT PR
+### 📌 QUY TẮC 2: BẮT BUỘC DÙNG "SQUASH AND MERGE" KHI DUYỆT PR VÀO `main`
 * **Tại sao phải dùng Squash and Merge?**
   * Trong quá trình dev một tính năng, các bạn thường tạo ra nhiều commit vụn vặt: *"fix typo"*, *"test thử api"*, *"sửa lại css"*, *"commit test"*...
-  * Nếu dùng Merge thông thường (Merge Commit), toàn bộ các commit rác đó sẽ tràn vào nhánh `dev` và `main`, làm cây lịch sử Git bị rối rắm, giảng viên kiểm tra Git log sẽ trừ điểm chuyên nghiệp.
-  * Khi chọn **Squash and Merge**, GitHub sẽ **tự động nén toàn bộ 5 - 20 commit lặt vặt của nhánh feature thành đúng 1 commit duy nhất**, sạch sẽ và đại diện trọn vẹn cho tính năng đó trên nhánh `dev`!
-* **Quy định**: Chỉ có **Leader Tùng** (hoặc Master QA Trường được ủy quyền) mới có quyền bấm nút **Squash and Merge** sau khi đã kiểm tra code chạy ổn định.
+  * Nếu dùng Merge thông thường (Merge Commit), toàn bộ các commit rác đó sẽ tràn vào nhánh `main`, làm cây lịch sử Git bị rối rắm, giảng viên kiểm tra Git log sẽ trừ điểm chuyên nghiệp.
+  * Khi chọn **Squash and Merge**, GitHub sẽ **tự động nén toàn bộ 5 - 20 commit lặt vặt của nhánh feature thành đúng 1 commit duy nhất**, sạch sẽ và đại diện trọn vẹn cho tính năng đó trên nhánh `main`!
+* **Quy định**: Hệ thống đã có **Bot GitHub Actions tự động kiểm tra, duyệt và Squash & Merge vào `main`** nếu code không bị lỗi và pass toàn bộ unit tests!
 
 ---
 
-### 📌 QUY TẮC 3: QUY CHUẨN ĐẶT TÊN NHÁNH & TIÊU ĐỀ PULL REQUEST (PR TITLE)
-* Tên nhánh và tiêu đề PR phải viết theo chuẩn quốc tế **Conventional Commits**:
+### 📌 QUY TẮC 3: ĐỒNG NHẤT 100% TIẾNG VIỆT CHO TIÊU ĐỀ (PR TITLE) VÀ MÔ TẢ (PR DESCRIPTION)
+* **Quy tắc ngôn ngữ**: Toàn bộ **Tiêu đề PR (Title)** và **Nội dung mô tả (Description)** **BẮT BUỘC ĐỒNG NHẤT 100% BẰNG TIẾNG VIỆT** (có dấu, rõ nghĩa, không nửa nạc nửa mỡ Anh - Việt).
+* **Định dạng Title PR**: Viết theo chuẩn **Conventional Commits**:
   ```text
-  <loại>(<phạm-vi>): <mô tả ngắn gọn bằng tiếng Việt có nghĩa>
+  <loại>(<phạm-vi>): <mô tả ngắn gọn tính năng bằng tiếng Việt có dấu>
   ```
+  *Ví dụ chuẩn*: `feat(quiz): hoàn thiện bộ sinh trắc nghiệm và chấm điểm tự động`
+* **Nội dung Description**: Phải điền đầy đủ theo mẫu chuẩn Tiếng Việt (GitHub đã tự động điền sẵn mẫu trong `.github/pull_request_template.md`).
 
 ---
 
 ## 🌳 2. QUY ĐỊNH TÊN NHÁNH CỤ THỂ CHO TỪNG THÀNH VIÊN
 
-Tất cả các nhánh tính năng đều phải được rẽ nhánh (checkout) từ nhánh `dev`:
+Tất cả các nhánh tính năng đều phải được rẽ nhánh (checkout) từ nhánh `main`:
 
 | Thành viên | Tên nhánh BẮT BUỘC | Phạm vi Module phụ trách |
 |:---|:---|:---|
@@ -69,24 +72,44 @@ Khi mở Pull Request trên GitHub, tiêu đề PR **bắt buộc** phải tuân
 * `fix(<module>): ...` $\rightarrow$ Sửa lỗi phát sinh.
   * *Ví dụ*: `fix(core): sửa lỗi validate trùng mã môn học khi tạo mới`
 
+### 📋 Mẫu nội dung mô tả PR (PR Description Template) - 100% Tiếng Việt
+*(Mỗi khi mở PR trên GitHub, hệ thống sẽ tự động chèn sẵn mẫu này, thành viên chỉ cần tick chọn và điền thông tin)*:
+```markdown
+## 📌 Mô tả công việc
+- [Mô tả chi tiết những gì bạn đã làm trong nhánh này]
+
+## 🎯 Module phụ trách
+- [ ] `rag`: Trích xuất PDF, RAG Engine và Chatbot hỏi đáp (Bình)
+- [ ] `settings`: Giao diện cấu hình API Key và kiểm tra kết nối AI (Ân)
+- [ ] `planner`: Lên kế hoạch ôn tập thông minh Study Planner (Thắng)
+- [ ] `quiz`: Bộ sinh trắc nghiệm tự động và chấm điểm tức thì (Nhật)
+- [ ] `docs`: Tài liệu hướng dẫn User Guide và Slide thuyết trình (Trường)
+
+## 📋 Checklist kiểm tra trước khi tạo PR
+- [x] Tiêu đề PR tuân thủ đúng chuẩn Conventional Commits bằng **100% Tiếng Việt**
+- [x] Tên nhánh đúng chuẩn: feature/<tên-chức-năng> hoặc fix/<tên-lỗi>
+- [x] Đã chạy mvn clean test ở máy local và BUILD SUCCESS
+- [x] Không sửa đổi các file ngoài phạm vi module được phân công
+```
+
 ---
 
 ## 🔄 4. QUY TRÌNH 5 BƯỚC LÀM VIỆC TỪ A - Z CHO MỖI THÀNH VIÊN
 
 ```mermaid
 graph LR
-    A["1. git pull origin dev"] --> B["2. git checkout -b feature/..."]
+    A["1. git pull origin main"] --> B["2. git checkout -b feature/..."]
     B --> C["3. Code & Commit cục bộ"]
     C --> D["4. git push origin feature/..."]
-    D --> E["5. Tạo PR trên GitHub"]
-    E --> F["6. Leader Tùng SQUASH & MERGE"]
+    D --> E["5. Mở PR vào main"]
+    E --> F["6. Bot tự động duyệt & SQUASH MERGE"]
 ```
 
-### Bước 1: Luôn cập nhật code mới nhất từ `dev`
+### Bước 1: Luôn cập nhật code mới nhất từ `main`
 Trước khi bắt đầu code ca làm việc mới, luôn kéo code mới nhất về:
 ```bash
-git checkout dev
-git pull origin dev
+git checkout main
+git pull origin main
 ```
 
 ### Bước 2: Tạo nhánh tính năng đúng tên quy định
@@ -111,10 +134,10 @@ git push -u origin feature/quiz-generator
 1. Vào GitHub repo: [https://github.com/Tung-pro123/Smart-StudyHub-RAG](https://github.com/Tung-pro123/Smart-StudyHub-RAG)
 2. Bấm nút màu xanh **Compare & pull request**.
 3. **CỰC KỲ QUAN TRỌNG**: 
-   * **Base branch**: chọn `dev` (KHÔNG ĐƯỢC CHỌN `main`).
+   * **Base branch**: chọn `main`.
    * **Compare branch**: chọn nhánh của bạn (ví dụ: `feature/quiz-generator`).
 4. Điền Title PR theo chuẩn: `feat(quiz): hoàn thiện bộ sinh trắc nghiệm và chấm điểm tự động`.
-5. Báo lên nhóm Zalo: *"Leader ơi, mình vừa tạo PR module Quiz, nhờ Tùng review nhé!"*
+5. Bấm **Create pull request**. Bot sẽ tự động kiểm tra và Squash & Merge vào `main`!
 
 ---
 
@@ -130,12 +153,12 @@ git push -u origin feature/quiz-generator
    * ✅ **TÍCH CHỌN DUY NHẤT**: **Allow squash merging**.
    * ✅ **TÍCH CHỌN**: **Automatically delete head branches** (để khi merge xong, GitHub tự động xóa nhánh feature cũ, giữ repo luôn gọn gàng).
 
-### ⚙️ Thiết lập 2: Khóa nhánh `main` và `dev` (Branch Protection Rules)
+### ⚙️ Thiết lập 2: Khóa nhánh `main` (Branch Protection Rules)
 1. Trong **Settings** $\rightarrow$ bấm mục **Branches** (cột trái) $\rightarrow$ bấm **Add branch protection rule**.
-2. **Branch name pattern**: nhập `main` (làm tiếp tương tự cho `dev`).
+2. **Branch name pattern**: nhập `main`.
 3. Tích chọn:
    * ✅ **Require a pull request before merging** (Bắt buộc phải qua PR, không ai được push thẳng).
-   * ✅ **Require approvals**: chọn 1 (Bắt buộc có review).
+   * ✅ **Require approvals**: chọn 1 (Bắt buộc có review - Bot hoặc Leader).
 4. Bấm **Create** để lưu.
 
 ---
@@ -146,9 +169,9 @@ Tuy nhiên nếu có ai vô tình sửa chung file cấu hình, chỉ cần th�
 ```bash
 git checkout feature/ten-nhanh-cua-ban
 git fetch origin
-git merge origin/dev
+git merge origin/main
 # Mở IntelliJ giải quyết conflict (Accept Incoming / Current)
 git add .
-git commit -m "fix: resolve merge conflicts with dev"
+git commit -m "fix: resolve merge conflicts with main"
 git push origin feature/ten-nhanh-cua-ban
 ```
