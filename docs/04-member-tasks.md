@@ -23,7 +23,7 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 | **ÂN** | `feature/settings-security`| `com.tung.assignment.settings` | `templates/settings/` | Cài đặt API Key, Nút Test Ping kết nối, Lưu Session |
 | **THẮNG** | `feature/study-planner` | `com.tung.assignment.planner` | `templates/planner/` | Form chọn lịch rảnh, AI Study Planner Timeline theo Chunks |
 | **NHẬT** 🚀 | `feature/quiz-generator` | `com.tung.assignment.quiz` | `templates/quiz/` | Bộ lọc độ khó, Sinh đề trắc nghiệm AI JSON, Chấm điểm tự động |
-| **TRƯỜNG** | `docs/user-guide-and-slides` | `docs/` | Toàn bộ hệ thống | Tổng quản QA, Biên soạn User Guide, Thiết kế Slide & Demo |
+| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | `com.tung.assignment.auth` | `templates/auth/` | Đăng ký, Đăng nhập, Bảo mật JWT, Hồ sơ cá nhân & User Guide/Slide |
 
 ---
 
@@ -158,22 +158,36 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ---
 
-### 👑 6. TRƯỜNG: MASTER QA LEAD & USER GUIDE / POWERPOINT PRESENTATION
-* **Nhánh làm việc**: `docs/user-guide-and-slides`
-* **Thư mục phụ trách**: `docs/`, `src/main/resources/data/samples/`
-* **Sản phẩm bàn giao cụ thể**:
-  1. **Cuốn Tài liệu Báo cáo User Guide (Word / PDF)**:
-     - Soạn thảo tài liệu hoàn chỉnh gồm: Giới thiệu hệ thống, Hướng dẫn cài đặt chạy từ A - Z, Chi tiết 5 Module nghiệp vụ (có hình ảnh minh họa giao diện sắc nét), Báo cáo thực nghiệm AI của 6 bạn.
-  2. **Bộ Slide Thuyết trình PowerPoint (12 - 15 slides)**:
-     - Thiết kế chuyên nghiệp, có logo, màu sắc đồng bộ, thể hiện luồng Đa Môn Học (Multi-Course) và các tính năng RAG, Study Planner, Quiz.
-  3. **Bộ dữ liệu mẫu (Sample Dataset) để Demo trên lớp**:
-     - Chuẩn bị sẵn 2 file PDF môn học thực tế (ví dụ: *Slide bài giảng JPA Spring Boot* và *Tài liệu Lập trình Java Cơ bản*).
-     - Test trước toàn bộ kịch bản demo: Tạo môn ➔ Cài key ➔ Upload PDF ➔ Chat RAG ➔ Lập Study Plan ➔ Làm Quiz chấm điểm.
-  4. **Kịch bản Thuyết trình (Presentation Script) & Điều phối bảo vệ**:
-     - Viết lời mở đầu giới thiệu thành viên, phân công nhiệm vụ và kết luận trả lời câu hỏi của Giảng viên.
+### 🛡️ 6. TRƯỜNG: MODULE XÁC THỰC, JWT SECURITY & CÁ NHÂN HÓA NGƯỜI DÙNG (AUTH & JWT MODULE)
+* **Nhánh làm việc**: `feature/auth-jwt-security`
+* **Package phụ trách**: `com.tung.assignment.auth`
+* **Thư mục View**: `src/main/resources/templates/auth/` (`login.html`, `register.html`, `profile.html`)
+* **Các file Java trọng tâm**:
+  - `entity/User.java`: Entity người dùng (`id`, `username`, `email`, `password`, `fullName`, `role`, `avatar`, `createdAt`, `updatedAt`).
+  - `repository/UserRepository.java`: Tìm kiếm người dùng theo username/email và kiểm tra trùng lặp.
+  - `dto/LoginRequestDto.java`, `dto/RegisterRequestDto.java`: Nhận dữ liệu form đăng nhập / đăng ký.
+  - `service/JwtService.java`: Bộ máy sinh và xác thực JSON Web Token chuẩn thư viện JJWT 0.12.x (`generateToken`, `validateToken`, `extractUsername`).
+  - `service/AuthService.java`: Băm mật khẩu bằng thuật toán an toàn BCrypt (`BCryptPasswordEncoder`), kiểm tra trùng username/email, sinh JWT token đăng nhập và nạp sẵn tài khoản demo (`student` / `123456`, `truong` / `123456`).
+  - `controller/AuthController.java`: Điều hướng đăng ký, đăng nhập (lưu token vào Cookie `STUDYHUB_JWT` và Session), đăng xuất và xem hồ sơ cá nhân.
+* **Các URL Endpoints phụ trách**:
+  - `GET /login`: Giao diện đăng nhập Glassmorphism (có nút con mắt toggle mật khẩu và hộp gợi ý tài khoản demo).
+  - `POST /login`: Xác thực thông tin, tạo JWT Token, lưu vào HttpOnly Cookie và chuyển hướng về trang chủ.
+  - `GET /register`: Form đăng ký tài khoản sinh viên mới (validate độ dài mật khẩu, khớp mật khẩu xác nhận).
+  - `POST /register`: Mã hóa mật khẩu BCrypt, lưu tài khoản vào cơ sở dữ liệu và chuyển hướng sang `/login` với thông báo xanh.
+  - `GET /profile`: Trang hồ sơ cá nhân hiển thị ảnh đại diện, email, quyền hạn (ROLE_STUDENT / ROLE_ADMIN) và trạng thái JWT Token.
+  - `GET /logout`: Xóa Cookie JWT, hủy Session an toàn và đưa người dùng về trang đăng nhập.
+* **Các bước triển khai**:
+  1. Mở file `UserRepository.java`, bổ sung các method tìm kiếm theo username và email.
+  2. Tìm hiểu cơ chế sinh và giải mã JWT trong `JwtService.java` (khóa ký bí mật HS256, thời hạn hết hạn 24 giờ).
+  3. Hoàn thiện các method xử lý `login()` và `register()` trong `AuthService.java`.
+  4. Tùy biến giao diện `login.html`, `register.html`, `profile.html` bằng Tailwind CSS và DaisyUI cho đồng bộ với thiết kế chung của nhóm.
+  5. Chạy bộ 4 bài kiểm thử trong `AuthServiceTest.java` để đảm bảo hệ thống đạt `BUILD SUCCESS`.
+  6. *(Kiêm nhiệm hỗ trợ)*: Cùng Leader Tùng tổng hợp tài liệu User Guide Word/PDF và hoàn thiện bộ Slide PowerPoint (12 - 15 trang) để báo cáo cuối kỳ.
 * **Gợi ý Prompt AI cho Trường**:
-  > *"Hãy đóng vai trò chuyên gia viết tài liệu kỹ thuật phần mềm: Dựa trên kiến trúc Spring Boot 3 và 5 module chức năng của hệ thống Smart StudyHub RAG, hãy lập dàn ý chi tiết 15 slide thuyết trình bảo vệ đồ án trước hội đồng giảng viên."*
-* **Câu hỏi vấn đáp dự kiến**: *"Em hãy điều phối trình bày tổng quan hệ thống và giải thích các bước QA kiểm thử để đảm bảo sản phẩm không bị crash khi demo?"*
+  > *"Viết AuthService trong Spring Boot 3 sử dụng BCryptPasswordEncoder để băm mật khẩu khi đăng ký tài khoản sinh viên và sử dụng thư viện JJWT 0.12.x để sinh JWT Token khi đăng nhập thành công. Yêu cầu kiểm tra trùng username/email và ném ngoại lệ rõ ràng."*
+* **Câu hỏi vấn đáp dự kiến của Giảng viên**:
+  - *"Em hãy giải thích cơ chế hoạt động của JSON Web Token (JWT) gồm mấy phần và tại sao lại dùng JWT để cá nhân hóa phiên đăng nhập thay vì chỉ dùng Session truyền thống?"*
+  - *"Thuật toán băm BCrypt hoạt động ra sao để chống lại các cuộc tấn công Brute-force hoặc Rainbow Table?"*
 
 ---
 

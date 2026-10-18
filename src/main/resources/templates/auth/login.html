@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: main-layout(
+        'Đăng Nhập - StudyHub AI',
+        ~{::section}
+      )}">
+<body>
+<section class="max-w-md mx-auto my-8 space-y-6">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span class="font-bold text-xs md:text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            <span class="font-bold text-xs md:text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <!-- Login Card Glassmorphism -->
+    <div class="glass-card rounded-3xl p-8 shadow-2xl border border-white/20 space-y-6">
+        <div class="text-center space-y-2">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-2xl mx-auto shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 class="text-2xl font-black text-base-content tracking-tight">Đăng Nhập StudyHub</h2>
+            <p class="text-xs text-base-content/60">Cá nhân hóa lộ trình học tập và kết nối JWT bảo mật</p>
+        </div>
+
+        <form th:action="@{/login}" th:object="${loginDto}" method="post" class="space-y-4">
+            <div class="form-control">
+                <label class="label py-1"><span class="label-text font-bold text-xs">Tên Đăng Nhập</span></label>
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                    <input type="text" th:field="*{username}" required placeholder="student hoặc truong" 
+                           class="input input-bordered pl-9 w-full rounded-xl text-xs" />
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label class="label py-1"><span class="label-text font-bold text-xs">Mật Khẩu</span></label>
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                    <input type="password" id="login-password" th:field="*{password}" required placeholder="••••••••" 
+                           class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
+                    <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 border-none text-white shadow-lg shadow-indigo-500/20 mt-2">
+                <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập Ngay
+            </button>
+        </form>
+
+        <!-- Demo Credentials Box -->
+        <div class="bg-base-200/50 rounded-2xl p-4 border border-base-300/40 text-xs space-y-1">
+            <p class="font-bold text-base-content flex items-center gap-1.5 text-indigo-600">
+                <i class="fa-solid fa-circle-info"></i> Tài Khoản Demo Sẵn Có:
+            </p>
+            <p class="text-base-content/70">Tài khoản: <code class="font-bold text-primary">student</code> | Mật khẩu: <code class="font-bold text-primary">123456</code></p>
+            <p class="text-base-content/70">Tài khoản: <code class="font-bold text-purple-600">truong</code> | Mật khẩu: <code class="font-bold text-purple-600">123456</code> (Admin)</p>
+        </div>
+
+        <div class="text-center text-xs text-base-content/60">
+            Chưa có tài khoản? 
+            <a th:href="@{/register}" class="font-bold text-primary hover:underline ml-1">Đăng ký tài khoản mới</a>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+</body>
+</html>

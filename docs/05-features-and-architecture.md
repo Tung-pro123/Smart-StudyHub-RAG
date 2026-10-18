@@ -48,6 +48,13 @@ graph TD
             QuizCtrl["QuizController"]
             QuizService["QuizService (Sinh Multiple Choice & Chấm Điểm)"]
         end
+
+        subgraph Mod6["MODULE 6: Auth, JWT Security & Personalization (TRƯỜNG 🛡️)"]
+            AuthView["Đăng Ký, Đăng Nhập & Hồ Sơ (/login, /register, /profile)"]
+            AuthCtrl["AuthController"]
+            AuthService["AuthService (Mã hóa BCrypt & Lưu Cookie/Session)"]
+            JwtService["JwtService (Ký và xác thực HS256 JWT Token)"]
+        end
     end
 
     subgraph ExternalServices["Dịch Vụ AI Bên Ngoài"]
@@ -59,6 +66,7 @@ graph TD
     User -->|Cấu hình API Key cá nhân| Mod3
     User -->|Nhập lịch rảnh & nhận Timeline học| Mod4
     User -->|Luyện đề trắc nghiệm & xem điểm| Mod5
+    User -->|Đăng ký, Đăng nhập & Xác thực JWT| Mod6
 
     Mod2 -->|Gửi Context Chunks + Câu hỏi| GeminiAPI
     Mod4 -->|Gửi Danh mục Chunks + Lịch rảnh| GeminiAPI
@@ -154,7 +162,26 @@ graph TD
 
 ---
 
-## 👑 3. VAI TRÒ MASTER LEAD CỦA TRƯỜNG
+### 🛡️ MODULE 6: XÁC THỰC, JWT SECURITY & CÁ NHÂN HÓA NGƯỜI DÙNG (TRƯỜNG)
+* **Các Endpoint**:
+  * `GET /login`, `POST /login`: Đăng nhập sinh viên, mã hóa mật khẩu, sinh JWT Token lưu vào HttpOnly Cookie và Session.
+  * `GET /register`, `POST /register`: Đăng ký tài khoản sinh viên mới, băm mật khẩu an toàn bằng BCrypt.
+  * `GET /profile`: Trang hồ sơ cá nhân hiển thị avatar, email, vai trò (ROLE_STUDENT) và trạng thái JWT Token.
+  * `GET /logout`: Đăng xuất an toàn, xóa Cookie JWT và hủy Session.
+* **Mô tả**: Đảm bảo hệ thống có cơ chế xác thực danh tính cá nhân hóa cho từng sinh viên, giúp mỗi bạn có không gian học tập riêng biệt, không bị lẫn lộn dữ liệu khóa học hay lịch sử hỏi đáp.
+* **Front-end (`login.html`, `register.html`, `profile.html`)**:
+  - Giao diện Glassmorphism hiện đại, responsive đầy đủ trên điện thoại và máy tính.
+  - Hỗ trợ nút con mắt toggle ẩn/hiện mật khẩu và hiển thị sẵn tài khoản demo (`student` / `123456`).
+* **Back-end**:
+  - `User.java`: Entity người dùng trong database H2.
+  - `UserRepository.java`: Thao tác JPA tìm kiếm theo username và email.
+  - `JwtService.java`: Sử dụng thư viện JJWT 0.12.x với thuật toán HMAC-SHA256 để ký số và giải mã token.
+  - `AuthService.java`: Thuật toán băm mật khẩu BCrypt chống tấn công từ điển, quản lý đăng nhập/đăng ký.
+  - `AuthController.java`: Quản lý điều hướng và vòng đời Cookie/Session.
+
+---
+
+## 👑 3. VAI TRÒ TỔNG QUAN QA & TÀI LIỆU CỦA TRƯỜNG
 * **Trường** là người chịu trách nhiệm tổng thể về chất lượng đầu ra:
   1. Chủ biên cuốn **User Guide (Word/PDF)** hoàn chỉnh (gồm đủ 5 module và báo cáo thực nghiệm AI của cả 5 bạn).
   2. Thiết kế bộ **Slide PowerPoint (12 - 15 trang)** chuẩn đẹp, trực quan.
