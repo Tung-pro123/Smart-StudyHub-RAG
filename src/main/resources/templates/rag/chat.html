@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: main-layout(
+        'AI Chatbot Giáo Trình - ' + ${course.code},
+        ~{::section}
+      )}">
+<body>
+<section class="space-y-6">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <!-- Top Navigation & Header Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <!-- Breadcrumbs -->
+        <div class="text-xs breadcrumbs text-base-content/60">
+            <ul>
+                <li><a th:href="@{/}"><i class="fa-solid fa-house mr-1"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/courses/{id}(id=${course.id})}"><span th:text="${course.code}">HSF302</span></a></li>
+                <li class="font-bold text-primary">RAG AI Chatbot Giáo Trình</li>
+            </ul>
+        </div>
+
+        <!-- Status Badges & Quick Links -->
+        <div class="flex items-center gap-3 flex-wrap">
+            <div th:if="${hasApiKey}" class="badge badge-success gap-2 py-3 px-4 text-white font-semibold shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span>Gemini API: Đã Sẵn Sàng</span>
+            </div>
+            <div th:unless="${hasApiKey}" class="badge badge-warning gap-2 py-3 px-4 text-white font-semibold shadow-sm">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Chưa cài API Key</span>
+                <a th:href="@{/settings}" class="underline font-bold ml-1 hover:text-white">Cài đặt ngay</a>
+            </div>
+
+            <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm btn-outline border-base-content/20 rounded-xl gap-2">
+                <i class="fa-solid fa-file-pdf text-rose-500"></i>
+                <span>Quản Lý Giáo Trình & Chunks</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Chat Workspace (2 Columns Grid) -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+
+        <!-- Left Column: Chat Sessions History (1 Column) -->
+        <div class="lg:col-span-1 space-y-4">
+            <div class="glass-card rounded-3xl p-5 shadow-xl border border-white/20 flex flex-col h-[700px]">
+                
+                <!-- New Chat Button -->
+                <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" class="btn btn-primary w-full rounded-2xl shadow-lg shadow-primary/20 gap-2 mb-4">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Cuộc Trò Chuyện Mới</span>
+                </a>
+
+                <div class="flex items-center justify-between text-xs text-base-content/60 px-1 mb-2 font-semibold uppercase tracking-wider">
+                    <span>Lịch sử hội thoại</span>
+                    <span th:text="${#lists.size(sessions)} + ' phiên'">0 phiên</span>
+                </div>
+
+                <!-- Sessions List -->
+                <div class="flex-grow overflow-y-auto space-y-2 pr-1">
+                    <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-10 px-2 text-base-content/50 text-xs">
+                        <i class="fa-regular fa-comments text-3xl mb-2 block opacity-40"></i>
+                        Chưa có cuộc trò chuyện nào. Hãy đặt câu hỏi đầu tiên!
+                    </div>
+
+                    <div th:each="sess : ${sessions}"
+                         class="group p-3 rounded-2xl transition-all duration-200 border flex items-center justify-between gap-2"
+                         th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'bg-primary/10 border-primary/30 shadow-sm' : 'bg-base-100/40 border-base-content/5 hover:bg-base-100/70'">
+                        <a th:href="@{/courses/{cId}/chat(cId=${course.id}, sessionId=${sess.id})}" class="flex-grow truncate flex items-center gap-2.5">
+                            <i class="fa-regular fa-comment-dots text-xs" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-primary' : 'text-base-content/40'"></i>
+                            <div class="truncate">
+                                <p class="text-xs font-bold text-base-content truncate" th:text="${sess.title}">Tiêu đề cuộc trò chuyện</p>
+                                <p class="text-[10px] text-base-content/50" th:text="${#temporals.format(sess.updatedAt, 'dd/MM/yyyy HH:mm')}">19/10 10:30</p>
+                            </div>
+                        </a>
+
+                        <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" class="opacity-0 group-hover:opacity-100 transition-opacity" onsubmit="return confirm('Bạn có chắc muốn xóa phiên chat này?');">
+                            <input type="hidden" name="sessionId" th:value="${sess.id}" />
+                            <button type="submit" class="btn btn-ghost btn-circle btn-xs text-rose-500 hover:bg-rose-500/10" title="Xóa phiên">
+                                <i class="fa-solid fa-trash-can text-[11px]"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Course Summary Footer Note -->
+                <div class="mt-4 pt-3 border-t border-base-content/10 text-center">
+                    <p class="text-[11px] text-base-content/60 font-semibold" th:text="${course.code} + ' - ' + ${course.name}">HSF302</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Interactive Chat Box (3 Columns) -->
+        <div class="lg:col-span-3">
+            <div class="glass-card rounded-3xl p-6 shadow-xl border border-white/20 flex flex-col h-[700px] relative">
+                
+                <!-- Chat Window Header -->
+                <div class="flex items-center justify-between pb-4 border-b border-base-content/10 flex-shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white text-lg shadow-md shadow-primary/20">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h2 class="text-sm font-extrabold text-base-content" th:text="${currentSession != null} ? ${currentSession.title} : 'Trợ Lý AI Giáo Trình ' + ${course.code}">Trợ Lý AI Giáo Trình</h2>
+                                <span class="badge badge-sm badge-outline text-[10px] text-primary">RAG Engine v2.0</span>
+                            </div>
+                            <p class="text-[11px] text-base-content/60">Được huấn luyện trực tiếp trên giáo trình và tài liệu PDF chính thức</p>
+                        </div>
+                    </div>
+
+                    <div th:if="${currentSession != null}">
+                        <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" onsubmit="return confirm('Xóa toàn bộ tin nhắn trong phiên chat này?');">
+                            <input type="hidden" name="sessionId" th:value="${currentSession.id}" />
+                            <button type="submit" class="btn btn-ghost btn-xs text-base-content/50 hover:text-rose-500 gap-1 rounded-xl">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Làm sạch đoạn chat</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Messages Scroll Area -->
+                <div id="chatMessagesContainer" class="flex-grow overflow-y-auto py-4 space-y-4 pr-2">
+                    
+                    <!-- Welcome AI Bot Message if conversation is empty -->
+                    <div th:if="${#lists.isEmpty(messages)}" class="chat chat-start">
+                        <div class="chat-image avatar">
+                            <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                        </div>
+                        <div class="chat-header text-xs text-base-content/60 mb-1">
+                            Trợ Lý AI Môn Học
+                            <time class="text-[10px] opacity-50 ml-1">Vừa xong</time>
+                        </div>
+                        <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 text-xs md:text-sm leading-relaxed max-w-[85%]">
+                            <p class="font-bold text-primary mb-1">👋 Xin chào bạn! Mình là Trợ Lý AI của môn <span th:text="${course.code}">HSF302</span>.</p>
+                            <p>Mình có thể giải đáp kiến thức, tóm tắt các chương học, phân tích khái niệm và trích dẫn trực tiếp từ các đoạn Chunks giáo trình PDF mà bạn đã tải lên.</p>
+                            <p class="mt-2 text-xs text-base-content/70">👉 Hãy bấm chọn các câu hỏi gợi ý nhanh bên dưới hoặc gõ câu hỏi bất kỳ để bắt đầu nhé!</p>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Render Saved Messages -->
+                    <th:block th:each="msg : ${messages}">
+                        
+                        <!-- USER MESSAGE -->
+                        <div th:if="${msg.sender == 'USER'}" class="chat chat-end">
+                            <div class="chat-image avatar">
+                                <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center text-sm shadow">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                            </div>
+                            <div class="chat-header text-xs text-base-content/60 mb-1">
+                                Bạn
+                                <time class="text-[10px] opacity-50 ml-1" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">10:30</time>
+                            </div>
+                            <div class="chat-bubble chat-bubble-primary text-white text-xs md:text-sm leading-relaxed max-w-[85%] whitespace-pre-wrap" th:text="${msg.content}">
+                                Nội dung câu hỏi của sinh viên
+                            </div>
+                        </div>
+
+                        <!-- AI MESSAGE -->
+                        <div th:if="${msg.sender == 'AI'}" class="chat chat-start">
+                            <div class="chat-image avatar">
+                                <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                            </div>
+                            <div class="chat-header text-xs text-base-content/60 mb-1">
+                                Trợ Lý AI Giáo Trình
+                                <time class="text-[10px] opacity-50 ml-1" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">10:30</time>
+                            </div>
+                            <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3">
+                                <div class="markdown-body whitespace-pre-wrap" th:text="${msg.content}">
+                                    Nội dung câu trả lời của AI
+                                </div>
+
+                                <!-- Accordion Trích dẫn tài liệu nếu có RAG Context -->
+                                <div th:if="${msg.ragContext != null and !msg.ragContext.isBlank()}" class="collapse collapse-arrow bg-base-200/50 rounded-xl border border-base-content/10 mt-2 text-xs">
+                                    <input type="checkbox" />
+                                    <div class="collapse-title text-[11px] font-bold text-primary flex items-center gap-1.5 py-2 min-h-0">
+                                        <i class="fa-solid fa-book-bookmark text-primary"></i>
+                                        <span>📚 Nguồn trích dẫn từ giáo trình (Chunks ngữ cảnh)</span>
+                                    </div>
+                                    <div class="collapse-content text-[11px] text-base-content/70">
+                                        <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto">
+                                            <span th:text="${msg.ragContext}">Trích dẫn đoạn văn bản giáo trình...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </th:block>
+
+                    <!-- Typing Indicator (Hidden by default, shown during Fetch API) -->
+                    <div id="typingIndicator" class="chat chat-start hidden">
+                        <div class="chat-image avatar">
+                            <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                        </div>
+                        <div class="chat-header text-xs text-base-content/60 mb-1">
+                            Trợ Lý AI Giáo Trình
+                            <span class="text-[10px] text-primary ml-1 font-semibold">đang suy nghĩ & truy xuất giáo trình...</span>
+                        </div>
+                        <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 py-3 px-4 flex items-center gap-2">
+                            <span class="loading loading-dots loading-sm text-primary"></span>
+                            <span class="text-xs text-base-content/60">Đang quét Chunks và tham vấn Gemini...</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Quick Prompts Pills -->
+                <div class="pt-2 pb-2 border-t border-base-content/10 flex items-center gap-2 overflow-x-auto flex-shrink-0 text-xs py-1">
+                    <span class="text-base-content/50 text-[11px] whitespace-nowrap"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Gợi ý nhanh:</span>
+                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Tóm tắt các kiến thức trọng tâm của môn học này">
+                        📑 Tóm tắt nội dung chính
+                    </button>
+                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Giải thích các khái niệm quan trọng nhất trong giáo trình">
+                        💡 Giải thích khái niệm quan trọng
+                    </button>
+                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Các dạng bài tập và câu hỏi trắc nghiệm hay gặp trong môn này là gì?">
+                        🎯 Các dạng bài tập hay gặp
+                    </button>
+                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Cho tôi lời khuyên và chiến lược ôn thi môn này đạt điểm cao">
+                        🏆 Chiến lược ôn thi
+                    </button>
+                </div>
+
+                <!-- Chat Input Bar Form -->
+                <form id="chatForm" th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post" class="mt-2 flex items-center gap-2 flex-shrink-0">
+                    <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
+                    
+                    <div class="relative flex-grow">
+                        <input type="text"
+                               id="chatQuestionInput"
+                               name="question"
+                               placeholder="Hỏi bất kỳ điều gì về giáo trình môn học... (Nhấn Enter để gửi)"
+                               autocomplete="off"
+                               required
+                               class="input input-bordered w-full rounded-2xl pl-4 pr-12 text-sm bg-base-100/70 backdrop-blur-md border-base-content/20 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-inner" />
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-base-content/40 pointer-events-none hidden sm:inline">
+                            ↵ Enter
+                        </span>
+                    </div>
+
+                    <button type="submit" id="sendBtn" class="btn btn-primary rounded-2xl shadow-lg shadow-primary/25 px-5 gap-2">
+                        <span>Gửi</span>
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Pure Vanilla JS Chat Handler with Async Fetch API -->
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const courseId = /*[[${course.id}]]*/ 1;
+        const chatContainer = document.getElementById('chatMessagesContainer');
+        const chatForm = document.getElementById('chatForm');
+        const questionInput = document.getElementById('chatQuestionInput');
+        const sessionIdInput = document.getElementById('chatSessionIdInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
+
+        // Tự động cuộn xuống đáy
+        function scrollToBottom() {
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        }
+        scrollToBottom();
+
+        // Xử lý nút gợi ý nhanh
+        quickPromptBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const prompt = this.getAttribute('data-prompt');
+                if (questionInput) {
+                    questionInput.value = prompt;
+                    questionInput.focus();
+                }
+            });
+        });
+
+        // Xử lý gửi tin nhắn bất đồng bộ qua Fetch API
+        if (chatForm) {
+            chatForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const question = questionInput.value.trim();
+                if (!question) return;
+
+                const currentSessionId = sessionIdInput.value ? parseInt(sessionIdInput.value) : null;
+
+                // 1. Append User Message to UI
+                appendUserMessage(question);
+                questionInput.value = '';
+                questionInput.disabled = true;
+                sendBtn.disabled = true;
+
+                // 2. Show Typing Indicator & Scroll
+                typingIndicator.classList.remove('hidden');
+                scrollToBottom();
+
+                try {
+                    // 3. Send Fetch API POST to backend
+                    const response = await fetch(`/courses/${courseId}/chat/send`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            question: question,
+                            sessionId: currentSessionId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Mã lỗi máy chủ: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    // 4. Update SessionId if a new session was created
+                    if (data.sessionId && (!currentSessionId || currentSessionId !== data.sessionId)) {
+                        sessionIdInput.value = data.sessionId;
+                    }
+
+                    // 5. Append AI Answer to UI
+                    appendAiMessage(data.answer, data.citations);
+
+                } catch (error) {
+                    console.error('Lỗi khi gửi tin nhắn chat:', error);
+                    appendAiMessage(`❌ **Đã xảy ra lỗi khi gửi câu hỏi:** ${error.message}\n\nVui lòng thử lại hoặc tải lại trang.`);
+                } finally {
+                    typingIndicator.classList.add('hidden');
+                    questionInput.disabled = false;
+                    sendBtn.disabled = false;
+                    questionInput.focus();
+                    scrollToBottom();
+                }
+            });
+        }
+
+        function appendUserMessage(text) {
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat chat-end animate-fade-in';
+            messageDiv.innerHTML = `
+                <div class="chat-image avatar">
+                    <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center text-sm shadow">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                </div>
+                <div class="chat-header text-xs text-base-content/60 mb-1">
+                    Bạn <time class="text-[10px] opacity-50 ml-1">${timeStr}</time>
+                </div>
+                <div class="chat-bubble chat-bubble-primary text-white text-xs md:text-sm leading-relaxed max-w-[85%] whitespace-pre-wrap">${escapeHtml(text)}</div>
+            `;
+            chatContainer.insertBefore(messageDiv, typingIndicator);
+        }
+
+        function appendAiMessage(answer, citations) {
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat chat-start animate-fade-in';
+
+            let citationsHtml = '';
+            if (citations && citations.length > 0) {
+                let snippetsHtml = citations.map(c => 
+                    `[#Chunk ${c.chunkIndex} | ${escapeHtml(c.documentFileName || 'Tài liệu')} - Trang ${c.pageNumber}]\n${escapeHtml(c.snippet)}`
+                ).join('\n\n--------------------\n\n');
+
+                citationsHtml = `
+                    <div class="collapse collapse-arrow bg-base-200/50 rounded-xl border border-base-content/10 mt-2 text-xs">
+                        <input type="checkbox" />
+                        <div class="collapse-title text-[11px] font-bold text-primary flex items-center gap-1.5 py-2 min-h-0">
+                            <i class="fa-solid fa-book-bookmark text-primary"></i>
+                            <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} đoạn Chunks)</span>
+                        </div>
+                        <div class="collapse-content text-[11px] text-base-content/70">
+                            <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto">${snippetsHtml}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            messageDiv.innerHTML = `
+                <div class="chat-image avatar">
+                    <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                </div>
+                <div class="chat-header text-xs text-base-content/60 mb-1">
+                    Trợ Lý AI Giáo Trình <time class="text-[10px] opacity-50 ml-1">${timeStr}</time>
+                </div>
+                <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3">
+                    <div class="markdown-body whitespace-pre-wrap">${formatSimpleMarkdown(answer)}</div>
+                    ${citationsHtml}
+                </div>
+            `;
+            chatContainer.insertBefore(messageDiv, typingIndicator);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        function formatSimpleMarkdown(text) {
+            if (!text) return '';
+            let html = escapeHtml(text);
+            // Bold **text**
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Inline code `code`
+            html = html.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-base-200 text-primary font-mono text-xs">$1</code>');
+            return html;
+        }
+    });
+</script>
+
+</body>
+</html>
