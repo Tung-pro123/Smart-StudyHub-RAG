@@ -2,6 +2,8 @@ package com.group2.assignment.settings;
 
 import com.group2.assignment.auth.controller.AuthController;
 import com.group2.assignment.auth.entity.User;
+import com.group2.assignment.auth.service.JwtService;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SettingsControllerTest {
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private JwtService jwtService;
     private MockHttpSession session;
 
     @BeforeEach
@@ -39,6 +43,20 @@ class SettingsControllerTest {
     @Test
     void settingsRequiresLogin() throws Exception {
         mvc.perform(get("/settings")).andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error=unauthorized"));
+    }
+
+    @Test
+    void restoresSettingsSessionFromJwtCookieThroughSecurityFilterChain() throws Exception {
+        String jwt = jwtService.generateToken("student", "ROLE_STUDENT", "Student");
+        mvc.perform(get("/settings").cookie(new Cookie(AuthController.AUTH_COOKIE_NAME, jwt)))
+                .andExpect(status().isOk()).andExpect(view().name("settings/index"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/settings/save", "/settings/clear", "/settings/test-ping"})
+    void unauthenticatedPostsStillRequireLogin(String path) throws Exception {
+        mvc.perform(post(path).param("apiKey", "test-secret"))
                 .andExpect(redirectedUrl("/login?error=unauthorized"));
     }
 
@@ -101,7 +119,7 @@ class SettingsControllerTest {
     @Test
     void logoutInvalidatesApiKeySession() throws Exception {
         session.setAttribute(SettingsConstants.SESSION_API_KEY, "test-secret");
-        mvc.perform(get("/logout").session(session)).andExpect(redirectedUrl("/login"));
+        mvc.perform(get("/logout").session(session)).andExpect(redirectedUrl("/login?logout"));
         assertThat(session.isInvalid()).isTrue();
     }
 }

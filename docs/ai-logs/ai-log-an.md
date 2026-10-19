@@ -23,3 +23,9 @@ Tạo kiểm thử giả lập API cho các provider và lỗi HTTP/mạng; ki�
 Không thực hiện ping bằng API key thật. Không có prompt bổ sung hay ảnh chụp hội thoại được tạo trong nhật ký này; Ân có thể bổ sung ảnh minh chứng từ cuộc hội thoại hiện tại và nhận xét cá nhân sau khi demo.
 
 Kết quả: `mvn test` bằng Java 21 thành công, 43 tests, 0 failures/errors/skipped; trong đó 28 tests mới của Settings. Kiểm tra `git diff --check` không phát hiện lỗi whitespace.
+
+## Rà soát trước khi hợp nhất
+
+Cập nhật nhánh từ main sau khi nhóm bổ sung OAuth2 và Quiz. Kiểm thử tích hợp phát hiện bộ lọc Spring Security chặn phiên JWT/session trước khi đến Settings. Bổ sung chuỗi bộ lọc chỉ áp dụng tuyến Settings để giữ xác thực qua `JwtAuthInterceptor` và kiểm tra CSRF trong controller. Bổ sung kiểm thử khôi phục phiên từ JWT cookie và chặn POST chưa đăng nhập; điều chỉnh kiểm tra chuyển hướng logout theo Spring Security mới (`/login?logout`).
+
+Kết quả cuối: `mvn clean test` trên Java 21 thành công với 50 tests, 0 failures/errors/skipped, gồm 32 tests Settings và 18 tests từ main.

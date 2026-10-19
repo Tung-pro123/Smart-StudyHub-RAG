@@ -16,6 +16,7 @@
 - `POST /settings/test-ping` (alias `/settings/test-connection`): form tương tự; JSON `{success, latencyMs, message}`. Key trống chỉ sử dụng lại key trong session nếu provider trùng khớp.
 - `POST /settings/clear`: form `csrfToken`; xóa cấu hình và redirect.
 - Các tuyến Settings dùng `JwtAuthInterceptor` hiện có. Token chống CSRF được tạo khi mở trang; các POST thiếu/sai token trả HTTP 403. Phản hồi Settings có `Cache-Control: no-store`.
+- `SettingsSecurityConfig` ưu tiên riêng `/settings` và `/settings/**` để chuyển xác thực cho JWT/session interceptor, tương thích với cấu hình Spring Security OAuth2 mới trên main. Cấu hình này không thay đổi các tuyến của module khác.
 - Module khác có thể inject `ApiKeyService` rồi gọi `getApiKey(session)` và `getProvider(session)`. Cần kiểm tra provider trước khi gọi API tương ứng; việc gọi AI ở RAG/Planner/Quiz thuộc các module đó.
 - `SettingsConstants.SESSION_API_KEY` vẫn là `GEMINI_API_KEY` để tương thích các module Gemini. Chỉ có giá trị khi chọn Gemini; đổi sang provider khác sẽ xóa giá trị này để tránh gửi nhầm key tới Google.
 - Provider và key chung nằm ở `SESSION_PROVIDER`, `SESSION_PROVIDER_API_KEY`. Không dùng database, file cấu hình, localStorage hay cookie để lưu key. DTO không sinh `toString()` chứa key.
