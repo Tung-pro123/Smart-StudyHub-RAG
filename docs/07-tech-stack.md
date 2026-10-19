@@ -53,9 +53,10 @@ Tài liệu này tổng hợp toàn bộ các tầng công nghệ, thư viện, 
 2. **Apache PDFBox**:
    * Thư viện Java mã nguồn mở hàng đầu để xử lý file PDF.
    * Cho phép đọc nhanh toàn bộ các trang sách/slide, lọc bỏ ký tự rác và trích xuất văn bản thô để phục vụ bộ máy Chunking.
-3. **Lưu trữ Trạng thái & Dữ liệu (State Management)**:
-   * **Bảo mật API Key**: Lưu trực tiếp vào `HttpSession` của người dùng. Không lưu cứng ra file cấu hình `application.properties`, không đẩy lên database công khai, đảm bảo tính an toàn cá nhân tuyệt đối.
-   * **In-Memory Repositories**: Danh sách Môn học (`Course`), Tài liệu (`Document`), Đoạn cắt (`Chunk`), Kế hoạch (`StudyPlan`), Đề thi (`Quiz`) được lưu trong RAM thông qua các Java Concurrent Collections (Thread-safe).
+3. **Lưu trữ Trạng thái & Cơ sở dữ liệu (Persistence & State Management)**:
+   * **Bảo mật API Key**: Lưu trực tiếp vào `HttpSession` của người dùng (`SESSION_PROVIDER_API_KEY`). Không lưu cứng ra file cấu hình `application.properties`, không đẩy lên database công khai, đảm bảo tính an toàn cá nhân tuyệt đối.
+   * **H2 Database (Lưu trữ file bền vững)**: Toàn bộ dữ liệu 11 bảng quan hệ (Môn học, Tài liệu PDF, Chunks, Đề thi Quiz, Câu hỏi, Lần làm bài, Kế hoạch học, Tài khoản người dùng...) được lưu trữ bền vững tại `./data/studyhubdb.mv.db` với chế độ `AUTO_SERVER=TRUE` cho môi trường phát triển cục bộ và `jdbc:h2:mem:testdb` cách ly cho kiểm thử tự động.
+   * **Spring Data JPA & Hibernate**: Ánh xạ đầy đủ các Entity quan hệ `@OneToMany`, `@ManyToOne`, `@Entity` chuẩn doanh nghiệp, tự động đồng bộ lược đồ với Flyway Migration `V1__initial_schema.sql`.
 
 ---
 

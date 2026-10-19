@@ -11,21 +11,15 @@
 Theo đề bài bài tập nhóm môn học, dự án được chia làm 2 chặng đường lớn:
 
 ```
-[GIAI ĐOẠN 1: BÀI ASSIGNMENT (Hiện tại)]
-      │
-      ▼
-  Nghiên cứu & Thực hành:
-  • Tích hợp UI Toolkit (Tailwind CSS + DaisyUI) trong Spring Boot Thymeleaf
-  • Ứng dụng AI Agent trong IDE để sinh code UI và Back-end
-  • Xây dựng Mini App nền tảng: AI Tutor hỗ trợ học Java Spring (Chat API ngoài + Cài đặt API Key)
-  • Bàn giao: Source Code Demo + Slide Thuyết trình + Tài liệu User Guide
-      │
-      ▼
-[GIAI ĐOẠN 2: PROJECT CUỐI KỲ (Tương lai)]
-  Nâng cấp từ nền tảng Giai đoạn 1:
-  • Tích hợp RAG (Retrieval-Augmented Generation) từ tài liệu môn học (PDF, Docx)
-  • Text Chunking, Vector Embeddings & Vector Database
-  • Streaming Response, OAuth2 Login Google/GitHub, Hoán chuyển đa nền tảng LLM
+[BÀI TẬP NHÓM ASSIGNMENT HSF302: SMART STUDYHUB & RAG AI]
+  │
+  ├── 1. UI Toolkit & Master Layout: Tailwind CSS + DaisyUI (Glassmorphism, Dark/Light Theme)
+  ├── 2. Core Courses Management: Quản lý môn học, tìm kiếm, lọc học kỳ, Course Detail Hub
+  ├── 3. RAG AI Chatbot: Trích xuất PDFBox 3.0, cắt chunks ngữ cảnh, hỏi đáp giáo trình có trích dẫn nguồn
+  ├── 4. Settings & Security: Quản lý API Key đa nền tảng (Gemini/Groq/OpenAI), nút test ping đo độ trễ
+  ├── 5. AI Study Planner: Phân bổ lịch ôn tập thông minh theo khối lượng chunks và thời gian rảnh
+  ├── 6. AI Quiz Generator: Sinh đề trắc nghiệm AI từ slide/giáo trình, phòng thi Split-view, chấm điểm tức thì
+  └── 7. Authentication & Security: Bảo mật token JWT (HS256 24h), Interceptor và Đăng nhập Google OAuth2
 ```
 
 ---

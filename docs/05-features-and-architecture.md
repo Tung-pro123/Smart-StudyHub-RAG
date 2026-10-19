@@ -113,16 +113,19 @@ graph TD
 ---
 
 ### 🔹 MODULE 3: CÀI ĐẶT & BẢO MẬT API KEY (ÂN)
-* **Các Endpoint**: `GET /settings`, `POST /settings/save`, `POST /settings/test-connection`
-* **Mô tả**: Quản lý API Key cá nhân và kiểm tra trạng thái kết nối.
-* **Front-end**:
-  * Form nhập API Key có nút mắt ẩn/hiện mật khẩu.
-  * Dropdown chọn Provider: Google Gemini, Groq, hoặc OpenAI.
-  * Nút **"Test Connection"**: Bấm để kiểm tra key sống/chết và đo độ trễ (Latency ms).
-  * Hộp Alert DaisyUI: Báo xanh khi Key hợp lệ, báo đỏ khi Key sai hoặc hết hạn.
-  * Tích hợp hướng dẫn nhỏ: *"Cách lấy API Key Gemini miễn phí trong 1 phút"*.
+* **Các Endpoint**: `GET /settings`, `POST /settings/save`, `POST /settings/test-ping` (alias `/settings/test-connection`), `POST /settings/clear`
+* **Mô tả**: Quản lý API Key cá nhân đa nhà cung cấp (Google Gemini, Groq, OpenAI), kiểm tra kết nối AI với đo độ trễ mạng thực tế (`latencyMs`), cách ly theo `HttpSession` an toàn tuyệt đối.
+* **Front-end (`templates/settings/index.html`)**:
+  * Form nhập API Key có nút con mắt toggle ẩn/hiện key và token chống CSRF.
+  * Dropdown chọn Provider: Google Gemini (`gemini-1.5-flash`), Groq Cloud (`llama-3.3-70b-versatile`), hoặc OpenAI (`gpt-4o-mini`).
+  * Nút **"Kiểm tra kết nối"** (`/settings/test-ping`): Gửi câu thử nghiệm nhỏ đo độ trễ phản hồi (`latencyMs`), hiển thị badge xanh/đỏ trực quan.
+  * Hộp Alert DaisyUI thông báo trạng thái chi tiết, mã lỗi HTTP được dịch sang tiếng Việt thân thiện.
+  * Nút **"Lưu cấu hình"** và nút **"Xóa key đã lưu"** (chỉ xóa key AI trong session, tự động dọn dẹp khi đăng xuất).
 * **Back-end**:
-  * `SettingsController.java`, `ApiKeyService.java`: Lưu Key vào `HttpSession` an toàn. Hàm Ping test kết nối.
+  * `SettingsController.java`: Điều hướng giao diện và tiếp nhận AJAX/Form actions.
+  * `ApiKeyService.java`: Tra cứu key, gọi HTTP ping test với timeout kết nối 5s / đọc 15s, xử lý lỗi mạng mượt mà.
+  * `SettingsSecurityConfig.java`: Cấu hình ưu tiên riêng cho route `/settings/**` tương thích hoàn hảo giữa Spring Security OAuth2 và `JwtAuthInterceptor`.
+  * **Bảo mật tuyệt đối**: Key chỉ nằm trong RAM `HttpSession` (`SESSION_PROVIDER_API_KEY`), không lưu cứng vào database, file hay cookie, không in log key.
 
 ---
 

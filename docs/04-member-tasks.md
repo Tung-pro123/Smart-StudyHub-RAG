@@ -16,14 +16,14 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ## 📌 BẢNG TỔNG QUAN PHÂN CÔNG VÀ RANH GIỚI MÃ NGUỒN
 
-| Thành viên | Tên nhánh Git | Package Backend | Thư mục Giao diện | Nhiệm vụ chính |
-|:---|:---|:---|:---|:---|
-| **TÙNG** (Lead) 👑 | `feature/core-courses` | `com.group2.assignment.core` | `templates/`, `fragments/` | Nền móng dự án, CRUD Môn học, Layout Glassmorphism |
-| **BÌNH** 🌟 | `feature/rag-engine` | `com.group2.assignment.rag` | `templates/rag/` | Upload PDF, Cắt Chunks (PDFBox), RAG Chatbot giáo trình |
-| **ÂN** | `feature/settings-security`| `com.group2.assignment.settings` | `templates/settings/` | Cài đặt API Key, Nút Test Ping kết nối, Lưu Session |
-| **THẮNG** | `feature/study-planner` | `com.group2.assignment.planner` | `templates/planner/` | Form chọn lịch rảnh, AI Study Planner Timeline theo Chunks |
-| **NHẬT** 🚀 | `feature/quiz-generator` | `com.group2.assignment.quiz` | `templates/quiz/` | Bộ lọc độ khó, Sinh đề trắc nghiệm AI JSON, Chấm điểm tự động |
-| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | `com.group2.assignment.auth` | `templates/auth/` | Đăng ký, Đăng nhập, Bảo mật JWT, Hồ sơ cá nhân & User Guide/Slide |
+| Thành viên | Tên nhánh Git | Package Backend | Thư mục Giao diện | Nhiệm vụ chính | Trạng thái |
+|:---|:---|:---|:---|:---|:---:|
+| **TÙNG** (Lead) 👑 | `feature/core-courses` | `com.group2.assignment.core` | `templates/`, `fragments/` | Nền móng dự án, CRUD Môn học, Layout Glassmorphism | **Hoàn thành** ✅ |
+| **BÌNH** 🌟 | `feature/rag-engine` | `com.group2.assignment.rag` | `templates/rag/` | Upload PDF, Cắt Chunks (PDFBox), RAG Chatbot giáo trình | **Hoàn thành** ✅ |
+| **ÂN** ⚙️ | `feature/settings-security`| `com.group2.assignment.settings` | `templates/settings/` | Cài đặt API Key, Nút Test Ping kết nối, Lưu Session | **Hoàn thành** ✅ |
+| **THẮNG** 📅 | `feature/study-planner` | `com.group2.assignment.planner` | `templates/planner/` | Form chọn lịch rảnh, AI Study Planner Timeline theo Chunks | *Đang làm* ⏳ |
+| **NHẬT** 🚀 | `feature/quiz-generator` | `com.group2.assignment.quiz` | `templates/quiz/` | Bộ lọc độ khó, Sinh đề trắc nghiệm AI JSON, Chấm điểm tự động | **Hoàn thành** ✅ |
+| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | `com.group2.assignment.auth` | `templates/auth/` | Đăng ký, Đăng nhập, Bảo mật JWT, Google OAuth2, Slide & User Guide | **Hoàn thành** ✅ |
 
 ---
 
