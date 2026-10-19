@@ -2,11 +2,12 @@
 
 **Thành viên thực hiện**: Ngô Nhật Trường  
 **Phạm vi phụ trách**: Module Auth & JWT Security (`com.group2.assignment.auth`)  
-- Entity `User.java` và cơ sở dữ liệu tài khoản người dùng trong H2.  
+- Entity `User.java` và cơ sở dữ liệu tài khoản người dùng trong H2 (hỗ trợ tài khoản Local và Google OAuth2).  
 - Thuật toán băm mật khẩu an toàn `BCryptPasswordEncoder`.  
 - Sinh và xác thực JSON Web Token bằng thư viện `JJWT 0.12.x` (`JwtService.java`).  
 - Bộ máy chặn route riêng tư và tự động khôi phục phiên từ Cookie JWT (`JwtAuthInterceptor.java` & `WebMvcConfig.java`).  
 - Giao diện đăng ký, đăng nhập, đổi mật khẩu và cập nhật hồ sơ cá nhân (`login.html`, `register.html`, `profile.html`).  
+- Tích hợp đăng nhập 1 chạm với Google OAuth2 (`spring-boot-starter-oauth2-client`, `SecurityConfig.java`, `OAuth2UserInfo.java`).  
 - Kiêm nhiệm: Hỗ trợ Leader Tùng tổng hợp User Guide và Slide PowerPoint.  
 **Công cụ AI sử dụng**: Antigravity / Claude Code
 
@@ -49,10 +50,29 @@
 ### 🔹 GIAI ĐOẠN 3: DÙNG AI VIẾT UNIT TEST VÀ GỠ LỖI MÔI TRƯỜNG (TEST & DEBUG)
 * **Mục tiêu**: Viết bộ test toàn diện 8 bài kiểm thử trong `AuthServiceTest.java` (bao gồm đăng ký, trùng username, đăng nhập JWT, sai mật khẩu, cập nhật profile, đổi mật khẩu thành công và bắt ngoại lệ sai mật khẩu cũ).
 * **Lỗi gặp phải & Cách AI sửa giúp**:
-  - *Lỗi 1*: Môi trường máy tính cài đặt Java 27 khiến Lombok 1.18.36 bị lỗi `TypeTag :: UNKNOWN`. AI đã hướng dẫn cấu hình `.vscode/settings.json` trỏ runtime về `JDK 21 LTS` (`C:\Program Files\Java\jdk-21.0.12`) để Language Server và Maven chạy ổn định 100%.
+  - *Lỗi 1*: Môi trường máy tính cài đặt Java 27 khiến Lombok 1.18.36 bị lỗi `TypeTag :: UNKNOWN`. AI đã hướng dẫn cấu hình `.vscode/settings.json` trỏ runtime về `JDK 21 LTS` (`C:\Program Files\Java\jdk-21.0.12`) và JDK 17 cho Maven để Language Server và Maven chạy ổn định 100%.
   - *Lỗi 2*: Chưa import các DTO mới `UpdateProfileDto` và `ChangePasswordDto` trong `AuthService`. AI đã phát hiện và bổ sung đầy đủ.
 * **Kết quả**: Bộ 8 bài test của Module Auth và 7 bài test của các module khác đều đạt `BUILD SUCCESS` (15/15 tests passed).
 * **Ảnh chụp màn hình**: `![Unit Test Auth xanh](images/truong-step3-test.png)`
+
+---
+
+### 🔹 GIAI ĐOẠN 4: DÙNG AI TÍCH HỢP GOOGLE OAUTH2 LOGIN VÀ GIẢI PHÁP CONDITIONAL SECURITY CHO CI/CD
+* **Mục tiêu**: Tích hợp phương thức đăng nhập bằng Google OAuth2 song song với đăng nhập tài khoản thường, tự động liên kết / tạo mới tài khoản sinh viên với provider `GOOGLE`, cấp phát JWT cookie và bảo toàn tính độc lập của test suites khi chạy trên môi trường CI/CD không có credentials.
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi muốn tích hợp Google OAuth2 Login vào ứng dụng Spring Boot 3 song song với hệ thống JWT hiện tại:
+  1. Thêm dependency spring-boot-starter-oauth2-client và cấu hình application.properties.
+  2. Tạo SecurityConfig hỗ trợ OAuth2 Login và callback success handler.
+  3. Quan trọng: Khi chạy CI/CD hoặc unit test trên máy local không có sẵn Google Client ID / Secret thật, cấu hình phải có cơ chế fallback (@ConditionalOnProperty) để không làm gãy các test suites hiện tại.
+  4. Trong AuthService, viết processOAuth2Login để tự động tạo mới tài khoản nếu chưa có hoặc liên kết tài khoản theo email, sau đó cấp phát JWT Cookie STUDYHUB_JWT.
+  5. Cập nhật trang login.html thêm nút 'Đăng nhập với Google' đồng bộ với giao diện hiện tại.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - Thiết kế kiến trúc `@ConditionalOnProperty(prefix = "spring.security.oauth2.client.registration.google", name = "client-id")` cho `SecurityConfig`: Khi chưa cấu hình ID/Secret thật, Security filter chain của OAuth2 sẽ không khởi tạo nhằm tránh exception `IllegalStateException: ClientRegistrationRepository bean not found`, giúp toàn bộ test suites và CI/CD GitHub Actions vẫn chạy xanh mượt mà.
+  - Xử lý nghiệp vụ `processOAuth2Login`: trích xuất `OAuth2UserInfo` (email, fullName, avatar), tự sinh username chuẩn, gán mật khẩu ngẫu nhiên băm BCrypt, lưu `provider = Provider.GOOGLE` và phát hành JWT Token HttpOnly Cookie chuẩn xác.
+  - Thiết kế nút đăng nhập Google Glassmorphism tinh tế trên `login.html` với logo Google SVG sắc nét.
+* **Ảnh chụp màn hình**: `![Trường tích hợp Google OAuth2 Login](images/truong-step4-oauth2.png)`
 
 ---
 
@@ -61,3 +81,4 @@
   1. Sử dụng kết hợp **Cookie HttpOnly lưu JWT Token** cùng với **HttpSession** giúp ứng dụng vừa có tốc độ xử lý nhanh của Session, vừa có tính năng ghi nhớ đăng nhập dài hạn của JWT.
   2. Bắt buộc băm mật khẩu với `BCryptPasswordEncoder` (10 rounds) trước khi lưu vào database để đảm bảo an toàn thông tin người dùng.
   3. Khi gặp lỗi IDE báo đỏ, cần kiểm tra sự tương thích giữa phiên bản JDK của dự án (Java 17/21) và Java Runtime của máy tính thay vì chỉ sửa code Java.
+  4. Khi tích hợp dịch vụ OAuth2 từ bên thứ ba (Google/Facebook/GitHub), luôn áp dụng mô hình **Conditional Configuration (Graceful Degradation)** để môi trường kiểm thử tự động CI/CD và máy local của đồng đội không bị gián đoạn khi chưa có credentials thực tế.
