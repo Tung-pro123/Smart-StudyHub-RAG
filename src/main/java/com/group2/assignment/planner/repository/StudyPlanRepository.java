@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface StudyPlanRepository extends JpaRepository<StudyPlan, Long> {
     List<StudyPlan> findAllByCourseIdOrderByCreatedAtDesc(Long courseId);
+    List<StudyPlan> findAllByOrderByCreatedAtDesc();
     Optional<StudyPlan> findFirstByCourseIdOrderByCreatedAtDesc(Long courseId);
     void deleteAllByCourseId(Long courseId);
 }
