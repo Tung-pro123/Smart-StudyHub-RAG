@@ -34,8 +34,10 @@ build/
 
 ### H2 Database Local & Environment Helpers ###
 data/
+uploads/
 powershell.bat
 CLAUDE.md
 .env
 .superpowers/
+
 

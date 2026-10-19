@@ -108,29 +108,22 @@
                 <p class="text-xs md:text-sm text-base-content/60">Chọn môn học để xem chi tiết, nạp tài liệu PDF hoặc chat hỏi đáp giáo trình</p>
             </div>
 
-            <!-- Search & Filter Bar Form -->
+            <!-- Search Bar Form -->
             <form th:action="@{/}" method="get" class="flex flex-wrap items-center gap-2">
                 <!-- Search Input -->
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
-                    <input type="text" name="keyword" th:value="${currentKeyword}" placeholder="Tìm mã hoặc tên môn..." 
-                           class="input input-sm input-bordered pl-8 w-44 md:w-56 rounded-xl text-xs" />
+                    <input type="text" name="keyword" th:value="${currentKeyword}" placeholder="Tìm mã môn, tên môn hoặc học kỳ..." 
+                           class="input input-sm input-bordered pl-8 w-56 md:w-80 rounded-xl text-xs" />
                 </div>
-
-                <!-- Semester Select -->
-                <select name="semester" class="select select-sm select-bordered rounded-xl text-xs">
-                    <option value="ALL" th:selected="${currentSemester == 'ALL'}">Tất cả học kỳ</option>
-                    <option th:each="sem : ${semesters}" th:value="${sem}" th:text="${sem}" 
-                            th:selected="${currentSemester == sem}">Fall 2026</option>
-                </select>
 
                 <!-- Action Buttons -->
                 <button type="submit" class="btn btn-sm btn-primary rounded-xl" title="Tìm kiếm">
-                    <i class="fa-solid fa-filter"></i> Lọc
+                    <i class="fa-solid fa-magnifying-glass mr-1"></i> Tìm Kiếm
                 </button>
-                <a th:if="${currentKeyword != '' or currentSemester != 'ALL'}" th:href="@{/}" 
+                <a th:if="${currentKeyword != null and !currentKeyword.isEmpty()}" th:href="@{/}" 
                    class="btn btn-sm btn-ghost rounded-xl text-xs text-base-content/60" title="Đặt lại">
-                    <i class="fa-solid fa-rotate-left"></i>
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Đặt Lại
                 </a>
 
                 <!-- Create Course Button -->

@@ -10,7 +10,7 @@ public final class SettingsConstants {
     public static final String SESSION_PROVIDER = "AI_PROVIDER";
     public static final String SESSION_PROVIDER_API_KEY = "AI_API_KEY";
     public static final String SESSION_CSRF_TOKEN = "SETTINGS_CSRF_TOKEN";
-    public static final String DEFAULT_MODEL = "gemini-3.5-flash-lite";
+    public static final String DEFAULT_MODEL = "gemini-2.5-flash";
 
     private SettingsConstants() {
     }

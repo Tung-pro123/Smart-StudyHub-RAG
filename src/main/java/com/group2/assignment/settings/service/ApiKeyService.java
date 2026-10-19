@@ -38,7 +38,7 @@ public class ApiKeyService {
 
     private String normalizeKey(String key) {
         String value = key == null ? "" : key.trim();
-        if (value.isEmpty() || value.length() > 512 || !value.matches("[A-Za-z0-9_\\-]+")) {
+        if (value.isEmpty() || value.length() > 512 || !value.matches("[A-Za-z0-9_\\-\\.]+")) {
             throw new IllegalArgumentException("Vui lòng nhập API key hợp lệ (tối đa 512 ký tự, không chứa khoảng trắng).");
         }
         return value;
