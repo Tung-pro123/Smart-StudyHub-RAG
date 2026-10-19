@@ -37,6 +37,10 @@ public class User {
     @Builder.Default
     private String role = "ROLE_STUDENT"; // ROLE_STUDENT, ROLE_ADMIN
 
+    @Column(length = 20)
+    @Builder.Default
+    private String provider = "local"; // "local", "google"
+
     @Column(length = 255)
     @Builder.Default
     private String avatar = "https://api.dicebear.com/7.x/bottts/svg?seed=student";
@@ -52,6 +56,9 @@ public class User {
         this.updatedAt = LocalDateTime.now();
         if (this.role == null || this.role.isBlank()) {
             this.role = "ROLE_STUDENT";
+        }
+        if (this.provider == null || this.provider.isBlank()) {
+            this.provider = "local";
         }
         if (this.avatar == null || this.avatar.isBlank()) {
             this.avatar = "https://api.dicebear.com/7.x/bottts/svg?seed=" + (this.username != null ? this.username : "student");

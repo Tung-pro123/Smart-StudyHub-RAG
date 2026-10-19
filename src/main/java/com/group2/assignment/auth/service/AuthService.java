@@ -2,6 +2,7 @@ package com.group2.assignment.auth.service;
 
 import com.group2.assignment.auth.dto.ChangePasswordDto;
 import com.group2.assignment.auth.dto.LoginRequestDto;
+import com.group2.assignment.auth.dto.OAuth2UserInfo;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
 import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -82,6 +84,65 @@ public class AuthService {
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
+    }
+
+    /**
+     * Xử lý đăng nhập OAuth2 (Google):
+     * - Tạo user mới nếu email chưa tồn tại
+     * - Cập nhật avatar nếu có thay đổi
+     * - Trả về User đã đăng nhập
+     */
+    public User processOAuth2Login(OAuth2UserInfo oauth2UserInfo) {
+        // Tìm user theo email
+        Optional<User> existingUser = userRepository.findByEmailIgnoreCase(oauth2UserInfo.getEmail());
+
+        User user;
+        if (existingUser.isPresent()) {
+            // User đã tồn tại (đăng ký thường) - cập nhật avatar từ Google
+            user = existingUser.get();
+            if (oauth2UserInfo.getAvatarUrl() != null && !oauth2UserInfo.getAvatarUrl().isBlank()) {
+                user.setAvatar(oauth2UserInfo.getAvatarUrl());
+            }
+            user.setProvider("google");
+        } else {
+            // User mới - tạo tài khoản mới
+            String username = extractUsernameFromEmail(oauth2UserInfo.getEmail());
+            // Đảm bảo username không trùng
+            int suffix = 1;
+            String baseUsername = username;
+            while (userRepository.existsByUsernameIgnoreCase(username)) {
+                username = baseUsername + suffix;
+                suffix++;
+            }
+
+            user = User.builder()
+                    .username(username)
+                    .email(oauth2UserInfo.getEmail())
+                    .fullName(oauth2UserInfo.getFullName() != null ? oauth2UserInfo.getFullName() : username)
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString())) // Random password
+                    .avatar(oauth2UserInfo.getAvatarUrl() != null ?
+                            oauth2UserInfo.getAvatarUrl() :
+                            "https://api.dicebear.com/7.x/bottts/svg?seed=" + username)
+                    .role("ROLE_STUDENT")
+                    .provider("google")
+                    .createdAt(LocalDateTime.now())
+                    .build();
+        }
+
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    /**
+     * Trích xuất username từ email (phần trước @)
+     */
+    private String extractUsernameFromEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return "user" + System.currentTimeMillis();
+        }
+        String extracted = email.substring(0, email.indexOf("@"));
+        // Thay thế ký tự đặc biệt
+        return extracted.replaceAll("[^a-zA-Z0-9]", "");
     }
 
     /**
