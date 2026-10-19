@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: main-layout(
+        'StudyHub AI - Luyện Thi Trắc Nghiệm AI',
+        ~{::section}
+      )}">
+<body>
+<section class="space-y-8 max-w-7xl mx-auto pb-16">
+
+    <!-- Flash Messages -->
+    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            <span class="font-bold text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+    </div>
+
+    <!-- Header & Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div>
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-800 tracking-tight">AI Quiz Generator & Thi Thử</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">Tự động sinh đề trắc nghiệm chuẩn A/B/C/D từ file PDF giáo trình bằng Google Gemini & PDFBox</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <!-- Course Selector Dropdown -->
+            <form method="get" th:action="@{/quiz}" class="flex items-center gap-2">
+                <select name="courseId" onchange="this.form.submit()" class="select select-sm select-bordered rounded-xl text-xs font-semibold bg-white border-slate-300">
+                    <option th:each="c : ${courses}"
+                            th:value="${c.id}"
+                            th:text="${c.code + ' - ' + c.name}"
+                            th:selected="${selectedCourse != null && selectedCourse.id == c.id}">
+                    </option>
+                </select>
+            </form>
+
+            <!-- Button Mở Modal Tải PDF Sinh Đề -->
+            <button onclick="document.getElementById('modal-generate-quiz').showModal()"
+                    class="btn btn-sm bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl shadow-md shadow-amber-500/20 border-none gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Tạo Đề Thi Mới</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bộ Lọc Độ Khó (Difficulty Filter Pills) -->
+    <div class="flex items-center justify-between flex-wrap gap-3 bg-white/70 p-3 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+            <i class="fa-solid fa-layer-group text-indigo-500 ml-2"></i>
+            <span>Lọc theo độ khó:</span>
+        </div>
+
+        <div class="join bg-slate-100 p-1 rounded-xl">
+            <a th:href="@{'/quiz?courseId=' + ${selectedCourse != null ? selectedCourse.id : 1} + '&difficulty=ALL'}"
+               class="join-item btn btn-xs rounded-lg font-bold"
+               th:classappend="${selectedDifficulty == 'ALL' ? 'btn-active bg-white shadow-sm text-slate-800' : 'btn-ghost text-slate-500'}">
+                Tất cả
+            </a>
+            <a th:href="@{'/quiz?courseId=' + ${selectedCourse != null ? selectedCourse.id : 1} + '&difficulty=EASY'}"
+               class="join-item btn btn-xs rounded-lg font-bold"
+               th:classappend="${selectedDifficulty == 'EASY' ? 'btn-active bg-white shadow-sm text-emerald-600' : 'btn-ghost text-slate-500'}">
+                Dễ
+            </a>
+            <a th:href="@{'/quiz?courseId=' + ${selectedCourse != null ? selectedCourse.id : 1} + '&difficulty=MEDIUM'}"
+               class="join-item btn btn-xs rounded-lg font-bold"
+               th:classappend="${selectedDifficulty == 'MEDIUM' ? 'btn-active bg-white shadow-sm text-amber-600' : 'btn-ghost text-slate-500'}">
+                Trung bình
+            </a>
+            <a th:href="@{'/quiz?courseId=' + ${selectedCourse != null ? selectedCourse.id : 1} + '&difficulty=HARD'}"
+               class="join-item btn btn-xs rounded-lg font-bold"
+               th:classappend="${selectedDifficulty == 'HARD' ? 'btn-active bg-white shadow-sm text-rose-600' : 'btn-ghost text-slate-500'}">
+                Nâng cao
+            </a>
+        </div>
+    </div>
+
+    <!-- Danh Sách Đề Thi Của Môn -->
+    <div class="space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-indigo-500"></i>
+                <span>Bộ Đề Thi Trắc Nghiệm Môn: </span>
+                <span class="badge badge-primary font-bold" th:text="${selectedCourse != null ? selectedCourse.code : 'Chưa chọn'}">HSF302</span>
+            </h2>
+            <span class="text-xs text-slate-400 font-semibold" th:text="'Tổng cộng: ' + ${#lists.size(quizzes)} + ' đề thi'"></span>
+        </div>
+
+        <!-- Empty State nếu chưa có đề -->
+        <div th:if="${#lists.isEmpty(quizzes)}" class="bg-white/60 backdrop-blur-sm border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-3xl">
+                <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-700">Chưa có đề thi nào phù hợp với bộ lọc</h3>
+                <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto">Hãy tải lên một file slide PDF bài giảng để AI tự động trích xuất bộ câu hỏi trắc nghiệm!</p>
+            </div>
+            <button onclick="document.getElementById('modal-generate-quiz').showModal()" class="btn btn-sm btn-outline border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white rounded-xl text-xs font-bold">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Tải PDF Ngay
+            </button>
+        </div>
+
+        <!-- Grid Cards Đề Thi -->
+        <div th:if="${not #lists.isEmpty(quizzes)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="q : ${quizzes}" class="card bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col justify-between">
+                <div class="p-6 space-y-4">
+                    <div class="flex items-start justify-between gap-2">
+                        <span class="badge font-bold text-[11px]"
+                              th:classappend="${q.difficulty == 'HARD' ? 'badge-error text-white' : (q.difficulty == 'MEDIUM' ? 'badge-warning text-white' : 'badge-success text-white')}"
+                              th:text="${q.difficulty}">MEDIUM</span>
+
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] text-slate-400 font-medium" th:text="${#temporals.format(q.createdAt, 'dd/MM/yyyy HH:mm')}">19/10/2026</span>
+                            <!-- Button Xóa Đề Thi -->
+                            <button th:onclick="'document.getElementById(\'modal-delete-' + ${q.id} + '\').showModal()'"
+                                    class="btn btn-ghost btn-circle btn-xs text-slate-300 hover:text-rose-500"
+                                    title="Xóa đề thi này">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base leading-snug line-clamp-2" th:text="${q.title}">Đề thi trắc nghiệm chương 1</h3>
+                        <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                            <i class="fa-regular fa-bookmark text-amber-500"></i>
+                            <span th:text="${q.chapterTopic}">Tổng hợp kiến thức</span>
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-question text-indigo-500"></i>
+                            <span><strong th:text="${q.totalQuestions}">5</strong> câu hỏi</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-regular fa-clock text-rose-500"></i>
+                            <span><strong th:text="${q.timeLimitMinutes}">15</strong> phút</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-[11px] font-semibold text-slate-400">Trắc nghiệm 4 lựa chọn</span>
+                    <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm">
+                        <span>Làm bài thi</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Modal Xác Nhận Xóa Đề Thi -->
+                <dialog th:id="'modal-delete-' + ${q.id}" class="modal modal-bottom sm:modal-middle">
+                    <div class="modal-box bg-white rounded-3xl p-6 border border-slate-200 max-w-sm">
+                        <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-2xl mb-3 shadow-inner">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                        <h3 class="font-extrabold text-lg text-slate-800">Xóa đề thi này?</h3>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                            Đề thi "<strong th:text="${q.title}">Tiêu đề</strong>" và toàn bộ lịch sử thi liên quan sẽ bị xóa vĩnh viễn khỏi CSDL.
+                        </p>
+                        <div class="modal-action mt-6 gap-2">
+                            <button type="button" th:onclick="'document.getElementById(\'modal-delete-' + ${q.id} + '\').close()'" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold">Hủy</button>
+                            <form th:action="@{'/quiz/' + ${q.id} + '/delete'}" method="post">
+                                <input type="hidden" name="courseId" th:value="${selectedCourse != null ? selectedCourse.id : 1}" />
+                                <button type="submit" class="btn btn-sm bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs border-none shadow-sm">
+                                    Xác nhận xóa
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </dialog>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng Lịch Sử Làm Bài Gần Đây (Recent Attempts Widget) -->
+    <div th:if="${not #lists.isEmpty(recentAttempts)}" class="space-y-4 pt-6 border-t border-slate-200">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-amber-500"></i>
+                <span>Lịch Sử Thi & Điểm Số Gần Đây</span>
+            </h2>
+            <span class="text-xs text-slate-400 font-semibold" th:text="${#lists.size(recentAttempts)} + ' lượt làm bài'"></span>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="table table-zebra text-xs w-full">
+                    <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold">
+                        <tr>
+                            <th>Thí sinh</th>
+                            <th>Đề thi</th>
+                            <th>Điểm số</th>
+                            <th>Số câu đúng</th>
+                            <th>Thời gian làm</th>
+                            <th>Ngày hoàn thành</th>
+                            <th class="text-right">Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="a : ${recentAttempts}" class="hover:bg-slate-50/80">
+                            <td class="font-bold text-slate-700" th:text="${a.studentName}">Sinh viên</td>
+                            <td class="font-semibold text-slate-800" th:text="${a.quiz != null ? a.quiz.title : 'Đề thi'}">Đề thi</td>
+                            <td>
+                                <span class="badge font-black text-xs"
+                                      th:classappend="${a.totalScore >= 8.0 ? 'badge-success text-white' : (a.totalScore >= 5.0 ? 'badge-warning text-white' : 'badge-error text-white')}"
+                                      th:text="${a.totalScore} + ' / 10'">8.0 / 10</span>
+                            </td>
+                            <td>
+                                <span class="font-semibold text-slate-700" th:text="${a.correctCount} + ' / ' + ${a.totalCount}">4 / 5</span>
+                            </td>
+                            <td class="text-slate-500" th:text="${a.timeSpentSeconds} + ' giây'">120 giây</td>
+                            <td class="text-slate-400" th:text="${#temporals.format(a.completedAt, 'dd/MM/yyyy HH:mm')}">19/10/2026</td>
+                            <td class="text-right">
+                                <a th:href="@{'/quiz/attempt/' + ${a.id}}" class="btn btn-xs btn-outline border-indigo-400 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg font-bold">
+                                    Xem lại bài
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tải File PDF Hoặc Chọn Tài Liệu Sinh Đề -->
+    <dialog id="modal-generate-quiz" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box bg-white rounded-3xl p-6 border border-slate-200 max-w-xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-4 top-4 text-slate-400">✕</button>
+            </form>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-lg text-slate-800">Sinh Đề Thi Trắc Nghiệm Bằng AI</h3>
+                    <p class="text-xs text-slate-400">Trích xuất văn bản từ PDF (Apache PDFBox) & sinh đề trắc nghiệm chuẩn</p>
+                </div>
+            </div>
+
+            <!-- Tabs Chọn Nguồn Tài Liệu -->
+            <div class="tabs tabs-boxed bg-slate-100 p-1 rounded-2xl mb-4">
+                <a id="tab-upload" onclick="switchSourceTab('upload')" class="tab tab-active text-xs font-bold rounded-xl flex-1">
+                    <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Tải File PDF Mới
+                </a>
+                <a id="tab-existing" onclick="switchSourceTab('existing')" class="tab text-xs font-bold rounded-xl flex-1">
+                    <i class="fa-solid fa-book mr-1.5"></i> Chọn Tài Liệu Môn Đã Có
+                </a>
+            </div>
+
+            <form th:action="@{/quiz/generate}" method="post" enctype="multipart/form-data" class="space-y-4">
+                <input type="hidden" name="courseId" th:value="${selectedCourse != null ? selectedCourse.id : 1}" />
+
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Môn học</span></label>
+                    <input type="text" readonly th:value="${selectedCourse != null ? selectedCourse.code + ' - ' + selectedCourse.name : ''}" class="input input-sm input-bordered rounded-xl bg-slate-100 text-slate-600 font-semibold text-xs" />
+                </div>
+
+                <!-- Nguồn 1: Tải File PDF Mới -->
+                <div id="section-upload" class="form-control">
+                    <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">File bài giảng PDF (Max 25MB) *</span></label>
+                    <input type="file" id="input-pdf-file" name="pdfFile" accept="application/pdf" class="file-input file-input-bordered file-input-sm file-input-primary w-full rounded-xl text-xs" />
+                </div>
+
+                <!-- Nguồn 2: Chọn Tài Liệu Đã Upload Sẵn Của Môn -->
+                <div id="section-existing" class="form-control hidden">
+                    <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Tài liệu giáo trình môn học *</span></label>
+                    <div th:if="${#lists.isEmpty(documents)}" class="p-3 bg-amber-50 text-amber-800 rounded-xl text-xs border border-amber-200">
+                        Chưa có tài liệu nào được tải lên cho môn học này. Vui lòng chuyển sang tab <strong>Tải File PDF Mới</strong>.
+                    </div>
+                    <select th:if="${not #lists.isEmpty(documents)}" name="documentId" class="select select-sm select-bordered rounded-xl text-xs font-semibold">
+                        <option value="">-- Chọn một tài liệu --</option>
+                        <option th:each="doc : ${documents}" th:value="${doc.id}" th:text="${doc.fileName + ' (' + doc.totalPages + ' trang)'}"></option>
+                    </select>
+                </div>
+
+                <!-- Khoảng trang ôn tập -->
+                <div class="grid grid-cols-2 gap-3 bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
+                    <div class="form-control">
+                        <label class="label py-0.5"><span class="label-text text-[11px] font-bold text-slate-500">Từ trang (tùy chọn)</span></label>
+                        <input type="number" name="fromPage" min="1" placeholder="VD: 1" class="input input-sm input-bordered rounded-xl text-xs" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label py-0.5"><span class="label-text text-[11px] font-bold text-slate-500">Đến trang (tùy chọn)</span></label>
+                        <input type="number" name="toPage" min="1" placeholder="VD: 25" class="input input-sm input-bordered rounded-xl text-xs" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Tiêu đề đề thi</span></label>
+                        <input type="text" name="title" placeholder="VD: Đề Ôn Tập Chương 1 - Spring IoC" class="input input-sm input-bordered rounded-xl text-xs" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Chủ đề / Chương bài</span></label>
+                        <input type="text" name="chapterTopic" placeholder="VD: Dependency Injection & Bean Lifecycle" class="input input-sm input-bordered rounded-xl text-xs" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Độ khó</span></label>
+                        <select name="difficulty" class="select select-sm select-bordered rounded-xl text-xs">
+                            <option value="EASY">Dễ (EASY)</option>
+                            <option value="MEDIUM" selected>Trung bình (MEDIUM)</option>
+                            <option value="HARD">Nâng cao (HARD)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Số câu hỏi</span></label>
+                        <select name="totalQuestions" class="select select-sm select-bordered rounded-xl text-xs font-semibold">
+                            <option value="5" selected>5 câu</option>
+                            <option value="10">10 câu</option>
+                            <option value="15">15 câu</option>
+                            <option value="20">20 câu</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Thời gian (phút)</span></label>
+                        <input type="number" name="timeLimitMinutes" value="15" min="1" max="180" class="input input-sm input-bordered rounded-xl text-xs font-semibold" />
+                    </div>
+                </div>
+
+                <div class="pt-3 flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modal-generate-quiz').close()" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-sm bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs border-none gap-2 shadow-md">
+                        <i class="fa-solid fa-bolt"></i> Bắt Đầu Sinh Đề
+                    </button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Script Chuyển Tab Trong Modal -->
+    <script>
+        function switchSourceTab(source) {
+            const tabUpload = document.getElementById('tab-upload');
+            const tabExisting = document.getElementById('tab-existing');
+            const sectionUpload = document.getElementById('section-upload');
+            const sectionExisting = document.getElementById('section-existing');
+            const inputPdfFile = document.getElementById('input-pdf-file');
+
+            if (source === 'upload') {
+                tabUpload.classList.add('tab-active');
+                tabExisting.classList.remove('tab-active');
+                sectionUpload.classList.remove('hidden');
+                sectionExisting.classList.add('hidden');
+                inputPdfFile.required = true;
+            } else {
+                tabUpload.classList.remove('tab-active');
+                tabExisting.classList.add('tab-active');
+                sectionUpload.classList.add('hidden');
+                sectionExisting.classList.remove('hidden');
+                inputPdfFile.required = false;
+            }
+        }
+    </script>
+
+</section>
+</body>
+</html>
