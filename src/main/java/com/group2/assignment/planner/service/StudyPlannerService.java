@@ -162,33 +162,55 @@ public class StudyPlannerService {
         );
 
         String jsonPayload = objectMapper.writeValueAsString(requestBody);
-        String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint))
-                .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(30))
-                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Gemini HTTP error: " + response.statusCode() + " - " + response.body());
-        }
-
-        JsonNode rootNode = objectMapper.readTree(response.body());
-        String rawContent = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
-
-        // Làm sạch JSON response
-        String cleanJson = rawContent.replaceAll("^```json\\s*", "").replaceAll("```\\s*$", "").trim();
-
-        List<Map<String, Object>> timelineData = objectMapper.readValue(
-                cleanJson,
-                new TypeReference<List<Map<String, Object>>>() {}
+        List<String> models = List.of(
+                "gemini-2.5-flash",
+                "gemini-2.0-flash",
+                "gemini-1.5-flash-latest",
+                "gemini-1.5-flash",
+                "gemini-1.5-pro",
+                "gemini-2.5-flash-lite"
         );
 
-        return timelineData;
+        Exception lastException = null;
+
+        for (String model : models) {
+            try {
+                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(endpoint))
+                        .header("Content-Type", "application/json")
+                        .header("x-goog-api-key", apiKey)
+                        .timeout(Duration.ofSeconds(30))
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                        .build();
+
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 200) {
+                    JsonNode rootNode = objectMapper.readTree(response.body());
+                    String rawContent = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+
+                    // Làm sạch JSON response
+                    String cleanJson = rawContent.replaceAll("^```json\\s*", "").replaceAll("```\\s*$", "").trim();
+
+                    List<Map<String, Object>> timelineData = objectMapper.readValue(
+                            cleanJson,
+                            new TypeReference<List<Map<String, Object>>>() {}
+                    );
+
+                    return timelineData;
+                } else {
+                    lastException = new RuntimeException("Gemini HTTP " + response.statusCode() + " on model " + model + ": " + response.body());
+                    log.warn("Model {} trả về lỗi HTTP {} -> thử model kế tiếp", model, response.statusCode());
+                }
+            } catch (Exception e) {
+                lastException = e;
+                log.warn("Thử model {} thất bại ({}) -> chuyển model kế tiếp", model, e.getMessage());
+            }
+        }
+
+        throw lastException != null ? lastException : new RuntimeException("Tất cả candidate Gemini models đều không phản hồi.");
     }
 
     private List<Map<String, Object>> generateMockTimeline(StudyPlanRequestDto dto) {
