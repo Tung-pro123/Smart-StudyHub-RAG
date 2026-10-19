@@ -64,6 +64,13 @@ class ApiKeyServiceTest {
     }
 
     @Test
+    void supportsModernGeminiKeyWithDotPrefix() {
+        String modernKey = "AQ.Ab8RNGLIVjkFiJEuGwazySYgRIzoKBe-nxX2yjPUv_Y6MTBY8oI";
+        service.save(dto("GEMINI", modernKey), session);
+        assertThat(service.getApiKey(session)).isEqualTo(modernKey);
+    }
+
+    @Test
     void geminiPingUsesHeaderAndSavedKeyWithoutPuttingKeyInUrl() {
         service.save(dto("GEMINI", KEY), session);
         server.expect(requestTo("https://generativelanguage.googleapis.com/v1beta/models/" + SettingsConstants.DEFAULT_MODEL + ":generateContent"))

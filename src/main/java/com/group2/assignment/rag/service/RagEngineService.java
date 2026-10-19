@@ -35,8 +35,14 @@ public class RagEngineService {
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ObjectMapper objectMapper;
-
-    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
+    private static final List<String> GEMINI_MODELS = List.of(
+            "gemini-2.5-flash",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash-latest",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-2.5-flash-lite"
+    );
 
     /**
      * Tìm kiếm top K Chunks liên quan nhất với câu hỏi dựa trên thuật toán Term Overlap & TF-IDF
@@ -295,24 +301,34 @@ public class RagEngineService {
         Map<String, Object> content = Map.of("parts", List.of(part));
         Map<String, Object> requestBody = Map.of("contents", List.of(content));
 
-        String url = GEMINI_API_URL + apiKey;
+        Exception lastException = null;
 
-        String responseJson = restClient.post()
-                .uri(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(requestBody)
-                .retrieve()
-                .body(String.class);
+        for (String model : GEMINI_MODELS) {
+            try {
+                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+                String responseJson = restClient.post()
+                        .uri(url)
+                        .header("x-goog-api-key", apiKey)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(requestBody)
+                        .retrieve()
+                        .body(String.class);
 
-        JsonNode root = objectMapper.readTree(responseJson);
-        JsonNode candidates = root.path("candidates");
-        if (candidates.isArray() && !candidates.isEmpty()) {
-            JsonNode parts = candidates.get(0).path("content").path("parts");
-            if (parts.isArray() && !parts.isEmpty()) {
-                return parts.get(0).path("text").asText();
+                JsonNode root = objectMapper.readTree(responseJson);
+                JsonNode candidates = root.path("candidates");
+                if (candidates.isArray() && !candidates.isEmpty()) {
+                    JsonNode parts = candidates.get(0).path("content").path("parts");
+                    if (parts.isArray() && !parts.isEmpty()) {
+                        return parts.get(0).path("text").asText();
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Gọi Gemini model '{}' thất bại: {}. Đang thử model tiếp theo...", model, e.getMessage());
+                lastException = e;
             }
         }
-        throw new RuntimeException("Phản hồi từ Gemini không chứa nội dung hợp lệ!");
+
+        throw (lastException != null) ? lastException : new RuntimeException("Không tìm thấy model Gemini khả dụng!");
     }
 
     private void saveMessages(ChatSession chatSession, String question, String answer, String ragContext) {

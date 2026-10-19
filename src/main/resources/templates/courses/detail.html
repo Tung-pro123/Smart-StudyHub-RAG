@@ -197,7 +197,7 @@
                 <input type="checkbox" />
                 <div class="collapse-title text-xs font-bold flex items-center gap-3">
                     <span class="badge badge-sm badge-primary text-[10px]" th:text="'Chunk #' + ${chunk.chunkIndex}">#1</span>
-                    <span class="text-base-content/80 font-mono text-[11px]" th:text="${chunk.charCount} + ' ký tự'">1200 ký tự</span>
+                    <span class="text-base-content/80 font-mono text-[11px]" th:text="${chunk.wordCount} + ' từ (~' + ${chunk.charCount} + ' ký tự)'">350 từ (~1200 ký tự)</span>
                     <span class="text-base-content/60 font-normal line-clamp-1 truncate" th:text="${chunk.content}">Trích đoạn nội dung...</span>
                 </div>
                 <div class="collapse-content text-xs text-base-content/80 leading-relaxed bg-base-200/30 p-4 rounded-b-2xl font-mono whitespace-pre-wrap">
