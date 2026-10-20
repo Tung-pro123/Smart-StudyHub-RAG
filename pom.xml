@@ -91,6 +91,16 @@
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
 
+        <!-- Spring Security Config & Web: Cung cấp HttpSecurity, SecurityFilterChain cho IntelliJ và runtime -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+
         <!-- Spring Security OAuth2 Client: Đăng nhập Google OAuth -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
