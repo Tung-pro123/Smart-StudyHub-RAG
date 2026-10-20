@@ -24,16 +24,15 @@ public class SecurityConfig {
             // Tắt CSRF vì dùng JWT cookie (SPA/Mobile friendly)
             .csrf(csrf -> csrf.disable())
 
-            // Cấu hình authorization
+            // Cấu hình authorization: Cho phép các request đi qua để JwtAuthInterceptor kiểm soát xác thực
             .authorizeHttpRequests(auth -> auth
-                // Cho phép truy cập public
                 .requestMatchers("/", "/login", "/register", "/logout",
                                  "/css/**", "/js/**", "/images/**",
                                  "/webjars/**", "/favicon.ico", "/h2-console/**").permitAll()
                 // OAuth2 endpoints
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
-                // Tất cả các request khác cần xác thực (JWT interceptor xử lý)
-                .anyRequest().authenticated()
+                // Mọi request được chuyển tiếp cho JwtAuthInterceptor kiểm soát phiên đăng nhập và bảo vệ route
+                .anyRequest().permitAll()
             );
 
         // Chỉ bật OAuth2 nếu có credentials hợp lệ
