@@ -1,38 +1,31 @@
 package com.group2.assignment.core.controller;
 
-import com.group2.assignment.core.dto.CourseCardDto;
-import com.group2.assignment.core.entity.Course;
-import com.group2.assignment.core.service.CourseService;
+import com.group2.assignment.auth.controller.AuthController;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final CourseService courseService;
-
+    /**
+     * Cổng chào tiếp thị: Khách vãng lai xem Landing Page, người dùng đã đăng nhập vào thẳng /courses
+     */
     @GetMapping("/")
-    public String index(
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "semester", required = false) String semester,
-            Model model) {
+    public String index(HttpSession session) {
+        if (session.getAttribute(AuthController.SESSION_USER) != null) {
+            return "redirect:/courses";
+        }
+        return "landing";
+    }
 
-        List<CourseCardDto> courses = courseService.getAllCoursesWithStats(keyword, semester);
-        List<String> semesters = courseService.getAllSemesters();
-
-        model.addAttribute("courses", courses);
-        model.addAttribute("totalCourses", courseService.countCourses());
-        model.addAttribute("semesters", semesters);
-        model.addAttribute("currentKeyword", keyword != null ? keyword : "");
-        model.addAttribute("currentSemester", semester != null ? semester : "ALL");
-        model.addAttribute("newCourse", new Course());
-
-        return "index";
+    /**
+     * Alias tương thích ngược cho Dashboard môn học
+     */
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "redirect:/courses";
     }
 }

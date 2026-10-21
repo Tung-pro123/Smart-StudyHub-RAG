@@ -34,6 +34,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 // Loại trừ các tuyến đường công khai và tài nguyên tĩnh
                 .excludePathPatterns(
                         "/",
+                        "/courses",
                         "/courses/*",
                         "/login",
                         "/register",
