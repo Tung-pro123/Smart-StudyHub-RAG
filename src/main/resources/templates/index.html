@@ -109,7 +109,7 @@
             </div>
 
             <!-- Search & Filter Bar Form -->
-            <form th:action="@{/}" method="get" class="flex flex-wrap items-center gap-2">
+            <form th:action="@{/courses}" method="get" class="flex flex-wrap items-center gap-2">
                 <!-- Search Input -->
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
@@ -128,7 +128,7 @@
                 <button type="submit" class="btn btn-sm btn-primary rounded-xl" title="Tìm kiếm">
                     <i class="fa-solid fa-filter"></i> Lọc
                 </button>
-                <a th:if="${currentKeyword != '' or currentSemester != 'ALL'}" th:href="@{/}" 
+                <a th:if="${currentKeyword != '' or currentSemester != 'ALL'}" th:href="@{/courses}" 
                    class="btn btn-sm btn-ghost rounded-xl text-xs text-base-content/60" title="Đặt lại">
                     <i class="fa-solid fa-rotate-left"></i>
                 </a>

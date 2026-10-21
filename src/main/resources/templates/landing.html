@@ -1,0 +1,2526 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" data-theme="dark" lang="vi" xmlns:th="http://www.thymeleaf.org"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StudyHub AI - All your learning & creative tools in one powerful platform</title>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS & DaisyUI via CDN -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Font Awesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              indigo: '#6366f1',
+              violet: '#8b5cf6',
+              pink: '#ec4899',
+              cyan: '#06b6d4',
+              dark: '#030712',
+              card: 'rgba(17, 24, 39, 0.7)',
+            }
+          },
+          animation: {
+            'blob': 'blob 7s infinite',
+            'float': 'float 5s ease-in-out infinite',
+            'float-slow': 'floatSlow 6s ease-in-out infinite',
+            'float-fast': 'floatFast 4.2s ease-in-out infinite',
+            'float-reverse': 'floatReverse 5.2s ease-in-out infinite',
+            'pulse-glow': 'pulse-glow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'badge-pulse': 'badgePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -40px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.95)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(1deg)' },
+            },
+            floatFast: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-8px) rotate(-1.5deg)' },
+            },
+            floatReverse: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(10px) rotate(1deg)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '0.8' },
+            },
+            badgePulse: {
+              '0%, 100%': {
+                transform: 'scale(1)',
+                boxShadow: '0 0 0 0 rgba(236, 72, 153, 0.5)'
+              },
+              '50%': {
+                transform: 'scale(1.05)',
+                boxShadow: '0 0 16px 2px rgba(236, 72, 153, 0.6)'
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-hover:hover {
+      background: rgba(31, 41, 55, 0.75);
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.2);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #c084fc 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .text-gradient-cyan {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .btn-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      border: none;
+      color: white;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-gradient:hover {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
+      transform: translateY(-1px);
+    }
+    .grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Scroll Reveal Animation Styles */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Staggered Delays */
+    .reveal-delay-100 { transition-delay: 0.1s; }
+    .reveal-delay-200 { transition-delay: 0.2s; }
+    .reveal-delay-300 { transition-delay: 0.3s; }
+    .reveal-delay-400 { transition-delay: 0.4s; }
+    .reveal-delay-500 { transition-delay: 0.5s; }
+
+    @keyframes heroFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    .animate-hero-float {
+      animation: heroFloat 5s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    /* 3D Tilt container & inner styles */
+    .tilt-perspective-wrapper {
+      perspective: 1200px;
+      perspective-origin: center center;
+    }
+    .tilt-card-inner {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tilt-card-inner.is-tilting {
+      transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .glare-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle 500px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.15), transparent 80%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 30;
+      mix-blend-mode: overlay;
+    }
+    .tilt-perspective-wrapper:hover .glare-overlay {
+      opacity: 1;
+    }
+
+    /* 3D Floating Widgets Layering */
+    .hero-floating-widget {
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+    .hero-widget-z-high {
+      transform: translateZ(52px);
+    }
+    .hero-widget-z-med {
+      transform: translateZ(42px);
+    }
+
+    /* Neon Glow Pulse Counter Finish Celebrations */
+    @keyframes counterNeonPulse {
+      0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(168, 85, 247, 0)) drop-shadow(0 0 0px rgba(6, 182, 212, 0));
+      }
+      35% {
+        transform: scale(1.09);
+        filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.95)) drop-shadow(0 0 32px rgba(6, 182, 212, 0.8)) drop-shadow(0 0 45px rgba(236, 72, 153, 0.5));
+      }
+      65% {
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.75)) drop-shadow(0 0 22px rgba(6, 182, 212, 0.6));
+      }
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4)) drop-shadow(0 0 16px rgba(6, 182, 212, 0.3));
+      }
+    }
+
+    @keyframes cardNeonPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      30% {
+        box-shadow: 0 0 35px 2px rgba(139, 92, 246, 0.4), inset 0 0 20px 0 rgba(6, 182, 212, 0.2);
+        border-color: rgba(168, 85, 247, 0.75);
+      }
+      100% {
+        box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.2);
+        border-color: rgba(139, 92, 246, 0.35);
+      }
+    }
+
+    .counter-value.neon-pulse-complete {
+      animation: counterNeonPulse 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      display: inline-block;
+      will-change: transform, filter;
+    }
+
+    .card-glow-pulse.neon-card-active {
+      animation: cardNeonPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Originkit Live Chat Typing Animation */
+    .originkit-typing-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background-color: #c084fc;
+      display: inline-block;
+      opacity: 0.4;
+      animation: originkitBounce 1.2s infinite ease-in-out;
+    }
+    .originkit-typing-dot:nth-child(1) { animation-delay: 0s; }
+    .originkit-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .originkit-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes originkitBounce {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+      }
+      30% {
+        transform: translateY(-5px);
+        opacity: 1;
+      }
+    }
+
+    /* RAG Pipeline Flowing Connector Beam */
+    .pipeline-beam {
+      background: linear-gradient(90deg, 
+        rgba(99, 102, 241, 0.2) 0%, 
+        rgba(168, 85, 247, 0.85) 50%, 
+        rgba(236, 72, 153, 0.2) 100%
+      );
+      box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+      background-size: 200% 100%;
+      animation: pipelineBeamSweep 3s linear infinite;
+    }
+    @keyframes pipelineBeamSweep {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Spotlight Hover Effect for Pricing Cards */
+    .spotlight-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .spotlight-card.spotlight-pro {
+      overflow: visible;
+    }
+    .spotlight-card:not(.spotlight-pro):hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.28);
+    }
+    .spotlight-card.spotlight-pro:hover {
+      transform: translateY(-20px);
+      box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.38);
+    }
+    .spotlight-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 1;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(168, 85, 247, 0.18),
+        rgba(236, 72, 153, 0.08) 40%,
+        transparent 70%
+      );
+    }
+    .spotlight-border {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      background: radial-gradient(
+        320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(192, 132, 252, 0.85),
+        rgba(236, 72, 153, 0.5) 30%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 2;
+    }
+    .spotlight-card:hover .spotlight-overlay,
+    .spotlight-card:hover .spotlight-border {
+      opacity: 1;
+    }
+    .spotlight-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Price Value Flip / Fade Transition */
+    .price-value-container {
+      display: inline-flex;
+      align-items: baseline;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      will-change: transform, opacity;
+    }
+    .price-value-container.price-flip {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.96);
+    }
+    .annual-note-wrapper {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .animate-hero-float,
+      .animate-float,
+      .animate-float-slow,
+      .animate-float-fast,
+      .animate-float-reverse,
+      .animate-badge-pulse,
+      .animate-marquee {
+        animation: none !important;
+      }
+      .tilt-card-inner {
+        transform: none !important;
+        transition: none !important;
+      }
+      .glare-overlay {
+        display: none !important;
+      }
+      .hero-floating-widget {
+        transform: none !important;
+      }
+      .counter-value.neon-pulse-complete {
+        animation: none !important;
+      }
+      .card-glow-pulse.neon-card-active {
+        animation: none !important;
+      }
+      .halo-flare {
+        display: none !important;
+      }
+      .micro-particle {
+        display: none !important;
+      }
+      .spotlight-card:hover {
+        transform: none !important;
+      }
+      .spotlight-card.spotlight-pro:hover {
+        transform: translateY(-16px) !important;
+      }
+      .spotlight-overlay,
+      .spotlight-border {
+        display: none !important;
+      }
+      .price-value-container {
+        transition: none !important;
+      }
+    }
+
+    /* GradientASCII Background Container & Canvas */
+    .gradient-ascii-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .gradient-ascii-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* CursorGrid WebGL2 Background (Active everywhere except Hero) */
+    .cursor-grid-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cursor-grid-container.is-active {
+      opacity: 1;
+    }
+    .cursor-grid__canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Infinite Marquee Tech Loop */
+    @keyframes marquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 35s linear infinite;
+      will-change: transform;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+    .tech-loop-mask {
+      mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    }
+
+    /* SpecularButton Styles */
+    .specular-button {
+      --sb-radius: 12px;
+      --sb-tint: #ffffff;
+      --sb-tint-opacity: 0.05;
+      --sb-blur: 16px;
+      --sb-text-color: #f1f5f9;
+
+      position: relative;
+      isolation: isolate;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--sb-radius);
+      font: inherit;
+      line-height: 1.25;
+      color: var(--sb-text-color);
+      background: color-mix(in srgb, var(--sb-tint) calc(var(--sb-tint-opacity) * 100%), transparent);
+      box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.45);
+      -webkit-backdrop-filter: blur(var(--sb-blur));
+      backdrop-filter: blur(var(--sb-blur));
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease, border-color 0.3s ease;
+    }
+    .specular-button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(196, 181, 253, 0.35);
+    }
+    .specular-button:active {
+      transform: scale(0.97);
+    }
+    .specular-button:focus-visible {
+      outline: 2px solid rgba(196, 181, 253, 0.6);
+      outline-offset: 3px;
+    }
+    .specular-button__light {
+      position: absolute;
+      inset: -24px;
+      z-index: 1;
+      display: block;
+      width: calc(100% + 48px);
+      height: calc(100% + 48px);
+      pointer-events: none;
+    }
+    .specular-button__label {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: inherit;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative antialiased selection:bg-purple-500 selection:text-white overflow-x-hidden">
+<!-- Background decorative light glow blobs -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-blob"></div>
+<div class="absolute top-1/4 -right-32 w-96 h-96 bg-pink-600/15 rounded-full blur-3xl animate-blob" style="animation-delay: 2s;"></div>
+<div class="absolute top-2/3 left-1/3 w-[30rem] h-[30rem] bg-violet-600/15 rounded-full blur-[100px] animate-blob" style="animation-delay: 4s;"></div>
+<div class="absolute -bottom-20 right-10 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl animate-blob" style="animation-delay: 3s;"></div>
+<div class="absolute inset-0 grid-pattern opacity-40"></div>
+</div>
+
+<!-- CursorGrid Global WebGL2 Canvas (Active on all sections except Hero) -->
+<div id="cursor-grid-container" class="cursor-grid-container" aria-hidden="true">
+  <canvas class="cursor-grid__canvas"></canvas>
+</div>
+
+<div class="relative z-10">
+<!-- a. NAVBAR: Floating Glass Island -->
+<header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none transition-all duration-300">
+<nav class="w-full max-w-6xl pointer-events-auto rounded-2xl px-5 sm:px-6 py-3 flex items-center justify-between bg-slate-900/75 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.45)]">
+<!-- Logo -->
+<a th:href="@{/}" class="flex items-center gap-2.5 group">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+<i class="fa-solid fa-graduation-cap text-lg"></i>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-white flex items-center">
+StudyHub <span class="text-gradient ml-1">AI</span>
+</span>
+</a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-7 lg:gap-8 text-sm font-medium text-gray-300">
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#about">RAG Pipeline</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#features">Tính Năng</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#pricing">Gói Học Tập</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#testimonials">Đánh Giá</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#blog">Kiến Thức</a>
+<a th:href="@{/courses}" class="relative py-1 text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1.5 font-semibold after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300">
+<i class="fa-solid fa-book-open text-xs"></i>
+<span>Môn Học</span>
+</a>
+</div>
+<!-- Actions & CTA -->
+<div class="flex items-center gap-3.5">
+<!-- Nếu đã đăng nhập -->
+<th:block th:if="${session.currentUser != null}">
+<a th:href="@{/courses}" class="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:shadow-[0_0_22px_rgba(168,85,247,0.45)] hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
+<i class="fa-solid fa-gauge-high"></i>
+<span>Vào Dashboard</span>
+</a>
+</th:block>
+
+<!-- Nếu là khách vãng lai -->
+<th:block th:unless="${session.currentUser != null}">
+<a th:href="@{/login}" class="hidden sm:inline-flex text-sm font-medium text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
+              Đăng Nhập
+            </a>
+<a th:href="@{/register}" class="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 hover:shadow-[0_0_22px_rgba(168,85,247,0.45)] hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
+<span>Bắt Đầu Ngay</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</a>
+</th:block>
+
+<!-- Mobile menu trigger via DaisyUI Drawer/Dropdown -->
+<div class="dropdown dropdown-end md:hidden">
+<label class="btn btn-ghost btn-circle btn-sm text-gray-300" tabindex="0">
+<i class="fa-solid fa-bars text-base"></i>
+</label>
+<ul class="dropdown-content menu p-3 shadow-2xl glass-card rounded-2xl w-52 mt-3 space-y-1 text-sm border border-white/10" tabindex="0">
+<li><a class="hover:text-violet-400" href="#about">RAG Pipeline</a></li>
+<li><a class="hover:text-violet-400" href="#features">Tính Năng</a></li>
+<li><a class="hover:text-violet-400" href="#pricing">Gói Học Tập</a></li>
+<li><a class="hover:text-violet-400" href="#testimonials">Đánh Giá</a></li>
+<li><a class="hover:text-violet-400" href="#blog">Kiến Thức</a></li>
+<li><a th:href="@{/courses}" class="hover:text-violet-400 font-semibold"><i class="fa-solid fa-book-open text-xs mr-1"></i>Môn Học</a></li>
+<div class="divider my-1 border-white/10"></div>
+<th:block th:if="${session.currentUser != null}">
+<li><a th:href="@{/courses}" class="text-violet-400 font-semibold"><i class="fa-solid fa-gauge-high mr-1"></i>Dashboard</a></li>
+</th:block>
+<th:block th:unless="${session.currentUser != null}">
+<li><a th:href="@{/login}" class="text-violet-400 font-semibold">Đăng Nhập</a></li>
+<li><a th:href="@{/register}" class="text-pink-400 font-semibold">Đăng Ký</a></li>
+</th:block>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<!-- b. HERO SECTION -->
+<section id="hero-section" class="relative pt-28 pb-28 md:pt-36 md:pb-36 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+<!-- GradientASCII Ambient Full Width Background Container -->
+<div id="hero-ascii-container" class="gradient-ascii-container pointer-events-none absolute -top-32 md:-top-36 left-1/2 -translate-x-1/2 w-screen h-[calc(100%+14rem)] z-0 overflow-hidden"></div>
+<!-- Content Layer (z-10 on top of the background) -->
+<div class="relative z-10">
+<!-- Tag / Badge -->
+<div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-xs sm:text-sm font-medium text-violet-300 border border-violet-500/30 mb-8 animate-float">
+<span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+<span class="text-white font-semibold">Smart Multi-Course Hub:</span> RAG AI Engine v2.0 Live
+<i class="fa-solid fa-graduation-cap text-violet-400 text-xs ml-1"></i>
+</div>
+<!-- Heading -->
+<h1 class="reveal reveal-delay-100 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] max-w-5xl mx-auto mb-6">
+Unlock the Hidden Knowledge in Your <span class="text-gradient">Courseware.</span>
+</h1>
+<!-- Description -->
+<p class="reveal reveal-delay-200 text-base sm:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
+Hệ thống trợ lý học tập đa môn học dành cho sinh viên đại học. Tự động trích xuất slide &amp; giáo trình PDF, giải đáp thắc mắc 100% bám sát tài liệu kèm trích dẫn số trang (Citations) — triệt tiêu hoàn toàn ảo giác (zero hallucinations).
+</p>
+<!-- CTA Buttons -->
+<div class="reveal reveal-delay-300 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+<a th:href="@{/register}" class="btn-gradient w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-base flex items-center justify-center gap-2 shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40">
+<span>Bắt Đầu Học Miễn Phí</span>
+<i class="fa-solid fa-bolt text-sm"></i>
+</a>
+<a th:href="@{/courses}" id="hero-specular-btn" class="specular-button w-full sm:w-auto px-8 py-3.5 font-semibold text-base text-gray-200 hover:text-white flex items-center justify-center gap-2">
+<canvas class="specular-button__light" aria-hidden="true"></canvas>
+<span class="specular-button__label flex items-center gap-2">
+<i class="fa-solid fa-book-open text-violet-400"></i>
+<span>Khám Phá Môn Học</span>
+</span>
+</a>
+</div>
+<!-- Dashboard Mockup (3D Interactive Tilt + Ambient Float + Floating Widgets) -->
+<div class="reveal reveal-delay-400 relative max-w-5xl mx-auto group tilt-perspective-wrapper" id="hero-tilt-container">
+<!-- Floating Ambient Container -->
+<div class="animate-hero-float" id="hero-float-wrapper">
+<!-- 3D Tilt Card Inner -->
+<div class="tilt-card-inner relative rounded-2xl cursor-pointer" id="hero-tilt-card">
+<!-- Glow outline under mockup -->
+<div class="absolute -inset-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl blur-2xl opacity-15 group-hover:opacity-30 transition duration-1000 group-hover:duration-300 pointer-events-none"></div>
+
+<!-- FLOATING WIDGET 1: Top-Left - 768-dim Vector Embeddings -->
+<div class="hero-floating-widget hero-widget-z-high absolute -top-7 -left-4 sm:-top-8 sm:-left-8 lg:-left-12 z-40 animate-float-slow hidden xs:flex">
+<div class="glass-card bg-slate-900/90 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-indigo-500/20 text-left flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+<div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 relative">
+<i class="fa-solid fa-brain text-sm"></i>
+<span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xs sm:text-sm font-extrabold text-white">768-dim Vectors</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+<i class="fa-solid fa-check text-[9px] mr-1"></i>Indexed
+</span>
+</div>
+<p class="text-[11px] text-gray-400 font-medium">Apache PDFBox Chunking</p>
+</div>
+</div>
+</div>
+
+<!-- FLOATING WIDGET 2: Top-Right - Verified Page Citations -->
+<div class="hero-floating-widget hero-widget-z-high absolute -top-8 -right-4 sm:-top-9 sm:-right-8 lg:-right-10 z-40 animate-float-fast hidden sm:flex" style="animation-delay: 1.2s;">
+<div class="glass-card bg-slate-900/90 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-purple-500/20 text-left flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+<div class="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-300">
+<i class="fa-solid fa-quote-left text-sm font-black"></i>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xs sm:text-sm font-black text-white">Page 14 Citation</span>
+<i class="fa-solid fa-circle-check text-emerald-400 text-xs" title="Verified Citation"></i>
+</div>
+<p class="text-[11px] text-violet-300/80 font-medium flex items-center gap-1">
+<span>HSF302_Syllabus.pdf</span>
+<span class="text-gray-500">• 99.8% match</span>
+</p>
+</div>
+</div>
+</div>
+
+<!-- FLOATING WIDGET 3: Bottom-Left - Embedded H2 DB & $0 Cost -->
+<div class="hero-floating-widget hero-widget-z-med absolute -bottom-7 -left-3 sm:-bottom-8 sm:-left-7 lg:-left-10 z-40 animate-float hidden sm:flex" style="animation-delay: 2.1s;">
+<div class="glass-card bg-slate-900/90 backdrop-blur-xl border border-white/20 rounded-2xl px-3.5 py-3 shadow-xl shadow-cyan-500/20 text-left flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+<div class="relative flex items-center justify-center">
+<div class="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300">
+<i class="fa-solid fa-database text-xs"></i>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-slate-950 animate-pulse"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-white">Cosine Search: <span class="text-cyan-400">0.4s</span></span>
+<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none font-semibold text-[10px]">$0 Cost</span>
+</div>
+<p class="text-[11px] text-gray-400">Embedded H2 Persistence</p>
+</div>
+</div>
+</div>
+
+<!-- FLOATING WIDGET 4: Bottom-Right - AI Quiz Generator Ready -->
+<div class="hero-floating-widget hero-widget-z-high absolute -bottom-8 -right-3 sm:-bottom-9 sm:-right-6 lg:-right-8 z-40 animate-float-reverse hidden md:flex" style="animation-delay: 0.8s;">
+<div class="glass-card bg-slate-900/90 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-pink-500/20 text-left hover:scale-105 transition-transform duration-300 min-w-[210px]">
+<div class="flex items-center justify-between gap-3 mb-1.5">
+<span class="text-xs font-bold text-gray-200 flex items-center gap-1.5">
+<i class="fa-solid fa-circle-question text-pink-400 text-xs"></i>
+AI Quiz Generator
+</span>
+<span class="text-xs font-black text-pink-400">A/B/C/D</span>
+</div>
+<!-- Mini Progress Bar -->
+<div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden mb-1">
+<div class="bg-gradient-to-r from-violet-500 to-pink-500 h-1.5 rounded-full w-[100%]"></div>
+</div>
+<div class="flex items-center justify-between text-[10px] text-gray-400">
+<span>Exam Chapter 1-4</span>
+<span class="text-emerald-400 font-semibold flex items-center gap-1">
+<i class="fa-solid fa-check text-[9px]"></i> Instant Grading
+</span>
+</div>
+</div>
+</div>
+
+<!-- Mockup Main Window -->
+<div class="relative mockup-window border border-white/10 bg-slate-950/90 shadow-2xl rounded-2xl overflow-hidden backdrop-blur-xl">
+<!-- Specular Highlight / Glare Overlay -->
+<div class="glare-overlay" id="hero-glare"></div>
+<!-- Window Header Custom Info -->
+<div class="flex items-center justify-between px-6 py-2.5 border-b border-white/10 bg-slate-900/60 text-xs text-gray-400">
+<span class="flex items-center gap-2">
+<i class="fa-solid fa-lock text-[10px] text-emerald-400"></i>
+studyhub.ai/course/<span id="mock-course-code" class="text-violet-300 font-semibold">HSF302</span>/rag-workspace
+</span>
+<div class="flex items-center gap-3">
+<span class="badge badge-xs badge-success gap-1 text-[10px]" id="mock-index-status">PDF Indexed (48 Pages)</span>
+<span class="hidden sm:inline text-gray-300 font-mono text-[11px]" id="mock-course-tag">HSF302 Workspace</span>
+</div>
+</div>
+
+<!-- Mockup Inside Content: 2-Column Split (Left: PDF Viewer | Right: RAG AI Chat) -->
+<div class="p-4 sm:p-6 lg:p-7 text-left bg-gradient-to-b from-slate-900/80 to-slate-950">
+<!-- Workspace Top Subheader -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-violet-600/20 text-violet-400 border border-violet-500/30 flex items-center justify-center text-sm">
+<i class="fa-solid fa-book-bookmark"></i>
+</div>
+<div>
+<h4 id="mock-doc-title" class="font-bold text-white text-sm sm:text-base flex items-center gap-2">
+HSF302_Chapter3_Communication.pdf
+<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Active Syllabus</span>
+</h4>
+<p class="text-xs text-gray-400">Vector Embeddings generated via Apache PDFBox • Gemini 1.5 Flash Grounded</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="badge badge-neutral border border-white/10 text-[11px] py-2 px-2.5 text-emerald-400 gap-1">
+<i class="fa-solid fa-shield-check"></i> Zero Hallucination
+</span>
+</div>
+</div>
+
+<!-- Grid 2 Cột: Bên trái PDF Reader | Bên phải Khung Chat RAG -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+<!-- Cột trái (5 cols): PDF Viewer Mockup có Highlight -->
+<div class="lg:col-span-5 glass-card p-4 rounded-xl border border-white/10 bg-slate-950/60 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-2 mb-3 border-b border-white/10 text-xs text-gray-400">
+<span class="flex items-center gap-1.5 text-gray-300 font-medium">
+<i class="fa-regular fa-file-pdf text-rose-400"></i>
+<span id="mock-pdf-name">HSF302_Slide_Ch3.pdf</span>
+</span>
+<span class="badge badge-sm badge-outline border-white/15 text-gray-400" id="mock-pdf-page">Page 14 / 48</span>
+</div>
+<!-- Simulated PDF Slide Page Content with Highlight -->
+<div class="space-y-2 text-xs text-gray-300 font-sans leading-relaxed bg-slate-900/50 p-3 rounded-lg border border-white/5">
+<p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold font-mono" id="mock-pdf-chapter">CHƯƠNG 3: KỸ NĂNG GIAO TIẾP VÀ PHẢN BIỆN</p>
+<p class="text-gray-300">
+Giáo trình phân tích tầm quan trọng của việc chủ động tiếp nhận thông tin từ người đối diện nhằm tối ưu hóa kết quả làm việc nhóm:
+</p>
+<!-- Highlighted Passage -->
+<div id="mock-highlight-box" class="p-2.5 rounded bg-amber-400/15 border-l-2 border-amber-400 text-amber-200 text-xs my-2 font-medium">
+<span class="text-[10px] text-amber-300/80 uppercase font-bold block mb-1">
+<i class="fa-solid fa-highlighter mr-1"></i>Trích đoạn Chunk #142 (Đã vector hóa):
+</span>
+<span id="mock-highlight-text">
+"5 bước trong quy trình Lắng Nghe Tích Cực (Active Listening): (1) Tiếp nhận (Receiving), (2) Thấu hiểu (Understanding), (3) Ghi nhớ (Remembering), (4) Đánh giá (Evaluating), và (5) Phản hồi (Responding)."
+</span>
+</div>
+<p class="text-gray-400 text-[11px]">
+Mỗi bước đóng vai trò là một mắt xích giúp duy trì sự tập trung và giảm thiểu 85% xung đột hiểu nhầm trong giao tiếp.
+</p>
+</div>
+</div>
+<!-- Chunk metadata footer -->
+<div class="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between text-[11px] text-gray-400">
+<span class="flex items-center gap-1 text-indigo-400">
+<i class="fa-solid fa-vector-square text-[10px]"></i>
+<span>Cosine Sim: <strong id="mock-similarity">0.984</strong></span>
+</span>
+<span class="text-emerald-400 font-mono text-[10px] flex items-center gap-1">
+<i class="fa-solid fa-check"></i> 768-dim Synced
+</span>
+</div>
+</div>
+
+<!-- Cột phải (7 cols): Khung Live Chat RAG với Originkit Design System -->
+<div class="lg:col-span-7 glass-card p-4 rounded-xl border border-white/10 bg-slate-900/60 flex flex-col justify-between">
+<!-- Live Chat Header Bar -->
+<div class="flex items-center justify-between pb-3 mb-2 border-b border-white/10 text-xs">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="font-bold text-white flex items-center gap-1.5">
+Live RAG Assistant
+<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none font-mono" id="mock-chat-badge">HSF302</span>
+</span>
+</div>
+<div class="text-[10px] text-gray-400 font-mono flex items-center gap-1.5">
+<i class="fa-solid fa-bolt text-amber-400"></i>
+<span>Latency: <strong class="text-emerald-400" id="mock-chat-latency">0.38s</strong></span>
+</div>
+</div>
+
+<!-- Chat History Area (Originkit iOS Style Bubbles) -->
+<div class="space-y-3 mb-2.5 max-h-[260px] overflow-y-auto pr-1" id="mock-chat-thread">
+<!-- Student Message (Me) -->
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1.5 text-[10px] text-gray-400 pr-1">
+<span>Sinh viên (Bạn)</span>
+<span>•</span>
+<span id="mock-user-time">10:14 AM</span>
+</div>
+<div class="flex items-start gap-2 justify-end max-w-[88%]">
+<div class="bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-[20px] rounded-br-[4px] px-3.5 py-2.5 text-xs shadow-md leading-relaxed">
+<p id="mock-user-query">Trình bày 5 bước lắng nghe tích cực theo giáo trình HSF302 và ý nghĩa của chúng?</p>
+</div>
+<div class="w-7 h-7 rounded-full bg-violet-600 flex items-center justify-center text-white text-[11px] font-bold shrink-0 shadow-sm">
+SV
+</div>
+</div>
+</div>
+
+<!-- AI Response with Citation Badge (Them) -->
+<div class="flex flex-col items-start gap-1" id="mock-ai-msg-container">
+<div class="flex items-center gap-1.5 text-[10px] text-gray-400 pl-1">
+<span class="text-violet-300 font-semibold">StudyHub RAG AI</span>
+<span>•</span>
+<span class="text-emerald-400 font-medium"><i class="fa-solid fa-check-circle text-[9px] mr-0.5"></i>Grounded</span>
+<span>•</span>
+<span id="mock-ai-time">10:14 AM</span>
+</div>
+<div class="flex items-start gap-2 max-w-[94%]">
+<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center text-white text-[11px] shrink-0 shadow-md">
+<i class="fa-solid fa-sparkles text-[10px]"></i>
+</div>
+<div class="glass-card bg-slate-950/85 border border-white/15 rounded-[20px] rounded-bl-[4px] p-3.5 text-xs text-gray-200 shadow-lg space-y-2">
+<p id="mock-ai-answer" class="text-gray-200 leading-relaxed text-xs">
+Theo giáo trình <strong>HSF302 (Kỹ năng mềm)</strong>, quy trình Lắng Nghe Tích Cực gồm 5 bước: <strong>(1) Tiếp nhận</strong>, <strong>(2) Thấu hiểu</strong>, <strong>(3) Ghi nhớ</strong>, <strong>(4) Đánh giá</strong> và <strong>(5) Phản hồi</strong>. Quy trình này giúp sinh viên thấu cảm trọn vẹn và giảm thiểu hiểu nhầm trong làm việc nhóm.
+</p>
+<!-- Citation Badge Component -->
+<div class="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+<div id="mock-citation-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-violet-500/15 border border-violet-500/30 text-violet-300 text-[10px] font-semibold">
+<i class="fa-solid fa-bookmark text-pink-400 text-[9px]"></i>
+<span>Trích dẫn: <strong id="mock-citation-source">HSF302_Slide_Ch3.pdf - Trang 14</strong></span>
+</div>
+<span class="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+<i class="fa-solid fa-shield text-[9px]"></i> 100% Grounded
+</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Originkit Typing Indicator Bubble (Hidden by default, shown during transition) -->
+<div id="originkit-typing-indicator" class="hidden flex items-start gap-2 max-w-[90%]">
+<div class="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 flex items-center justify-center text-white text-[11px] shrink-0 shadow-md">
+<i class="fa-solid fa-sparkles text-[10px]"></i>
+</div>
+<div class="bg-slate-950/85 border border-white/10 rounded-[20px] rounded-bl-[4px] px-3.5 py-2.5 inline-flex items-center gap-1.5 shadow-md">
+<span class="originkit-typing-dot"></span>
+<span class="originkit-typing-dot"></span>
+<span class="originkit-typing-dot"></span>
+<span class="text-[10px] text-gray-400 ml-1.5 font-mono">Đang tìm kiếm vector trong giáo trình...</span>
+</div>
+</div>
+</div>
+
+<!-- Live Chat Interactive Input Form -->
+<form id="mock-chat-form" class="mt-2 pt-2 border-t border-white/10" onsubmit="return false;">
+<div class="relative flex items-center">
+<input type="text" id="mock-chat-input" placeholder="Hỏi AI bất kỳ điều gì (vd: Vòng đời Servlet, Phân phối Gaussian...)" class="w-full bg-slate-950/70 border border-white/10 rounded-xl pl-3.5 pr-10 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-violet-500/50 transition-colors" autocomplete="off" />
+<button type="submit" id="mock-chat-send" class="absolute right-1 w-6 h-6 rounded-lg bg-gradient-to-r from-violet-600 to-pink-600 text-white flex items-center justify-center text-[10px] hover:scale-105 active:scale-95 transition-all shadow-sm">
+<i class="fa-solid fa-paper-plane text-[9px]"></i>
+</button>
+</div>
+</form>
+
+<!-- Interactive Prompt Pills Selector -->
+<div class="pt-2 mt-2 border-t border-white/10">
+<p class="text-[11px] text-gray-400 mb-1.5 flex items-center gap-1.5 font-medium">
+<i class="fa-solid fa-hand-pointer text-violet-400 text-[10px]"></i>
+<span>Bấm câu hỏi mẫu để trải nghiệm tương tác:</span>
+</p>
+<div class="flex flex-wrap items-center gap-2">
+<button type="button" class="mock-prompt-pill px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-violet-600 text-white border border-violet-400/40 shadow-sm transition-all duration-200 hover:scale-105 active:scale-95" data-scenario="hsf302">
+HSF302: Lắng nghe tích cực
+</button>
+<button type="button" class="mock-prompt-pill px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200 hover:scale-105 active:scale-95" data-scenario="prj301">
+PRJ301: Vòng đời JSP &amp; Servlet
+</button>
+<button type="button" class="mock-prompt-pill px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200 hover:scale-105 active:scale-95" data-scenario="mas291">
+MAS291: Phân phối xác suất Gaussian
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div></section>
+<!-- c. POWERED BY MODERN TECH STACK & ENTERPRISE AI (INFINITE TECH LOOP) -->
+<section class="reveal py-14 md:py-18 border-y border-white/5 bg-slate-950/40 overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-8">
+<p class="text-xs uppercase tracking-widest text-gray-400 font-semibold">
+          Powered by <span class="text-white font-bold">Modern Tech Stack</span> &amp; <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-pink-400 to-indigo-400 font-extrabold">Enterprise AI</span>
+        </p>
+</div>
+<!-- Infinite Marquee Loop with Fade Mask -->
+<div class="relative w-full overflow-hidden tech-loop-mask py-4">
+<div class="animate-marquee gap-12 sm:gap-16">
+<!-- Set 1 of Tech Logos -->
+<div class="flex items-center gap-12 sm:gap-16 shrink-0">
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-brands fa-java text-2xl sm:text-3xl text-orange-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Java 17</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-leaf text-2xl sm:text-3xl text-emerald-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Spring Boot 3</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-feather-pointed text-2xl sm:text-3xl text-green-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Thymeleaf SSR</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-wand-magic-sparkles text-2xl sm:text-3xl text-pink-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Gemini 1.5 Flash</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-brain text-2xl sm:text-3xl text-violet-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>RAG Vector Search</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-database text-2xl sm:text-3xl text-blue-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>PostgreSQL &amp; H2</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-brands fa-css3-alt text-2xl sm:text-3xl text-cyan-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Tailwind CSS</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-brands fa-docker text-2xl sm:text-3xl text-sky-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Docker Container</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-bolt text-2xl sm:text-3xl text-amber-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Semantic Cache</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-network-wired text-2xl sm:text-3xl text-indigo-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Neural Embeddings</span>
+  </div>
+</div>
+<!-- Set 2 of Tech Logos (Duplicate for Seamless Infinite Marquee Loop) -->
+<div aria-hidden="true" class="flex items-center gap-12 sm:gap-16 shrink-0">
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-brands fa-java text-2xl sm:text-3xl text-orange-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Java 17</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-leaf text-2xl sm:text-3xl text-emerald-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Spring Boot 3</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-feather-pointed text-2xl sm:text-3xl text-green-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Thymeleaf SSR</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-wand-magic-sparkles text-2xl sm:text-3xl text-pink-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Gemini 1.5 Flash</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-brain text-2xl sm:text-3xl text-violet-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>RAG Vector Search</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-database text-2xl sm:text-3xl text-blue-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>PostgreSQL &amp; H2</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-brands fa-css3-alt text-2xl sm:text-3xl text-cyan-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Tailwind CSS</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-brands fa-docker text-2xl sm:text-3xl text-sky-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Docker Container</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-bolt text-2xl sm:text-3xl text-amber-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Semantic Cache</span>
+  </div>
+  <div class="group flex items-center gap-3 text-lg sm:text-xl font-bold text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+    <i class="fa-solid fa-network-wired text-2xl sm:text-3xl text-indigo-400 group-hover:scale-110 transition-transform duration-300"></i>
+    <span>Neural Embeddings</span>
+  </div>
+</div>
+</div>
+</div>
+</section>
+<!-- d. HOW IT WORKS: RAG PIPELINE (Thay thế About Us) -->
+<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="about">
+<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+UNDER THE HOOD ARCHITECTURE
+</span>
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
+How Our <span class="text-gradient">RAG Pipeline</span> Works
+</h2>
+<p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
+Quy trình 3 bước khép kín biến slide &amp; giáo trình PDF đồ sộ thành trợ lý AI thông minh: Nạp &amp; nhúng vector 768 chiều, truy xuất ngữ nghĩa siêu tốc trên H2 Database nhúng, và tổng hợp câu trả lời chính xác có số trang trích dẫn.
+</p>
+</div>
+<div class="relative">
+<!-- Neon Flow Connecting Beam (Desktop) -->
+<div class="hidden md:block pointer-events-none absolute top-1/2 -translate-y-1/2 left-[8%] right-[8%] h-[2px] z-0 pipeline-beam"></div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 relative z-10">
+<!-- Step 1: Ingest & Embed -->
+<div class="relative group">
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-6">
+<div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-file-pdf"></i>
+</div>
+<span class="badge badge-sm bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono font-bold">BƯỚC 01</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-3">1. Ingest &amp; Embed</h3>
+<p class="text-gray-300 leading-relaxed text-sm mb-4">
+Tải lên slide bài giảng hoặc giáo trình PDF môn học. Thư viện <strong>Apache PDFBox</strong> tự động bóc tách text thô, chia nhỏ thành các Chunks thông minh và chuyển hóa thành vector nhúng <strong>768 chiều</strong> bảo toàn ngữ cảnh học thuật.
+</p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex flex-wrap gap-2">
+<span class="badge badge-xs bg-white/5 border border-white/10 text-gray-300 font-mono text-[10px]">Apache PDFBox</span>
+<span class="badge badge-xs bg-white/5 border border-white/10 text-indigo-300 font-mono text-[10px]">768-dim Vectors</span>
+<span class="badge badge-xs bg-white/5 border border-white/10 text-gray-300 font-mono text-[10px]">Overlap Chunks</span>
+</div>
+</div>
+<!-- Desktop Floating Arrow Connector 1 -> 2 (Centered exactly in the gap) -->
+<div class="hidden md:flex absolute left-full top-1/2 -translate-x-1/2 -translate-y-1/2 md:ml-6 lg:ml-8 z-20 w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-slate-950/95 border border-indigo-400/50 text-indigo-300 items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.4)] backdrop-blur-md group-hover:scale-115 group-hover:border-indigo-400 group-hover:shadow-[0_0_22px_rgba(99,102,241,0.7)] group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-arrow-right text-xs animate-pulse"></i>
+</div>
+</div>
+
+<!-- Mobile Connector 1 -> 2 -->
+<div class="flex md:hidden justify-center my-3 z-20">
+<div class="w-8 h-8 rounded-full bg-slate-950/95 border border-indigo-400/50 text-indigo-300 flex items-center justify-center shadow-[0_0_12px_rgba(99,102,241,0.35)] backdrop-blur-md">
+<i class="fa-solid fa-arrow-down text-xs animate-bounce"></i>
+</div>
+</div>
+
+<!-- Step 2: Vector Retrieve -->
+<div class="relative group">
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden border-violet-500/30 bg-gradient-to-b from-slate-900/90 to-slate-900/50 flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-6">
+<div class="w-14 h-14 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-database"></i>
+</div>
+<span class="badge badge-sm bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono font-bold">BƯỚC 02</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-3">2. Vector Retrieve</h3>
+<p class="text-gray-300 leading-relaxed text-sm mb-4">
+Khi sinh viên đặt câu hỏi, hệ thống vector hóa câu truy vấn và tính toán <strong>Cosine Similarity</strong> trực tiếp trên <strong>H2 Database nhúng</strong>. Trích xuất top các đoạn văn bản liên quan nhất trong <strong>&lt; 0.4 giây</strong> với chi phí máy chủ $0.
+</p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex flex-wrap gap-2">
+<span class="badge badge-xs bg-white/5 border border-white/10 text-violet-300 font-mono text-[10px]">H2 Embedded DB</span>
+<span class="badge badge-xs bg-white/5 border border-white/10 text-cyan-300 font-mono text-[10px]">Cosine Similarity</span>
+<span class="badge badge-xs bg-white/5 border border-white/10 text-emerald-300 font-mono text-[10px]">$0 Server Cost</span>
+</div>
+</div>
+<!-- Desktop Floating Arrow Connector 2 -> 3 (Centered exactly in the gap) -->
+<div class="hidden md:flex absolute left-full top-1/2 -translate-x-1/2 -translate-y-1/2 md:ml-6 lg:ml-8 z-20 w-8 h-8 lg:w-9 lg:h-9 rounded-full bg-slate-950/95 border border-pink-400/50 text-pink-300 items-center justify-center shadow-[0_0_15px_rgba(236,72,153,0.4)] backdrop-blur-md group-hover:scale-115 group-hover:border-pink-400 group-hover:shadow-[0_0_22px_rgba(236,72,153,0.7)] group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-arrow-right text-xs animate-pulse"></i>
+</div>
+</div>
+
+<!-- Mobile Connector 2 -> 3 -->
+<div class="flex md:hidden justify-center my-3 z-20">
+<div class="w-8 h-8 rounded-full bg-slate-950/95 border border-pink-400/50 text-pink-300 flex items-center justify-center shadow-[0_0_12px_rgba(236,72,153,0.35)] backdrop-blur-md">
+<i class="fa-solid fa-arrow-down text-xs animate-bounce"></i>
+</div>
+</div>
+
+<!-- Step 3: Grounded Generate -->
+<div class="relative group">
+<div class="reveal reveal-delay-300 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-6">
+<div class="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-wand-magic-sparkles"></i>
+</div>
+<span class="badge badge-sm bg-pink-500/20 text-pink-300 border border-pink-400/30 font-mono font-bold">BƯỚC 03</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-3">3. Grounded Generate</h3>
+<p class="text-gray-300 leading-relaxed text-sm mb-4">
+<strong>Gemini 1.5 Flash</strong> nhận câu hỏi kết hợp với ngữ cảnh trích xuất từ giáo trình để sinh câu trả lời chuẩn xác. Mỗi ý kiến thức luôn đính kèm <strong>Citation Card (số trang cụ thể)</strong>, loại bỏ 100% ảo giác (hallucinations).
+</p>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5 flex flex-wrap gap-2">
+<span class="badge badge-xs bg-white/5 border border-white/10 text-pink-300 font-mono text-[10px]">Gemini 1.5 Flash</span>
+<span class="badge badge-xs bg-white/5 border border-white/10 text-emerald-300 font-mono text-[10px]">Page Citations</span>
+<span class="badge badge-xs bg-white/5 border border-white/10 text-gray-300 font-mono text-[10px]">Zero Hallucination</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- e. FEATURES (Bento Box Layout) -->
+<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="features">
+<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<span class="badge badge-outline border-pink-500/40 text-pink-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+CORE CAPABILITIES
+</span>
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
+Designed for University Students &amp; <span class="text-gradient">Exam Preparation</span>
+</h2>
+<p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
+Không còn cảnh lạc lối giữa hàng trăm trang slide trước tuần thi Final. Tất cả công cụ học tập thông minh quy tụ trong một nền tảng duy nhất.
+</p>
+</div>
+<!-- Bento Grid (Unequal Grid Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Bento 1: Large Card (2 Cols) - Semantic Search with Citations -->
+<div class="reveal reveal-delay-100 md:col-span-2 glass-card glass-card-hover p-8 sm:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div class="relative z-10 max-w-lg mb-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
+<i class="fa-solid fa-magnifying-glass-chart"></i> Semantic Vector Search
+</div>
+<h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Semantic Search, Not Just Keywords</h3>
+<p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+Tìm kiếm theo ngữ nghĩa sâu sắc thay vì chỉ khớp từ khóa thô sơ. AI hiểu chính xác ý định câu hỏi của bạn ngay cả khi không dùng đúng từ ngữ trong giáo trình, tự động trích dẫn số trang chính xác để đối chiếu nguồn gốc.
+</p>
+</div>
+<!-- Decorative Bento Graphic: Search Box & Matched Chunk Preview -->
+<div class="relative z-10 glass-card p-4 rounded-2xl border border-white/10 bg-slate-900/85">
+<div class="flex items-center justify-between text-xs text-gray-400 pb-3 border-b border-white/10">
+<span class="font-medium text-white flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Truy Vấn Ngữ Nghĩa Trực Tiếp
+</span>
+<span class="badge badge-sm badge-outline border-indigo-500/30 text-indigo-300">Giao Thức Cosine 768-D</span>
+</div>
+<div class="mt-3 p-3 bg-white/5 rounded-xl border border-white/10">
+<div class="flex items-center gap-2 text-xs text-violet-300 mb-1.5 font-mono">
+<i class="fa-solid fa-terminal text-[10px]"></i>
+<span>Query: "So sánh Servlet và JSP trong kiến trúc MVC?"</span>
+</div>
+<div class="text-[11px] text-gray-300 bg-slate-950/70 p-2.5 rounded-lg border border-white/5 flex items-start justify-between gap-2">
+<span><strong>Trích xuất:</strong> "JSP chuyên xử lý tầng View (Giao diện), còn Servlet đóng vai trò Controller điều phối logic..."</span>
+<span class="badge badge-xs bg-violet-500/20 text-violet-300 shrink-0">PRJ301 - Trang 28</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-3 mt-3">
+<div class="p-2.5 bg-white/5 rounded-xl border border-white/5 text-center">
+<div class="text-[11px] text-gray-400">Thời Gian Truy Xuất</div>
+<div class="text-base sm:text-lg font-bold text-white">0.3s</div>
+</div>
+<div class="p-2.5 bg-white/5 rounded-xl border border-white/5 text-center">
+<div class="text-[11px] text-gray-400">Độ Tương Đồng</div>
+<div class="text-base sm:text-lg font-bold text-violet-400">99.2%</div>
+</div>
+<div class="p-2.5 bg-white/5 rounded-xl border border-white/5 text-center">
+<div class="text-[11px] text-gray-400">Hiện Tượng Ảo Giác</div>
+<div class="text-base sm:text-lg font-bold text-emerald-400">0%</div>
+</div>
+</div>
+</div>
+<!-- Background accent glow -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+
+<!-- Bento 2: 1 Col Card - Multi-Course Hub -->
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-xl mb-6">
+<i class="fa-solid fa-layer-group"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2">Quản Lý Đa Môn Học</h3>
+<p class="text-gray-300 text-sm leading-relaxed mb-6">
+Không gian học tập riêng biệt cho từng môn: HSF302, MAS291, PRJ301, SWE201. Mỗi môn sở hữu kho giáo trình, vector index và lịch sử chat tách biệt.
+</p>
+
+<!-- Mini Course Pills Grid -->
+<div class="grid grid-cols-2 gap-2 mb-6">
+<div class="flex items-center gap-2 p-2 rounded-xl bg-violet-500/10 border border-violet-500/20 text-xs font-semibold text-violet-200">
+<i class="fa-solid fa-comments text-violet-400"></i>
+<span class="truncate">HSF302 • Kỹ Năng</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-200">
+<i class="fa-brands fa-java text-amber-400"></i>
+<span class="truncate">PRJ301 • Java Web</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs font-semibold text-cyan-200">
+<i class="fa-solid fa-calculator text-cyan-400"></i>
+<span class="truncate">MAS291 • Thống Kê</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-200">
+<i class="fa-solid fa-code text-emerald-400"></i>
+<span class="truncate">SWE201 • CN Phần Mềm</span>
+</div>
+</div>
+
+<!-- 3 Architecture Checklist Points -->
+<div class="space-y-2.5 text-xs text-gray-300">
+<div class="flex items-center gap-2">
+<i class="fa-solid fa-database text-violet-400 w-3.5 text-center"></i>
+<span><strong>Multi-Tenant:</strong> Phân vùng tài liệu theo Course ID</span>
+</div>
+<div class="flex items-center gap-2">
+<i class="fa-solid fa-brain text-pink-400 w-3.5 text-center"></i>
+<span><strong>Vector Partition:</strong> Index riêng biệt, không lẫn ngữ cảnh</span>
+</div>
+<div class="flex items-center gap-2">
+<i class="fa-solid fa-shield-halved text-emerald-400 w-3.5 text-center"></i>
+<span><strong>Zero Context Leak:</strong> Phòng vệ ảo giác chéo môn 100%</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+<span class="text-xs text-violet-300 font-semibold flex items-center gap-1.5">
+<i class="fa-solid fa-graduation-cap"></i> Không gian độc lập
+</span>
+<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none">4+ Môn Học</span>
+</div>
+</div>
+
+<!-- Bento 3: 1 Col Card - $0 Architecture & Privacy -->
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-6">
+<i class="fa-solid fa-shield-halved"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2">Chi Phí Vận Hành $0</h3>
+<p class="text-gray-300 text-sm leading-relaxed">
+Sử dụng H2 Database nhúng Java lưu bền vững ra file đĩa kết hợp Gemini API miễn phí. Không tốn tài nguyên server đám mây, dữ liệu hoàn toàn an toàn và riêng tư.
+</p>
+</div>
+<div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+<span class="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+<i class="fa-solid fa-circle-check"></i> Embedded H2 DB
+</span>
+<span class="text-xs text-cyan-400 font-mono font-bold">$0 / tháng</span>
+</div>
+</div>
+
+<!-- Bento 4: Large Card (2 Cols) - AI Study Planner & Quiz Generator -->
+<div class="reveal reveal-delay-200 md:col-span-2 glass-card glass-card-hover p-8 sm:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+<div class="max-w-md">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold mb-4">
+<i class="fa-solid fa-calendar-check"></i> Study Planner &amp; Quiz Engine
+</div>
+<h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">AI Study Planner &amp; Quiz Generator</h3>
+<p class="text-gray-300 text-sm leading-relaxed">
+Tự động phân tích khối lượng giáo trình và lịch rảnh để lập thời khóa biểu học tập vừa sức; đồng thời sinh đề thi trắc nghiệm A/B/C/D bám sát đề cương có chấm điểm và giải thích chi tiết.
+</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="badge badge-lg bg-white/5 border border-white/10 text-white font-mono text-xs">A/B/C/D Quiz</span>
+<span class="badge badge-lg bg-white/5 border border-white/10 text-pink-300 font-mono text-xs">Spaced Repetition</span>
+</div>
+</div>
+<!-- Mini Quiz Question Preview Inside Bento -->
+<div class="glass-card rounded-2xl p-4 bg-slate-950/90 text-xs text-gray-300 border border-white/10">
+<div class="flex items-center justify-between text-gray-400 pb-2 mb-2.5 border-b border-white/10">
+<span class="font-semibold text-white flex items-center gap-2">
+<i class="fa-solid fa-circle-question text-pink-400"></i> PRJ301 - Mock Quiz Chương 2
+</span>
+<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none font-bold">Tự Động Sinh Từ PDF</span>
+</div>
+<p class="font-medium text-white mb-3 text-xs sm:text-sm">
+Câu 1: Phương thức nào trong Servlet chỉ được container gọi duy nhất 1 lần trong suốt vòng đời?
+</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+<div class="p-2.5 rounded-lg bg-white/5 border border-white/10 text-gray-400">
+A. service()
+</div>
+<div class="p-2.5 rounded-lg bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-semibold flex items-center justify-between">
+<span>B. init()</span>
+<i class="fa-solid fa-check-circle text-emerald-400"></i>
+</div>
+<div class="p-2.5 rounded-lg bg-white/5 border border-white/10 text-gray-400">
+C. doGet()
+</div>
+<div class="p-2.5 rounded-lg bg-white/5 border border-white/10 text-gray-400">
+D. destroy()
+</div>
+</div>
+</div>
+<!-- Background glow -->
+<div class="absolute -left-16 -top-16 w-72 h-72 bg-pink-500/15 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+</div>
+</section>
+<!-- f. IMPACT IN NUMBERS -->
+<section class="py-24 md:py-32 relative overflow-hidden bg-slate-950/60 border-y border-white/5" id="impact">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="reveal text-center max-w-2xl mx-auto mb-16">
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
+Our Impact in <span class="text-gradient">Numbers</span>
+</h2>
+<p class="text-gray-300 mt-3 text-base">
+Chỉ số kiểm chứng thực tế từ hệ thống RAG phục vụ sinh viên ôn thi học kỳ hiệu quả.
+</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+<!-- Metric 1 -->
+<div class="reveal reveal-delay-100 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="99.9" data-decimals="1" data-suffix="%">99.9%</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Không Ảo Giác</div>
+<p class="text-xs text-gray-400 relative z-10">100% câu trả lời gắn kèm số trang trích dẫn giáo trình kiểm chứng</p>
+</div>
+<!-- Metric 2 -->
+<div class="reveal reveal-delay-200 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient-cyan mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="0.4" data-decimals="1" data-prefix="&lt; " data-suffix="s">&lt; 0.4s</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Tốc Độ Phản Hồi RAG</div>
+<p class="text-xs text-gray-400 relative z-10">Cosine Similarity siêu tốc trên cơ sở dữ liệu H2 nhúng cục bộ</p>
+</div>
+<!-- Metric 3 -->
+<div class="reveal reveal-delay-300 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="10" data-decimals="0" data-suffix="x">10x</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Tốc Độ Ôn Thi</div>
+<p class="text-xs text-gray-400 relative z-10">Nắm bắt cốt lõi 300 trang slide chỉ trong 15 phút ôn tập</p>
+</div>
+<!-- Metric 4 -->
+<div class="reveal reveal-delay-400 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient-cyan mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="0" data-decimals="0" data-prefix="$">$0</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Chi Phí Vận Hành Server</div>
+<p class="text-xs text-gray-400 relative z-10">Lưu trữ bền vững H2 Database và Gemini Flash API miễn phí</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- g. PRICING SECTION -->
+<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="pricing">
+<div class="reveal text-center max-w-3xl mx-auto mb-10">
+<span class="badge badge-outline border-indigo-500/40 text-indigo-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+Gói Học Tập Sinh Viên
+</span>
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
+Choose Your Plan for <span class="text-gradient">Final Exams</span>
+</h2>
+<p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
+Minh bạch và hoàn toàn miễn phí cho sinh viên tự học. Nâng cấp để mở khóa thời khóa biểu học tập AI và không giới hạn môn thi.
+</p>
+</div>
+<!-- BILLING CYCLE TOGGLE (Học kỳ / Cả năm với Sliding Pill) -->
+<div class="reveal reveal-delay-100 flex flex-col items-center justify-center mb-16">
+<div class="relative glass-card bg-slate-900/90 border border-white/15 p-1.5 rounded-full inline-flex items-center shadow-xl shadow-indigo-500/10">
+<!-- Active sliding pill indicator -->
+<div class="absolute top-1.5 bottom-1.5 rounded-full btn-gradient shadow-md shadow-violet-500/40 transition-all duration-300 ease-out pointer-events-none z-0" id="billing-pill-indicator"></div>
+<!-- Monthly Button -->
+<button aria-pressed="true" class="relative z-10 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white transition-colors duration-200 flex items-center justify-center focus:outline-none" id="billing-btn-monthly" type="button">
+<span>Theo Tháng</span>
+</button>
+<!-- Yearly Button -->
+<button aria-pressed="false" class="relative z-10 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold text-gray-400 hover:text-gray-200 transition-colors duration-200 flex items-center justify-center gap-2.5 focus:outline-none" id="billing-btn-yearly" type="button">
+<span>Theo Học Kỳ</span>
+<!-- Save 20% Glowing Pulsing Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-pink-500 via-rose-500 to-violet-500 text-white shadow-md shadow-pink-500/40 border border-pink-400/40 animate-badge-pulse whitespace-nowrap">
+<i class="fa-solid fa-sparkles text-[8px]"></i>
+<span>Tiết Kiệm 20%</span>
+</span>
+</button>
+</div>
+<p class="text-xs text-gray-400 mt-3 font-medium flex items-center gap-1.5">
+<i class="fa-solid fa-bolt text-pink-400 text-[10px]"></i>
+<span>Đăng ký trọn gói học kỳ để nhận thêm <strong>Flashcards Spaced Repetition</strong></span>
+</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+<!-- Plan 1: Starter / Sinh Viên Tự Học (Spotlight Hover Card) -->
+<div class="reveal reveal-delay-100 glass-card spotlight-card p-8 rounded-3xl flex flex-col justify-between border border-white/10" data-plan="starter">
+<div class="spotlight-overlay"></div>
+<div class="spotlight-border"></div>
+<div class="spotlight-content flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-white">Sinh Viên Tự Học</h3>
+<span class="badge badge-sm badge-ghost text-emerald-400 font-semibold">Miễn Phí</span>
+</div>
+<p class="text-gray-300 text-sm mb-6 leading-relaxed">Phù hợp cho sinh viên tự học và tra cứu slide các môn cơ bản trong kỳ.</p>
+<div class="flex items-baseline gap-2 mb-1">
+<div class="price-value-container">
+<span class="price-amount text-4xl sm:text-5xl font-extrabold text-white" data-monthly="0" data-yearly="0">$0</span>
+</div>
+<span class="price-period text-gray-400 text-sm">/ vĩnh viễn</span>
+</div>
+<div class="annual-note-wrapper min-h-[22px] mb-5">
+<p class="annual-note text-xs text-emerald-400 font-semibold opacity-0 transform -translate-y-1 transition-all duration-300" data-note-yearly="Miễn phí vĩnh viễn • Không cần thẻ thanh toán">
+Miễn phí vĩnh viễn
+</p>
+</div>
+<div class="divider my-4 border-white/10"></div>
+<ul class="space-y-3.5 text-sm text-gray-300 mb-8">
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Tối đa <strong>3 Môn học</strong> (HSF302, PRJ301...)</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Truy vấn RAG 50 câu hỏi / ngày</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Trích dẫn số trang chính xác (Citations)</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Sinh đề trắc nghiệm cơ bản (10 câu)</span>
+</li>
+<li class="flex items-center gap-3 text-gray-500 line-through">
+<i class="fa-solid fa-circle-xmark text-gray-600 text-sm"></i>
+<span>AI Study Planner tự động lập lịch</span>
+</li>
+</ul>
+</div>
+<a th:href="@{/register}" class="w-full py-3.5 rounded-xl font-semibold text-sm glass-card hover:bg-white/10 border border-white/15 text-white transition text-center block">
+Bắt Đầu Học Ngay
+</a>
+</div>
+</div>
+
+<!-- Plan 2: Pro / Ôn Thi Cấp Tốc (Highlighted with Gradient border) -->
+<div class="reveal reveal-delay-200 relative glass-card spotlight-card spotlight-pro p-8 rounded-3xl flex flex-col justify-between border-2 border-violet-500 shadow-2xl shadow-violet-500/20 bg-gradient-to-b from-slate-900/90 to-slate-950 lg:-translate-y-4" data-plan="pro">
+<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full btn-gradient text-[11px] font-extrabold uppercase tracking-wider text-white shadow-lg shadow-violet-500/40 border border-violet-400/30 z-30 pointer-events-none whitespace-nowrap">
+Sinh Viên Ưa Chuộng
+</div>
+<div class="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none z-0">
+<div class="spotlight-overlay"></div>
+<div class="spotlight-border"></div>
+</div>
+<div class="spotlight-content relative z-10 flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-4 mt-2">
+<h3 class="text-2xl font-bold text-white">Ôn Thi Cấp Tốc</h3>
+<span class="badge badge-sm badge-primary bg-violet-600 border-none text-white font-semibold">Gói Pro</span>
+</div>
+<p class="text-gray-300 text-sm mb-6">Dành cho sinh viên trong mùa thi muốn tối ưu hóa thời gian và đạt điểm A.</p>
+<div class="flex items-baseline gap-2 mb-1">
+<div class="price-value-container">
+<span class="price-amount text-5xl font-extrabold text-white" data-monthly="2" data-yearly="1.5">$2</span>
+</div>
+<span class="price-period text-gray-400 text-sm">/ tháng (~49k VNĐ)</span>
+</div>
+<div class="annual-note-wrapper min-h-[22px] mb-5">
+<p class="annual-note text-xs text-pink-400 font-semibold opacity-0 transform -translate-y-1 transition-all duration-300" data-note-yearly="Thanh toán theo kỳ ($6/kỳ) • Tiết kiệm 25%">
+Thanh toán theo tháng
+</p>
+</div>
+<div class="divider my-4 border-violet-500/20"></div>
+<ul class="space-y-3.5 text-sm text-gray-200 mb-8">
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span><strong>Không giới hạn</strong> Môn học</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span>Truy vấn RAG Gemini 1.5 Flash không giới hạn</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span><strong>AI Study Planner:</strong> Tự động xếp lịch học vừa sức</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span><strong>AI Quiz Generator:</strong> Sinh đề thi A/B/C/D theo chương</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span>Xuất đề thi PDF &amp; Flashcards Spaced Repetition</span>
+</li>
+</ul>
+</div>
+<a th:href="@{/register}" class="w-full btn-gradient py-3.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-indigo-500/30 text-center block">
+Nâng Cấp Gói Pro
+</a>
+</div>
+</div>
+
+<!-- Plan 3: Campus / Giảng Viên & Lớp Học -->
+<div class="reveal reveal-delay-300 glass-card spotlight-card p-8 rounded-3xl flex flex-col justify-between border border-white/10" data-plan="enterprise">
+<div class="spotlight-overlay"></div>
+<div class="spotlight-border"></div>
+<div class="spotlight-content flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-white">Giảng Viên &amp; Lớp Học</h3>
+<span class="badge badge-sm badge-ghost text-violet-300">Khoa / Lớp</span>
+</div>
+<p class="text-gray-300 text-sm mb-6 leading-relaxed">Dành cho giảng viên hoặc ban cán sự muốn tạo kho tài liệu chung cho lớp.</p>
+<div class="flex items-baseline gap-2 mb-1">
+<div class="price-value-container">
+<span class="price-amount text-3xl sm:text-4xl font-extrabold text-white" data-monthly="Campus" data-yearly="Campus">Liên Hệ</span>
+</div>
+<span class="price-period text-gray-400 text-sm">/ học kỳ</span>
+</div>
+<div class="annual-note-wrapper min-h-[22px] mb-5">
+<p class="annual-note text-xs text-cyan-400 font-semibold opacity-0 transform -translate-y-1 transition-all duration-300" data-note-yearly="Hỗ trợ tích hợp LMS trường đại học">
+Gói tài trợ giáo dục
+</p>
+</div>
+<div class="divider my-4 border-white/10"></div>
+<ul class="space-y-3.5 text-sm text-gray-300 mb-8">
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Không gian lớp học dùng chung cho cả lớp</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Tải lên trọn bộ slide giáo trình môn học</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Dashboard theo dõi tiến độ hiểu bài của sinh viên</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Ngân hàng đề thi trắc nghiệm bảo mật nội bộ</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Hỗ trợ kỹ thuật trực tiếp cho Giảng viên</span>
+</li>
+</ul>
+</div>
+<a th:href="@{/register}" class="w-full py-3.5 rounded-xl font-semibold text-sm glass-card hover:bg-white/10 border border-white/15 text-white transition text-center block">
+Liên Hệ Bộ Môn
+</a>
+</div>
+</div>
+</div>
+<!-- Guarantee Note -->
+<div class="reveal text-center mt-12 flex items-center justify-center gap-2 text-sm text-gray-400">
+<i class="fa-solid fa-graduation-cap text-violet-400"></i>
+<span>Cam kết hỗ trợ tối đa cho sinh viên trong mọi kỳ thi. Hoàn tiền 100% nếu không hài lòng trong <strong>14 ngày</strong>.</span>
+</div>
+</section>
+
+<!-- h. TESTIMONIALS -->
+<section class="py-24 md:py-32 bg-slate-950/40 border-y border-white/5" id="testimonials">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<span class="badge badge-outline border-cyan-500/40 text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+Trải Nghiệm Thực Tế
+</span>
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
+Hear from Our <span class="text-gradient">Student Community</span>
+</h2>
+<p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
+Xem cách sinh viên đại học chinh phục các môn học lý thuyết và lập trình với sự đồng hành của StudyHub RAG AI.
+</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+<!-- Review 1 -->
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between">
+<div>
+<div class="flex text-amber-400 text-sm gap-1 mb-4">
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+</div>
+<p class="text-gray-200 text-base sm:text-lg leading-relaxed font-medium italic mb-6">
+“Tài liệu PRJ301 và SWE201 có quá nhiều khái niệm phân tán. Nhờ StudyHub trích dẫn đúng số trang giáo trình mà mình hoàn thành bài ôn tập trong 1 tiếng thay vì mất cả đêm lật từng slide.”
+</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-white/10">
+<div class="avatar placeholder">
+<div class="bg-indigo-600/30 text-indigo-300 rounded-full w-12 border border-indigo-400/30 font-bold">
+HN
+</div>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm">Nguyễn Hoàng Nam</h4>
+<p class="text-xs text-gray-400">Kỹ thuật Phần mềm (SE) • Điểm A PRJ301</p>
+</div>
+</div>
+</div>
+<!-- Review 2 -->
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between border-violet-500/20 bg-gradient-to-b from-slate-900/80 to-slate-950">
+<div>
+<div class="flex text-amber-400 text-sm gap-1 mb-4">
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+</div>
+<p class="text-gray-200 text-base sm:text-lg leading-relaxed font-medium italic mb-6">
+“Môn HSF302 có rất nhiều tình huống giao tiếp và case study dài. Tính năng Quiz Generator sinh đề trắc nghiệm sát sạt đề thi thật kèm giải thích cặn kẽ giúp mình tự tin đi thi.”
+</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-white/10">
+<div class="avatar placeholder">
+<div class="bg-pink-600/30 text-pink-300 rounded-full w-12 border border-pink-400/30 font-bold">
+MA
+</div>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm">Trần Thị Mai Anh</h4>
+<p class="text-xs text-gray-400">Quản trị Kinh doanh (BA) • Khóa K18</p>
+</div>
+</div>
+</div>
+<!-- Review 3 -->
+<div class="reveal reveal-delay-300 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between">
+<div>
+<div class="flex text-amber-400 text-sm gap-1 mb-4">
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+</div>
+<p class="text-gray-200 text-base sm:text-lg leading-relaxed font-medium italic mb-6">
+“Kiến trúc kết hợp H2 Database và Gemini nhúng cực kỳ thông minh. Hệ thống chạy êm ru trên máy cá nhân mà không tốn một đồng chi phí hosting hay máy chủ đám mây.”
+</p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-white/10">
+<div class="avatar placeholder">
+<div class="bg-cyan-600/30 text-cyan-300 rounded-full w-12 border border-cyan-400/30 font-bold">
+QB
+</div>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm">Lê Quốc Bảo</h4>
+<p class="text-xs text-gray-400">Trí tuệ Nhân tạo (AI) • Khoa học Dữ liệu</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- i. BLOG / RECENT NEWS -->
+<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="blog">
+<div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
+<div>
+<span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+Hướng Dẫn &amp; Kiến Thức
+</span>
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
+Study Guides &amp; <span class="text-gradient">Tech Insights</span>
+</h2>
+</div>
+<a class="text-sm font-semibold text-violet-400 hover:text-violet-300 flex items-center gap-2 group" href="#blog">
+<span>Xem Tất Cả Bài Viết</span>
+<i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Post 1: RAG Hallucination Tech Preview -->
+<article class="reveal reveal-delay-100 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-violet-500/30 transition-all duration-300">
+<div>
+<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 font-mono text-xs flex flex-col justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
+<div class="flex items-center gap-1.5 mb-3 opacity-70">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="ml-2 text-[10px] text-gray-500">rag_pipeline.java</span>
+</div>
+<div class="space-y-1.5 text-[11px]">
+<div class="text-indigo-400"><span class="text-pink-400">&gt;</span> pdfBox.extractChunks(<span class="text-emerald-300">"HSF302_Syllabus.pdf"</span>)</div>
+<div class="text-gray-400 flex items-center gap-2">
+<span>✓ Extracted 142 Chunks</span>
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">768-D</span>
+</div>
+<div class="text-violet-300/80 text-[10px] truncate">&gt;&gt; Zero Hallucination Grounded: 100%</div>
+</div>
+<span class="absolute top-4 right-4 badge badge-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">RAG Engine</span>
+</div>
+<div class="p-6">
+<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
+<span>Đồ Án AI</span>
+<span>•</span>
+<span>5 phút đọc</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-violet-300 transition-colors">
+Cách RAG Triệt Tiêu Hoàn Toàn Ảo Giác Khi Ôn Thi Slide 300 Trang
+</h3>
+<p class="text-gray-300 text-sm leading-relaxed">
+Phân tích cơ chế Grounded Generation kết hợp trích dẫn số trang (Citations) giúp sinh viên tra cứu tài liệu với độ chính xác tuyệt đối.
+</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
+<div class="w-8 h-8 rounded-full bg-violet-600/30 flex items-center justify-center text-xs font-bold text-violet-300">
+G2
+</div>
+<span class="text-xs font-medium text-gray-300">Group 2 • RAG Core Team</span>
+</div>
+</article>
+
+<!-- Post 2: Embedded H2 DB Tech Preview -->
+<article class="reveal reveal-delay-200 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-pink-500/10 hover:border-pink-500/30 transition-all duration-300">
+<div>
+<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 flex items-center justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
+<div class="grid grid-cols-3 gap-2 w-full max-w-[240px]">
+<div class="col-span-2 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 p-2 flex flex-col justify-between">
+<div class="w-12 h-2 rounded-full bg-purple-400/50"></div>
+<div class="w-20 h-1.5 rounded-full bg-pink-400/30"></div>
+</div>
+<div class="h-14 rounded-xl bg-slate-800/60 border border-white/10 flex flex-col items-center justify-center p-1">
+<i class="fa-solid fa-database text-pink-400/80 text-sm"></i>
+<span class="text-[9px] text-gray-400 mt-1 font-mono">H2 DB</span>
+</div>
+<div class="h-12 rounded-xl bg-slate-800/60 border border-white/10 flex items-center justify-center">
+<i class="fa-solid fa-bolt text-purple-400/80 text-xs"></i>
+</div>
+<div class="col-span-2 h-12 rounded-xl bg-gradient-to-r from-pink-500/20 to-violet-500/20 border border-pink-500/30 flex items-center justify-between px-3">
+<span class="text-[10px] text-pink-200 font-mono">Cosine Sim</span>
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+</div>
+</div>
+<span class="absolute top-4 right-4 badge badge-sm bg-pink-500/20 text-pink-300 border border-pink-400/30">Database</span>
+</div>
+<div class="p-6">
+<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
+<span>Kiến Trúc $0</span>
+<span>•</span>
+<span>7 phút đọc</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-pink-300 transition-colors">
+Tối Ưu Hóa Vector Search 768 Chiều Trên H2 Database Nhúng Chi Phí $0
+</h3>
+<p class="text-gray-300 text-sm leading-relaxed">
+Cách lưu trữ bền vững vector nhúng xuống đĩa cứng bằng Java thuần và tính toán Cosine Similarity không phụ thuộc hạ tầng đám mây.
+</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
+<div class="w-8 h-8 rounded-full bg-pink-600/30 flex items-center justify-center text-xs font-bold text-pink-300">
+BE
+</div>
+<span class="text-xs font-medium text-gray-300">Backend Lead • Spring Boot</span>
+</div>
+</article>
+
+<!-- Post 3: Study Planner & Spaced Repetition -->
+<article class="reveal reveal-delay-300 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-cyan-500/30 transition-all duration-300">
+<div>
+<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 flex items-center justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
+<div class="flex items-center justify-between w-full max-w-[240px] px-2">
+<div class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-emerald-500/30">
+<i class="fa-solid fa-calendar-check text-emerald-400 text-sm"></i>
+<span class="text-[9px] text-gray-300 font-bold">Lịch Rảnh</span>
+<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none text-[8px]">Auto</span>
+</div>
+<div class="flex-1 flex flex-col items-center">
+<span class="text-[8px] text-cyan-400 font-mono mb-1">Spaced Rep</span>
+<div class="w-full h-0.5 bg-gradient-to-r from-emerald-500 via-cyan-400 to-indigo-500 relative">
+<span class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-300 animate-pulse"></span>
+</div>
+<span class="text-[8px] text-gray-400 mt-1">Vừa Sức</span>
+</div>
+<div class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-indigo-500/30">
+<i class="fa-solid fa-brain text-indigo-400 text-sm"></i>
+<span class="text-[9px] text-gray-300 font-bold">Quiz A/B/C/D</span>
+<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border-none text-[8px]">100%</span>
+</div>
+</div>
+<span class="absolute top-4 right-4 badge badge-sm bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">Phương Pháp Học</span>
+</div>
+<div class="p-6">
+<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
+<span>Khoa Học Học Tập</span>
+<span>•</span>
+<span>4 phút đọc</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
+Ứng Dụng Thuật Toán Spaced Repetition Và AI Lập Kế Hoạch Học Tập
+</h3>
+<p class="text-gray-300 text-sm leading-relaxed">
+Tối ưu hóa đường cong lãng quên thông qua thời khóa biểu học tập phân tán và sinh đề trắc nghiệm ngẫu nhiên theo từng chương giáo trình.
+</p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
+<div class="w-8 h-8 rounded-full bg-cyan-600/30 flex items-center justify-center text-xs font-bold text-cyan-300">
+AI
+</div>
+<span class="text-xs font-medium text-gray-300">AI Tutor Mentor</span>
+</div>
+</article>
+</div>
+</section>
+
+<!-- j. CALL TO ACTION (CTA) SECTION -->
+<section class="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="reveal relative rounded-3xl overflow-hidden p-8 sm:p-16 text-center border border-white/15 bg-gradient-to-r from-indigo-900/80 via-purple-900/80 to-pink-900/80 shadow-2xl shadow-purple-900/40">
+<!-- Background light elements -->
+<div class="absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-72 h-72 bg-pink-500/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl mx-auto">
+<span class="badge badge-outline border-white/30 text-white font-semibold text-xs tracking-wider uppercase mb-4 px-4 py-2 bg-white/5">
+STUDY SMARTER, NOT HARDER
+</span>
+<h2 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight mb-6">
+Ready to Turn Your Heavy Slides into an AI Tutor?
+</h2>
+<p class="text-gray-200 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+Tham gia cùng hàng trăm sinh viên học tập thông minh hơn với StudyHub RAG AI ngay hôm nay. Bắt đầu miễn phí chỉ trong 30 giây.
+</p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<a th:href="@{/register}" class="w-full sm:w-auto px-9 py-4 rounded-xl font-bold text-base bg-white text-gray-950 hover:bg-gray-100 hover:shadow-2xl hover:shadow-white/20 transition-all flex items-center justify-center gap-2">
+<span>Bắt Đầu Miễn Phí</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</a>
+<a th:href="@{/courses}" class="w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-base text-white border border-white/25 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+<i class="fa-solid fa-book-open text-violet-400"></i>
+<span>Xem Danh Sách Môn Học</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- k. FOOTER -->
+<footer class="border-t border-white/10 bg-slate-950 pt-16 pb-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+<!-- Col 1: Brand & Bio (2 cols on md) -->
+<div class="col-span-2">
+<a th:href="@{/}" class="flex items-center gap-2.5 mb-4 group">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+<i class="fa-solid fa-graduation-cap text-sm"></i>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-white">
+StudyHub <span class="text-gradient ml-1">AI</span>
+</span>
+</a>
+<p class="text-gray-400 text-sm max-w-sm mb-6 leading-relaxed">
+Nền tảng quản lý và hỗ trợ học tập thông minh đa môn học cho sinh viên đại học. Kết hợp RAG AI giáo trình, AI Study Planner và AI Quiz Generator với chi phí vận hành $0.
+</p>
+<div class="flex items-center gap-3">
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-brands fa-github text-sm"></i>
+</a>
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-solid fa-graduation-cap text-sm"></i>
+</a>
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-brands fa-discord text-sm"></i>
+</a>
+</div>
+</div>
+<!-- Col 2: Navigation -->
+<div>
+<h4 class="text-white font-bold text-sm mb-4">Môn Học &amp; Tính Năng</h4>
+<ul class="space-y-2.5 text-sm text-gray-400">
+<li><a th:href="@{/courses}" class="hover:text-violet-400 transition font-semibold">Danh Sách Môn Học</a></li>
+<li><a class="hover:text-white transition" href="#about">Kiến Trúc RAG 3 Bước</a></li>
+<li><a class="hover:text-white transition" href="#features">Tính Năng Cốt Lõi</a></li>
+<li><a class="hover:text-white transition" href="#pricing">Gói Học Tập</a></li>
+<li><a class="hover:text-white transition" href="#testimonials">Đánh Giá Sinh Viên</a></li>
+</ul>
+</div>
+<!-- Col 3: Tech Stack -->
+<div>
+<h4 class="text-white font-bold text-sm mb-4">Công Nghệ Đồ Án</h4>
+<ul class="space-y-2.5 text-sm text-gray-400">
+<li><span class="hover:text-white transition">Java 17 &amp; Spring Boot 3</span></li>
+<li><span class="hover:text-white transition">Thymeleaf SSR &amp; WebGL2</span></li>
+<li><span class="hover:text-white transition">Gemini 1.5 Flash API</span></li>
+<li><span class="hover:text-white transition">H2 Database Embedded</span></li>
+<li><span class="hover:text-white transition">Apache PDFBox</span></li>
+</ul>
+</div>
+<!-- Col 4: Support & Access -->
+<div>
+<h4 class="text-white font-bold text-sm mb-4">Truy Cập Hệ Thống</h4>
+<ul class="space-y-2.5 text-sm text-gray-400">
+<li><a th:href="@{/login}" class="hover:text-violet-400 transition">Đăng Nhập Sinh Viên</a></li>
+<li><a th:href="@{/register}" class="hover:text-pink-400 transition">Tạo Tài Khoản Mới</a></li>
+<li><a th:href="@{/courses}" class="hover:text-white transition">Vào Dashboard Học Tập</a></li>
+<li><a class="hover:text-white transition" href="#blog">Hướng Dẫn Ôn Thi</a></li>
+</ul>
+</div>
+</div>
+<!-- Bottom Copyright -->
+<div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+<p>© 2026 Smart StudyHub RAG AI - Assignment Group 2. All rights reserved.</p>
+<div class="flex items-center gap-6">
+<span class="flex items-center gap-1.5 text-emerald-400">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+H2 DB &amp; Gemini 1.5 Flash Online
+</span>
+<a class="hover:text-gray-400" href="#">Bảo Mật Dữ Liệu</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<!-- Scroll Reveal Script via IntersectionObserver -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+
+      if (!('IntersectionObserver' in window)) {
+        // Fallback for browsers lacking IntersectionObserver support
+        reveals.forEach(el => el.classList.add('revealed'));
+      } else {
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px 0px -40px 0px',
+          threshold: 0.12
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        reveals.forEach(el => {
+          // Immediately reveal elements already near top/in viewport on page load
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9) {
+            el.classList.add('revealed');
+          } else {
+            revealObserver.observe(el);
+          }
+        });
+      }
+
+      // --- NUMBER COUNTER ANIMATION WITH SOFT NEON GLOW PULSE ---
+      const counterElements = document.querySelectorAll('.counter-value');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Base animation duration ~1850ms
+      const baseCounterDuration = 1850;
+
+      // Ease-out exponential / cubic curve: starts fast, slows down smoothly at target
+      const easeOutExpo = (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+      const triggerNeonCelebration = (el) => {
+        if (prefersReducedMotion) return;
+        el.classList.add('neon-pulse-complete');
+        const parentCard = el.closest('.card-glow-pulse');
+        if (parentCard) {
+          parentCard.classList.add('neon-card-active');
+        }
+      };
+
+      const animateCounter = (el, index = 0) => {
+        const target = parseFloat(el.getAttribute('data-counter')) || 0;
+        const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+        const suffix = el.getAttribute('data-suffix') || '';
+
+        if (prefersReducedMotion) {
+          el.textContent = `${target.toFixed(decimals)}${suffix}`;
+          return;
+        }
+
+        // Slight duration variation per counter creates a high-tech cascading lock-in feel
+        const counterDuration = baseCounterDuration + (index * 120);
+        let startTime = null;
+
+        const step = (currentTime) => {
+          if (!startTime) startTime = currentTime;
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / counterDuration, 1);
+          const easedProgress = easeOutExpo(progress);
+
+          const currentValue = easedProgress * target;
+          el.textContent = `${currentValue.toFixed(decimals)}${suffix}`;
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = `${target.toFixed(decimals)}${suffix}`;
+            // Trigger high-tech neon glow celebration & micro-confetti particle burst
+            triggerNeonCelebration(el);
+          }
+        };
+
+        requestAnimationFrame(step);
+      };
+
+      if (counterElements.length > 0) {
+        if (!('IntersectionObserver' in window) || prefersReducedMotion) {
+          counterElements.forEach((el, idx) => animateCounter(el, idx));
+        } else {
+          const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const targetEl = entry.target;
+                const idx = Array.from(counterElements).indexOf(targetEl);
+                animateCounter(targetEl, idx >= 0 ? idx : 0);
+                observer.unobserve(targetEl);
+              }
+            });
+          }, {
+            threshold: 0.25
+          });
+
+          counterElements.forEach(el => {
+            // Set initial state to 0 before animation triggers
+            const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+            const suffix = el.getAttribute('data-suffix') || '';
+            el.textContent = `${(0).toFixed(decimals)}${suffix}`;
+            counterObserver.observe(el);
+          });
+        }
+      }
+
+      // --- 3D INTERACTIVE TILT EFFECT FOR HERO DASHBOARD MOCKUP ---
+      const tiltContainer = document.getElementById('hero-tilt-container');
+      const tiltCard = document.getElementById('hero-tilt-card');
+      const floatWrapper = document.getElementById('hero-float-wrapper');
+      const glare = document.getElementById('hero-glare');
+
+      if (tiltContainer && tiltCard && !prefersReducedMotion) {
+        let isHovered = false;
+        let animationFrameId = null;
+        let targetRotateX = 0;
+        let targetRotateY = 0;
+        let currentRotateX = 0;
+        let currentRotateY = 0;
+        let targetScale = 1;
+        let currentScale = 1;
+        let targetTranslateZ = 0;
+        let currentTranslateZ = 0;
+
+        const maxTilt = 8.5; // Max degree tilt (-8.5deg to 8.5deg)
+
+        const updateTilt = () => {
+          if (!isHovered) {
+            // Smoothly return to neutral
+            currentRotateX += (0 - currentRotateX) * 0.12;
+            currentRotateY += (0 - currentRotateY) * 0.12;
+            currentScale += (1 - currentScale) * 0.12;
+            currentTranslateZ += (0 - currentTranslateZ) * 0.12;
+
+            if (Math.abs(currentRotateX) < 0.01 && Math.abs(currentRotateY) < 0.01 && Math.abs(currentScale - 1) < 0.001) {
+              tiltCard.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateZ(0px)`;
+              if (floatWrapper) floatWrapper.classList.add('animate-hero-float');
+              animationFrameId = null;
+              return;
+            }
+          } else {
+            // Follow mouse target with responsive lerp
+            currentRotateX += (targetRotateX - currentRotateX) * 0.18;
+            currentRotateY += (targetRotateY - currentRotateY) * 0.18;
+            currentScale += (targetScale - currentScale) * 0.18;
+            currentTranslateZ += (targetTranslateZ - currentTranslateZ) * 0.18;
+          }
+
+          tiltCard.style.transform = `perspective(1200px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) scale3d(${currentScale.toFixed(3)}, ${currentScale.toFixed(3)}, 1) translateZ(${currentTranslateZ.toFixed(1)}px)`;
+
+          animationFrameId = requestAnimationFrame(updateTilt);
+        };
+
+        tiltContainer.addEventListener('mouseenter', () => {
+          isHovered = true;
+          tiltCard.classList.add('is-tilting');
+          if (floatWrapper) {
+            // Pause ambient float to prevent transform conflicts during interactive tilt
+            floatWrapper.classList.remove('animate-hero-float');
+          }
+          targetScale = 1.025;
+          targetTranslateZ = 24;
+          if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(updateTilt);
+          }
+        });
+
+        tiltContainer.addEventListener('mousemove', (e) => {
+          const rect = tiltContainer.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
+
+          const percentX = mouseX / rect.width;
+          const percentY = mouseY / rect.height;
+
+          // rotateX is based on vertical tilt (mouse up tilts back, mouse down tilts forward)
+          targetRotateX = (0.5 - percentY) * (maxTilt * 2);
+          // rotateY is based on horizontal tilt (mouse right tilts right, mouse left tilts left)
+          targetRotateY = (percentX - 0.5) * (maxTilt * 2);
+
+          // Update specular glare reflection coordinates
+          if (glare) {
+            glare.style.setProperty('--mouse-x', `${(percentX * 100).toFixed(1)}%`);
+            glare.style.setProperty('--mouse-y', `${(percentY * 100).toFixed(1)}%`);
+          }
+
+          if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(updateTilt);
+          }
+        });
+
+        tiltContainer.addEventListener('mouseleave', () => {
+          isHovered = false;
+          tiltCard.classList.remove('is-tilting');
+          targetRotateX = 0;
+          targetRotateY = 0;
+          targetScale = 1;
+          targetTranslateZ = 0;
+          if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(updateTilt);
+          }
+        });
+      }
+
+      // --- SPOTLIGHT HOVER EFFECT FOR PRICING CARDS ---
+      const spotlightCards = document.querySelectorAll('.spotlight-card');
+      if (spotlightCards.length > 0 && !prefersReducedMotion) {
+        spotlightCards.forEach((card) => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+          });
+
+          card.addEventListener('mouseleave', () => {
+            card.style.removeProperty('--mouse-x');
+            card.style.removeProperty('--mouse-y');
+          });
+        });
+      }
+
+      // --- BILLING CYCLE TOGGLE (MONTHLY / YEARLY) LOGIC ---
+      const btnMonthly = document.getElementById('billing-btn-monthly');
+      const btnYearly = document.getElementById('billing-btn-yearly');
+      const pillIndicator = document.getElementById('billing-pill-indicator');
+      const priceAmounts = document.querySelectorAll('.price-amount');
+      const priceContainers = document.querySelectorAll('.price-value-container');
+      const annualNotes = document.querySelectorAll('.annual-note');
+
+      let currentBilling = 'monthly'; // 'monthly' | 'yearly'
+
+      const updatePill = (btn) => {
+        if (!btn || !pillIndicator) return;
+        pillIndicator.style.left = `${btn.offsetLeft}px`;
+        pillIndicator.style.width = `${btn.offsetWidth}px`;
+      };
+
+      const setBillingCycle = (cycle) => {
+        if (cycle === currentBilling) return;
+        currentBilling = cycle;
+
+        const isYearly = cycle === 'yearly';
+
+        // Update Pill Position & Button States
+        if (isYearly) {
+          updatePill(btnYearly);
+          btnMonthly.classList.remove('text-white');
+          btnMonthly.classList.add('text-gray-400');
+          btnMonthly.setAttribute('aria-pressed', 'false');
+
+          btnYearly.classList.remove('text-gray-400');
+          btnYearly.classList.add('text-white');
+          btnYearly.setAttribute('aria-pressed', 'true');
+        } else {
+          updatePill(btnMonthly);
+          btnMonthly.classList.remove('text-gray-400');
+          btnMonthly.classList.add('text-white');
+          btnMonthly.setAttribute('aria-pressed', 'true');
+
+          btnYearly.classList.remove('text-white');
+          btnYearly.classList.add('text-gray-400');
+          btnYearly.setAttribute('aria-pressed', 'false');
+        }
+
+        // Animate Price Containers (Flip / Fade Transition)
+        priceContainers.forEach(container => container.classList.add('price-flip'));
+
+        setTimeout(() => {
+          // Update displayed price value
+          priceAmounts.forEach(el => {
+            const targetVal = isYearly ? el.getAttribute('data-yearly') : el.getAttribute('data-monthly');
+            el.textContent = `$${targetVal}`;
+          });
+
+          // Update annual billed info notes
+          annualNotes.forEach(note => {
+            if (isYearly) {
+              const yearlyText = note.getAttribute('data-note-yearly');
+              note.textContent = yearlyText;
+              note.classList.remove('opacity-0', '-translate-y-1');
+              note.classList.add('opacity-100', 'translate-y-0');
+            } else {
+              note.classList.remove('opacity-100', 'translate-y-0');
+              note.classList.add('opacity-0', '-translate-y-1');
+            }
+          });
+
+          // Animate back in smoothly
+          priceContainers.forEach(container => container.classList.remove('price-flip'));
+        }, prefersReducedMotion ? 0 : 140);
+      };
+
+      if (btnMonthly && btnYearly && pillIndicator) {
+        btnMonthly.addEventListener('click', () => setBillingCycle('monthly'));
+        btnYearly.addEventListener('click', () => setBillingCycle('yearly'));
+
+        // Initialize pill dimensions to hug the monthly button exactly
+        updatePill(btnMonthly);
+        window.addEventListener('resize', () => {
+          updatePill(currentBilling === 'yearly' ? btnYearly : btnMonthly);
+        });
+      }
+
+      // --- HERO RAG MOCKUP INTERACTIVE PROMPT PILLS ---
+      const promptPills = document.querySelectorAll('.mock-prompt-pill');
+      const mockScenarios = {
+        hsf302: {
+          code: 'HSF302',
+          tag: 'HSF302 Workspace',
+          title: 'HSF302_Chapter3_Communication.pdf',
+          pdfName: 'HSF302_Slide_Ch3.pdf',
+          pdfPage: 'Page 14 / 48',
+          chapter: 'CHƯƠNG 3: KỸ NĂNG GIAO TIẾP VÀ PHẢN BIỆN',
+          highlight: '"5 bước trong quy trình Lắng Nghe Tích Cực (Active Listening): (1) Tiếp nhận (Receiving), (2) Thấu hiểu (Understanding), (3) Ghi nhớ (Remembering), (4) Đánh giá (Evaluating), và (5) Phản hồi (Responding)."',
+          sim: '0.984',
+          query: 'Trình bày 5 bước lắng nghe tích cực theo giáo trình HSF302 và ý nghĩa của chúng?',
+          answer: 'Theo giáo trình <strong>HSF302 (Kỹ năng mềm)</strong>, quy trình Lắng Nghe Tích Cực gồm 5 bước: <strong>(1) Tiếp nhận</strong>, <strong>(2) Thấu hiểu</strong>, <strong>(3) Ghi nhớ</strong>, <strong>(4) Đánh giá</strong> và <strong>(5) Phản hồi</strong>. Quy trình này giúp sinh viên thấu cảm trọn vẹn và giảm thiểu hiểu nhầm trong làm việc nhóm.',
+          citation: 'HSF302_Slide_Ch3.pdf - Trang 14'
+        },
+        prj301: {
+          code: 'PRJ301',
+          tag: 'PRJ301 Workspace',
+          title: 'PRJ301_JavaWeb_ServletLifecycle.pdf',
+          pdfName: 'PRJ301_Module2_Servlet.pdf',
+          pdfPage: 'Page 28 / 65',
+          chapter: 'CHƯƠNG 2: SERVLET ARCHITECTURE & LIFECYCLE',
+          highlight: '"Vòng đời Servlet gồm 3 phương thức chính: init() được gọi duy nhất 1 lần khi container khởi tạo servlet, service() (hoặc doGet/doPost) xử lý từng request trong một luồng riêng, và destroy() được gọi khi servlet bị hủy khỏi memory."',
+          sim: '0.991',
+          query: 'Vòng đời (Lifecycle) của một Servlet diễn ra như thế nào trong PRJ301?',
+          answer: 'Theo bài giảng <strong>PRJ301 (Java Web)</strong>, vòng đời Servlet tuân thủ 3 giai đoạn: <strong>init()</strong> khởi tạo tài nguyên (chỉ chạy 1 lần), <strong>service()</strong> điều phối request đến doGet/doPost (chạy đa luồng cho từng client), và <strong>destroy()</strong> giải phóng tài nguyên trước khi container tắt.',
+          citation: 'PRJ301_Module2_Servlet.pdf - Trang 28'
+        },
+        mas291: {
+          code: 'MAS291',
+          tag: 'MAS291 Workspace',
+          title: 'MAS291_Probability_Statistics.pdf',
+          pdfName: 'MAS291_NormalDistribution.pdf',
+          pdfPage: 'Page 52 / 90',
+          chapter: 'CHƯƠNG 4: CONTINUOUS PROBABILITY DISTRIBUTIONS',
+          highlight: '"Phân phối Chuẩn (Normal Distribution X ~ N(μ, σ²)) có dạng hình chuông đối xứng qua kỳ vọng μ. Quy tắc thực nghiệm 68-95-99.7: 68.26% dữ liệu nằm trong khoảng [μ - σ, μ + σ], 95.44% trong [μ - 2σ, μ + 2σ]."',
+          sim: '0.978',
+          query: 'Quy tắc thực nghiệm 68-95-99.7 trong phân phối chuẩn MAS291 phát biểu thế nào?',
+          answer: 'Theo giáo trình <strong>MAS291 (Xác suất thống kê)</strong>, đối với biến ngẫu nhiên liên tục phân phối chuẩn: khoảng <strong>[μ ± σ]</strong> chứa <strong>68.26%</strong> dữ liệu, khoảng <strong>[μ ± 2σ]</strong> chứa <strong>95.44%</strong> dữ liệu, và khoảng <strong>[μ ± 3σ]</strong> chứa <strong>99.74%</strong> toàn bộ mẫu quan sát.',
+          citation: 'MAS291_NormalDistribution.pdf - Trang 52'
+        }
+      };
+
+      if (promptPills.length > 0) {
+        const typingIndicator = document.getElementById('originkit-typing-indicator');
+        const aiMsgContainer = document.getElementById('mock-ai-msg-container');
+        const chatBadge = document.getElementById('mock-chat-badge');
+        const latencyEl = document.getElementById('mock-chat-latency');
+        const chatInput = document.getElementById('mock-chat-input');
+        const chatForm = document.getElementById('mock-chat-form');
+
+        const triggerScenario = (scenarioKey, customQuery = null) => {
+          const data = mockScenarios[scenarioKey] || mockScenarios.hsf302;
+
+          // 1. Update left column PDF workspace immediately
+          const courseCodeEl = document.getElementById('mock-course-code');
+          const courseTagEl = document.getElementById('mock-course-tag');
+          const docTitleEl = document.getElementById('mock-doc-title');
+          const pdfNameEl = document.getElementById('mock-pdf-name');
+          const pdfPageEl = document.getElementById('mock-pdf-page');
+          const pdfChapterEl = document.getElementById('mock-pdf-chapter');
+          const highlightTextEl = document.getElementById('mock-highlight-text');
+          const similarityEl = document.getElementById('mock-similarity');
+          const userQueryEl = document.getElementById('mock-user-query');
+          const aiAnswerEl = document.getElementById('mock-ai-answer');
+          const citationSourceEl = document.getElementById('mock-citation-source');
+
+          if (courseCodeEl) courseCodeEl.textContent = data.code;
+          if (courseTagEl) courseTagEl.textContent = data.tag;
+          if (docTitleEl) docTitleEl.innerHTML = `${data.title} <span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Active Syllabus</span>`;
+          if (pdfNameEl) pdfNameEl.textContent = data.pdfName;
+          if (pdfPageEl) pdfPageEl.textContent = data.pdfPage;
+          if (pdfChapterEl) pdfChapterEl.textContent = data.chapter;
+          if (highlightTextEl) highlightTextEl.textContent = data.highlight;
+          if (similarityEl) similarityEl.textContent = data.sim;
+          if (chatBadge) chatBadge.textContent = data.code;
+
+          // 2. Set student question
+          if (userQueryEl) userQueryEl.textContent = customQuery || data.query;
+
+          // 3. Show Originkit typing indicator
+          if (aiMsgContainer) aiMsgContainer.classList.add('hidden');
+          if (typingIndicator) typingIndicator.classList.remove('hidden');
+
+          // Simulated realistic RAG query latency
+          const latencyVal = (0.32 + Math.random() * 0.12).toFixed(2);
+          if (latencyEl) latencyEl.textContent = `${latencyVal}s`;
+
+          setTimeout(() => {
+            if (aiAnswerEl) aiAnswerEl.innerHTML = data.answer;
+            if (citationSourceEl) citationSourceEl.textContent = data.citation;
+
+            if (typingIndicator) typingIndicator.classList.add('hidden');
+            if (aiMsgContainer) aiMsgContainer.classList.remove('hidden');
+          }, prefersReducedMotion ? 0 : 420);
+        };
+
+        promptPills.forEach(pill => {
+          pill.addEventListener('click', () => {
+            const scenarioKey = pill.getAttribute('data-scenario');
+            // Highlight active button style
+            promptPills.forEach(p => {
+              p.classList.remove('bg-violet-600', 'text-white', 'border-violet-400/40');
+              p.classList.add('bg-white/5', 'text-gray-300', 'border-white/10');
+            });
+            pill.classList.remove('bg-white/5', 'text-gray-300', 'border-white/10');
+            pill.classList.add('bg-violet-600', 'text-white', 'border-violet-400/40');
+
+            triggerScenario(scenarioKey);
+          });
+        });
+
+        if (chatForm && chatInput) {
+          chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const lower = text.toLowerCase();
+            let key = 'hsf302';
+            if (lower.includes('jsp') || lower.includes('servlet') || lower.includes('vòng đời') || lower.includes('java')) {
+              key = 'prj301';
+            } else if (lower.includes('xác suất') || lower.includes('gaussian') || lower.includes('chuẩn') || lower.includes('thống kê') || lower.includes('phân phối')) {
+              key = 'mas291';
+            }
+
+            // Sync prompt pill active style
+            promptPills.forEach(p => {
+              if (p.getAttribute('data-scenario') === key) {
+                p.classList.remove('bg-white/5', 'text-gray-300', 'border-white/10');
+                p.classList.add('bg-violet-600', 'text-white', 'border-violet-400/40');
+              } else {
+                p.classList.remove('bg-violet-600', 'text-white', 'border-violet-400/40');
+                p.classList.add('bg-white/5', 'text-gray-300', 'border-white/10');
+              }
+            });
+
+            triggerScenario(key, text);
+            chatInput.value = '';
+          });
+        }
+      }
+    });
+  </script>
+
+  <!-- GradientASCII WebGL2 Script & Initialization -->
+  <script th:src="@{/js/gradient-ascii.js}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initGradientASCII === 'function') {
+        window.initGradientASCII('#hero-ascii-container', {
+          shape: 'horizon',
+          colors: ['#312e81', '#6366f1', '#c084fc', '#38bdf8'],
+          characters: ' =+xX0S8#@',
+          cellSize: 18,
+          density: 0.75,
+          gradientOpacity: 0.6,
+          glyphOpacity: 0.7,
+          glow: 0.2,
+          softness: 0.5,
+          scale: 1.0,
+          flow: 0.5,
+          speed: 0.8,
+          grain: 0.06,
+          mouseInteraction: true,
+          clickEffect: 'wave',
+          dpr: 1.0
+        });
+      }
+    });
+  </script>
+
+  <!-- SpecularButton WebGL2 Script & Initialization -->
+  <script th:src="@{/js/specular-button.js}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initSpecularButton === 'function') {
+        window.initSpecularButton('#hero-specular-btn', {
+          radius: 12,
+          lineColor: '#c4b5fd',
+          baseColor: '#334155',
+          intensity: 1.15,
+          idleIntensity: 0.35,
+          shineSize: 12,
+          shineFade: 36,
+          thickness: 1.25,
+          glow: 1.2,
+          followMouse: true,
+          proximity: 250
+        });
+      }
+    });
+  </script>
+
+  <!-- CursorGrid WebGL2 Script & Initialization -->
+  <script th:src="@{/js/cursor-grid.js}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof window.initCursorGrid !== 'function') return;
+
+      const cursorGridContainer = document.getElementById('cursor-grid-container');
+      const heroSection = document.getElementById('hero-section');
+      if (!cursorGridContainer || !heroSection) return;
+
+      const cursorGridCtrl = window.initCursorGrid(cursorGridContainer, {
+        cellSize: 60,
+        color: '#a855f7',
+        gridColor: '#6366f1',
+        highlight: 'area',
+        gridStyle: 'lines',
+        radius: 140,
+        falloff: 'smooth',
+        holdTime: 300,
+        fadeDuration: 650,
+        lineWidth: 1,
+        maxOpacity: 0.28,
+        fillOpacity: 0.02,
+        gridOpacity: 0.035,
+        spotlight: 0.32,
+        clickPulse: true,
+        pulseSpeed: 550,
+        ambient: 0,
+        edgeFade: 0.18,
+        intro: false,
+        visible: false,
+        dpr: 1.25
+      });
+
+      // Synchronize visibility: active on all sections EXCEPT the Hero section
+      function updateCursorGridVisibility() {
+        const heroRect = heroSection.getBoundingClientRect();
+        // When hero bottom is at or above 120px from top, user has scrolled into content sections
+        const isPastHero = heroRect.bottom <= 120;
+        if (isPastHero) {
+          cursorGridContainer.classList.add('is-active');
+          if (cursorGridCtrl) cursorGridCtrl.setVisible(true);
+        } else {
+          cursorGridContainer.classList.remove('is-active');
+          if (cursorGridCtrl) cursorGridCtrl.setVisible(false);
+        }
+      }
+
+      window.addEventListener('scroll', updateCursorGridVisibility, { passive: true });
+      window.addEventListener('resize', updateCursorGridVisibility, { passive: true });
+      updateCursorGridVisibility();
+    });
+  </script>
+</body></html>

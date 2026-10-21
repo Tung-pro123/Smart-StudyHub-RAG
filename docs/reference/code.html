@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" data-theme="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SaasSpace - All your creative tools in one powerful platform</title>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS & DaisyUI via CDN -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Font Awesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              indigo: '#6366f1',
+              violet: '#8b5cf6',
+              pink: '#ec4899',
+              cyan: '#06b6d4',
+              dark: '#030712',
+              card: 'rgba(17, 24, 39, 0.7)',
+            }
+          },
+          animation: {
+            'blob': 'blob 7s infinite',
+            'float': 'float 5s ease-in-out infinite',
+            'float-slow': 'floatSlow 6s ease-in-out infinite',
+            'float-fast': 'floatFast 4.2s ease-in-out infinite',
+            'float-reverse': 'floatReverse 5.2s ease-in-out infinite',
+            'pulse-glow': 'pulse-glow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'badge-pulse': 'badgePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -40px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.95)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(1deg)' },
+            },
+            floatFast: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-8px) rotate(-1.5deg)' },
+            },
+            floatReverse: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(10px) rotate(1deg)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '0.8' },
+            },
+            badgePulse: {
+              '0%, 100%': {
+                transform: 'scale(1)',
+                boxShadow: '0 0 0 0 rgba(236, 72, 153, 0.5)'
+              },
+              '50%': {
+                transform: 'scale(1.05)',
+                boxShadow: '0 0 16px 2px rgba(236, 72, 153, 0.6)'
+              }
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-hover:hover {
+      background: rgba(31, 41, 55, 0.75);
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.2);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #c084fc 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .text-gradient-cyan {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .btn-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      border: none;
+      color: white;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .btn-gradient:hover {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
+      transform: translateY(-1px);
+    }
+    .grid-pattern {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Scroll Reveal Animation Styles */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Staggered Delays */
+    .reveal-delay-100 { transition-delay: 0.1s; }
+    .reveal-delay-200 { transition-delay: 0.2s; }
+    .reveal-delay-300 { transition-delay: 0.3s; }
+    .reveal-delay-400 { transition-delay: 0.4s; }
+    .reveal-delay-500 { transition-delay: 0.5s; }
+
+    @keyframes heroFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    .animate-hero-float {
+      animation: heroFloat 5s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    /* 3D Tilt container & inner styles */
+    .tilt-perspective-wrapper {
+      perspective: 1200px;
+      perspective-origin: center center;
+    }
+    .tilt-card-inner {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transform: perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tilt-card-inner.is-tilting {
+      transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .glare-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle 500px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.15), transparent 80%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 30;
+      mix-blend-mode: overlay;
+    }
+    .tilt-perspective-wrapper:hover .glare-overlay {
+      opacity: 1;
+    }
+
+    /* 3D Floating Widgets Layering */
+    .hero-floating-widget {
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+    .hero-widget-z-high {
+      transform: translateZ(52px);
+    }
+    .hero-widget-z-med {
+      transform: translateZ(42px);
+    }
+
+    /* Neon Glow Pulse Counter Finish Celebrations */
+    @keyframes counterNeonPulse {
+      0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(168, 85, 247, 0)) drop-shadow(0 0 0px rgba(6, 182, 212, 0));
+      }
+      35% {
+        transform: scale(1.09);
+        filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.95)) drop-shadow(0 0 32px rgba(6, 182, 212, 0.8)) drop-shadow(0 0 45px rgba(236, 72, 153, 0.5));
+      }
+      65% {
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.75)) drop-shadow(0 0 22px rgba(6, 182, 212, 0.6));
+      }
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4)) drop-shadow(0 0 16px rgba(6, 182, 212, 0.3));
+      }
+    }
+
+    @keyframes cardNeonPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      30% {
+        box-shadow: 0 0 35px 2px rgba(139, 92, 246, 0.4), inset 0 0 20px 0 rgba(6, 182, 212, 0.2);
+        border-color: rgba(168, 85, 247, 0.75);
+      }
+      100% {
+        box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.2);
+        border-color: rgba(139, 92, 246, 0.35);
+      }
+    }
+
+    @keyframes haloFlare {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.4);
+      }
+      40% {
+        opacity: 0.85;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      100% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .counter-value.neon-pulse-complete {
+      animation: counterNeonPulse 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      display: inline-block;
+      will-change: transform, filter;
+    }
+
+    .card-glow-pulse.neon-card-active {
+      animation: cardNeonPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .halo-flare {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      width: 140px;
+      height: 140px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(6, 182, 212, 0.35) 45%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 0;
+    }
+
+    .neon-card-active .halo-flare {
+      animation: haloFlare 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Micro-Particle Burst Styles */
+    .particle-burst-container {
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 25;
+    }
+    .micro-particle {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      border-radius: 9999px;
+      animation: shootParticle var(--duration, 900ms) cubic-bezier(0.12, 0.85, 0.3, 1) forwards;
+    }
+    .micro-particle.particle-shard {
+      border-radius: 1px;
+    }
+    .micro-particle.particle-star {
+      clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+      border-radius: 0;
+    }
+    @keyframes shootParticle {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(var(--initial-scale, 1)) rotate(0deg);
+      }
+      70% {
+        opacity: 0.95;
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(var(--tx), var(--ty), 0) scale(0) rotate(var(--rot, 180deg));
+      }
+    }
+
+    /* Spotlight Hover Effect for Pricing Cards */
+    .spotlight-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .spotlight-card:not(.spotlight-pro):hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.28);
+    }
+    .spotlight-card.spotlight-pro:hover {
+      transform: translateY(-20px);
+      box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.38);
+    }
+    .spotlight-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 1;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(168, 85, 247, 0.18),
+        rgba(236, 72, 153, 0.08) 40%,
+        transparent 70%
+      );
+    }
+    .spotlight-border {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      background: radial-gradient(
+        320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(192, 132, 252, 0.85),
+        rgba(236, 72, 153, 0.5) 30%,
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 2;
+    }
+    .spotlight-card:hover .spotlight-overlay,
+    .spotlight-card:hover .spotlight-border {
+      opacity: 1;
+    }
+    .spotlight-content {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Price Value Flip / Fade Transition */
+    .price-value-container {
+      display: inline-flex;
+      align-items: baseline;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      will-change: transform, opacity;
+    }
+    .price-value-container.price-flip {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.96);
+    }
+    .annual-note-wrapper {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .animate-hero-float,
+      .animate-float,
+      .animate-float-slow,
+      .animate-float-fast,
+      .animate-float-reverse,
+      .animate-badge-pulse {
+        animation: none !important;
+      }
+      .tilt-card-inner {
+        transform: none !important;
+        transition: none !important;
+      }
+      .glare-overlay {
+        display: none !important;
+      }
+      .hero-floating-widget {
+        transform: none !important;
+      }
+      .counter-value.neon-pulse-complete {
+        animation: none !important;
+      }
+      .card-glow-pulse.neon-card-active {
+        animation: none !important;
+      }
+      .halo-flare {
+        display: none !important;
+      }
+      .micro-particle {
+        display: none !important;
+      }
+      .spotlight-card:hover {
+        transform: none !important;
+      }
+      .spotlight-card.spotlight-pro:hover {
+        transform: translateY(-16px) !important;
+      }
+      .spotlight-overlay,
+      .spotlight-border {
+        display: none !important;
+      }
+      .price-value-container {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen relative antialiased selection:bg-purple-500 selection:text-white">
+<!-- Background decorative light glow blobs -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute -top-32 -left-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-blob"></div>
+<div class="absolute top-1/4 -right-32 w-96 h-96 bg-pink-600/15 rounded-full blur-3xl animate-blob" style="animation-delay: 2s;"></div>
+<div class="absolute top-2/3 left-1/3 w-[30rem] h-[30rem] bg-violet-600/15 rounded-full blur-[100px] animate-blob" style="animation-delay: 4s;"></div>
+<div class="absolute -bottom-20 right-10 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl animate-blob" style="animation-delay: 3s;"></div>
+<div class="absolute inset-0 grid-pattern opacity-40"></div>
+</div>
+<div class="relative z-10">
+<!-- a. NAVBAR -->
+<header class="sticky top-0 z-50 transition-all duration-300">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-3">
+<nav class="glass-card rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between shadow-2xl">
+<!-- Logo -->
+<a class="flex items-center gap-2.5 group" href="#">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+<i class="fa-solid fa-shapes text-lg"></i>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-white flex items-center">
+              Saas<span class="text-gradient">Space</span>
+</span>
+</a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+<a class="hover:text-white transition-colors" href="#features">Features</a>
+<a class="hover:text-white transition-colors" href="#about">About Us</a>
+<a class="hover:text-white transition-colors" href="#pricing">Pricing</a>
+<a class="hover:text-white transition-colors" href="#testimonials">Testimonials</a>
+<a class="hover:text-white transition-colors" href="#blog">Blog</a>
+</div>
+<!-- Actions & CTA -->
+<div class="flex items-center gap-3">
+<a class="hidden sm:inline-flex text-sm font-semibold text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition" href="#pricing">
+              Login
+            </a>
+<a class="btn-gradient text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-lg" href="#pricing">
+<span>Get Started</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</a>
+<!-- Mobile menu trigger via DaisyUI Drawer/Dropdown -->
+<div class="dropdown dropdown-end md:hidden">
+<label class="btn btn-ghost btn-circle btn-sm text-gray-300" tabindex="0">
+<i class="fa-solid fa-bars text-base"></i>
+</label>
+<ul class="dropdown-content menu p-3 shadow-2xl glass-card rounded-2xl w-52 mt-3 space-y-1 text-sm border border-white/10" tabindex="0">
+<li><a class="hover:text-violet-400" href="#features">Features</a></li>
+<li><a class="hover:text-violet-400" href="#about">About Us</a></li>
+<li><a class="hover:text-violet-400" href="#pricing">Pricing</a></li>
+<li><a class="hover:text-violet-400" href="#testimonials">Testimonials</a></li>
+<li><a class="hover:text-violet-400" href="#blog">Blog</a></li>
+<div class="divider my-1 border-white/10"></div>
+<li><a class="text-violet-400 font-semibold" href="#pricing">Login</a></li>
+</ul>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<!-- b. HERO SECTION -->
+<section class="pt-16 pb-20 md:pt-24 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+<!-- Tag / Badge -->
+<div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-xs sm:text-sm font-medium text-violet-300 border border-violet-500/30 mb-8 animate-float">
+<span class="flex h-2 w-2 rounded-full bg-pink-500 animate-ping"></span>
+<span class="text-white font-semibold">New Feature:</span> AI Analytics Dashboard v2.4 Live
+        <i class="fa-solid fa-sparkles text-pink-400 text-xs ml-1"></i>
+</div>
+<!-- Heading -->
+<h1 class="reveal reveal-delay-100 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] max-w-5xl mx-auto mb-6">
+        All your creative tools in one <span class="text-gradient">powerful platform.</span>
+</h1>
+<!-- Description -->
+<p class="reveal reveal-delay-200 text-base sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+        A simple solution for building, launching, and managing your digital projects — without the noise. Automate workflows, scale your revenue, and ship faster.
+      </p>
+<!-- CTA Buttons -->
+<div class="reveal reveal-delay-300 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+<a class="btn-gradient w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-base flex items-center justify-center gap-2 shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40" href="#pricing">
+<span>Get Started Free</span>
+<i class="fa-solid fa-bolt text-sm"></i>
+</a>
+<a class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-semibold text-base text-gray-300 hover:text-white glass-card border border-white/15 hover:border-violet-500/50 hover:bg-white/10 transition-all flex items-center justify-center gap-2" href="#features">
+<i class="fa-regular fa-circle-play text-violet-400"></i>
+<span>Learn More</span>
+</a>
+</div>
+<!-- Dashboard Mockup (3D Interactive Tilt + Ambient Float + Floating Widgets) -->
+<div class="reveal reveal-delay-400 relative max-w-5xl mx-auto group tilt-perspective-wrapper" id="hero-tilt-container">
+<!-- Floating Ambient Container -->
+<div class="animate-hero-float" id="hero-float-wrapper">
+<!-- 3D Tilt Card Inner -->
+<div class="tilt-card-inner relative rounded-2xl cursor-pointer" id="hero-tilt-card">
+<!-- Glow outline under mockup -->
+<div class="absolute -inset-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
+<!-- FLOATING WIDGET 1: Top-Left (North-West) - Active Users & Growth -->
+<div class="hero-floating-widget hero-widget-z-high absolute -top-7 -left-4 sm:-top-8 sm:-left-8 lg:-left-12 z-40 animate-float-slow hidden xs:flex">
+<div class="glass-card bg-slate-900/85 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-indigo-500/20 text-left flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+<div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 relative">
+<i class="fa-solid fa-bolt text-sm"></i>
+<span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xs sm:text-sm font-extrabold text-white">4.8k Live</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+<i class="fa-solid fa-arrow-trend-up text-[9px] mr-1"></i>+34.2%
+        </span>
+</div>
+<p class="text-[11px] text-gray-400 font-medium">Real-time Visitors Spike</p>
+</div>
+</div>
+</div>
+<!-- FLOATING WIDGET 2: Top-Right (North-East) - Stripe Payment Verified -->
+<div class="hero-floating-widget hero-widget-z-high absolute -top-8 -right-4 sm:-top-9 sm:-right-8 lg:-right-10 z-40 animate-float-fast hidden sm:flex" style="animation-delay: 1.2s;">
+<div class="glass-card bg-slate-900/85 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-purple-500/20 text-left flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+<div class="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-300">
+<i class="fa-brands fa-stripe-s text-base font-black"></i>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-xs sm:text-sm font-black text-white">$1,240.00</span>
+<i class="fa-solid fa-circle-check text-emerald-400 text-xs" title="Verified"></i>
+</div>
+<p class="text-[11px] text-violet-300/80 font-medium flex items-center gap-1">
+<span>Payment Received</span>
+<span class="text-gray-500">• Just now</span>
+</p>
+</div>
+</div>
+</div>
+<!-- FLOATING WIDGET 3: Bottom-Left (South-West) - Server Edge Latency & Security -->
+<div class="hero-floating-widget hero-widget-z-med absolute -bottom-7 -left-3 sm:-bottom-8 sm:-left-7 lg:-left-10 z-40 animate-float hidden sm:flex" style="animation-delay: 2.1s;">
+<div class="glass-card bg-slate-900/85 backdrop-blur-xl border border-white/20 rounded-2xl px-3.5 py-3 shadow-xl shadow-cyan-500/20 text-left flex items-center gap-3 hover:scale-105 transition-transform duration-300">
+<div class="relative flex items-center justify-center">
+<div class="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-300">
+<i class="fa-solid fa-shield-halved text-xs"></i>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-slate-950 animate-pulse"></span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-white">Edge Latency: <span class="text-cyan-400">9ms</span></span>
+<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none font-semibold text-[10px]">Optimal</span>
+</div>
+<p class="text-[11px] text-gray-400">Security Guard Active</p>
+</div>
+</div>
+</div>
+<!-- FLOATING WIDGET 4: Bottom-Right (South-East) - Automated Workflow Success Rate -->
+<div class="hero-floating-widget hero-widget-z-high absolute -bottom-8 -right-3 sm:-bottom-9 sm:-right-6 lg:-right-8 z-40 animate-float-reverse hidden md:flex" style="animation-delay: 0.8s;">
+<div class="glass-card bg-slate-900/85 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-pink-500/20 text-left hover:scale-105 transition-transform duration-300 min-w-[210px]">
+<div class="flex items-center justify-between gap-3 mb-1.5">
+<span class="text-xs font-bold text-gray-200 flex items-center gap-1.5">
+<i class="fa-solid fa-robot text-pink-400 text-xs"></i>
+        Auto Workflow
+      </span>
+<span class="text-xs font-black text-pink-400">99.8%</span>
+</div>
+<!-- Mini Progress Bar -->
+<div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden mb-1">
+<div class="bg-gradient-to-r from-violet-500 to-pink-500 h-1.5 rounded-full w-[99.8%]"></div>
+</div>
+<div class="flex items-center justify-between text-[10px] text-gray-400">
+<span>14,820 tasks completed</span>
+<span class="text-emerald-400 font-semibold flex items-center gap-1">
+<i class="fa-solid fa-check text-[9px]"></i> Sync ok
+      </span>
+</div>
+</div>
+</div>
+<div class="relative mockup-window border border-white/10 bg-slate-950/90 shadow-2xl rounded-2xl overflow-hidden backdrop-blur-xl">
+<!-- Specular Highlight / Glare Overlay -->
+<div class="glare-overlay" id="hero-glare"></div>
+<!-- Window Header Custom Info -->
+<div class="flex items-center justify-between px-6 py-2 border-b border-white/10 bg-slate-900/60 text-xs text-gray-400">
+<span class="flex items-center gap-2">
+<i class="fa-solid fa-lock text-[10px] text-emerald-400"></i>
+                    app.saasspace.io/dashboard/analytics
+                  </span>
+<div class="flex items-center gap-3">
+<span class="badge badge-xs badge-success gap-1 text-[10px]">Live Sync</span>
+<span class="hidden sm:inline">Pro Workspace</span>
+</div>
+</div>
+<!-- Mockup Inside Content -->
+<div class="p-4 sm:p-6 lg:p-8 text-left bg-gradient-to-b from-slate-900/80 to-slate-950">
+<!-- App Bar Inside Mockup -->
+<div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
+<div class="flex items-center gap-3">
+<div class="avatar placeholder">
+<div class="bg-indigo-600/30 text-indigo-400 rounded-full w-10 border border-indigo-500/30">
+<i class="fa-solid fa-chart-pie"></i>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-white text-base">Performance Matrix</h4>
+<p class="text-xs text-gray-400">Real-time overview of monthly conversions &amp; sales</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="badge badge-neutral border border-white/10 text-xs py-3 px-3 gap-1.5 text-gray-300">
+<i class="fa-regular fa-calendar"></i> Last 30 Days
+                      </span>
+<button class="btn btn-sm btn-outline border-violet-500/30 text-violet-300 hover:bg-violet-600 hover:border-violet-600">
+<i class="fa-solid fa-download text-xs"></i> Export
+                      </button>
+</div>
+</div>
+<!-- Dashboard Mini Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
+<div class="glass-card p-4 rounded-xl border border-white/10">
+<div class="text-xs text-gray-400 mb-1 flex items-center justify-between">
+<span>Total Users</span>
+<i class="fa-solid fa-arrow-trend-up text-emerald-400"></i>
+</div>
+<div class="text-xl sm:text-2xl font-extrabold text-white">48,290</div>
+<div class="text-[11px] text-emerald-400 font-semibold mt-1">+14.2% vs last mo</div>
+</div>
+<div class="glass-card p-4 rounded-xl border border-white/10">
+<div class="text-xs text-gray-400 mb-1 flex items-center justify-between">
+<span>Gross MRR</span>
+<i class="fa-solid fa-arrow-trend-up text-emerald-400"></i>
+</div>
+<div class="text-xl sm:text-2xl font-extrabold text-white">$124,500</div>
+<div class="text-[11px] text-emerald-400 font-semibold mt-1">+28.5% growth</div>
+</div>
+<div class="glass-card p-4 rounded-xl border border-white/10">
+<div class="text-xs text-gray-400 mb-1 flex items-center justify-between">
+<span>Conversion Rate</span>
+<i class="fa-solid fa-arrow-trend-up text-indigo-400"></i>
+</div>
+<div class="text-xl sm:text-2xl font-extrabold text-white">4.86%</div>
+<div class="text-[11px] text-indigo-400 font-semibold mt-1">High retention</div>
+</div>
+<div class="glass-card p-4 rounded-xl border border-white/10">
+<div class="text-xs text-gray-400 mb-1 flex items-center justify-between">
+<span>Avg Latency</span>
+<i class="fa-solid fa-bolt text-amber-400"></i>
+</div>
+<div class="text-xl sm:text-2xl font-extrabold text-white">18ms</div>
+<div class="text-[11px] text-amber-400 font-semibold mt-1">Global Edge</div>
+</div>
+</div>
+<!-- Mockup Chart Area Visualization -->
+<div class="glass-card p-5 rounded-xl border border-white/10">
+<div class="flex items-center justify-between mb-4">
+<div class="font-bold text-sm text-gray-200">Revenue &amp; Inflow Activity</div>
+<div class="flex items-center gap-2">
+<span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+<span class="text-xs text-gray-400 mr-2">Subscription</span>
+<span class="inline-block w-2.5 h-2.5 rounded-full bg-pink-500"></span>
+<span class="text-xs text-gray-400">Add-ons</span>
+</div>
+</div>
+<!-- Simulated Chart Bars -->
+<div class="h-32 sm:h-44 flex items-end gap-2 sm:gap-3 pt-6 px-2 justify-between border-b border-white/10">
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-indigo-600/40 to-indigo-500 rounded-t-md h-[40%] group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-gray-500">Jan</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-indigo-600/40 to-indigo-500 rounded-t-md h-[55%] group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-gray-500">Feb</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-indigo-600/40 to-indigo-500 rounded-t-md h-[50%] group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-gray-500">Mar</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-indigo-600/40 to-indigo-500 rounded-t-md h-[70%] group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-gray-500">Apr</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-pink-600/50 via-purple-600 to-indigo-500 rounded-t-md h-[88%] shadow-lg shadow-indigo-500/20 group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-violet-300 font-bold">May</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-indigo-600/40 to-indigo-500 rounded-t-md h-[65%] group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-gray-500">Jun</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-1 h-full justify-end group/bar">
+<div class="w-full bg-gradient-to-t from-indigo-600/40 to-indigo-500 rounded-t-md h-[95%] shadow-lg shadow-pink-500/20 group-hover/bar:brightness-125 transition"></div>
+<span class="text-[10px] text-pink-400 font-bold">Jul</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+<!-- c. TRUSTED BY / SOCIAL PROOF -->
+<section class="reveal py-12 border-y border-white/5 bg-slate-950/40">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<p class="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-8">
+          Trusted by <span class="text-gray-300 font-bold">10,000+</span> innovative companies worldwide
+        </p>
+<div class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2 text-xl font-bold text-gray-300 hover:text-white transition">
+<i class="fa-brands fa-github text-2xl"></i>
+<span>GitHub</span>
+</div>
+<div class="flex items-center gap-2 text-xl font-bold text-gray-300 hover:text-white transition">
+<i class="fa-brands fa-stripe text-2xl"></i>
+<span>Stripe</span>
+</div>
+<div class="flex items-center gap-2 text-xl font-bold text-gray-300 hover:text-white transition">
+<i class="fa-brands fa-slack text-2xl"></i>
+<span>Slack</span>
+</div>
+<div class="flex items-center gap-2 text-xl font-bold text-gray-300 hover:text-white transition">
+<i class="fa-brands fa-spotify text-2xl"></i>
+<span>Spotify</span>
+</div>
+<div class="flex items-center gap-2 text-xl font-bold text-gray-300 hover:text-white transition">
+<i class="fa-brands fa-discord text-2xl"></i>
+<span>Discord</span>
+</div>
+<div class="flex items-center gap-2 text-xl font-bold text-gray-300 hover:text-white transition">
+<i class="fa-brands fa-airbnb text-2xl"></i>
+<span>Airbnb</span>
+</div>
+</div>
+</div>
+</section>
+<!-- d. ABOUT US (What Drives Us) -->
+<section class="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="about">
+<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+          About Us
+        </span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">
+          What <span class="text-gradient">Drives Us</span>
+</h2>
+<p class="text-gray-400 mt-4 text-base sm:text-lg">
+          We believe technology should empower creativity, not constrain it. Here is the vision and purpose that pushes our engineering team forward every single day.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+<!-- Card 1: Our Product -->
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden group">
+<div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-cube"></i>
+</div>
+<h3 class="text-2xl font-bold text-white mb-3">Our Product</h3>
+<p class="text-gray-400 leading-relaxed text-sm">
+            Built from scratch to unify fragmented software suites. We blend drag-and-drop simplicity with full developer API control, creating the ultimate workspace for modern teams.
+          </p>
+<div class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-indigo-400 text-sm font-semibold group-hover:translate-x-1 transition-transform">
+<span>Explore Architecture</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</div>
+</div>
+<!-- Card 2: Our Mission -->
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden group border-violet-500/30 bg-gradient-to-b from-slate-900/90 to-slate-900/50">
+<div class="w-14 h-14 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-rocket"></i>
+</div>
+<h3 class="text-2xl font-bold text-white mb-3">Our Mission</h3>
+<p class="text-gray-400 leading-relaxed text-sm">
+            To eliminate repetitive digital toil and automate 80% of routine workflows, allowing product designers, marketers, and developers to focus on high-impact invention.
+          </p>
+<div class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-violet-400 text-sm font-semibold group-hover:translate-x-1 transition-transform">
+<span>Read our Manifesto</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</div>
+</div>
+<!-- Card 3: Our Core Philosophy -->
+<div class="reveal reveal-delay-300 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden group">
+<div class="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-heart-pulse"></i>
+</div>
+<h3 class="text-2xl font-bold text-white mb-3">Human-Centered</h3>
+<p class="text-gray-400 leading-relaxed text-sm">
+            Behind every line of code is a human user striving to complete a task. We prioritize accessibility, blazing performance, and empathetic customer-first support around the clock.
+          </p>
+<div class="mt-6 pt-6 border-t border-white/5 flex items-center gap-2 text-pink-400 text-sm font-semibold group-hover:translate-x-1 transition-transform">
+<span>Meet the Leadership</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</div>
+</div>
+</div>
+</section>
+<!-- e. FEATURES (Bento Box Layout) -->
+<section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="features">
+<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<span class="badge badge-outline border-pink-500/40 text-pink-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+          Modular Capabilities
+        </span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">
+          All Your Tools in One <span class="text-gradient">Smart Dashboard</span>
+</h2>
+<p class="text-gray-400 mt-4 text-base sm:text-lg">
+          Replace 8 disjointed SaaS subscriptions with our high-speed, interoperable suite engineered for hyper-growth teams.
+        </p>
+</div>
+<!-- Bento Grid (Unequal Grid Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Bento 1: Large Card (2 Cols) -->
+<div class="reveal reveal-delay-100 md:col-span-2 glass-card glass-card-hover p-8 sm:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div class="relative z-10 max-w-lg mb-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-4">
+<i class="fa-solid fa-microchip"></i> Next-Gen AI Engine
+            </div>
+<h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Intelligent Predictive Workflow Automation</h3>
+<p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+              Our neural pipeline predicts repetitive pipeline bottlenecks and triggers self-healing automation routines before downtime impacts your end-users.
+            </p>
+</div>
+<!-- Decorative Bento Graphic -->
+<div class="relative z-10 glass-card p-4 rounded-2xl border border-white/10 bg-slate-900/80">
+<div class="flex items-center justify-between text-xs text-gray-400 pb-3 border-b border-white/10">
+<span class="font-medium text-white flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Active Neural Triggers
+              </span>
+<span class="badge badge-sm badge-outline border-indigo-500/30 text-indigo-300">99.98% Accuracy</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+<div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+<div class="text-xs text-gray-400">Trigger Time</div>
+<div class="text-lg font-bold text-white">0.4ms</div>
+</div>
+<div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+<div class="text-xs text-gray-400">Tasks Handled</div>
+<div class="text-lg font-bold text-violet-400">14.8M/day</div>
+</div>
+<div class="p-3 bg-white/5 rounded-xl border border-white/5 text-center">
+<div class="text-xs text-gray-400">Resource Savings</div>
+<div class="text-lg font-bold text-pink-400">74.2%</div>
+</div>
+</div>
+</div>
+<!-- Background accent glow -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+<!-- Bento 2: 1 Col Card -->
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl mb-6">
+<i class="fa-solid fa-shield-halved"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2">Zero-Trust Security</h3>
+<p class="text-gray-400 text-sm leading-relaxed">
+              SOC2 Type II certified, GDPR compliant, and end-to-end encrypted storage with role-based cryptographic keys.
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+<span class="text-xs text-emerald-400 font-semibold flex items-center gap-1.5">
+<i class="fa-solid fa-circle-check"></i> Encrypted at rest
+            </span>
+<i class="fa-solid fa-lock text-gray-500 text-sm"></i>
+</div>
+</div>
+<!-- Bento 3: 1 Col Card -->
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl mb-6">
+<i class="fa-solid fa-gauge-high"></i>
+</div>
+<h3 class="text-xl font-bold text-white mb-2">Edge-Speed API</h3>
+<p class="text-gray-400 text-sm leading-relaxed">
+              Deployed across 320+ global CDN nodes. Response times sub-20 milliseconds with automatic regional load balancing.
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
+<span class="text-xs text-cyan-400 font-semibold">Anycast Network</span>
+<span class="text-xs text-gray-500 font-mono">p99 &lt; 35ms</span>
+</div>
+</div>
+<!-- Bento 4: Large Card (2 Cols) -->
+<div class="reveal reveal-delay-200 md:col-span-2 glass-card glass-card-hover p-8 sm:p-10 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+<div class="max-w-md">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-semibold mb-4">
+<i class="fa-solid fa-diagram-project"></i> 100+ Integrations
+              </div>
+<h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Sync Anywhere, Code in Anything</h3>
+<p class="text-gray-400 text-sm leading-relaxed">
+                Plug in with your favorite stack seamlessly. Webhooks, GraphQL, REST, and ready-to-use SDKs for React, Vue, Next.js, and Python.
+              </p>
+</div>
+<div class="flex items-center gap-3">
+<span class="badge badge-lg bg-white/5 border border-white/10 text-white font-mono text-xs">Node.js</span>
+<span class="badge badge-lg bg-white/5 border border-white/10 text-white font-mono text-xs">Python</span>
+<span class="badge badge-lg bg-white/5 border border-white/10 text-white font-mono text-xs">Go</span>
+</div>
+</div>
+<!-- Code Snippet Preview -->
+<div class="glass-card rounded-2xl p-4 bg-slate-950/90 font-mono text-xs text-gray-300 border border-white/10 overflow-x-auto">
+<div class="flex items-center justify-between text-gray-500 pb-2 mb-2 border-b border-white/5">
+<span>client.ts</span>
+<span class="text-emerald-400 text-[10px]">Ready</span>
+</div>
+<div class="space-y-1">
+<p><span class="text-violet-400">import</span> { SaasClient } <span class="text-violet-400">from</span> <span class="text-pink-400">'@saasspace/sdk'</span>;</p>
+<p><span class="text-violet-400">const</span> space = <span class="text-violet-400">new</span> <span class="text-yellow-300">SaasClient</span>({ apiKey: process.env.SPACE_KEY });</p>
+<p><span class="text-violet-400">await</span> space.pipelines.<span class="text-cyan-400">deploy</span>({ environment: <span class="text-pink-400">'production'</span>, autoScale: <span class="text-indigo-400">true</span> });</p>
+</div>
+</div>
+<!-- Background glow -->
+<div class="absolute -left-16 -top-16 w-72 h-72 bg-violet-500/15 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+</div>
+</section>
+<!-- f. IMPACT IN NUMBERS -->
+<section class="py-20 relative overflow-hidden bg-slate-950/60 border-y border-white/5" id="impact">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="reveal text-center max-w-2xl mx-auto mb-16">
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+            Our Impact in <span class="text-gradient">Numbers</span>
+</h2>
+<p class="text-gray-400 mt-3 text-base">
+            Quantifiable results delivered across 140+ countries and global enterprise infrastructures.
+          </p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+<!-- Metric 1 -->
+<div class="reveal reveal-delay-100 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="halo-flare"></div>
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="2" data-decimals="0" data-suffix="M+">2M+</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Products Sold</div>
+<p class="text-xs text-gray-400 relative z-10">Delivered reliably through automated checkout pipelines</p>
+</div>
+<!-- Metric 2 -->
+<div class="reveal reveal-delay-200 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="halo-flare"></div>
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient-cyan mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="98" data-decimals="0" data-suffix="%">98%</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Satisfaction Rate</div>
+<p class="text-xs text-gray-400 relative z-10">Based on verified reviews from over 25,000 customers</p>
+</div>
+<!-- Metric 3 -->
+<div class="reveal reveal-delay-300 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="halo-flare"></div>
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="150" data-decimals="0" data-suffix="+">150+</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">New Features</div>
+<p class="text-xs text-gray-400 relative z-10">Shipped annually with zero breaking API changes</p>
+</div>
+<!-- Metric 4 -->
+<div class="reveal reveal-delay-400 glass-card card-glow-pulse p-6 sm:p-8 rounded-3xl text-center border border-white/10 relative group transition-all duration-300">
+<div class="halo-flare"></div>
+<div class="text-3xl sm:text-5xl font-extrabold text-gradient-cyan mb-2 tracking-tight relative z-10 flex items-center justify-center">
+<span class="counter-value relative inline-block" data-counter="99.99" data-decimals="2" data-suffix="%">99.99%</span>
+</div>
+<div class="text-sm sm:text-base font-bold text-white mb-1 relative z-10">Guaranteed Uptime</div>
+<p class="text-xs text-gray-400 relative z-10">Backed by strict enterprise SLA guarantees</p>
+</div>
+</div>
+</div>
+</section>
+<!-- g. PRICING SECTION -->
+<section class="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="pricing">
+<div class="reveal text-center max-w-3xl mx-auto mb-10">
+<span class="badge badge-outline border-indigo-500/40 text-indigo-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+          Transparent Investment
+        </span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">
+          Choose the Plan That <span class="text-gradient">Fits You Best</span>
+</h2>
+<p class="text-gray-400 mt-4 text-base sm:text-lg">
+          No hidden fees. Scale up or pause anytime with our 30-day money-back guarantee.
+        </p>
+</div>
+<!-- BILLING CYCLE TOGGLE (Monthly / Yearly with Sliding Pill & Save 20% Glowing Badge) -->
+<div class="reveal reveal-delay-100 flex flex-col items-center justify-center mb-16">
+<div class="relative glass-card bg-slate-900/90 border border-white/15 p-1.5 rounded-full inline-flex items-center shadow-xl shadow-indigo-500/10">
+<!-- Active sliding pill indicator -->
+<div class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] rounded-full btn-gradient shadow-md shadow-violet-500/40 transition-transform duration-300 ease-out pointer-events-none z-0" id="billing-pill-indicator"></div>
+<!-- Monthly Button -->
+<button aria-pressed="true" class="relative z-10 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold text-white transition-colors duration-200 flex items-center gap-2 focus:outline-none" id="billing-btn-monthly" type="button">
+<span>Monthly</span>
+<span class="text-[11px] font-normal text-gray-400 hidden sm:inline">(Hàng tháng)</span>
+</button>
+<!-- Yearly Button -->
+<button aria-pressed="false" class="relative z-10 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold text-gray-400 hover:text-gray-200 transition-colors duration-200 flex items-center gap-2 focus:outline-none" id="billing-btn-yearly" type="button">
+<span>Yearly</span>
+<span class="text-[11px] font-normal text-gray-400 hidden sm:inline">(Hàng năm)</span>
+<!-- Save 20% Glowing Pulsing Badge -->
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-pink-500 via-rose-500 to-violet-500 text-white shadow-md shadow-pink-500/40 border border-pink-400/40 animate-badge-pulse">
+<i class="fa-solid fa-sparkles text-[8px]"></i>
+<span>Save 20%</span>
+</span>
+</button>
+</div>
+<p class="text-xs text-gray-400 mt-3 font-medium flex items-center gap-1.5">
+<i class="fa-solid fa-bolt text-pink-400 text-[10px]"></i>
+<span>Switch to annual billing and save up to <strong>$480 / year</strong></span>
+</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+<!-- Plan 1: Starter (Spotlight Hover Card) -->
+<div class="reveal reveal-delay-100 glass-card spotlight-card p-8 rounded-3xl flex flex-col justify-between border border-white/10" data-plan="starter">
+<!-- Dynamic Spotlight Overlay & Glowing Border -->
+<div class="spotlight-overlay"></div>
+<div class="spotlight-border"></div>
+<div class="spotlight-content flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-white">Starter</h3>
+<span class="badge badge-sm badge-ghost text-gray-300">Solopreneurs</span>
+</div>
+<p class="text-gray-400 text-sm mb-6">Perfect for bootstrapping side projects and testing ideas fast.</p>
+<div class="flex items-baseline gap-2 mb-1">
+<div class="price-value-container">
+<span class="price-amount text-4xl sm:text-5xl font-extrabold text-white" data-monthly="19" data-yearly="15">$19</span>
+</div>
+<span class="price-period text-gray-400 text-sm">/ month</span>
+</div>
+<!-- Annual Billed Note -->
+<div class="annual-note-wrapper min-h-[22px] mb-5">
+<p class="annual-note text-xs text-emerald-400 font-semibold opacity-0 transform -translate-y-1 transition-all duration-300" data-note-yearly="Billed annually ($180/year) • Save $48">
+    Billed monthly
+  </p>
+</div>
+<div class="divider my-4 border-white/10"></div>
+<!-- Features List -->
+<ul class="space-y-3.5 text-sm text-gray-300 mb-8">
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Up to 3 Active Projects</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Basic Neural Automations</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Community Discord Support</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>10GB Cloud Storage</span>
+</li>
+<li class="flex items-center gap-3 text-gray-500 line-through">
+<i class="fa-solid fa-circle-xmark text-gray-600 text-sm"></i>
+<span>Custom Domain &amp; SSL</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-3.5 rounded-xl font-semibold text-sm glass-card hover:bg-white/10 border border-white/15 text-white transition">
+            Choose Starter
+          </button>
+</div>
+</div>
+<!-- Plan 2: Pro (Highlighted with Gradient border, Popular ribbon & Spotlight Hover Card) -->
+<div class="reveal reveal-delay-200 relative glass-card spotlight-card spotlight-pro p-8 rounded-3xl flex flex-col justify-between border-2 border-violet-500 shadow-2xl shadow-violet-500/20 bg-gradient-to-b from-slate-900/90 to-slate-950 lg:-translate-y-4" data-plan="pro">
+<!-- Popular Ribbon -->
+<div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full btn-gradient text-[11px] font-extrabold uppercase tracking-wider text-white shadow-md z-20">
+            Most Popular
+          </div>
+<!-- Dynamic Spotlight Overlay & Glowing Border -->
+<div class="spotlight-overlay"></div>
+<div class="spotlight-border"></div>
+<div class="spotlight-content flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-4 mt-2">
+<h3 class="text-2xl font-bold text-white">Pro</h3>
+<span class="badge badge-sm badge-primary bg-violet-600 border-none text-white">Scaling Teams</span>
+</div>
+<p class="text-gray-300 text-sm mb-6">Designed for expanding startups seeking full-scale pipeline acceleration.</p>
+<div class="flex items-baseline gap-2 mb-1">
+<div class="price-value-container">
+<span class="price-amount text-5xl font-extrabold text-white" data-monthly="49" data-yearly="39">$49</span>
+</div>
+<span class="price-period text-gray-400 text-sm">/ month</span>
+</div>
+<!-- Annual Billed Note -->
+<div class="annual-note-wrapper min-h-[22px] mb-5">
+<p class="annual-note text-xs text-pink-400 font-semibold opacity-0 transform -translate-y-1 transition-all duration-300" data-note-yearly="Billed annually ($468/year) • Save $120">
+    Billed monthly
+  </p>
+</div>
+<div class="divider my-4 border-violet-500/20"></div>
+<!-- Features List -->
+<ul class="space-y-3.5 text-sm text-gray-200 mb-8">
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span><strong>Unlimited</strong> Active Projects</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span>Advanced AI Predictive Engine</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span>Custom Domains + Wildcard SSL</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span>100GB High-Speed Cloud SSD</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span>Priority 24/7 Slack &amp; Email</span>
+</li>
+</ul>
+</div>
+<button class="w-full btn-gradient py-3.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-indigo-500/30">
+            Start 14-Day Free Trial
+          </button>
+</div>
+</div>
+<!-- Plan 3: Enterprise (Spotlight Hover Card) -->
+<div class="reveal reveal-delay-300 glass-card spotlight-card p-8 rounded-3xl flex flex-col justify-between border border-white/10" data-plan="enterprise">
+<!-- Dynamic Spotlight Overlay & Glowing Border -->
+<div class="spotlight-overlay"></div>
+<div class="spotlight-border"></div>
+<div class="spotlight-content flex flex-col justify-between h-full">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-bold text-white">Enterprise</h3>
+<span class="badge badge-sm badge-ghost text-gray-300">Custom SLA</span>
+</div>
+<p class="text-gray-400 text-sm mb-6">Dedicated cloud isolation and custom compliance for global organizations.</p>
+<div class="flex items-baseline gap-2 mb-1">
+<div class="price-value-container">
+<span class="price-amount text-4xl sm:text-5xl font-extrabold text-white" data-monthly="199" data-yearly="159">$199</span>
+</div>
+<span class="price-period text-gray-400 text-sm">/ month</span>
+</div>
+<!-- Annual Billed Note -->
+<div class="annual-note-wrapper min-h-[22px] mb-5">
+<p class="annual-note text-xs text-cyan-400 font-semibold opacity-0 transform -translate-y-1 transition-all duration-300" data-note-yearly="Billed annually ($1,908/year) • Save $480">
+    Billed monthly
+  </p>
+</div>
+<div class="divider my-4 border-white/10"></div>
+<!-- Features List -->
+<ul class="space-y-3.5 text-sm text-gray-300 mb-8">
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Dedicated Single-Tenant Cluster</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Custom Machine Learning Models</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>SOC2 &amp; HIPAA Custom Audits</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Unlimited Storage &amp; Bandwidth</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Dedicated Technical Account Manager</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-3.5 rounded-xl font-semibold text-sm glass-card hover:bg-white/10 border border-white/15 text-white transition">
+            Contact Sales
+          </button>
+</div>
+</div>
+</div>
+<!-- Guarantee Note -->
+<div class="reveal text-center mt-12 flex items-center justify-center gap-2 text-sm text-gray-400">
+<i class="fa-solid fa-shield-cat text-violet-400"></i>
+<span>All plans come with an unconditional <strong>30-day money-back guarantee</strong>. No questions asked.</span>
+</div>
+</section>
+<!-- h. TESTIMONIALS -->
+<section class="py-20 bg-slate-950/40 border-y border-white/5" id="testimonials">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<span class="badge badge-outline border-cyan-500/40 text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+            Social Proof
+          </span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">
+            Hear from Our <span class="text-gradient">Happy Customers</span>
+</h2>
+<p class="text-gray-400 mt-4 text-base sm:text-lg">
+            See how forward-thinking leaders rely on SaasSpace to streamline their daily engineering and design cycles.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+<!-- Review 1 -->
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between">
+<div>
+<div class="flex text-amber-400 text-sm gap-1 mb-4">
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+</div>
+<p class="text-gray-300 text-sm sm:text-base leading-relaxed italic mb-6">
+                “SaasSpace transformed how our product team operates. We went from managing 6 disparate tools down to one cohesive dashboard, saving roughly 15 engineering hours weekly.”
+              </p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-white/10">
+<div class="avatar placeholder">
+<div class="bg-indigo-600/30 text-indigo-300 rounded-full w-12 border border-indigo-400/30 font-bold">
+                  AK
+                </div>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm">Alex Kim</h4>
+<p class="text-xs text-gray-400">Head of Engineering @ CloudFlow</p>
+</div>
+</div>
+</div>
+<!-- Review 2 -->
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between border-violet-500/20 bg-gradient-to-b from-slate-900/80 to-slate-950">
+<div>
+<div class="flex text-amber-400 text-sm gap-1 mb-4">
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+</div>
+<p class="text-gray-300 text-sm sm:text-base leading-relaxed italic mb-6">
+                “The Bento dashboard analytics alone are worth 10x the subscription. Our conversion metrics jumped 32% within 60 days of implementing their automated feedback loop.”
+              </p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-white/10">
+<div class="avatar placeholder">
+<div class="bg-pink-600/30 text-pink-300 rounded-full w-12 border border-pink-400/30 font-bold">
+                  SR
+                </div>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm">Sarah Jenkins</h4>
+<p class="text-xs text-gray-400">VP Marketing @ GrowthStack</p>
+</div>
+</div>
+</div>
+<!-- Review 3 -->
+<div class="reveal reveal-delay-300 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between">
+<div>
+<div class="flex text-amber-400 text-sm gap-1 mb-4">
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+<i class="fa-solid fa-star"></i>
+</div>
+<p class="text-gray-300 text-sm sm:text-base leading-relaxed italic mb-6">
+                “The developer ergonomics in the SDK are unbelievable. We connected our custom internal API in an afternoon. Truly a masterclass in frontend &amp; developer experience.”
+              </p>
+</div>
+<div class="flex items-center gap-4 pt-4 border-t border-white/10">
+<div class="avatar placeholder">
+<div class="bg-cyan-600/30 text-cyan-300 rounded-full w-12 border border-cyan-400/30 font-bold">
+                  MT
+                </div>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm">Marcus Thorne</h4>
+<p class="text-xs text-gray-400">Lead Architect @ DevSprint</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- i. BLOG / RECENT NEWS -->
+<section class="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="blog">
+<div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
+<div>
+<span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
+            Insights &amp; Guides
+          </span>
+<h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-2">
+            Our Recent <span class="text-gradient">News &amp; Articles</span>
+</h2>
+</div>
+<a class="text-sm font-semibold text-violet-400 hover:text-violet-300 flex items-center gap-2 group" href="#blog">
+<span>Explore All Articles</span>
+<i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Post 1 -->
+<article class="reveal reveal-delay-100 glass-card glass-card-hover rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between">
+<div>
+<div class="relative h-48 bg-gradient-to-tr from-indigo-950 via-slate-900 to-violet-900 flex items-center justify-center overflow-hidden">
+<i class="fa-solid fa-brain text-5xl text-indigo-400/40 group-hover:scale-110 group-hover:text-indigo-400 transition-all duration-500"></i>
+<span class="absolute top-4 left-4 badge badge-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">AI &amp; Tech</span>
+</div>
+<div class="p-6">
+<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
+<span>Oct 14, 2024</span>
+<span>•</span>
+<span>5 min read</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-violet-300 transition-colors">
+                How Micro-Automations Boost Enterprise Velocity by 40%
+              </h3>
+<p class="text-gray-400 text-sm leading-relaxed">
+                Examining the impact of granular neural trigger agents in modern software release cycles and developer sanity.
+              </p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
+<div class="w-8 h-8 rounded-full bg-violet-600/30 flex items-center justify-center text-xs font-bold text-violet-300">
+              EL
+            </div>
+<span class="text-xs font-medium text-gray-300">Elena Liu, AI Researcher</span>
+</div>
+</article>
+<!-- Post 2 -->
+<article class="reveal reveal-delay-200 glass-card glass-card-hover rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between">
+<div>
+<div class="relative h-48 bg-gradient-to-tr from-purple-950 via-slate-900 to-pink-900 flex items-center justify-center overflow-hidden">
+<i class="fa-solid fa-shapes text-5xl text-pink-400/40 group-hover:scale-110 group-hover:text-pink-400 transition-all duration-500"></i>
+<span class="absolute top-4 left-4 badge badge-sm bg-pink-500/20 text-pink-300 border border-pink-400/30">Design Systems</span>
+</div>
+<div class="p-6">
+<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
+<span>Oct 08, 2024</span>
+<span>•</span>
+<span>7 min read</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-pink-300 transition-colors">
+                The Rise of Bento Box Layouts in Contemporary UI Design
+              </h3>
+<p class="text-gray-400 text-sm leading-relaxed">
+                Why non-uniform grid systems dominate modern tech landing pages and how they optimize human cognitive load.
+              </p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
+<div class="w-8 h-8 rounded-full bg-pink-600/30 flex items-center justify-center text-xs font-bold text-pink-300">
+              DR
+            </div>
+<span class="text-xs font-medium text-gray-300">David Ross, Lead Designer</span>
+</div>
+</article>
+<!-- Post 3 -->
+<article class="reveal reveal-delay-300 glass-card glass-card-hover rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between">
+<div>
+<div class="relative h-48 bg-gradient-to-tr from-cyan-950 via-slate-900 to-blue-900 flex items-center justify-center overflow-hidden">
+<i class="fa-solid fa-code-merge text-5xl text-cyan-400/40 group-hover:scale-110 group-hover:text-cyan-400 transition-all duration-500"></i>
+<span class="absolute top-4 left-4 badge badge-sm bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">DevOps</span>
+</div>
+<div class="p-6">
+<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
+<span>Sep 29, 2024</span>
+<span>•</span>
+<span>4 min read</span>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
+                Zero-Downtime Multi-Region Database Syncing at Scale
+              </h3>
+<p class="text-gray-400 text-sm leading-relaxed">
+                A deep dive into our global raft consensus mechanism handling sub-10ms synchronous replications worldwide.
+              </p>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
+<div class="w-8 h-8 rounded-full bg-cyan-600/30 flex items-center justify-center text-xs font-bold text-cyan-300">
+              JN
+            </div>
+<span class="text-xs font-medium text-gray-300">Julian Ngo, Staff SRE</span>
+</div>
+</article>
+</div>
+</section>
+<!-- j. CALL TO ACTION (CTA) SECTION -->
+<section class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="reveal relative rounded-3xl overflow-hidden p-8 sm:p-16 text-center border border-white/15 bg-gradient-to-r from-indigo-900/80 via-purple-900/80 to-pink-900/80 shadow-2xl shadow-purple-900/40">
+<!-- Background light elements -->
+<div class="absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-72 h-72 bg-pink-500/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl mx-auto">
+<span class="badge badge-outline border-white/30 text-white font-semibold text-xs tracking-wider uppercase mb-4 px-4 py-2 bg-white/5">
+            Instant Deployment
+          </span>
+<h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-6">
+            Connect 100+ Products with us &amp; Scale Limitlessly
+          </h2>
+<p class="text-gray-200 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            Join thousands of fast-moving companies building the future on SaasSpace. Set up your workspace in under 3 minutes.
+          </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<a class="w-full sm:w-auto px-9 py-4 rounded-xl font-bold text-base bg-white text-gray-950 hover:bg-gray-100 hover:shadow-2xl hover:shadow-white/20 transition-all flex items-center justify-center gap-2" href="#pricing">
+<span>Get Started Now</span>
+<i class="fa-solid fa-arrow-right text-xs"></i>
+</a>
+<a class="w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-base text-white border border-white/25 hover:bg-white/10 transition-all" href="#about">
+              Book Architecture Demo
+            </a>
+</div>
+</div>
+</div>
+</section>
+<!-- k. FOOTER -->
+<footer class="border-t border-white/10 bg-slate-950 pt-16 pb-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+<!-- Col 1: Brand & Bio (2 cols on md) -->
+<div class="col-span-2">
+<a class="flex items-center gap-2.5 mb-4" href="#">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-500 flex items-center justify-center text-white shadow-md">
+<i class="fa-solid fa-shapes text-sm"></i>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-white">
+                Saas<span class="text-gradient">Space</span>
+</span>
+</a>
+<p class="text-gray-400 text-sm max-w-sm mb-6 leading-relaxed">
+              The all-in-one modern workspace tailored for high-output engineering, product design, and automated marketing funnels.
+            </p>
+<div class="flex items-center gap-3">
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-brands fa-x-twitter text-sm"></i>
+</a>
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-brands fa-github text-sm"></i>
+</a>
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-brands fa-linkedin-in text-sm"></i>
+</a>
+<a class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-violet-500 transition" href="#">
+<i class="fa-brands fa-discord text-sm"></i>
+</a>
+</div>
+</div>
+<!-- Col 2: Navigation -->
+<div>
+<h4 class="text-white font-bold text-sm mb-4">Product</h4>
+<ul class="space-y-2.5 text-sm text-gray-400">
+<li><a class="hover:text-white transition" href="#features">Features</a></li>
+<li><a class="hover:text-white transition" href="#pricing">Pricing Plans</a></li>
+<li><a class="hover:text-white transition" href="#about">Integrations</a></li>
+<li><a class="hover:text-white transition" href="#features">Changelog</a></li>
+<li><a class="hover:text-white transition" href="#pricing">Enterprise SLA</a></li>
+</ul>
+</div>
+<!-- Col 3: Company -->
+<div>
+<h4 class="text-white font-bold text-sm mb-4">Company</h4>
+<ul class="space-y-2.5 text-sm text-gray-400">
+<li><a class="hover:text-white transition" href="#about">About Us</a></li>
+<li><a class="hover:text-white transition" href="#testimonials">Customer Stories</a></li>
+<li><a class="hover:text-white transition" href="#blog">Blog &amp; Insights</a></li>
+<li><a class="hover:text-white transition" href="#">Careers <span class="badge badge-xs badge-secondary ml-1">Hiring</span></a></li>
+<li><a class="hover:text-white transition" href="#">Press Kit</a></li>
+</ul>
+</div>
+<!-- Col 4: Support & Legal -->
+<div>
+<h4 class="text-white font-bold text-sm mb-4">Support &amp; Legal</h4>
+<ul class="space-y-2.5 text-sm text-gray-400">
+<li><a class="hover:text-white transition" href="#">Documentation</a></li>
+<li><a class="hover:text-white transition" href="#">API Reference</a></li>
+<li><a class="hover:text-white transition" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-white transition" href="#">Terms of Service</a></li>
+<li><a class="hover:text-white transition" href="#">Security &amp; SOC2</a></li>
+</ul>
+</div>
+</div>
+<!-- Bottom Copyright -->
+<div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+<p>© 2025 SaasSpace, Inc. All rights reserved.</p>
+<div class="flex items-center gap-6">
+<span class="flex items-center gap-1.5 text-emerald-400">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              All systems normal
+            </span>
+<a class="hover:text-gray-400" href="#">Cookie Settings</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<!-- Scroll Reveal Script via IntersectionObserver -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+
+      if (!('IntersectionObserver' in window)) {
+        // Fallback for browsers lacking IntersectionObserver support
+        reveals.forEach(el => el.classList.add('revealed'));
+      } else {
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px 0px -40px 0px',
+          threshold: 0.12
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        reveals.forEach(el => {
+          // Immediately reveal elements already near top/in viewport on page load
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.9) {
+            el.classList.add('revealed');
+          } else {
+            revealObserver.observe(el);
+          }
+        });
+      }
+
+      // --- NUMBER COUNTER ANIMATION WITH NEON GLOW PULSE & MICRO-CONFETTI / PARTICLE BURST ---
+      const counterElements = document.querySelectorAll('.counter-value');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Base animation duration ~1850ms
+      const baseCounterDuration = 1850;
+
+      // Ease-out exponential / cubic curve: starts fast, slows down smoothly at target
+      const easeOutExpo = (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+      // Vibrant Cyber / Neon Colors Palette
+      const burstPalette = [
+        '#a855f7', // Neon Purple
+        '#ec4899', // Vibrant Pink
+        '#06b6d4', // Cyan
+        '#3b82f6', // Electric Blue
+        '#facc15', // Radiant Gold
+        '#c084fc', // Lilac Spark
+      ];
+
+      // Micro-confetti particle burst generator
+      const triggerParticleBurst = (originEl) => {
+        if (prefersReducedMotion || !originEl) return;
+
+        const parentCard = originEl.closest('.card-glow-pulse') || originEl.parentElement;
+        if (!parentCard) return;
+
+        // Ensure container for particles
+        let container = parentCard.querySelector('.particle-burst-container');
+        if (!container) {
+          container = document.createElement('div');
+          container.className = 'particle-burst-container';
+          parentCard.appendChild(container);
+        }
+
+        // Calculate center relative to parent card
+        const cardRect = parentCard.getBoundingClientRect();
+        const originRect = originEl.getBoundingClientRect();
+        const originCenterX = (originRect.left + originRect.width / 2) - cardRect.left;
+        const originCenterY = (originRect.top + originRect.height / 2) - cardRect.top;
+
+        // Particle count: 18 - 24 micro-particles
+        const particleCount = 20 + Math.floor(Math.random() * 5);
+        const shapes = ['dot', 'shard', 'star'];
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          const shapeType = shapes[Math.floor(Math.random() * shapes.length)];
+          particle.className = `micro-particle ${shapeType === 'shard' ? 'particle-shard' : shapeType === 'star' ? 'particle-star' : ''}`;
+
+          const color = burstPalette[Math.floor(Math.random() * burstPalette.length)];
+
+          // Angles distributed with natural jitter in all radial directions
+          const angle = (i / particleCount) * 2 * Math.PI + (Math.random() - 0.5) * 0.55;
+          // Radii distance travel from 48px to 105px
+          const distance = 48 + Math.random() * 58;
+          const tx = Math.cos(angle) * distance;
+          // Slight upward bias for gravity & natural spark burst
+          const ty = Math.sin(angle) * distance - (12 + Math.random() * 18);
+
+          // Variable sizes for high-tech micro realism
+          let width = 5;
+          let height = 5;
+          if (shapeType === 'shard') {
+            width = 3 + Math.random() * 3;
+            height = 8 + Math.random() * 6;
+          } else if (shapeType === 'star') {
+            width = 7 + Math.random() * 4;
+            height = width;
+          } else {
+            width = 4 + Math.random() * 4;
+            height = width;
+          }
+
+          const durationMs = 800 + Math.floor(Math.random() * 400); // 0.8s - 1.2s
+          const rot = (Math.random() - 0.5) * 540;
+          const initialScale = 0.8 + Math.random() * 0.5;
+
+          particle.style.left = `${originCenterX}px`;
+          particle.style.top = `${originCenterY}px`;
+          particle.style.width = `${width}px`;
+          particle.style.height = `${height}px`;
+          particle.style.backgroundColor = color;
+          particle.style.boxShadow = `0 0 8px ${color}, 0 0 14px ${color}80`;
+          particle.style.setProperty('--tx', `${tx.toFixed(1)}px`);
+          particle.style.setProperty('--ty', `${ty.toFixed(1)}px`);
+          particle.style.setProperty('--rot', `${rot.toFixed(1)}deg`);
+          particle.style.setProperty('--initial-scale', initialScale.toFixed(2));
+          particle.style.setProperty('--duration', `${durationMs}ms`);
+
+          container.appendChild(particle);
+
+          // Automatic cleanup from DOM
+          setTimeout(() => {
+            particle.remove();
+          }, durationMs + 60);
+        }
+      };
+
+      const triggerNeonCelebration = (el) => {
+        if (prefersReducedMotion) return;
+        el.classList.add('neon-pulse-complete');
+        const parentCard = el.closest('.card-glow-pulse');
+        if (parentCard) {
+          parentCard.classList.add('neon-card-active');
+        }
+        // Micro-confetti particle burst outward from counter element
+        triggerParticleBurst(el);
+      };
+
+      const animateCounter = (el, index = 0) => {
+        const target = parseFloat(el.getAttribute('data-counter')) || 0;
+        const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+        const suffix = el.getAttribute('data-suffix') || '';
+
+        if (prefersReducedMotion) {
+          el.textContent = `${target.toFixed(decimals)}${suffix}`;
+          return;
+        }
+
+        // Slight duration variation per counter creates a high-tech cascading lock-in feel
+        const counterDuration = baseCounterDuration + (index * 120);
+        let startTime = null;
+
+        const step = (currentTime) => {
+          if (!startTime) startTime = currentTime;
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / counterDuration, 1);
+          const easedProgress = easeOutExpo(progress);
+
+          const currentValue = easedProgress * target;
+          el.textContent = `${currentValue.toFixed(decimals)}${suffix}`;
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = `${target.toFixed(decimals)}${suffix}`;
+            // Trigger high-tech neon glow celebration & micro-confetti particle burst
+            triggerNeonCelebration(el);
+          }
+        };
+
+        requestAnimationFrame(step);
+      };
+
+      if (counterElements.length > 0) {
+        if (!('IntersectionObserver' in window) || prefersReducedMotion) {
+          counterElements.forEach((el, idx) => animateCounter(el, idx));
+        } else {
+          const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const targetEl = entry.target;
+                const idx = Array.from(counterElements).indexOf(targetEl);
+                animateCounter(targetEl, idx >= 0 ? idx : 0);
+                observer.unobserve(targetEl);
+              }
+            });
+          }, {
+            threshold: 0.25
+          });
+
+          counterElements.forEach(el => {
+            // Set initial state to 0 before animation triggers
+            const decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+            const suffix = el.getAttribute('data-suffix') || '';
+            el.textContent = `${(0).toFixed(decimals)}${suffix}`;
+            counterObserver.observe(el);
+          });
+        }
+      }
+
+      // --- 3D INTERACTIVE TILT EFFECT FOR HERO DASHBOARD MOCKUP ---
+      const tiltContainer = document.getElementById('hero-tilt-container');
+      const tiltCard = document.getElementById('hero-tilt-card');
+      const floatWrapper = document.getElementById('hero-float-wrapper');
+      const glare = document.getElementById('hero-glare');
+
+      if (tiltContainer && tiltCard && !prefersReducedMotion) {
+        let isHovered = false;
+        let animationFrameId = null;
+        let targetRotateX = 0;
+        let targetRotateY = 0;
+        let currentRotateX = 0;
+        let currentRotateY = 0;
+        let targetScale = 1;
+        let currentScale = 1;
+        let targetTranslateZ = 0;
+        let currentTranslateZ = 0;
+
+        const maxTilt = 8.5; // Max degree tilt (-8.5deg to 8.5deg)
+
+        const updateTilt = () => {
+          if (!isHovered) {
+            // Smoothly return to neutral
+            currentRotateX += (0 - currentRotateX) * 0.12;
+            currentRotateY += (0 - currentRotateY) * 0.12;
+            currentScale += (1 - currentScale) * 0.12;
+            currentTranslateZ += (0 - currentTranslateZ) * 0.12;
+
+            if (Math.abs(currentRotateX) < 0.01 && Math.abs(currentRotateY) < 0.01 && Math.abs(currentScale - 1) < 0.001) {
+              tiltCard.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateZ(0px)`;
+              if (floatWrapper) floatWrapper.classList.add('animate-hero-float');
+              animationFrameId = null;
+              return;
+            }
+          } else {
+            // Follow mouse target with responsive lerp
+            currentRotateX += (targetRotateX - currentRotateX) * 0.18;
+            currentRotateY += (targetRotateY - currentRotateY) * 0.18;
+            currentScale += (targetScale - currentScale) * 0.18;
+            currentTranslateZ += (targetTranslateZ - currentTranslateZ) * 0.18;
+          }
+
+          tiltCard.style.transform = `perspective(1200px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) scale3d(${currentScale.toFixed(3)}, ${currentScale.toFixed(3)}, 1) translateZ(${currentTranslateZ.toFixed(1)}px)`;
+
+          animationFrameId = requestAnimationFrame(updateTilt);
+        };
+
+        tiltContainer.addEventListener('mouseenter', () => {
+          isHovered = true;
+          tiltCard.classList.add('is-tilting');
+          if (floatWrapper) {
+            // Pause ambient float to prevent transform conflicts during interactive tilt
+            floatWrapper.classList.remove('animate-hero-float');
+          }
+          targetScale = 1.025;
+          targetTranslateZ = 24;
+          if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(updateTilt);
+          }
+        });
+
+        tiltContainer.addEventListener('mousemove', (e) => {
+          const rect = tiltContainer.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
+
+          const percentX = mouseX / rect.width;
+          const percentY = mouseY / rect.height;
+
+          // rotateX is based on vertical tilt (mouse up tilts back, mouse down tilts forward)
+          targetRotateX = (0.5 - percentY) * (maxTilt * 2);
+          // rotateY is based on horizontal tilt (mouse right tilts right, mouse left tilts left)
+          targetRotateY = (percentX - 0.5) * (maxTilt * 2);
+
+          // Update specular glare reflection coordinates
+          if (glare) {
+            glare.style.setProperty('--mouse-x', `${(percentX * 100).toFixed(1)}%`);
+            glare.style.setProperty('--mouse-y', `${(percentY * 100).toFixed(1)}%`);
+          }
+
+          if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(updateTilt);
+          }
+        });
+
+        tiltContainer.addEventListener('mouseleave', () => {
+          isHovered = false;
+          tiltCard.classList.remove('is-tilting');
+          targetRotateX = 0;
+          targetRotateY = 0;
+          targetScale = 1;
+          targetTranslateZ = 0;
+          if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(updateTilt);
+          }
+        });
+      }
+
+      // --- SPOTLIGHT HOVER EFFECT FOR PRICING CARDS ---
+      const spotlightCards = document.querySelectorAll('.spotlight-card');
+      if (spotlightCards.length > 0 && !prefersReducedMotion) {
+        spotlightCards.forEach((card) => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+          });
+
+          card.addEventListener('mouseleave', () => {
+            card.style.removeProperty('--mouse-x');
+            card.style.removeProperty('--mouse-y');
+          });
+        });
+      }
+
+      // --- BILLING CYCLE TOGGLE (MONTHLY / YEARLY) LOGIC ---
+      const btnMonthly = document.getElementById('billing-btn-monthly');
+      const btnYearly = document.getElementById('billing-btn-yearly');
+      const pillIndicator = document.getElementById('billing-pill-indicator');
+      const priceAmounts = document.querySelectorAll('.price-amount');
+      const priceContainers = document.querySelectorAll('.price-value-container');
+      const annualNotes = document.querySelectorAll('.annual-note');
+
+      let currentBilling = 'monthly'; // 'monthly' | 'yearly'
+
+      const setBillingCycle = (cycle) => {
+        if (cycle === currentBilling) return;
+        currentBilling = cycle;
+
+        const isYearly = cycle === 'yearly';
+
+        // Update Pill Position & Button States
+        if (isYearly) {
+          pillIndicator.style.transform = 'translateX(100%)';
+          btnMonthly.classList.remove('text-white');
+          btnMonthly.classList.add('text-gray-400');
+          btnMonthly.setAttribute('aria-pressed', 'false');
+
+          btnYearly.classList.remove('text-gray-400');
+          btnYearly.classList.add('text-white');
+          btnYearly.setAttribute('aria-pressed', 'true');
+        } else {
+          pillIndicator.style.transform = 'translateX(0%)';
+          btnMonthly.classList.remove('text-gray-400');
+          btnMonthly.classList.add('text-white');
+          btnMonthly.setAttribute('aria-pressed', 'true');
+
+          btnYearly.classList.remove('text-white');
+          btnYearly.classList.add('text-gray-400');
+          btnYearly.setAttribute('aria-pressed', 'false');
+        }
+
+        // Animate Price Containers (Flip / Fade Transition)
+        priceContainers.forEach(container => container.classList.add('price-flip'));
+
+        setTimeout(() => {
+          // Update displayed price value
+          priceAmounts.forEach(el => {
+            const targetVal = isYearly ? el.getAttribute('data-yearly') : el.getAttribute('data-monthly');
+            el.textContent = `$${targetVal}`;
+          });
+
+          // Update annual billed info notes
+          annualNotes.forEach(note => {
+            if (isYearly) {
+              const yearlyText = note.getAttribute('data-note-yearly');
+              note.textContent = yearlyText;
+              note.classList.remove('opacity-0', '-translate-y-1');
+              note.classList.add('opacity-100', 'translate-y-0');
+            } else {
+              note.classList.remove('opacity-100', 'translate-y-0');
+              note.classList.add('opacity-0', '-translate-y-1');
+            }
+          });
+
+          // Animate back in smoothly
+          priceContainers.forEach(container => container.classList.remove('price-flip'));
+        }, prefersReducedMotion ? 0 : 140);
+      };
+
+      if (btnMonthly && btnYearly && pillIndicator) {
+        btnMonthly.addEventListener('click', () => setBillingCycle('monthly'));
+        btnYearly.addEventListener('click', () => setBillingCycle('yearly'));
+      }
+    });
+  </script>
+</body></html>

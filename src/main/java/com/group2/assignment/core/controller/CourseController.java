@@ -22,6 +22,28 @@ public class CourseController {
     private final ChunkRepository chunkRepository;
 
     /**
+     * Màn hình danh sách môn học / Dashboard
+     */
+    @GetMapping
+    public String listCourses(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "semester", required = false) String semester,
+            Model model) {
+
+        List<CourseCardDto> courses = courseService.getAllCoursesWithStats(keyword, semester);
+        List<String> semesters = courseService.getAllSemesters();
+
+        model.addAttribute("courses", courses);
+        model.addAttribute("totalCourses", courseService.countCourses());
+        model.addAttribute("semesters", semesters);
+        model.addAttribute("currentKeyword", keyword != null ? keyword : "");
+        model.addAttribute("currentSemester", semester != null ? semester : "ALL");
+        model.addAttribute("newCourse", new Course());
+
+        return "index";
+    }
+
+    /**
      * Màn hình chi tiết / Hub điều phối của Môn học
      */
     @GetMapping("/{id}")
@@ -36,7 +58,7 @@ public class CourseController {
             return "courses/detail";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/";
+            return "redirect:/courses";
         }
     }
 
@@ -52,7 +74,7 @@ public class CourseController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
-        return "redirect:/";
+        return "redirect:/courses";
     }
 
     /**
@@ -75,7 +97,7 @@ public class CourseController {
         if ("detail".equalsIgnoreCase(redirect)) {
             return "redirect:/courses/" + id;
         }
-        return "redirect:/";
+        return "redirect:/courses";
     }
 
     /**
@@ -92,6 +114,6 @@ public class CourseController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi xóa môn học: " + e.getMessage());
         }
-        return "redirect:/";
+        return "redirect:/courses";
     }
 }

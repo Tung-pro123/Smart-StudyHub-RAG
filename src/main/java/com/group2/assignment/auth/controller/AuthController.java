@@ -29,7 +29,7 @@ public class AuthController {
     @GetMapping("/login")
     public String showLoginPage(Model model, HttpSession session) {
         if (session.getAttribute(SESSION_USER) != null) {
-            return "redirect:/";
+            return "redirect:/courses";
         }
         model.addAttribute("loginDto", new LoginRequestDto());
         return "auth/login";
@@ -63,7 +63,7 @@ public class AuthController {
                 session.removeAttribute("authRedirectUrl");
                 return "redirect:" + redirectUrl;
             }
-            return "redirect:/";
+            return "redirect:/courses";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/login";
@@ -73,7 +73,7 @@ public class AuthController {
     @GetMapping("/register")
     public String showRegisterPage(Model model, HttpSession session) {
         if (session.getAttribute(SESSION_USER) != null) {
-            return "redirect:/";
+            return "redirect:/courses";
         }
         model.addAttribute("registerDto", new RegisterRequestDto());
         return "auth/register";
