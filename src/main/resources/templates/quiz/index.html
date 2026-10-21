@@ -108,11 +108,19 @@
             </div>
             <div>
                 <h3 class="font-bold text-slate-700">Chưa có đề thi nào phù hợp với bộ lọc</h3>
-                <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto">Hãy tải lên một file slide PDF bài giảng để AI tự động trích xuất bộ câu hỏi trắc nghiệm!</p>
+                <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto" th:if="${not #lists.isEmpty(documents)}">
+                    Chọn tài liệu giáo trình của môn học để AI tự động trích xuất bộ câu hỏi trắc nghiệm!
+                </p>
+                <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto" th:if="${#lists.isEmpty(documents)}">
+                    Môn học này chưa có tài liệu giáo trình nào. Vui lòng tải tài liệu lên Kho tài liệu để bắt đầu luyện thi!
+                </p>
             </div>
-            <button onclick="document.getElementById('modal-generate-quiz').showModal()" class="btn btn-sm btn-outline border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white rounded-xl text-xs font-bold">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Tải PDF Ngay
+            <button th:if="${not #lists.isEmpty(documents)}" onclick="document.getElementById('modal-generate-quiz').showModal()" class="btn btn-sm btn-outline border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white rounded-xl text-xs font-bold">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Tạo Đề Thi Ngay
             </button>
+            <a th:if="${#lists.isEmpty(documents)}" th:href="@{'/courses/' + ${selectedCourse != null ? selectedCourse.id : 1} + '/documents'}" class="btn btn-sm bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow-md">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Đến Kho Tài Liệu Tải Lên
+            </a>
         </div>
 
         <!-- Grid Cards Đề Thi -->
@@ -238,7 +246,7 @@
         </div>
     </div>
 
-    <!-- Modal Tải File PDF Hoặc Chọn Tài Liệu Sinh Đề -->
+    <!-- Modal Sinh Đề Thi Trắc Nghiệm Từ Kho Học Liệu -->
     <dialog id="modal-generate-quiz" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box bg-white rounded-3xl p-6 border border-slate-200 max-w-xl">
             <form method="dialog">
@@ -251,21 +259,33 @@
                 </div>
                 <div>
                     <h3 class="font-extrabold text-lg text-slate-800">Sinh Đề Thi Trắc Nghiệm Bằng AI</h3>
-                    <p class="text-xs text-slate-400">Trích xuất văn bản từ PDF (Apache PDFBox) & sinh đề trắc nghiệm chuẩn</p>
+                    <p class="text-xs text-slate-400">Tự động sinh đề trắc nghiệm chuẩn từ tài liệu giáo trình của môn học</p>
                 </div>
             </div>
 
-            <!-- Tabs Chọn Nguồn Tài Liệu -->
-            <div class="tabs tabs-boxed bg-slate-100 p-1 rounded-2xl mb-4">
-                <a id="tab-upload" onclick="switchSourceTab('upload')" class="tab tab-active text-xs font-bold rounded-xl flex-1">
-                    <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> Tải File PDF Mới
-                </a>
-                <a id="tab-existing" onclick="switchSourceTab('existing')" class="tab text-xs font-bold rounded-xl flex-1">
-                    <i class="fa-solid fa-book mr-1.5"></i> Chọn Tài Liệu Môn Đã Có
-                </a>
+            <!-- Trường Hợp 1: Môn Học Chưa Có Tài Liệu Nào -->
+            <div th:if="${#lists.isEmpty(documents)}" class="p-6 text-center space-y-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl my-2">
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shadow-inner">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="font-extrabold text-sm text-amber-900">Môn học này chưa có tài liệu giáo trình!</h4>
+                    <p class="text-xs text-amber-700 max-w-sm mx-auto leading-relaxed">
+                        Để đảm bảo dữ liệu học tập đồng bộ, bạn cần tải tài liệu PDF lên Kho tài liệu của môn học trước khi sử dụng tính năng tạo đề trắc nghiệm.
+                    </p>
+                </div>
+                <div class="pt-2 flex justify-center gap-2">
+                    <button type="button" onclick="document.getElementById('modal-generate-quiz').close()" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold text-slate-500">Đóng</button>
+                    <a th:href="@{'/courses/' + ${selectedCourse != null ? selectedCourse.id : 1} + '/documents'}"
+                       class="btn btn-sm bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl text-xs border-none gap-2 shadow-md">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Đến Kho Tài Liệu Tải Lên Ngay</span>
+                    </a>
+                </div>
             </div>
 
-            <form th:action="@{/quiz/generate}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <!-- Trường Hợp 2: Môn Học Đã Có Tài Liệu Sẵn Sàng -->
+            <form th:if="${not #lists.isEmpty(documents)}" th:action="@{/quiz/generate}" method="post" class="space-y-4">
                 <input type="hidden" name="courseId" th:value="${selectedCourse != null ? selectedCourse.id : 1}" />
 
                 <div class="form-control">
@@ -273,20 +293,11 @@
                     <input type="text" readonly th:value="${selectedCourse != null ? selectedCourse.code + ' - ' + selectedCourse.name : ''}" class="input input-sm input-bordered rounded-xl bg-slate-100 text-slate-600 font-semibold text-xs" />
                 </div>
 
-                <!-- Nguồn 1: Tải File PDF Mới -->
-                <div id="section-upload" class="form-control">
-                    <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">File bài giảng PDF (Max 25MB) *</span></label>
-                    <input type="file" id="input-pdf-file" name="pdfFile" accept="application/pdf" class="file-input file-input-bordered file-input-sm file-input-primary w-full rounded-xl text-xs" />
-                </div>
-
-                <!-- Nguồn 2: Chọn Tài Liệu Đã Upload Sẵn Của Môn -->
-                <div id="section-existing" class="form-control hidden">
-                    <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Tài liệu giáo trình môn học *</span></label>
-                    <div th:if="${#lists.isEmpty(documents)}" class="p-3 bg-amber-50 text-amber-800 rounded-xl text-xs border border-amber-200">
-                        Chưa có tài liệu nào được tải lên cho môn học này. Vui lòng chuyển sang tab <strong>Tải File PDF Mới</strong>.
-                    </div>
-                    <select th:if="${not #lists.isEmpty(documents)}" name="documentId" class="select select-sm select-bordered rounded-xl text-xs font-semibold">
-                        <option value="">-- Chọn một tài liệu --</option>
+                <!-- Chọn Tài Liệu Từ Kho Học Liệu Môn Học -->
+                <div class="form-control">
+                    <label class="label py-1"><span class="label-text text-xs font-bold text-slate-600">Chọn tài liệu giáo trình *</span></label>
+                    <select name="documentId" required class="select select-sm select-bordered rounded-xl text-xs font-semibold border-slate-300">
+                        <option value="">-- Chọn tài liệu môn học --</option>
                         <option th:each="doc : ${documents}" th:value="${doc.id}" th:text="${doc.fileName + ' (' + doc.totalPages + ' trang)'}"></option>
                     </select>
                 </div>
@@ -349,31 +360,6 @@
             </form>
         </div>
     </dialog>
-
-    <!-- Script Chuyển Tab Trong Modal -->
-    <script>
-        function switchSourceTab(source) {
-            const tabUpload = document.getElementById('tab-upload');
-            const tabExisting = document.getElementById('tab-existing');
-            const sectionUpload = document.getElementById('section-upload');
-            const sectionExisting = document.getElementById('section-existing');
-            const inputPdfFile = document.getElementById('input-pdf-file');
-
-            if (source === 'upload') {
-                tabUpload.classList.add('tab-active');
-                tabExisting.classList.remove('tab-active');
-                sectionUpload.classList.remove('hidden');
-                sectionExisting.classList.add('hidden');
-                inputPdfFile.required = true;
-            } else {
-                tabUpload.classList.remove('tab-active');
-                tabExisting.classList.add('tab-active');
-                sectionUpload.classList.add('hidden');
-                sectionExisting.classList.remove('hidden');
-                inputPdfFile.required = false;
-            }
-        }
-    </script>
 
 </section>
 </body>

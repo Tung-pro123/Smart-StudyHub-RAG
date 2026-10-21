@@ -33,7 +33,7 @@ public class CourseService {
         if (hasKeyword && hasSemester) {
             courses = courseRepository.findBySemesterIgnoreCaseAndNameContainingIgnoreCase(semester.trim(), keyword.trim());
         } else if (hasKeyword) {
-            courses = courseRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(keyword.trim(), keyword.trim());
+            courses = courseRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCaseOrSemesterContainingIgnoreCase(keyword.trim(), keyword.trim(), keyword.trim());
         } else if (hasSemester) {
             courses = courseRepository.findBySemesterIgnoreCase(semester.trim());
         } else {

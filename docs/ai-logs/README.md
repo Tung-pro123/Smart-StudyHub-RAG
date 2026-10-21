@@ -20,11 +20,11 @@ Mỗi thành viên cần tự lưu lại tiến trình thực tế của chính 
 
 2. **Tạo file nhật ký của riêng bạn**:
    - Trong thư mục `docs/ai-logs/`, copy file [template.md](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/docs/ai-logs/template.md) và đổi tên thành tên của bạn:
-     - Bạn **Bình**: Tạo file `ai-log-binh.md`
-     - Bạn **Ân**: Tạo file `ai-log-an.md`
-     - Bạn **Thắng**: Tạo file `ai-log-thang.md`
-     - Bạn **Nhật**: Tạo file `ai-log-nhat.md`
-     - Bạn **Trường**: Tạo file `ai-log-truong.md`
+     - Bạn **Bình**: Tạo file `02-ai-log-binh.md`
+     - Bạn **Ân**: Tạo file `03-ai-log-an.md`
+     - Bạn **Thắng**: Tạo file `04-ai-log-thang.md`
+     - Bạn **Nhật**: Tạo file `05-ai-log-nhat.md`
+     - Bạn **Trường**: Tạo file `06-ai-log-truong.md`
 
 3. **Ghi lại 3 giai đoạn chính trong quá trình code**:
    - **Giai đoạn 1 (Front-end)**: Prompt AI sinh file HTML (Tailwind/DaisyUI).

@@ -72,44 +72,64 @@ public class QuizGeneratorService {
         );
 
         String jsonPayload = objectMapper.writeValueAsString(requestBody);
-        String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey;
+        List<String> models = List.of(
+                "gemini-2.5-flash",
+                "gemini-2.0-flash",
+                "gemini-1.5-flash-latest",
+                "gemini-1.5-flash",
+                "gemini-1.5-pro",
+                "gemini-2.5-flash-lite"
+        );
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(endpoint))
-                .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(30))
-                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
-                .build();
+        Exception lastException = null;
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        for (String model : models) {
+            try {
+                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
 
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Gemini HTTP error: " + response.statusCode() + " - " + response.body());
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(endpoint))
+                        .header("Content-Type", "application/json")
+                        .header("x-goog-api-key", apiKey)
+                        .timeout(Duration.ofSeconds(30))
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                        .build();
+
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() != 200) {
+                    throw new RuntimeException("Gemini HTTP error: " + response.statusCode() + " - " + response.body());
+                }
+
+                JsonNode rootNode = objectMapper.readTree(response.body());
+                String rawContent = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+
+                String cleanJson = rawContent.replaceAll("^```json\\s*", "").replaceAll("```\\s*$", "").trim();
+
+                List<Map<String, String>> rawQuestions = objectMapper.readValue(cleanJson, new TypeReference<List<Map<String, String>>>() {});
+                List<QuizQuestion> questions = new ArrayList<>();
+                int order = 1;
+
+                for (Map<String, String> m : rawQuestions) {
+                    questions.add(QuizQuestion.builder()
+                            .questionText(m.getOrDefault("questionText", "Câu hỏi trắc nghiệm"))
+                            .optionA(m.getOrDefault("optionA", "Đáp án A"))
+                            .optionB(m.getOrDefault("optionB", "Đáp án B"))
+                            .optionC(m.getOrDefault("optionC", "Đáp án C"))
+                            .optionD(m.getOrDefault("optionD", "Đáp án D"))
+                            .correctAnswer(m.getOrDefault("correctAnswer", "A").trim().toUpperCase())
+                            .explanation(m.getOrDefault("explanation", "Dựa theo nội dung giáo trình được cung cấp."))
+                            .sortOrder(order++)
+                            .build());
+                }
+
+                return questions;
+            } catch (Exception e) {
+                log.warn("Thử sinh câu hỏi với Gemini model '{}' thất bại: {}. Đang thử model tiếp theo...", model, e.getMessage());
+                lastException = e;
+            }
         }
-
-        JsonNode rootNode = objectMapper.readTree(response.body());
-        String rawContent = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
-
-        String cleanJson = rawContent.replaceAll("^```json\\s*", "").replaceAll("```\\s*$", "").trim();
-
-        List<Map<String, String>> rawQuestions = objectMapper.readValue(cleanJson, new TypeReference<List<Map<String, String>>>() {});
-        List<QuizQuestion> questions = new ArrayList<>();
-        int order = 1;
-
-        for (Map<String, String> m : rawQuestions) {
-            questions.add(QuizQuestion.builder()
-                    .questionText(m.getOrDefault("questionText", "Câu hỏi trắc nghiệm"))
-                    .optionA(m.getOrDefault("optionA", "Đáp án A"))
-                    .optionB(m.getOrDefault("optionB", "Đáp án B"))
-                    .optionC(m.getOrDefault("optionC", "Đáp án C"))
-                    .optionD(m.getOrDefault("optionD", "Đáp án D"))
-                    .correctAnswer(m.getOrDefault("correctAnswer", "A").trim().toUpperCase())
-                    .explanation(m.getOrDefault("explanation", "Dựa theo nội dung giáo trình được cung cấp."))
-                    .sortOrder(order++)
-                    .build());
-        }
-
-        return questions;
+        throw (lastException != null) ? lastException : new RuntimeException("Không tìm thấy model Gemini khả dụng!");
     }
 
     public List<QuizQuestion> generateMockQuestions(String contextText, int count, String difficulty) {

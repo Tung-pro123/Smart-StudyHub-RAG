@@ -22,9 +22,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/courses/*/delete",
                         "/courses/*/chat/**",
                         "/courses/*/documents/**",
+                        "/profile",
                         "/profile/**",
+                        "/planner",
                         "/planner/**",
+                        "/quiz",
                         "/quiz/**",
+                        "/settings",
                         "/settings/**"
                 )
                 // Loại trừ các tuyến đường công khai và tài nguyên tĩnh

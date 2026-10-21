@@ -80,4 +80,9 @@ public class Chunk {
             this.tokenCount = 0;
         }
     }
+
+    @Transient
+    public int getCharCount() {
+        return content != null ? content.length() : 0;
+    }
 }

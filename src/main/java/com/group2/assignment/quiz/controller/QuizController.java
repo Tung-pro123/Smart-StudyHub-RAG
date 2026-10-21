@@ -97,8 +97,8 @@ public class QuizController {
     @PostMapping("/generate")
     public String generateQuiz(
             @RequestParam("courseId") Long courseId,
-            @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile,
             @RequestParam(value = "documentId", required = false) Long documentId,
+            @RequestParam(value = "pdfFile", required = false) MultipartFile pdfFile,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "chapterTopic", required = false) String chapterTopic,
             @RequestParam(value = "difficulty", defaultValue = "MEDIUM") String difficulty,
@@ -110,14 +110,18 @@ public class QuizController {
             RedirectAttributes redirectAttributes) {
 
         try {
+            if ((documentId == null || documentId <= 0) && (pdfFile == null || pdfFile.isEmpty())) {
+                redirectAttributes.addFlashAttribute("errorMessage", 
+                        "Môn học này chưa có tài liệu hoặc bạn chưa chọn tài liệu giáo trình! Vui lòng tải tài liệu lên Kho tài liệu của môn học trước.");
+                return "redirect:/quiz?courseId=" + courseId;
+            }
+
             String apiKey = (String) session.getAttribute(SettingsConstants.SESSION_API_KEY);
             Quiz quiz;
             if (documentId != null && documentId > 0) {
                 quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, apiKey);
-            } else if (pdfFile != null && !pdfFile.isEmpty()) {
-                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, apiKey);
             } else {
-                throw new IllegalArgumentException("Vui lòng tải lên file PDF mới hoặc chọn tài liệu có sẵn của môn học!");
+                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, apiKey);
             }
 
             redirectAttributes.addFlashAttribute("successMessage", "Sinh đề trắc nghiệm thành công với " + quiz.getTotalQuestions() + " câu hỏi!");

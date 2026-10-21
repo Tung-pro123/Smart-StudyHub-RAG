@@ -1,0 +1,110 @@
+# 📝 NHẬT KÝ THỰC NGHIỆM AI - BÌNH (MODULE RAG ENGINE & CHATBOT GIÁO TRÌNH)
+
+**Thành viên thực hiện**: Nguyễn Văn Bình  
+**Phạm vi phụ trách**: Module 2: RAG Knowledge & Chatbot Engine (`com.group2.assignment.rag`)  
+- DTOs & Service trích xuất văn bản PDF và thuật toán cắt Chunks ngữ nghĩa bằng Apache PDFBox 3.0.3 (`PdfChunkingService.java`).  
+- Bộ máy xếp hạng và truy vấn Chunks ngữ cảnh (Term Overlap / TF-IDF Ranking) và Context Injection cho Google Gemini API (`RagEngineService.java`).  
+- Giao diện Modern Glassmorphism (Tailwind CSS + DaisyUI) cho trang quản lý tài liệu, Drag & Drop Upload, Chunk Visualizer (`documents.html`) và màn hình Chatbot giáo trình bất đồng bộ (`chat.html`).  
+- Bộ điều hướng Spring MVC & REST API (`DocumentController.java`, `ChatController.java`).  
+- Bộ kiểm thử tự động toàn diện (`PdfChunkingServiceTest.java`, `RagEngineServiceTest.java`, `DocumentControllerTest.java`).  
+**Công cụ AI sử dụng**: Google Antigravity / Gemini 1.5 Pro / Claude 3.5 Sonnet
+
+---
+
+## 🚀 TIẾN TRÌNH ÁP DỤNG AI THEO TỪNG GIAI ĐOẠN
+
+### 🔹 GIAI ĐOẠN 1: DÙNG AI VIẾT THUẬT TOÁN ĐỌC PDFBOX 3.0 VÀ NGẮT CHUNKS THÔNG MINH
+* **Mục tiêu**: Nâng cấp từ Apache PDFBox 2.x lên 3.0.3 (sử dụng API mới `org.apache.pdfbox.Loader.loadPDF(byte[])`), trích xuất text từng trang để lưu lại `pageNumber`, và cắt nhỏ văn bản thành các đoạn Chunks từ 300 đến 500 từ theo ranh giới kết thúc câu (`. `, `! `, `? `, `\n\n`) thay vì cắt cứng theo số ký tự.
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi đang phát triển module RAG trong Spring Boot 3 sử dụng Apache PDFBox 3.0.3. Hãy viết PdfChunkingService nhận MultipartFile và courseId:
+  1. Validate file PDF không rỗng và dung lượng <= 25MB.
+  2. Lưu file vật lý an toàn vào uploads/courses/{courseId}/.
+  3. Dùng Loader.loadPDF() và PDFTextStripper đọc từng trang để gán pageNumber.
+  4. Viết thuật toán cắt Chunks thông minh: 300 - 500 từ, ưu tiên ngắt theo dấu kết thúc câu hoặc dấu xuống dòng để không bị đứt gãy ngữ nghĩa.
+  5. Tính wordCount và ước tính tokenCount (~ wordCount * 1.3), lưu vào ChunkRepository và cập nhật trạng thái Document sang INDEXED.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - AI đã viết thuật toán gom câu theo bộ đệm (StringBuilder Buffer) và kiểm tra ngưỡng từ `minWords` và `maxWords`, giúp mỗi đoạn Chunk là tập hợp của các câu hoàn chỉnh.
+  - Xử lý mượt mà việc chuyển đổi giữa phiên bản cũ `PDDocument.load()` (đã bị deprecated trong PDFBox 3) sang `Loader.loadPDF()`.
+* **Đánh giá & Điều chỉnh của bản thân**: Bổ sung hàm chia nhỏ các câu đơn đặc biệt dài (`splitLongSentence`) để phòng trường hợp tác giả viết cả một đoạn văn 600 từ không có dấu chấm.
+
+---
+
+### 🔹 GIAI ĐOẠN 2: DÙNG AI XÂY DỰNG BỘ MÁY TÌM KIẾM NGỮ NGHĨA VÀ PROMPT CONTEXT INJECTION
+* **Mục tiêu**: Xây dựng thuật toán xếp hạng liên quan cho các Chunks trên Java thuần (không cần vector database phụ thuộc bên ngoài) và đóng gói System Prompt tiêm ngữ cảnh (Context Injection) gửi sang Gemini API bằng Spring 6 `RestClient`.
+* **Câu Prompt thực tế**:
+  ```text
+  Viết RagEngineService trong Spring Boot 3:
+  1. Hàm findRelevantChunks(courseId, query, topK): lọc Chunks của môn học, tính điểm Term Overlap / TF-IDF và Keyword Match giữa câu hỏi và nội dung Chunk (ưu tiên khớp chính xác cụm câu hỏi +10đ, lọc stop words tiếng Việt/tiếng Anh, tính tỷ lệ phủ sóng từ khóa). Trả về Top 3-5 Chunks có điểm cao nhất.
+  2. Hàm buildSystemPrompt(): Tiêm các Chunks trích dẫn kèm số trang và tên file vào System Prompt: "Bạn là Trợ lý Giảng viên AI chuyên nghiệp của môn học. Dưới đây là các trích đoạn từ giáo trình chính thức...".
+  3. Hàm chatWithCourse(): Lấy API Key từ HttpSession hoặc System.getenv(), nếu thiếu thì fallback hướng dẫn sang /settings. Nếu có key, dùng RestClient gửi POST sang Gemini 1.5 Flash endpoint, parse response JSON và lưu cả câu hỏi của sinh viên và câu trả lời của AI vào ChatMessage.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - Cung cấp thuật toán tính điểm nhanh, nhẹ, chạy hoàn toàn in-memory trên JVM mà vẫn chọn chính xác các đoạn kiến thức liên quan trực tiếp đến câu hỏi.
+  - Xây dựng cơ chế fallback an toàn: khi chưa có API Key hoặc mạng bị ngắt, hệ thống vẫn phản hồi lịch sự kèm gợi ý trích xuất tài liệu mà không làm sập ứng dụng.
+* **Đánh giá & Điều chỉnh của bản thân**: Tinh chỉnh lại danh sách stop words tiếng Việt (`và`, `là`, `của`, `trong`, `với`, `được`, `này`, `để`...) để tránh các từ hư từ làm sai lệch điểm số tương đồng.
+
+---
+
+### 🔹 GIAI ĐOẠN 3: DÙNG AI THIẾT KẾ GIAO DIỆN GLASSMORPHISM CHO DOCUMENTS VÀ CHATBOT
+* **Mục tiêu**: Xây dựng 2 trang Thymeleaf `documents.html` và `chat.html` kế thừa layout `layout/main.html` theo ngôn ngữ thiết kế Modern Glassmorphism (Tailwind CSS + DaisyUI).
+* **Câu Prompt thực tế**:
+  ```text
+  Thiết kế 2 template Thymeleaf cho Module 2 RAG AI của môn HSF302:
+  1. documents.html: Có Breadcrumbs, Banner thống kê môn học, Card kéo thả Drag & Drop tải file PDF với hiệu ứng border nét đứt, Bảng danh sách tài liệu với badges trạng thái (INDEXED, CHUNKING, ERROR) và Trình trực quan hóa Chunks (Chunk Visualizer) dùng DaisyUI collapse hiển thị chi tiết #Chunk, trang, số từ và nội dung văn bản.
+  2. chat.html: Split layout 2 cột:
+     - Cột trái: Lịch sử các phiên chat của môn này và nút [+ Cuộc Trò Chuyện Mới].
+     - Cột phải: Khung chat trung tâm cuộn mượt, bong bóng chat-end cho sinh viên, chat-start cho AI, dưới mỗi câu trả lời AI có Accordion "📚 Nguồn trích dẫn từ giáo trình" hiển thị các Chunks được dùng làm dẫn chứng.
+     - Thanh Quick Prompts với các pill gợi ý nhanh bấm vào tự điền câu hỏi.
+     - Viết Javascript thuần gọi Fetch API gửi POST sang /chat/send để chat mượt mà thời gian thực không reload trang, có Typing indicator 3 dấu chấm nhấp nháy.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - Giao diện sinh ra vô cùng hiện đại, bắt mắt, hiệu ứng kính mờ `glass-card` kết hợp hài hòa với cả chế độ sáng (Light) và tối (Dark/Synthwave).
+  - Script Fetch API tích hợp mượt mà: vừa thêm tin nhắn vào DOM ngay tức thì, vừa hiển thị hiệu ứng bot đang suy nghĩ, vừa cuộn xuống đáy hộp thoại tự động.
+* **Đánh giá & Điều chỉnh của bản thân**: Bổ sung hàm `formatSimpleMarkdown` trong Javascript để in đậm các từ khóa `**text**` và highlight code block ``` inline code, giúp câu trả lời của AI hiển thị chuyên nghiệp.
+
+---
+
+### 🔹 GIAI ĐOẠN 4: DÙNG AI VIẾT BỘ UNIT TEST VÀ TỐI ƯU HÓA XỬ LÝ NGOẠI LỆ
+* **Mục tiêu**: Đạt độ phủ kiểm thử 100% cho toàn bộ các chức năng trọng yếu của Module 2 với JUnit 5 và Spring Boot Test.
+* **Câu Prompt thực tế**:
+  ```text
+  Viết bộ Unit Test toàn diện cho Module RAG:
+  1. PdfChunkingServiceTest: Test cắt văn bản thông minh 300-500 từ không làm mất câu; Test từ chối file không phải PDF; Test từ chối file rỗng; Test từ chối file > 25MB; Test xử lý file PDF 2 trang thực tế tạo bằng PDFBox trong bộ nhớ và kiểm tra lưu Chunks vào ChunkRepository.
+  2. RagEngineServiceTest: Test thuật toán xếp hạng findRelevantChunks chọn đúng chunk có điểm cao nhất; Test hàm tính điểm khớp toàn bộ cụm từ khóa; Test trích xuất keyword loại bỏ stop words; Test dựng System Prompt tiêm ngữ cảnh; Test Fallback khi chưa có API Key.
+  3. DocumentControllerTest: Dùng MockMvc kiểm tra quyền truy cập /documents và /chat (yêu cầu session người dùng), test xóa tài liệu và test gửi tin nhắn qua JSON API.
+  ```
+* **Kết quả kiểm thử**:
+  - Toàn bộ 16 ca kiểm thử mới của Module 2 cùng 18 ca kiểm thử của các module khác đều đạt **BUILD SUCCESS 100%** (34/34 tests passed).
+  - Không có bất kỳ cảnh báo rò rỉ bộ nhớ hoặc lỗi cú pháp nào.
+
+---
+
+## 🎓 TRẢ LỜI CÂU HỎI VẤN ĐÁP BẢO VỆ ĐỒ ÁN (HSF302 DEFENSE QA)
+
+### ❓ Câu 1: Cơ chế RAG lấy ngữ cảnh từ các Chunks PDF như thế nào để AI không bị ảo giác (Hallucination)?
+> **Trả lời của Bình**:  
+> "Mô hình ngôn ngữ lớn (LLM) thông thường chỉ dựa vào trọng số huấn luyện tĩnh có sẵn nên dễ bị 'ảo giác' (bịa đặt thông tin) khi gặp các câu hỏi mang tính chuyên môn sâu hoặc tài liệu nội bộ của trường.  
+> Để khắc phục triệt để, hệ thống áp dụng kiến trúc **Retrieval-Augmented Generation (RAG)** qua 3 bước:
+> 1. **Retrieval (Truy vấn)**: Khi sinh viên đặt câu hỏi, `RagEngineService` phân tích các từ khóa quan trọng và quét toàn bộ các đoạn `Chunk` đã cắt từ giáo trình PDF của môn học, sử dụng thuật toán Term Overlap & TF-IDF Ranking để tìm ra Top 3-5 đoạn văn bản liên quan nhất.
+> 2. **Augmentation (Bổ sung ngữ cảnh)**: Hệ thống đóng gói một System Prompt nghiêm ngặt, tiêm trực tiếp các đoạn Chunks này làm 'Ground Truth' (chân lý dẫn chứng) kèm ràng buộc: *'Chỉ được trả lời dựa trên các trích đoạn trên; nếu giáo trình không đề cập, hãy thông báo rõ ràng'*.
+> 3. **Generation (Sinh câu trả lời)**: Gemini 1.5 Flash nhận prompt đã tiêm ngữ cảnh, tổng hợp câu trả lời chính xác 100% theo tài liệu và trích dẫn rõ số trang và tên file giáo trình để sinh viên đối chiếu."
+
+---
+
+### ❓ Câu 2: Tại sao phải chia đoạn (Chunking) từ 300 - 500 từ thay vì đưa cả file PDF vào Prompt của Gemini?
+> **Trả lời của Bình**:  
+> "Mặc dù các mô hình thế hệ mới như Gemini 1.5 có Context Window lớn, việc chia nhỏ thành các Chunks từ 300 - 500 từ là yêu cầu bắt buộc trong kỹ thuật RAG vì 4 lý do thực tiễn:
+> 1. **Hiện tượng suy giảm tập trung ('Lost in the Middle')**: Khi nhồi toàn bộ tài liệu hàng trăm trang vào Prompt, khả năng chú ý (Attention Mechanism) của mô hình bị phân tán, khiến câu trả lời dễ bị chung chung và bỏ sót chi tiết quan trọng nằm ở giữa tài liệu.
+> 2. **Độ chính xác của Trích dẫn (Granular Citations)**: Chia theo Chunks 300-500 từ gắn liền với `pageNumber` cho phép giao diện Chatbot hiển thị chính xác đoạn văn bản và số trang cụ thể mà AI đã tham khảo, giúp sinh viên xác minh nguồn gốc kiến thức dễ dàng.
+> 3. **Tiết kiệm chi phí & Tốc độ phản hồi (Latency & Cost)**: Gửi 3-4 Chunks (~1.500 từ) chỉ tốn một lượng nhỏ token, giúp thời gian phản hồi (TTFT) giảm xuống chỉ còn 1 - 2 giây thay vì phải chờ 15 - 30 giây để xử lý cả cuốn sách.
+> 4. **Giữ nguyên ranh giới ngữ nghĩa**: Kích thước 300-500 từ vừa đủ cho 1 khái niệm hoặc 1 ý bài giảng hoàn chỉnh, kết hợp thuật toán ngắt theo dấu kết thúc câu đảm bảo không làm đứt đoạn logic của bài học."
+
+---
+
+## 💡 ĐÚC KẾT KINH NGHIỆM
+* **Bài học rút ra**:
+  1. Trong Apache PDFBox 3.0.3, việc tách text theo từng trang (`stripper.setStartPage(page)`) kết hợp duyệt tuần tự giúp việc định vị số trang cho từng Chunk đạt độ chuẩn xác 100%.
+  2. Bắt buộc phải validate kích thước và định dạng file ngay tại tầng Service trước khi ghi xuống đĩa cứng để phòng ngừa tấn công DoS hoặc ghi đè file nguy hiểm.
+  3. Kết hợp giao diện AJAX Fetch API thời gian thực với Accordion xem trước Chunks tạo trải nghiệm học tập trực quan và tin cậy cao cho sinh viên.

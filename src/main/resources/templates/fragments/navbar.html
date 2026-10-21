@@ -57,7 +57,7 @@
         <div th:if="${session.currentUser != null}" class="dropdown dropdown-end ml-2">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar btn-sm">
                 <div class="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
-                    <img th:src="${session.currentUser.avatar}" alt="Avatar" />
+                    <img th:src="${session.currentUser.avatar}" alt="Avatar" referrerpolicy="no-referrer" />
                 </div>
             </div>
             <ul tabindex="0" class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content glass-card rounded-2xl w-52 border border-base-200">
