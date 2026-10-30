@@ -43,11 +43,11 @@ public class User {
     private String subscriptionTier = "FREE"; // "FREE", "PRO", "CAMPUS"
 
     @Builder.Default
-    private Integer dailyRagCount = 0;
+    private Integer dailyRagCount = 0; // Đếm số câu chat RAG trong ngày
 
-    private LocalDate lastRagResetDate;
+    private LocalDate lastRagResetDate; // Ngày reset gần nhất
 
-    private LocalDateTime tierExpiresAt;
+    private LocalDateTime tierExpiresAt; // Ngày hết hạn gói Pro
 
     @Column(length = 20)
     @Builder.Default

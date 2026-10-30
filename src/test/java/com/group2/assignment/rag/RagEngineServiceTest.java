@@ -153,9 +153,10 @@ class RagEngineServiceTest {
     }
 
     @Test
-    @DisplayName("RAG Chatbot kích hoạt Fallback hướng dẫn người dùng khi chưa cài API Key")
+    @DisplayName("RAG Chatbot kích hoạt Fallback khi chưa cấu hình Centralized System Key")
     void testChatFallbackWhenNoApiKey() {
         MockHttpSession emptySession = new MockHttpSession();
+        emptySession.setAttribute("GEMINI_API_KEY", "ignored-personal-key");
 
         ChatResponseDto response = ragEngineService.chatWithCourse(
                 sampleCourse.getId(),
@@ -167,8 +168,8 @@ class RagEngineServiceTest {
         assertNotNull(response);
         assertNotNull(response.getSessionId());
         assertFalse(response.isSuccess());
-        assertTrue(response.getAnswer().contains("Chưa cấu hình Google Gemini API Key"));
-        assertTrue(response.getAnswer().contains("/settings"));
+        assertTrue(response.getAnswer().contains("Chưa cấu hình"));
+        assertTrue(response.getAnswer().toLowerCase().contains("quản trị viên"));
         assertFalse(response.getCitations().isEmpty());
     }
 }

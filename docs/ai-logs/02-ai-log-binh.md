@@ -108,3 +108,78 @@
   1. Trong Apache PDFBox 3.0.3, việc tách text theo từng trang (`stripper.setStartPage(page)`) kết hợp duyệt tuần tự giúp việc định vị số trang cho từng Chunk đạt độ chuẩn xác 100%.
   2. Bắt buộc phải validate kích thước và định dạng file ngay tại tầng Service trước khi ghi xuống đĩa cứng để phòng ngừa tấn công DoS hoặc ghi đè file nguy hiểm.
   3. Kết hợp giao diện AJAX Fetch API thời gian thực với Accordion xem trước Chunks tạo trải nghiệm học tập trực quan và tin cậy cao cho sinh viên.
+
+
+---
+
+# 📝 NHẬT KÝ DÙNG AI HOÀN THÀNH NHIỆM VỤ (SPRINT 30/10/2026)
+
+**Thành viên thực hiện**: Nguyễn Văn Gia Bình  
+**Module được giao**: Module RAG Engine - Centralized System AI Key, Multi-Key Rotator & Kiểm soát Hạn ngạch 50 câu/ngày (`feature/rag-engine`)  
+**Công cụ AI sử dụng**: Google Antigravity / Gemini 3.8 Flash (High) / Ponytail Mode  
+
+---
+
+## 🚀 QUY TRÌNH DÙNG AI ĐỂ HOÀN THÀNH TỪNG PHẦN VIỆC
+
+### 🔹 BƯỚC 1: DÙNG AI LÀM PHẦN GIAO DIỆN (FRONT-END)
+* **Mục tiêu**:
+  - Cập nhật thanh header bar: Bỏ cảnh báo cá nhân "Chưa cài API Key", thay bằng badge "AI Multi-Key Engine: Đã Sẵn Sàng" và nhãn nhận diện "⚡ Gói PRO: Vô Hạn RAG".
+  - Thêm thẻ Quota Card tiến trình cho gói FREE: Hiển thị "Hạn ngạch RAG hôm nay: X/50 câu còn lại" kèm progress bar đổi màu mượt mà.
+  - Viết Javascript cập nhật hạn ngạch theo thời gian thực (Realtime) khi nhận phản hồi từ Fetch API `/chat/send` mà không cần F5 tải lại trang.
+* **Câu Prompt thực tế**:
+  ```text
+  Cập nhật templates/rag/chat.html theo mô hình Centralized Key và hạn ngạch 50 câu/ngày:
+  1. Header bar: Nếu hasSystemKey == true thì hiển thị badge xanh "AI Multi-Key Engine: Đã Sẵn Sàng". Nếu user là gói Pro/Admin thì hiển thị badge tím "⚡ Gói PRO: Vô Hạn RAG".
+  2. Cột trái: Thêm Quota Card cho người dùng Free với thanh progress bar DaisyUI biểu thị tỷ lệ X/50 câu hỏi còn lại và nút nâng cấp Pro.
+  3. Javascript Fetch API: Nhận remainingQuota từ ChatResponseDto để cập nhật realtime text và thanh progress bar. Nếu remainingQuota <= 0 thì tự động disable ô nhập câu hỏi và nút gửi kèm placeholder thông báo hết lượt.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - AI sinh cấu trúc HTML Tailwind + DaisyUI mượt mà, phân cấp rõ ràng giữa gói FREE và PRO.
+  - Viết hàm `updateQuotaUI(remaining)` đổi màu progress bar theo ngưỡng (xanh khi còn nhiều, vàng khi <= 20, đỏ khi <= 5) và khóa form chat một cách trực quan.
+
+---
+
+### 🔹 BƯỚC 2: DÙNG AI VIẾT PHẦN LOGIC (BACK-END)
+* **Mục tiêu**:
+  - Chuyển toàn bộ cơ chế gọi Gemini API sang dùng Centralized System Key đọc từ `application.properties` hoặc biến môi trường `GEMINI_API_KEYS`.
+  - Xây dựng `LlmKeyRotator`: Xoay vòng Round-Robin đa luồng, tự động Cooldown 60s và Failover sang key tiếp theo khi gặp mã lỗi HTTP `429 / RESOURCE_EXHAUSTED`.
+  - Hỗ trợ linh hoạt LiteLLM / OpenAI Gateway endpoint khi cấu hình `studyhub.ai.base-url`.
+  - Kiểm soát hạn ngạch 50 câu/ngày và tự động reset ngày mới theo `lastRagResetDate` trong `ChatController`.
+* **Câu Prompt thực tế**:
+  ```text
+  Triển khai logic Centralized Multi-Key Rotator và Quota 50 câu/ngày trong Spring Boot 3:
+  1. Tạo LlmProperties ánh xạ studyhub.ai.gemini-api-keys (hỗ trợ danh sách nhiều key cách nhau bằng dấu phẩy) và studyhub.ai.base-url (cho LiteLLM Proxy).
+  2. Tạo LlmKeyRotator: Quản lý pool keys, xoay vòng Round-Robin an toàn đa luồng bằng AtomicInteger. Khi gặp 429 hoặc Rate Limit thì markKeyFailed đưa vào Cooldown Map 60s và tự động dùng key kế tiếp.
+  3. Refactor RagEngineService: Bỏ lấy key từ HttpSession, gọi qua LlmKeyRotator hoặc LiteLLM OpenAI-compatible endpoint.
+  4. Cập nhật ChatController: Kiểm tra nếu LocalDate.now().isAfter(lastRagResetDate) thì reset dailyRagCount = 0. Nếu gói FREE và dailyRagCount >= 50 thì chặn lại và trả thông báo mời nâng cấp Pro. Nếu thành công thì dailyRagCount++ và trả về remainingQuota.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - AI thiết kế `LlmKeyRotator` rất thông minh và tinh gọn (theo triết lý Ponytail), xử lý đầy đủ trường hợp biên (edge case) khi tất cả các key đều bị cooldown thì tự động fallback về key có thời gian phục hồi sớm nhất.
+  - Tách bạch rõ ràng giữa chế độ gọi Gemini REST API trực tiếp và chuẩn LiteLLM `/v1/chat/completions`.
+  - Logic tự động reset hạn ngạch ngày mới chạy ngầm trong `ChatController` hoàn toàn mượt mà.
+
+---
+
+### 🔹 BƯỚC 3: DÙNG AI GỠ LỖI HOẶC HOÀN THIỆN TÍNH NĂNG (DEBUG & POLISH)
+* **Vấn đề gặp phải khi làm**:
+  - Khi chạy toàn bộ test suite (`mvn clean test`), phát hiện `DocumentControllerTest` gặp lỗi `DataIntegrityViolationException: not-null property references a null or transient value: User.email` do mock user trong test cũ không có email và chưa được lưu trong database.
+  - Ngoài ra, test cũ kiểm tra `model.attributeExists("hasApiKey")` nên cần duy trì tương thích ngược.
+* **Câu Prompt bạn hỏi AI để nhờ sửa**:
+  ```text
+  Chạy mvn clean test bị lỗi DataIntegrityViolationException trên DocumentControllerTest:
+  Hãy kiểm tra tại sao checkAndResetDailyQuota trong ChatController gây lỗi khi gặp mock user chưa persist trong database, và sửa lại để an toàn tuyệt đối đồng thời giữ tương thích ngược với hasApiKey.
+  ```
+* **Cách AI hướng dẫn bạn xử lý**:
+  - AI đã kiểm tra điều kiện `user.getId() != null && userRepository.existsById(user.getId())` trước khi gọi `userRepository.save(user)`, giúp code linh hoạt và an toàn với cả entity thật trong database lẫn mock user trong các bài test MVC.
+  - Thêm `model.addAttribute("hasApiKey", hasSystemKey)` song song với `hasSystemKey`.
+  - Kết quả: Toàn bộ 78 ca kiểm thử trên toàn bộ dự án đạt **BUILD SUCCESS 100% (78/78 tests passed)**.
+
+---
+
+## 💡 ĐÚC KẾT KINH NGHIỆM KHI DÙNG AI
+* **AI đã giúp ích nhiều nhất cho bạn ở khâu nào?**: 
+  - Khâu thiết kế kiến trúc Multi-Key Rotator kết hợp Cooldown Map và quy trình làm rõ yêu cầu qua `/grill-me`. AI đã phân tích từng nhánh thiết kế, đề xuất giải pháp nội bộ nhẹ gọn không cần cài thêm service ngoài mà vẫn giải quyết triệt để bài toán nghẽn hạn ngạch (Rate Limit 15 RPM của Gemini Free).
+* **Kinh nghiệm bạn rút ra để AI sinh ra code đúng ý mình**: 
+  - Sử dụng quy trình TDD kết hợp phong cách `/ponytail`: Viết test case trước để định hình hành vi, yêu cầu AI sinh code tối giản nhất giải quyết đúng vấn đề, không thêm các tầng wrapper thừa thãi.
+  - Luôn chạy full test suite sau khi sửa đổi để phát hiện ngay các phụ thuộc ngầm giữa các module.

@@ -46,6 +46,9 @@
                 <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
                     <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
                 </button>
+                <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                    <i class="fa-solid fa-key mr-1"></i> Trung tâm quản trị
+                </a>
                 <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
                     <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
                 </a>

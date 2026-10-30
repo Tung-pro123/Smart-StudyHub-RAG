@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: main-layout('Admin Command Center', ~{::section})}">
+<body><section class="max-w-6xl mx-auto space-y-6">
+    <nav class="flex flex-wrap gap-3" aria-label="Quản trị"><a th:href="@{/admin/dashboard}" class="btn btn-primary">Tổng quan</a><a th:href="@{/admin/users}" class="btn btn-outline">Sinh viên</a><a th:href="@{/admin/settings}" class="btn btn-outline">Cấu hình AI</a></nav>
+    <h1 class="text-3xl font-extrabold">Admin Command Center</h1>
+    <p class="text-base-content/60">Thống kê tại thời điểm tải trang · Lượt RAG tính theo ngày Việt Nam.</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card rounded-2xl p-6"><p>Tổng tài khoản</p><p class="text-4xl font-bold" th:text="${stats.totalUsers}"></p><p class="text-sm" th:text="|FREE: ${stats.freeUsersCount} · PRO: ${stats.proUsersCount}|"></p></div>
+        <div class="glass-card rounded-2xl p-6"><p>Môn học</p><p class="text-4xl font-bold" th:text="${stats.totalCourses}"></p></div>
+        <div class="glass-card rounded-2xl p-6"><p>Chunks tài liệu</p><p class="text-4xl font-bold" th:text="${stats.totalChunks}"></p></div>
+        <div class="glass-card rounded-2xl p-6"><p>Câu RAG hôm nay</p><p class="text-4xl font-bold" th:text="${stats.todayRagQueries}"></p></div>
+    </div>
+    <div class="glass-card rounded-2xl p-6 flex flex-wrap items-center gap-8">
+        <div class="radial-progress text-primary" th:style="|--value:${stats.proConversionRate}|" role="progressbar" aria-label="Tỷ lệ tài khoản PRO" aria-valuemin="0" aria-valuemax="100" th:attr="aria-valuenow=${stats.proConversionRate}" th:text="|${stats.proConversionRate}%|"></div>
+        <div><h2 class="text-xl font-bold">Tỷ lệ tài khoản PRO</h2><p>CAMPUS được giữ riêng, không tính vào số tài khoản PRO.</p></div>
+        <div><p class="font-bold">Lần ping Gemini thành công gần nhất</p><p th:text="${stats.geminiPingLatencyMs != null} ? |${stats.geminiPingLatencyMs} ms| : 'Chưa có kết quả thành công'"></p><a th:href="@{/admin/settings}" class="link link-primary">Kiểm tra kết nối</a></div>
+    </div>
+</section></body></html>

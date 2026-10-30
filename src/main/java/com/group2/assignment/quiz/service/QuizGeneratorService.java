@@ -85,7 +85,7 @@ public class QuizGeneratorService {
 
         for (String model : models) {
             try {
-                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent";
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(endpoint))

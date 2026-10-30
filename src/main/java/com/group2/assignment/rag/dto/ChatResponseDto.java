@@ -23,4 +23,9 @@ public class ChatResponseDto {
     @Builder.Default
     private boolean success = true;
     private String errorMessage;
+
+    // Các trường phản hồi hạn ngạch theo thời gian thực
+    private Integer remainingQuota;
+    private Integer dailyRagCount;
+    private String subscriptionTier;
 }
