@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -57,6 +58,9 @@ public class AuthService {
                 .fullName(dto.getFullName() != null && !dto.getFullName().isBlank() ? dto.getFullName().trim() : username)
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .dailyRagCount(0)
+                .lastRagResetDate(LocalDate.now())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -124,6 +128,9 @@ public class AuthService {
                             oauth2UserInfo.getAvatarUrl() :
                             "https://api.dicebear.com/7.x/bottts/svg?seed=" + username)
                     .role("ROLE_STUDENT")
+                    .subscriptionTier("FREE")
+                    .dailyRagCount(0)
+                    .lastRagResetDate(LocalDate.now())
                     .provider("google")
                     .createdAt(LocalDateTime.now())
                     .build();
@@ -200,21 +207,55 @@ public class AuthService {
     @PostConstruct
     public void initDefaultUser() {
         if (userRepository.count() == 0) {
+            // 1. Tài khoản Student Free
             userRepository.save(User.builder()
                     .username("student")
                     .email("student@fpt.edu.vn")
                     .fullName("Nguyễn Văn Sinh Viên")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
+                    .subscriptionTier("FREE")
+                    .dailyRagCount(0)
+                    .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
 
+            // 2. Tài khoản Pro Student
+            userRepository.save(User.builder()
+                    .username("pro_student")
+                    .email("pro_student@fpt.edu.vn")
+                    .fullName("Trần Pro Sinh Viên")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("PRO")
+                    .dailyRagCount(0)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+
+            // 3. Tài khoản Quản trị viên Admin
+            userRepository.save(User.builder()
+                    .username("admin")
+                    .email("admin@fpt.edu.vn")
+                    .fullName("Hệ Thống Quản Trị")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_ADMIN")
+                    .subscriptionTier("PRO")
+                    .dailyRagCount(0)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+
+            // 4. Tài khoản Demo Trường (Admin)
             userRepository.save(User.builder()
                     .username("truong")
                     .email("truong@fpt.edu.vn")
                     .fullName("Ngô Nhật Trường")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_ADMIN")
+                    .subscriptionTier("PRO")
+                    .dailyRagCount(0)
+                    .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
         }
