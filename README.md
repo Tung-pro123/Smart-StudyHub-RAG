@@ -117,9 +117,9 @@ com.group2.assignment/
 ## 📚 TÀI LIỆU QUY CHUẨN NỘI BỘ (DOCUMENTATION)
 
 Toàn bộ quy trình và đặc tả kỹ thuật chi tiết được lưu trong thư mục [`docs/`](docs/):
-* [`01-project-context.md`](docs/01-project-context.md): Bối cảnh môn học HSF302 và định hướng Project cuối kỳ.
+* [`01-system-specification.md`](docs/01-system-specification.md): Đặc tả yêu cầu hệ thống (SRS), luồng kiến trúc, CSDL Entity và ma trận API/Routes.
 * [`02-git-workflow.md`](docs/02-git-workflow.md): Quy chuẩn phân nhánh Git (`feature/`), chuẩn Commit Message và Merge PR.
-* [`03-team-rules.md`](docs/03-team-rules.md): Quy định deadline 21h00, văn hóa báo blocker 4 tiếng, chấm điểm công bằng.
+* [`03-business-rules.md`](docs/03-business-rules.md): Cẩm nang quy tắc nghiệp vụ (BRD) từ BR-CORE, BR-AUTH, BR-SET, BR-RAG, BR-PLAN đến BR-QUIZ.
 * [`04-member-tasks.md`](docs/04-member-tasks.md): Chi tiết đầu việc Fullstack của 6 thành viên: Tùng, Bình, Ân, Thắng, Nhật, Trường.
 * [`05-features-and-architecture.md`](docs/05-features-and-architecture.md): Sơ đồ luồng dữ liệu RAG, Planner và Quiz Generator.
 * [`06-prompt-engineering-guide.md`](docs/06-prompt-engineering-guide.md): Bộ Prompt mẫu hướng dẫn 6 bạn dùng AI hiệu quả trong IDE.
