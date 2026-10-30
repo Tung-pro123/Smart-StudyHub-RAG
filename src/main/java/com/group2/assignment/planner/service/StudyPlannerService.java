@@ -12,7 +12,7 @@ import com.group2.assignment.planner.entity.StudyPlan;
 import com.group2.assignment.planner.entity.StudyTask;
 import com.group2.assignment.planner.repository.StudyPlanRepository;
 import com.group2.assignment.planner.repository.StudyTaskRepository;
-import com.group2.assignment.settings.SettingsConstants;
+import com.group2.assignment.settings.service.SystemAiKeyService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +37,15 @@ public class StudyPlannerService {
     private final StudyPlanRepository studyPlanRepository;
     private final StudyTaskRepository studyTaskRepository;
     private final ObjectMapper objectMapper;
+    private final SystemAiKeyService systemAiKeyService;
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
     @Transactional
     public StudyPlan generateStudyPlan(StudyPlanRequestDto dto, HttpSession session) {
-        // 1. Lấy API Key từ Session
-        String apiKey = getApiKeyFromSession(session);
+        // 1. Lấy API Key hệ thống
+        String apiKey = systemAiKeyService.getApiKey();
 
         // 2. Lấy Course entity từ DB (fallback về stub nếu không tìm thấy)
         Course course = courseRepository.findById(dto.getCourseId()).orElseGet(() -> {
@@ -113,11 +114,6 @@ public class StudyPlannerService {
         return studyPlan;
     }
 
-    private String getApiKeyFromSession(HttpSession session) {
-        Object apiKey = session.getAttribute(SettingsConstants.SESSION_API_KEY);
-        return apiKey != null ? apiKey.toString() : null;
-    }
-
     private List<Map<String, Object>> callGeminiApi(StudyPlanRequestDto dto, String contextText, String apiKey) throws Exception {
         // Giới hạn context text để không vượt quá token limit
         String truncatedContext = contextText.length() > 6000 ? contextText.substring(0, 6000) : contextText;
@@ -175,7 +171,7 @@ public class StudyPlannerService {
 
         for (String model : models) {
             try {
-                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent";
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(endpoint))

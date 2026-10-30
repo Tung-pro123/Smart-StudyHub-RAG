@@ -3,6 +3,7 @@ package com.group2.assignment.rag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.group2.assignment.auth.controller.AuthController;
 import com.group2.assignment.auth.entity.User;
+import com.group2.assignment.auth.repository.UserRepository;
 import com.group2.assignment.auth.interceptor.JwtAuthInterceptor;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.CourseRepository;
@@ -48,6 +49,9 @@ class DocumentControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private Course sampleCourse;
     private User mockUser;
 
@@ -63,12 +67,7 @@ class DocumentControllerTest {
                         .name("JPA and Spring Framework")
                         .build()));
 
-        mockUser = User.builder()
-                .id(999L)
-                .username("binh_tester")
-                .fullName("Nguyễn Văn Bình")
-                .role("STUDENT")
-                .build();
+        mockUser = userRepository.findByUsernameIgnoreCase("student").orElseThrow();
     }
 
     @Test

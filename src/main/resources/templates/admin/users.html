@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: main-layout('Quản lý sinh viên', ~{::section})}">
+<body><section class="max-w-6xl mx-auto space-y-6">
+    <nav class="flex flex-wrap gap-3" aria-label="Quản trị"><a th:href="@{/admin/dashboard}" class="btn btn-outline">Tổng quan</a><a th:href="@{/admin/users}" class="btn btn-primary">Sinh viên</a><a th:href="@{/admin/settings}" class="btn btn-outline">Cấu hình AI</a></nav>
+    <h1 class="text-3xl font-extrabold">Quản lý gói cước sinh viên</h1>
+    <div th:if="${successMessage}" role="status" class="alert alert-success" th:text="${successMessage}"></div>
+    <p>Thay đổi gói có hiệu lực từ request tiếp theo. Thao tác cấp gói thủ công không thu tiền và không tự gia hạn.</p>
+    <div class="glass-card rounded-2xl overflow-x-auto">
+        <table class="table"><caption class="sr-only">Danh sách sinh viên và gói cước</caption><thead><tr><th>Sinh viên</th><th>Email</th><th>Gói hiện tại</th><th>RAG hôm nay</th><th>Thao tác</th></tr></thead>
+            <tbody><tr th:each="student : ${students}">
+                <td><div class="flex items-center gap-3"><img th:src="${student.avatar}" alt="" class="w-9 h-9 rounded-full" /><div><p th:text="${student.fullName}"></p><p class="text-xs" th:text="${student.username}"></p></div></div></td>
+                <td th:text="${student.email}"></td><td><span class="badge badge-outline" th:text="${student.subscriptionTier ?: 'FREE'}"></span></td>
+                <td th:text="${student.lastRagResetDate == today and student.dailyRagCount != null} ? ${student.dailyRagCount} : 0"></td>
+                <td><form th:if="${student.subscriptionTier == null or student.subscriptionTier == 'FREE'}" th:action="@{/admin/users/{id}/upgrade-pro(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-primary" type="submit" th:attr="aria-label=|Nâng cấp PRO cho ${student.username}|">⚡ Nâng cấp PRO</button></form>
+                    <form th:if="${student.subscriptionTier == 'PRO'}" th:action="@{/admin/users/{id}/downgrade-free(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-outline" type="submit" th:attr="aria-label=|Hạ về FREE cho ${student.username}|">Hạ về FREE</button></form>
+                    <span th:if="${student.subscriptionTier == 'CAMPUS'}">Gói CAMPUS</span></td>
+            </tr><tr th:if="${#lists.isEmpty(students)}"><td colspan="5">Chưa có sinh viên.</td></tr></tbody>
+        </table>
+    </div>
+</section></body></html>

@@ -37,8 +37,8 @@
                     </a>
                 </li>
                 <li>
-                    <a th:href="@{/settings}" class="font-semibold py-3">
-                        <i class="fa-solid fa-key text-purple-500 w-5"></i> Cài Đặt API Key
+                    <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="font-semibold py-3">
+                        <i class="fa-solid fa-key text-purple-500 w-5"></i> Trung tâm quản trị
                         <span class="badge badge-sm badge-outline">Module 3</span>
                     </a>
                 </li>

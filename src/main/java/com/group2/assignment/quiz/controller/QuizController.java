@@ -7,7 +7,7 @@ import com.group2.assignment.quiz.dto.QuizSubmissionDto;
 import com.group2.assignment.quiz.entity.Quiz;
 import com.group2.assignment.quiz.entity.QuizQuestion;
 import com.group2.assignment.quiz.service.QuizService;
-import com.group2.assignment.settings.SettingsConstants;
+import com.group2.assignment.settings.service.SystemAiKeyService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +28,17 @@ import java.util.Map;
 public class QuizController {
 
     private final QuizService quizService;
+    private final SystemAiKeyService systemAiKeyService;
     private final CourseRepository courseRepository;
     private final com.group2.assignment.rag.repository.DocumentRepository documentRepository;
 
     public QuizController(
             QuizService quizService,
+            SystemAiKeyService systemAiKeyService,
             CourseRepository courseRepository,
             com.group2.assignment.rag.repository.DocumentRepository documentRepository) {
         this.quizService = quizService;
+        this.systemAiKeyService = systemAiKeyService;
         this.courseRepository = courseRepository;
         this.documentRepository = documentRepository;
     }
@@ -116,7 +119,7 @@ public class QuizController {
                 return "redirect:/quiz?courseId=" + courseId;
             }
 
-            String apiKey = (String) session.getAttribute(SettingsConstants.SESSION_API_KEY);
+            String apiKey = systemAiKeyService.getApiKey();
             Quiz quiz;
             if (documentId != null && documentId > 0) {
                 quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, apiKey);

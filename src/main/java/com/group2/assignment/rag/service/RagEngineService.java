@@ -12,7 +12,7 @@ import com.group2.assignment.rag.entity.ChatMessage;
 import com.group2.assignment.rag.entity.ChatSession;
 import com.group2.assignment.rag.repository.ChatMessageRepository;
 import com.group2.assignment.rag.repository.ChatSessionRepository;
-import com.group2.assignment.settings.SettingsConstants;
+import com.group2.assignment.settings.service.SystemAiKeyService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,7 @@ public class RagEngineService {
 
     private final ChunkRepository chunkRepository;
     private final CourseRepository courseRepository;
+    private final SystemAiKeyService systemAiKeyService;
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ObjectMapper objectMapper;
@@ -224,14 +225,8 @@ public class RagEngineService {
             chatSession = chatSessionRepository.save(chatSession);
         }
 
-        // 2. Lấy API Key từ Session hoặc Biến môi trường
-        String apiKey = null;
-        if (session != null) {
-            apiKey = (String) session.getAttribute(SettingsConstants.SESSION_API_KEY);
-        }
-        if (apiKey == null || apiKey.trim().isBlank()) {
-            apiKey = System.getenv("GEMINI_API_KEY");
-        }
+        // 2. Lấy API Key hệ thống
+        String apiKey = systemAiKeyService.getApiKey();
 
         // 3. Tìm kiếm Chunks liên quan
         List<Chunk> relevantChunks = findRelevantChunks(courseId, question, 4);
@@ -241,7 +236,7 @@ public class RagEngineService {
         // 4. Nếu chưa có API Key -> Fallback hướng dẫn người dùng
         if (apiKey == null || apiKey.trim().isBlank()) {
             String fallbackAnswer = "⚠️ **Chưa cấu hình Google Gemini API Key!**\n\n" +
-                    "Bạn vui lòng truy cập trang [Cài đặt API Key](/settings) để thiết lập Gemini API Key trước khi sử dụng tính năng Trợ lý AI giáo trình.\n\n" +
+                    "Vui lòng liên hệ quản trị viên để cấu hình khóa AI hệ thống trước khi sử dụng Trợ lý AI giáo trình.\n\n" +
                     "> **Gợi ý trích xuất từ tài liệu:** Tìm thấy " + relevantChunks.size() + " đoạn văn bản có khả năng liên quan đến câu hỏi của bạn.";
 
             // Lưu tin nhắn USER và thông báo cảnh báo
@@ -305,7 +300,7 @@ public class RagEngineService {
 
         for (String model : GEMINI_MODELS) {
             try {
-                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent";
                 String responseJson = restClient.post()
                         .uri(url)
                         .header("x-goog-api-key", apiKey)

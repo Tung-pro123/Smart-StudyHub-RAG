@@ -29,3 +29,15 @@ Kết quả: `mvn test` bằng Java 21 thành công, 43 tests, 0 failures/errors
 Cập nhật nhánh từ main sau khi nhóm bổ sung OAuth2 và Quiz. Kiểm thử tích hợp phát hiện bộ lọc Spring Security chặn phiên JWT/session trước khi đến Settings. Bổ sung chuỗi bộ lọc chỉ áp dụng tuyến Settings để giữ xác thực qua `JwtAuthInterceptor` và kiểm tra CSRF trong controller. Bổ sung kiểm thử khôi phục phiên từ JWT cookie và chặn POST chưa đăng nhập; điều chỉnh kiểm tra chuyển hướng logout theo Spring Security mới (`/login?logout`).
 
 Kết quả cuối: `mvn clean test` trên Java 21 thành công với 50 tests, 0 failures/errors/skipped, gồm 32 tests Settings và 18 tests từ main.
+
+## Sprint 30/10/2026 — Admin Hub
+
+Yêu cầu: đọc `docs/tasks/task-2026-10-30.md`, triển khai công việc của Ân trên nhánh feature mới, chạy test và push, chưa tạo PR.
+
+Đã đọc luồng User/Auth/JWT, Settings, các điểm lấy key trong RAG/Quiz/Planner và đặc tả BR-ADMIN/BR-TIER. Tạo nhánh `feature/admin-hub` với dashboard KPI, quản lý sinh viên FREE/PRO, service quota/reset ngày Việt Nam và cấu hình/ping System Key. Thêm các trường User theo cấu trúc đã thống nhất trong task Auth để nhánh chạy độc lập; cần đối chiếu khi hợp nhất nhánh Auth.
+
+Bỏ form key cá nhân, chuyển các caller hiện tại sang nguồn key chung để không làm đứt luồng AI. Quản trị viên thay key trong bộ nhớ máy chủ, key bền vững vẫn lấy từ môi trường. Không thêm thanh toán, cron hoặc tính năng khóa Planner/Quiz thuộc task khác.
+
+Kiểm thử bao gồm quyền Admin lấy từ DB, CSRF, khôi phục phiên từ cookie JWT, đổi gói có hiệu lực ở request tiếp theo, bảo mật key, KPI, reset ngày và giới hạn 50. Test quota đồng thời nạp cùng dữ liệu User cũ trong nhiều transaction để kiểm tra cập nhật counter dưới khóa hàng DB. Fixture RAG dùng tài khoản thật từ repository thay cho user ID giả để tương thích cơ chế làm mới phiên.
+
+Kết quả: `mvn clean test` trên Java 21 thành công với 75 tests, 0 failures/errors/skipped; `git diff --check` đạt. Ping dùng mock, chưa chạy với key thật và chưa kiểm tra giao diện bằng trình duyệt.

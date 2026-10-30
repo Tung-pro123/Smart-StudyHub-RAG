@@ -9,7 +9,7 @@ import com.group2.assignment.rag.entity.ChatSession;
 import com.group2.assignment.rag.repository.ChatMessageRepository;
 import com.group2.assignment.rag.repository.ChatSessionRepository;
 import com.group2.assignment.rag.service.RagEngineService;
-import com.group2.assignment.settings.SettingsConstants;
+import com.group2.assignment.settings.service.SystemAiKeyService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,7 @@ import java.util.List;
 public class ChatController {
 
     private final CourseRepository courseRepository;
+    private final SystemAiKeyService systemAiKeyService;
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final RagEngineService ragEngineService;
@@ -61,9 +62,7 @@ public class ChatController {
         }
 
         // Kiểm tra xem đã cấu hình API Key chưa
-        String sessionKey = (String) session.getAttribute(SettingsConstants.SESSION_API_KEY);
-        String envKey = System.getenv("GEMINI_API_KEY");
-        boolean hasApiKey = (sessionKey != null && !sessionKey.isBlank()) || (envKey != null && !envKey.isBlank());
+        boolean hasApiKey = systemAiKeyService.isConfigured();
 
         model.addAttribute("course", course);
         model.addAttribute("sessions", sessions);

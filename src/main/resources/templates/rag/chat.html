@@ -35,8 +35,8 @@
             </div>
             <div th:unless="${hasApiKey}" class="badge badge-warning gap-2 py-3 px-4 text-white font-semibold shadow-sm">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Chưa cài API Key</span>
-                <a th:href="@{/settings}" class="underline font-bold ml-1 hover:text-white">Cài đặt ngay</a>
+                <span>AI hệ thống chưa được cấu hình. Vui lòng liên hệ quản trị viên.</span>
+
             </div>
 
             <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm btn-outline border-base-content/20 rounded-xl gap-2">
@@ -52,7 +52,7 @@
         <!-- Left Column: Chat Sessions History (1 Column) -->
         <div class="lg:col-span-1 space-y-4">
             <div class="glass-card rounded-3xl p-5 shadow-xl border border-white/20 flex flex-col h-[700px]">
-                
+
                 <!-- New Chat Button -->
                 <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" class="btn btn-primary w-full rounded-2xl shadow-lg shadow-primary/20 gap-2 mb-4">
                     <i class="fa-solid fa-plus"></i>
@@ -101,7 +101,7 @@
         <!-- Right Column: Interactive Chat Box (3 Columns) -->
         <div class="lg:col-span-3">
             <div class="glass-card rounded-3xl p-6 shadow-xl border border-white/20 flex flex-col h-[700px] relative">
-                
+
                 <!-- Chat Window Header -->
                 <div class="flex items-center justify-between pb-4 border-b border-base-content/10 flex-shrink-0">
                     <div class="flex items-center gap-3">
@@ -130,7 +130,7 @@
 
                 <!-- Messages Scroll Area -->
                 <div id="chatMessagesContainer" class="flex-grow overflow-y-auto py-4 space-y-4 pr-2">
-                    
+
                     <!-- Welcome AI Bot Message if conversation is empty -->
                     <div th:if="${#lists.isEmpty(messages)}" class="chat chat-start">
                         <div class="chat-image avatar">
@@ -151,7 +151,7 @@
 
                     <!-- Dynamic Render Saved Messages -->
                     <th:block th:each="msg : ${messages}">
-                        
+
                         <!-- USER MESSAGE -->
                         <div th:if="${msg.sender == 'USER'}" class="chat chat-end">
                             <div class="chat-image avatar">
@@ -241,7 +241,7 @@
                 <!-- Chat Input Bar Form -->
                 <form id="chatForm" th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post" class="mt-2 flex items-center gap-2 flex-shrink-0">
                     <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
-                    
+
                     <div class="relative flex-grow">
                         <input type="text"
                                id="chatQuestionInput"
@@ -384,7 +384,7 @@
 
             let citationsHtml = '';
             if (citations && citations.length > 0) {
-                let snippetsHtml = citations.map(c => 
+                let snippetsHtml = citations.map(c =>
                     `[#Chunk ${c.chunkIndex} | ${escapeHtml(c.documentFileName || 'Tài liệu')} - Trang ${c.pageNumber}]\n${escapeHtml(c.snippet)}`
                 ).join('\n\n--------------------\n\n');
 
