@@ -25,12 +25,23 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Left Column: Input Form -->
         <div class="glass-card rounded-2xl p-6 shadow-xl">
-            <h2 class="text-xl font-bold mb-4 flex items-center">
-                <i class="fa-solid fa-pen-to-square mr-2 text-indigo-600"></i>
-                Tạo kế hoạch học tập
-            </h2>
+            <div class="flex items-center justify-between gap-3 mb-4">
+                <h2 class="text-xl font-bold flex items-center">
+                    <i class="fa-solid fa-pen-to-square mr-2 text-indigo-600"></i>
+                    Tạo kế hoạch học tập
+                </h2>
+                <span th:if="${isPro}" class="badge badge-secondary badge-sm font-bold gap-1 shrink-0">
+                    <i class="fa-solid fa-crown text-amber-300"></i>
+                    <span th:text="${subscriptionTier}">PRO</span>
+                </span>
+                <span th:unless="${isPro}" class="badge badge-ghost badge-sm font-bold gap-1 shrink-0">
+                    <i class="fa-solid fa-lock"></i> FREE
+                </span>
+            </div>
 
-            <form th:action="@{/planner/generate}" method="post" class="space-y-4">
+            <div class="relative">
+            <form th:action="@{/planner/generate}" method="post" class="space-y-4"
+                  th:classappend="${plannerLocked} ? 'opacity-40 pointer-events-none select-none' : ''">
                 <!-- Chọn Môn học -->
                 <div class="form-control">
                     <label class="label">
@@ -112,11 +123,31 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary w-full">
+                <button type="submit" class="btn btn-primary w-full" th:disabled="${plannerLocked}">
                     <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
                     Tạo kế hoạch với AI
                 </button>
             </form>
+
+            <!-- Locked Glass Overlay dành cho gói FREE -->
+            <div th:if="${plannerLocked}"
+                 class="absolute inset-0 z-20 rounded-2xl backdrop-blur-md bg-base-100/60 border border-white/30 flex flex-col items-center justify-center text-center p-6 gap-3">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-lg font-extrabold text-base-content">AI Study Planner đang bị khóa</h3>
+                <p class="text-sm text-base-content/70 max-w-xs">
+                    Phân bổ lộ trình ôn thi theo tuần chỉ dành cho Gói Pro. Nâng cấp để AI tự động xếp lịch học vừa sức với bạn.
+                </p>
+                <button type="button"
+                        onclick="document.getElementById('modal-pricing-upgrade').showModal()"
+                        class="btn btn-sm rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 text-white font-black border-none shadow-lg shadow-purple-500/40">
+                    <i class="fa-solid fa-bolt mr-1"></i>
+                    Nâng cấp Gói Pro chỉ 49k/tháng để kích hoạt AI Study Planner
+                </button>
+                <p class="text-[11px] text-base-content/50">Bao gồm RAG không giới hạn, Flashcards &amp; không giới hạn môn học</p>
+            </div>
+            </div>
         </div>
 
         <!-- Right Column: Plans List -->
@@ -184,6 +215,63 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal nâng cấp gói Pro (dùng chung id với navbar để fallback hoạt động) -->
+    <dialog id="modal-pricing-upgrade" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box max-w-lg p-6 sm:p-8 rounded-3xl bg-slate-950 text-slate-100 border border-purple-500/30 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <button type="button" onclick="document.getElementById('modal-pricing-upgrade').close()"
+                    class="btn btn-sm btn-circle btn-ghost text-slate-400 hover:text-white absolute right-4 top-4 z-20">✕</button>
+
+            <div class="relative z-10 text-center space-y-3">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold">
+                    <i class="fa-solid fa-bolt text-amber-400"></i> NÂNG CẤP GÓI PRO
+                </div>
+                <h3 class="text-2xl font-black text-white">Mở khóa AI Study Planner</h3>
+                <p class="text-sm text-slate-400">
+                    Chỉ <span class="text-white font-bold">49.000đ/tháng</span> (~$2) để AI tự động phân bổ lộ trình ôn thi theo đúng lịch rảnh của bạn.
+                </p>
+            </div>
+
+            <ul class="relative z-10 mt-6 space-y-3 text-sm text-slate-200">
+                <li class="flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                    <span>AI Study Planner: Timeline học tập cá nhân hóa theo tuần/ngày</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                    <span>Chat RAG với giáo trình không giới hạn 50 câu/ngày</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                    <span>Không giới hạn số môn học &amp; mở khóa Flashcards</span>
+                </li>
+            </ul>
+
+            <div class="relative z-10 mt-7 flex flex-col gap-2">
+                <form th:action="@{/auth/upgrade-pro}" method="post">
+                    <button type="submit"
+                            class="btn rounded-xl w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 text-white font-black border-none shadow-lg shadow-purple-500/40">
+                        <i class="fa-solid fa-crown text-amber-300 mr-1"></i> Nâng cấp Gói Pro ngay
+                    </button>
+                </form>
+                <a th:href="@{/courses}" class="btn btn-sm btn-ghost text-slate-400 hover:text-white">
+                    Xem bảng giá đầy đủ 3 gói
+                </a>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <script th:if="${showUpgradeModal}">
+        window.addEventListener('DOMContentLoaded', function () {
+            var modal = document.getElementById('modal-pricing-upgrade');
+            if (modal) modal.showModal();
+        });
+    </script>
 </section>
 </body>
 </html>
