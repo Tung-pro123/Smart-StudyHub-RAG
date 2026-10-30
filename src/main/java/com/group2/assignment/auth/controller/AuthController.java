@@ -16,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -169,6 +168,23 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "redirect:/profile";
+    }
+
+    /**
+     * Nâng cấp gói Pro (Kích hoạt nhanh cho sinh viên từ bảng giá)
+     */
+    @PostMapping("/auth/upgrade-pro")
+    public String upgradePro(HttpSession session, RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để nâng cấp gói tài khoản!");
+            return "redirect:/login";
+        }
+        User updated = authService.upgradeSubscriptionTier(currentUser.getUsername(), "PRO");
+        session.setAttribute(SESSION_USER, updated);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "🎉 Chúc mừng! Bạn đã nâng cấp thành công lên Gói PRO (Không giới hạn môn học, AI Study Planner & RAG không giới hạn)!");
+        return "redirect:/courses";
     }
 
     /**

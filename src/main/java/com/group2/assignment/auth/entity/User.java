@@ -3,6 +3,7 @@ package com.group2.assignment.auth.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,6 +40,17 @@ public class User {
 
     @Column(length = 20)
     @Builder.Default
+    private String subscriptionTier = "FREE"; // "FREE", "PRO", "CAMPUS"
+
+    @Builder.Default
+    private Integer dailyRagCount = 0;
+
+    private LocalDate lastRagResetDate;
+
+    private LocalDateTime tierExpiresAt;
+
+    @Column(length = 20)
+    @Builder.Default
     private String provider = "local"; // "local", "google"
 
     @Column(length = 255)
@@ -57,6 +69,15 @@ public class User {
         if (this.role == null || this.role.isBlank()) {
             this.role = "ROLE_STUDENT";
         }
+        if (this.subscriptionTier == null || this.subscriptionTier.isBlank()) {
+            this.subscriptionTier = "FREE";
+        }
+        if (this.dailyRagCount == null) {
+            this.dailyRagCount = 0;
+        }
+        if (this.lastRagResetDate == null) {
+            this.lastRagResetDate = LocalDate.now();
+        }
         if (this.provider == null || this.provider.isBlank()) {
             this.provider = "local";
         }
@@ -68,5 +89,15 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isPro() {
+        return "ROLE_ADMIN".equalsIgnoreCase(this.role)
+                || "PRO".equalsIgnoreCase(this.subscriptionTier)
+                || "CAMPUS".equalsIgnoreCase(this.subscriptionTier);
+    }
+
+    public boolean isAdmin() {
+        return "ROLE_ADMIN".equalsIgnoreCase(this.role);
     }
 }

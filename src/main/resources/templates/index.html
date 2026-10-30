@@ -37,12 +37,15 @@
                 Quản lý môn học thông minh, tải lên giáo trình PDF để tự động cắt nhỏ đoạn Chunks, trò chuyện hỏi đáp chuyên sâu bám sát tài liệu và sinh đề thi trắc nghiệm AI tức thì.
             </p>
             <div class="pt-2 flex flex-wrap gap-3">
-                <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
+                <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
                     <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
                 </button>
-                <a th:href="@{/settings}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-key mr-1"></i> Cấu Hình API Key
-                </a>
+                <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning text-white shadow-lg shadow-amber-500/30 rounded-xl font-bold">
+                    <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Tạo Thêm Môn
+                </button>
+                <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                    <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
+                </button>
                 <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
                     <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
                 </a>
@@ -54,17 +57,34 @@
 
     <!-- Quick Stats Bar -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-indigo-500/40 transition-all">
-            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xl font-bold">
-                <i class="fa-solid fa-book-bookmark"></i>
+        <!-- Card 1: Hạn ngạch môn học & Gói cước -->
+        <div class="glass-card rounded-2xl p-5 flex items-center justify-between shadow-sm hover:border-indigo-500/40 transition-all border border-base-200">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs font-semibold text-base-content/60 uppercase">Môn Học & Hạn Ngạch</p>
+                        <span th:if="${isProUser}" class="badge badge-primary badge-xs font-bold text-[10px]">PRO</span>
+                        <span th:unless="${isProUser}" class="badge badge-ghost badge-xs font-bold text-[10px]">FREE</span>
+                    </div>
+                    <div class="flex items-baseline gap-2 mt-0.5">
+                        <h4 class="text-2xl font-black text-base-content" th:text="${totalCourses}">3</h4>
+                        <span th:if="${!isProUser}" class="text-xs font-bold text-base-content/50">/ <span th:text="${maxCoursesFree}">3</span> môn</span>
+                        <span th:if="${isProUser}" class="text-xs font-bold text-emerald-500">/ ∞ môn</span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <p class="text-xs font-semibold text-base-content/60 uppercase">Tổng Số Môn Học</p>
-                <h4 class="text-2xl font-black text-base-content" th:text="${totalCourses}">3</h4>
-            </div>
+            <!-- Mini Upgrade Button if Free -->
+            <button th:if="${!isProUser}" onclick="document.getElementById('modal-pricing-upgrade').showModal()"
+                    class="btn btn-xs btn-outline btn-primary rounded-lg text-[11px] gap-1 hover:text-white"
+                    title="Nâng cấp gói để không giới hạn môn học">
+                <i class="fa-solid fa-bolt text-amber-400"></i> Nâng cấp
+            </button>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-emerald-500/40 transition-all">
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-emerald-500/40 transition-all border border-base-200">
             <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xl font-bold">
                 <i class="fa-solid fa-database"></i>
             </div>
@@ -76,7 +96,7 @@
             </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-purple-500/40 transition-all">
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-purple-500/40 transition-all border border-base-200">
             <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-xl font-bold">
                 <i class="fa-solid fa-brain"></i>
             </div>
@@ -86,7 +106,7 @@
             </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-amber-500/40 transition-all">
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-amber-500/40 transition-all border border-base-200">
             <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-xl font-bold">
                 <i class="fa-solid fa-layer-group"></i>
             </div>
@@ -126,9 +146,12 @@
                     <i class="fa-solid fa-rotate-left mr-1"></i> Đặt Lại
                 </a>
 
-                <!-- Create Course Button -->
-                <button type="button" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-sm btn-primary rounded-xl ml-2 bg-gradient-to-r from-indigo-600 to-purple-600 border-none text-white shadow-md">
+                <!-- Create Course Button (Conditionally handles Quota Limit) -->
+                <button th:if="${canCreateCourse}" type="button" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-sm btn-primary rounded-xl ml-2 bg-gradient-to-r from-indigo-600 to-purple-600 border-none text-white shadow-md">
                     <i class="fa-solid fa-plus"></i> Thêm Môn
+                </button>
+                <button th:unless="${canCreateCourse}" type="button" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-sm btn-warning rounded-xl ml-2 text-white shadow-md gap-1" title="Đã đạt giới hạn 3 môn của gói Free. Nhấn để nâng cấp!">
+                    <i class="fa-solid fa-lock"></i> Thêm Môn <span class="badge badge-xs badge-neutral text-[9px]">PRO</span>
                 </button>
             </form>
         </div>
@@ -142,8 +165,11 @@
             <p class="text-xs text-base-content/60 max-w-sm mx-auto">
                 Không có môn học phù hợp với từ khóa hoặc bạn chưa tạo môn học nào. Hãy bấm nút dưới đây để tạo ngay môn đầu tiên!
             </p>
-            <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary btn-sm rounded-xl">
+            <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary btn-sm rounded-xl">
                 <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Đầu Tiên
+            </button>
+            <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning btn-sm rounded-xl text-white">
+                <i class="fa-solid fa-lock mr-1"></i> Nâng Cấp Để Tạo Thêm Môn
             </button>
         </div>
 
@@ -380,9 +406,227 @@
         </form>
     </dialog>
 
+    <!-- Modal 3: Bảng Giá Nâng Cấp Gói Cước (DaisyUI Pricing Modal) -->
+    <dialog id="modal-pricing-upgrade" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box max-w-5xl p-6 sm:p-10 rounded-3xl bg-slate-950 text-slate-100 border border-purple-500/30 shadow-2xl relative overflow-hidden">
+            <!-- Background Glow FX -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Modal Close button -->
+            <button type="button" onclick="document.getElementById('modal-pricing-upgrade').close()"
+                    class="btn btn-sm btn-circle btn-ghost text-slate-400 hover:text-white absolute right-4 top-4 z-20">✕</button>
+
+            <!-- Header & Switch Period Toggle -->
+            <div class="text-center space-y-4 relative z-10 max-w-2xl mx-auto">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold">
+                    <i class="fa-solid fa-sparkles text-amber-400"></i> BẢNG GIÁ HỘI VIÊN STUDYHUB AI
+                </div>
+                <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                    Chọn Gói Phù Hợp Cho Học Kỳ Của Bạn
+                </h3>
+
+                <!-- Toggle Buttons: Theo Tháng / Theo Học Kỳ -->
+                <div class="flex items-center justify-center pt-2">
+                    <div class="bg-slate-900/90 p-1.5 rounded-full inline-flex items-center border border-white/10 shadow-inner">
+                        <button type="button" id="tab-monthly" onclick="switchBillingPeriod('monthly')"
+                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md">
+                            Theo Tháng
+                        </button>
+                        <button type="button" id="tab-semester" onclick="switchBillingPeriod('semester')"
+                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">
+                            Theo Học Kỳ <span class="badge badge-secondary badge-xs font-extrabold text-[9px] uppercase">Tiết Kiệm 20%</span>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="text-xs text-purple-300/80 font-medium flex items-center justify-center gap-1.5 pt-1">
+                    <i class="fa-solid fa-bolt text-amber-400"></i> Đăng ký trọn gói học kỳ để nhận thêm Flashcards Spaced Repetition
+                </p>
+            </div>
+
+            <!-- 3 Pricing Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 relative z-10">
+
+                <!-- Card 1: Sinh Viên Tự Học (Free) -->
+                <div class="rounded-3xl p-6 bg-slate-900/80 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-lg font-bold text-white">Sinh Viên Tự Học</h4>
+                            <span class="badge badge-success badge-sm font-semibold text-xs bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Miễn Phí</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed min-h-[36px]">
+                            Phù hợp cho sinh viên tự học và tra cứu slide các môn cơ bản trong kỳ.
+                        </p>
+                        <div class="pt-2">
+                            <span class="text-3xl font-extrabold text-white">$0</span>
+                            <span class="text-xs text-slate-500 font-semibold">/ vĩnh viễn</span>
+                        </div>
+
+                        <div class="divider my-2 border-slate-800"></div>
+
+                        <!-- Features Checklist -->
+                        <ul class="space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <span>Tối đa <strong>3 Môn học</strong> (HSF302, MAS291...)</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <span>Truy vấn RAG <strong>50 câu hỏi / ngày</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <span>Trích dẫn số trang chính xác (Citations)</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <span>Sinh đề trắc nghiệm cơ bản (10 câu)</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 text-slate-500 line-through">
+                                <i class="fa-solid fa-circle-xmark text-slate-600 mt-0.5"></i>
+                                <span>AI Study Planner tự động lập lịch</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-6 mt-4">
+                        <button type="button" disabled class="btn btn-sm btn-outline rounded-xl w-full border-slate-700 text-slate-400 font-bold">
+                            <span th:if="${!isProUser}">Gói Đang Sử Dụng</span>
+                            <span th:if="${isProUser}">Gói Miễn Phí</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Ôn Thi Cấp Tốc (Gói PRO - Nổi bật) -->
+                <div class="rounded-3xl p-6 bg-gradient-to-b from-purple-950/40 via-slate-900/90 to-slate-900 border-2 border-purple-500/80 shadow-2xl shadow-purple-500/20 flex flex-col justify-between relative hover:border-purple-400 transition-all">
+                    <!-- Top Ribbon Badge -->
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                        <span class="badge bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-[10px] uppercase px-3 py-2 tracking-wider shadow-lg border-none">
+                            SINH VIÊN ƯA CHUỘNG
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between pt-1">
+                            <h4 class="text-lg font-black text-white">Ôn Thi Cấp Tốc</h4>
+                            <span class="badge badge-secondary badge-sm font-bold text-xs bg-purple-500/20 text-purple-300 border-purple-500/40">Gói Pro</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed min-h-[36px]">
+                            Dành cho sinh viên trong mùa thi muốn tối ưu hóa thời gian và đạt điểm A.
+                        </p>
+                        <div class="pt-2">
+                            <span id="card-pro-price" class="text-3xl font-black text-white">$2</span>
+                            <span id="card-pro-period" class="text-xs text-purple-300/80 font-semibold">/ tháng (~49k VNĐ)</span>
+                        </div>
+
+                        <div class="divider my-2 border-purple-500/30"></div>
+
+                        <!-- Features Checklist -->
+                        <ul class="space-y-2.5 text-xs text-slate-200">
+                            <li class="flex items-start gap-2.5 font-bold text-white">
+                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <span>Không giới hạn Môn học</span>
+                            </li>
+                            <li class="flex items-start gap-2.5 font-bold text-white">
+                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <span>Truy vấn RAG Gemini 1.5 không giới hạn</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <span>AI Study Planner: Tự động xếp lịch học vừa sức</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <span>AI Quiz Generator: Sinh đề thi A/B/C/D theo chương</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <span>Xuất đề thi PDF & Flashcards Spaced Repetition</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-6 mt-4">
+                        <div th:if="${isProUser}">
+                            <button type="button" disabled class="btn btn-sm btn-success rounded-xl w-full text-white font-extrabold shadow-md gap-1">
+                                <i class="fa-solid fa-crown text-amber-300"></i> Đang Kích Hoạt Gói PRO
+                            </button>
+                        </div>
+                        <div th:unless="${isProUser}">
+                            <form th:action="@{/auth/upgrade-pro}" method="post">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 text-white font-black border-none shadow-lg shadow-purple-500/40">
+                                    <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Gói Pro
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Giảng Viên & Lớp Học (Campus) -->
+                <div class="rounded-3xl p-6 bg-slate-900/80 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-lg font-bold text-white">Giảng Viên & Lớp Học</h4>
+                            <span class="badge badge-info badge-sm font-semibold text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">Khoa / Lớp</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed min-h-[36px]">
+                            Dành cho giảng viên hoặc ban cán sự muốn tạo kho tài liệu chung cho lớp.
+                        </p>
+                        <div class="pt-2">
+                            <span class="text-3xl font-extrabold text-white">$Campus</span>
+                            <span class="text-xs text-slate-500 font-semibold">/ học kỳ</span>
+                        </div>
+
+                        <div class="divider my-2 border-slate-800"></div>
+
+                        <!-- Features Checklist -->
+                        <ul class="space-y-2.5 text-xs text-slate-300">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
+                                <span>Không gian lớp học dùng chung cho cả lớp</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
+                                <span>Tải lên trọn bộ slide giáo trình môn học</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
+                                <span>Dashboard theo dõi tiến độ hiểu bài sinh viên</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
+                                <span>Ngân hàng đề thi trắc nghiệm bảo mật nội bộ</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
+                                <span>Hỗ trợ kỹ thuật trực tiếp cho Giảng viên</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-6 mt-4">
+                        <a href="mailto:admin@fpt.edu.vn?subject=Lien%20He%20Goi%20Campus%20StudyHub"
+                           class="btn btn-sm btn-outline rounded-xl w-full border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 font-bold">
+                            <i class="fa-solid fa-envelope mr-1"></i> Liên Hệ Bộ Môn
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Note -->
+            <div class="text-center mt-8 text-slate-500 text-xs">
+                <span>Cần thanh toán qua chuyển khoản ngân hàng hoặc ví MoMo? Vui lòng gửi yêu cầu hỗ trợ qua <a href="mailto:admin@fpt.edu.vn" class="text-purple-400 underline">admin@fpt.edu.vn</a></span>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
 </section>
 
-<!-- Client-side Script to populate Edit Modal & Theme Persistence -->
+<!-- Client-side Scripts -->
 <script>
     function openEditModal(id, code, name, description, semester, credits, color, icon) {
         const form = document.getElementById('form-edit-course');
@@ -396,6 +640,33 @@
         if (icon) document.getElementById('edit-icon').value = icon;
         document.getElementById('modal-edit-course').showModal();
     }
+
+    // Toggle Period: Monthly vs Semester
+    function switchBillingPeriod(period) {
+        const btnMonthly = document.getElementById('tab-monthly');
+        const btnSemester = document.getElementById('tab-semester');
+        const priceLabel = document.getElementById('card-pro-price');
+        const periodLabel = document.getElementById('card-pro-period');
+
+        if (period === 'monthly') {
+            btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md";
+            btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5";
+            if (priceLabel) priceLabel.innerText = "$2";
+            if (periodLabel) periodLabel.innerText = "/ tháng (~49k VNĐ)";
+        } else {
+            btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md flex items-center gap-1.5";
+            btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-400 hover:text-white";
+            if (priceLabel) priceLabel.innerText = "$5";
+            if (periodLabel) periodLabel.innerText = "/ học kỳ (~120k VNĐ)";
+        }
+    }
+</script>
+
+<script th:if="${showUpgradeModal}">
+    window.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('modal-pricing-upgrade');
+        if (modal) modal.showModal();
+    });
 </script>
 </body>
 </html>

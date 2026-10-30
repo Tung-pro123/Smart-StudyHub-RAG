@@ -57,6 +57,7 @@ public class AuthService {
                 .fullName(dto.getFullName() != null && !dto.getFullName().isBlank() ? dto.getFullName().trim() : username)
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -124,6 +125,7 @@ public class AuthService {
                             oauth2UserInfo.getAvatarUrl() :
                             "https://api.dicebear.com/7.x/bottts/svg?seed=" + username)
                     .role("ROLE_STUDENT")
+                    .subscriptionTier("FREE")
                     .provider("google")
                     .createdAt(LocalDateTime.now())
                     .build();
@@ -195,6 +197,17 @@ public class AuthService {
     }
 
     /**
+     * Nâng cấp hoặc chuyển đổi gói hội viên (FREE / PRO / CAMPUS)
+     */
+    public User upgradeSubscriptionTier(String username, String tier) {
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng: " + username));
+        user.setSubscriptionTier(tier != null ? tier.toUpperCase() : "FREE");
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    /**
      * Khởi tạo tài khoản sinh viên mẫu mặc định để demo
      */
     @PostConstruct
@@ -206,6 +219,27 @@ public class AuthService {
                     .fullName("Nguyễn Văn Sinh Viên")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
+                    .subscriptionTier("FREE")
+                    .createdAt(LocalDateTime.now())
+                    .build());
+
+            userRepository.save(User.builder()
+                    .username("pro_student")
+                    .email("pro@fpt.edu.vn")
+                    .fullName("Lê Pro Sinh Viên")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("PRO")
+                    .createdAt(LocalDateTime.now())
+                    .build());
+
+            userRepository.save(User.builder()
+                    .username("admin")
+                    .email("admin@fpt.edu.vn")
+                    .fullName("Quản Trị Viên Hệ Thống")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_ADMIN")
+                    .subscriptionTier("PRO")
                     .createdAt(LocalDateTime.now())
                     .build());
 
@@ -215,6 +249,7 @@ public class AuthService {
                     .fullName("Ngô Nhật Trường")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_ADMIN")
+                    .subscriptionTier("PRO")
                     .createdAt(LocalDateTime.now())
                     .build());
         }
