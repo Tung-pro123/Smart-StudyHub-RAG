@@ -1,5 +1,6 @@
 package com.group2.assignment.core;
 
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.dto.CourseCardDto;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
@@ -98,5 +99,59 @@ class CourseServiceTest {
         assertNotNull(dto);
         assertEquals("HSF302", dto.getCode());
         assertTrue(dto.getChunkCount() >= 0);
+    }
+
+    @Test
+    @DisplayName("Gói Free vượt quá giới hạn 3 môn sẽ bị chặn tạo môn mới")
+    void testFreeUserQuotaExceededThrowsException() {
+        // Sample data có sẵn 3 môn (HSF302, MAS291, SWP391)
+        assertTrue(courseService.countCourses() >= CourseService.MAX_COURSES_FREE);
+
+        User freeUser = User.builder()
+                .username("student_free")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .build();
+
+        // Kiểm tra hàm canCreateCourse trả về false
+        assertFalse(courseService.canCreateCourse(freeUser),
+                "Người dùng Free khi đã có >= 3 môn thì canCreateCourse phải là false");
+
+        // Cố tình lưu môn thứ 4 với user Free phải ném IllegalStateException
+        Course fourthCourse = Course.builder()
+                .code("MAE101")
+                .name("Mathematics for Engineering")
+                .semester("Fall 2026")
+                .credits(3)
+                .build();
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () ->
+                courseService.saveCourse(fourthCourse, freeUser));
+
+        assertTrue(ex.getMessage().contains("đạt giới hạn 3 môn học"),
+                "Thông báo lỗi phải chứa thông tin đạt giới hạn 3 môn học");
+    }
+
+    @Test
+    @DisplayName("Gói Pro và Admin được phép tạo môn học không giới hạn")
+    void testProUserCanCreateUnlimitedCourses() {
+        User proUser = User.builder()
+                .username("student_pro")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("PRO")
+                .build();
+
+        assertTrue(courseService.canCreateCourse(proUser), "Người dùng Pro phải được tạo môn học");
+
+        Course extraCourse = Course.builder()
+                .code("PRJ301")
+                .name("Java Web Application Development")
+                .semester("Fall 2026")
+                .credits(3)
+                .build();
+
+        Course saved = courseService.saveCourse(extraCourse, proUser);
+        assertNotNull(saved.getId());
+        assertEquals("PRJ301", saved.getCode());
     }
 }

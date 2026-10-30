@@ -1,5 +1,6 @@
 package com.group2.assignment.core.service;
 
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.dto.CourseCardDto;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CourseService {
+
+    public static final int MAX_COURSES_FREE = 3;
 
     private final CourseRepository courseRepository;
     private final ChunkRepository chunkRepository;
@@ -68,12 +71,32 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Kiểm tra người dùng có quyền tạo thêm môn học hay không (dựa trên hạn ngạch gói cước)
+     */
+    public boolean canCreateCourse(User user) {
+        if (user == null || user.isPro()) {
+            return true;
+        }
+        return countCourses() < MAX_COURSES_FREE;
+    }
+
     public Course saveCourse(Course course) {
+        return saveCourse(course, null);
+    }
+
+    public Course saveCourse(Course course, User user) {
         if (course.getCode() == null || course.getCode().trim().isBlank()) {
             throw new IllegalArgumentException("Mã môn học không được để trống!");
         }
         if (course.getName() == null || course.getName().trim().isBlank()) {
             throw new IllegalArgumentException("Tên môn học không được để trống!");
+        }
+
+        // Kiểm tra hạn ngạch gói cước nếu là tạo mới môn học
+        if (course.getId() == null && user != null && !canCreateCourse(user)) {
+            throw new IllegalStateException("Bạn đã đạt giới hạn " + MAX_COURSES_FREE
+                    + " môn học của Gói Tự Học (Free). Vui lòng nâng cấp lên Gói Pro để tạo không giới hạn môn học!");
         }
 
         course.setCode(course.getCode().trim().toUpperCase());

@@ -202,6 +202,17 @@ public class AuthService {
     }
 
     /**
+     * Nâng cấp hoặc chuyển đổi gói hội viên (FREE / PRO / CAMPUS)
+     */
+    public User upgradeSubscriptionTier(String username, String tier) {
+        User user = userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng: " + username));
+        user.setSubscriptionTier(tier != null ? tier.toUpperCase() : "FREE");
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
+    }
+
+    /**
      * Khởi tạo tài khoản sinh viên mẫu mặc định để demo
      */
     @PostConstruct

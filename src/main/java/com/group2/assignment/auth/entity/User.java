@@ -90,4 +90,14 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public boolean isPro() {
+        return "ROLE_ADMIN".equalsIgnoreCase(this.role)
+                || "PRO".equalsIgnoreCase(this.subscriptionTier)
+                || "CAMPUS".equalsIgnoreCase(this.subscriptionTier);
+    }
+
+    public boolean isAdmin() {
+        return "ROLE_ADMIN".equalsIgnoreCase(this.role);
+    }
 }
