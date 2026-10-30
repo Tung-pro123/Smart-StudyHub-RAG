@@ -29,14 +29,19 @@
 
         <!-- Status Badges & Quick Links -->
         <div class="flex items-center gap-3 flex-wrap">
-            <div th:if="${hasApiKey}" class="badge badge-success gap-2 py-3 px-4 text-white font-semibold shadow-sm">
+            <div th:if="${hasSystemKey}" class="badge badge-success gap-2 py-3 px-4 text-white font-semibold shadow-sm">
                 <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                <span>Gemini API: Đã Sẵn Sàng</span>
+                <span>AI Multi-Key Engine: Đã Sẵn Sàng</span>
             </div>
-            <div th:unless="${hasApiKey}" class="badge badge-warning gap-2 py-3 px-4 text-white font-semibold shadow-sm">
+            <div th:unless="${hasSystemKey}" class="badge badge-warning gap-2 py-3 px-4 text-white font-semibold shadow-sm">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>AI hệ thống chưa được cấu hình. Vui lòng liên hệ quản trị viên.</span>
+                <span>Chưa cài Centralized Key</span>
+            </div>
 
+            <!-- Gói Pro Badge -->
+            <div th:if="${isPro}" class="badge badge-secondary gap-2 py-3 px-4 text-white font-bold shadow-sm shadow-secondary/30">
+                <i class="fa-solid fa-crown text-amber-300"></i>
+                <span>Gói PRO: Vô Hạn RAG</span>
             </div>
 
             <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm btn-outline border-base-content/20 rounded-xl gap-2">
@@ -49,15 +54,43 @@
     <!-- Main Chat Workspace (2 Columns Grid) -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
 
-        <!-- Left Column: Chat Sessions History (1 Column) -->
+        <!-- Left Column: Chat Sessions History & Quota Card (1 Column) -->
         <div class="lg:col-span-1 space-y-4">
             <div class="glass-card rounded-3xl p-5 shadow-xl border border-white/20 flex flex-col h-[700px]">
-
+                
                 <!-- New Chat Button -->
-                <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" class="btn btn-primary w-full rounded-2xl shadow-lg shadow-primary/20 gap-2 mb-4">
+                <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" class="btn btn-primary w-full rounded-2xl shadow-lg shadow-primary/20 gap-2 mb-3">
                     <i class="fa-solid fa-plus"></i>
                     <span>Cuộc Trò Chuyện Mới</span>
                 </a>
+
+                <!-- Quota Card for Free Users -->
+                <div th:if="${!isPro}" id="quotaContainer" class="p-3.5 bg-base-100/70 rounded-2xl border border-primary/20 shadow-sm mb-3 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-bold">
+                        <span class="flex items-center gap-1.5 text-base-content/80">
+                            <i class="fa-solid fa-bolt text-warning"></i>
+                            Hạn ngạch RAG:
+                        </span>
+                        <span id="quotaText" class="text-primary font-extrabold" th:text="${remainingQuota} + '/50 câu còn lại'">50/50 câu còn lại</span>
+                    </div>
+                    <div class="w-full bg-base-300 rounded-full h-2 overflow-hidden">
+                        <div id="quotaProgressBar" class="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+                             th:style="'width: ' + (${remainingQuota} * 2) + '%'"></div>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-base-content/60 pt-0.5">
+                        <span>Gói Tự Học ($0)</span>
+                        <a th:href="@{/courses}" class="text-secondary font-bold hover:underline">⚡ Nâng cấp PRO</a>
+                    </div>
+                </div>
+
+                <!-- Pro Status Card for Pro Users -->
+                <div th:if="${isPro}" class="p-3 bg-gradient-to-r from-secondary/15 to-primary/10 rounded-2xl border border-secondary/30 shadow-sm mb-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-crown text-amber-400 text-sm"></i>
+                        <span class="text-xs font-bold text-base-content">Gói Pro Vô Hạn</span>
+                    </div>
+                    <span class="badge badge-secondary badge-xs py-2 px-2 text-[10px] font-bold">UNLIMITED</span>
+                </div>
 
                 <div class="flex items-center justify-between text-xs text-base-content/60 px-1 mb-2 font-semibold uppercase tracking-wider">
                     <span>Lịch sử hội thoại</span>
@@ -101,7 +134,7 @@
         <!-- Right Column: Interactive Chat Box (3 Columns) -->
         <div class="lg:col-span-3">
             <div class="glass-card rounded-3xl p-6 shadow-xl border border-white/20 flex flex-col h-[700px] relative">
-
+                
                 <!-- Chat Window Header -->
                 <div class="flex items-center justify-between pb-4 border-b border-base-content/10 flex-shrink-0">
                     <div class="flex items-center gap-3">
@@ -128,134 +161,96 @@
                     </div>
                 </div>
 
-                <!-- Messages Scroll Area -->
+                <!-- Messages Stream Area -->
                 <div id="chatMessagesContainer" class="flex-grow overflow-y-auto py-4 space-y-4 pr-2">
-
-                    <!-- Welcome AI Bot Message if conversation is empty -->
-                    <div th:if="${#lists.isEmpty(messages)}" class="chat chat-start">
-                        <div class="chat-image avatar">
-                            <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
-                                <i class="fa-solid fa-robot"></i>
-                            </div>
+                    
+                    <!-- Welcome Initial Message -->
+                    <div th:if="${#lists.isEmpty(messages)}" class="text-center py-12 max-w-md mx-auto space-y-3">
+                        <div class="w-16 h-16 rounded-3xl bg-primary/10 text-primary flex items-center justify-center text-3xl mx-auto shadow-inner">
+                            <i class="fa-solid fa-graduation-cap"></i>
                         </div>
-                        <div class="chat-header text-xs text-base-content/60 mb-1">
-                            Trợ Lý AI Môn Học
-                            <time class="text-[10px] opacity-50 ml-1">Vừa xong</time>
-                        </div>
-                        <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 text-xs md:text-sm leading-relaxed max-w-[85%]">
-                            <p class="font-bold text-primary mb-1">👋 Xin chào bạn! Mình là Trợ Lý AI của môn <span th:text="${course.code}">HSF302</span>.</p>
-                            <p>Mình có thể giải đáp kiến thức, tóm tắt các chương học, phân tích khái niệm và trích dẫn trực tiếp từ các đoạn Chunks giáo trình PDF mà bạn đã tải lên.</p>
-                            <p class="mt-2 text-xs text-base-content/70">👉 Hãy bấm chọn các câu hỏi gợi ý nhanh bên dưới hoặc gõ câu hỏi bất kỳ để bắt đầu nhé!</p>
+                        <h3 class="text-base font-bold text-base-content">Xin chào! Tôi có thể giúp gì cho bạn?</h3>
+                        <p class="text-xs text-base-content/60 leading-relaxed">
+                            Hãy hỏi bất kỳ câu hỏi nào liên quan đến môn học <strong th:text="${course.code}">HSF302</strong>. Tôi sẽ tra cứu giáo trình và trả lời chính xác kèm trích dẫn số trang!
+                        </p>
+                        <div class="pt-2 flex flex-wrap justify-center gap-2">
+                            <button type="button" class="btn btn-xs btn-outline rounded-xl quick-prompt-btn" data-prompt="Môn học này gồm những nội dung chính nào?">
+                                📌 Nội dung chính môn học?
+                            </button>
+                            <button type="button" class="btn btn-xs btn-outline rounded-xl quick-prompt-btn" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
+                                💡 Khái niệm quan trọng nhất?
+                            </button>
+                            <button type="button" class="btn btn-xs btn-outline rounded-xl quick-prompt-btn" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
+                                📝 Tóm tắt chương 1?
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Dynamic Render Saved Messages -->
-                    <th:block th:each="msg : ${messages}">
-
-                        <!-- USER MESSAGE -->
-                        <div th:if="${msg.sender == 'USER'}" class="chat chat-end">
-                            <div class="chat-image avatar">
-                                <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center text-sm shadow">
-                                    <i class="fa-solid fa-user-graduate"></i>
-                                </div>
-                            </div>
-                            <div class="chat-header text-xs text-base-content/60 mb-1">
-                                Bạn
-                                <time class="text-[10px] opacity-50 ml-1" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">10:30</time>
-                            </div>
-                            <div class="chat-bubble chat-bubble-primary text-white text-xs md:text-sm leading-relaxed max-w-[85%] whitespace-pre-wrap" th:text="${msg.content}">
-                                Nội dung câu hỏi của sinh viên
+                    <!-- Message History -->
+                    <div th:each="msg : ${messages}" 
+                         class="chat animate-fade-in"
+                         th:classappend="${msg.sender == 'USER'} ? 'chat-end' : 'chat-start'">
+                        
+                        <div class="chat-image avatar">
+                            <div class="w-10 rounded-full flex items-center justify-center text-sm shadow"
+                                 th:classappend="${msg.sender == 'USER'} ? 'bg-primary text-white' : 'bg-gradient-to-tr from-primary to-secondary text-white'">
+                                <i th:class="${msg.sender == 'USER'} ? 'fa-solid fa-user-graduate' : 'fa-solid fa-robot'"></i>
                             </div>
                         </div>
 
-                        <!-- AI MESSAGE -->
-                        <div th:if="${msg.sender == 'AI'}" class="chat chat-start">
-                            <div class="chat-image avatar">
-                                <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
-                                    <i class="fa-solid fa-robot"></i>
-                                </div>
-                            </div>
-                            <div class="chat-header text-xs text-base-content/60 mb-1">
-                                Trợ Lý AI Giáo Trình
-                                <time class="text-[10px] opacity-50 ml-1" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">10:30</time>
-                            </div>
-                            <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3">
-                                <div class="markdown-body whitespace-pre-wrap" th:text="${msg.content}">
-                                    Nội dung câu trả lời của AI
-                                </div>
+                        <div class="chat-header text-xs text-base-content/60 mb-1">
+                            <span th:text="${msg.sender == 'USER'} ? 'Bạn' : 'Trợ Lý AI Giáo Trình'">Người gửi</span>
+                            <time class="text-[10px] opacity-50 ml-1" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</time>
+                        </div>
 
-                                <!-- Accordion Trích dẫn tài liệu nếu có RAG Context -->
-                                <div th:if="${msg.ragContext != null and !msg.ragContext.isBlank()}" class="collapse collapse-arrow bg-base-200/50 rounded-xl border border-base-content/10 mt-2 text-xs">
-                                    <input type="checkbox" />
-                                    <div class="collapse-title text-[11px] font-bold text-primary flex items-center gap-1.5 py-2 min-h-0">
-                                        <i class="fa-solid fa-book-bookmark text-primary"></i>
-                                        <span>📚 Nguồn trích dẫn từ giáo trình (Chunks ngữ cảnh)</span>
-                                    </div>
-                                    <div class="collapse-content text-[11px] text-base-content/70">
-                                        <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto">
-                                            <span th:text="${msg.ragContext}">Trích dẫn đoạn văn bản giáo trình...</span>
-                                        </div>
-                                    </div>
+                        <div class="chat-bubble text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3"
+                             th:classappend="${msg.sender == 'USER'} ? 'chat-bubble-primary text-white whitespace-pre-wrap' : 'bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10'">
+                            
+                            <!-- AI formatted Answer / User plain question -->
+                            <div class="markdown-body whitespace-pre-wrap" th:text="${msg.content}">Nội dung câu hỏi hoặc câu trả lời</div>
+
+                            <!-- Expandable RAG Context Citations for AI -->
+                            <div th:if="${msg.sender == 'AI' and msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
+                                 class="collapse collapse-arrow bg-base-200/50 rounded-xl border border-base-content/10 mt-2 text-xs">
+                                <input type="checkbox" /> 
+                                <div class="collapse-title text-[11px] font-bold text-primary flex items-center gap-1.5 py-2 min-h-0">
+                                    <i class="fa-solid fa-book-bookmark text-primary"></i>
+                                    <span>📚 Ngữ cảnh trích xuất từ tài liệu</span>
+                                </div>
+                                <div class="collapse-content text-[11px] text-base-content/70"> 
+                                    <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] overflow-x-auto whitespace-pre-wrap" th:text="${msg.ragContext}">Trích đoạn</pre>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                    </th:block>
-
-                    <!-- Typing Indicator (Hidden by default, shown during Fetch API) -->
+                    <!-- Live Typing Indicator -->
                     <div id="typingIndicator" class="chat chat-start hidden">
                         <div class="chat-image avatar">
-                            <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
+                            <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow animate-pulse">
                                 <i class="fa-solid fa-robot"></i>
                             </div>
                         </div>
-                        <div class="chat-header text-xs text-base-content/60 mb-1">
-                            Trợ Lý AI Giáo Trình
-                            <span class="text-[10px] text-primary ml-1 font-semibold">đang suy nghĩ & truy xuất giáo trình...</span>
-                        </div>
-                        <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 py-3 px-4 flex items-center gap-2">
+                        <div class="chat-bubble bg-base-100/90 border border-base-content/10 py-3 px-4">
                             <span class="loading loading-dots loading-sm text-primary"></span>
-                            <span class="text-xs text-base-content/60">Đang quét Chunks và tham vấn Gemini...</span>
+                            <span class="text-xs text-base-content/60 ml-2">Đang tra cứu giáo trình và soạn câu trả lời...</span>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Quick Prompts Pills -->
-                <div class="pt-2 pb-2 border-t border-base-content/10 flex items-center gap-2 overflow-x-auto flex-shrink-0 text-xs py-1">
-                    <span class="text-base-content/50 text-[11px] whitespace-nowrap"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Gợi ý nhanh:</span>
-                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Tóm tắt các kiến thức trọng tâm của môn học này">
-                        📑 Tóm tắt nội dung chính
-                    </button>
-                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Giải thích các khái niệm quan trọng nhất trong giáo trình">
-                        💡 Giải thích khái niệm quan trọng
-                    </button>
-                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Các dạng bài tập và câu hỏi trắc nghiệm hay gặp trong môn này là gì?">
-                        🎯 Các dạng bài tập hay gặp
-                    </button>
-                    <button type="button" class="quick-prompt-btn badge badge-outline hover:badge-primary cursor-pointer whitespace-nowrap py-3 px-3 transition-colors" data-prompt="Cho tôi lời khuyên và chiến lược ôn thi môn này đạt điểm cao">
-                        🏆 Chiến lược ôn thi
-                    </button>
-                </div>
-
-                <!-- Chat Input Bar Form -->
-                <form id="chatForm" th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post" class="mt-2 flex items-center gap-2 flex-shrink-0">
+                <!-- Input Chat Bar -->
+                <form id="chatForm" class="pt-4 border-t border-base-content/10 flex items-center gap-2 flex-shrink-0"
+                      th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post">
+                    
                     <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
 
-                    <div class="relative flex-grow">
-                        <input type="text"
-                               id="chatQuestionInput"
-                               name="question"
-                               placeholder="Hỏi bất kỳ điều gì về giáo trình môn học... (Nhấn Enter để gửi)"
-                               autocomplete="off"
-                               required
-                               class="input input-bordered w-full rounded-2xl pl-4 pr-12 text-sm bg-base-100/70 backdrop-blur-md border-base-content/20 focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-inner" />
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-base-content/40 pointer-events-none hidden sm:inline">
-                            ↵ Enter
-                        </span>
-                    </div>
+                    <input type="text" id="chatQuestionInput" name="question" 
+                           placeholder="Đặt câu hỏi về môn học (VD: Giải thích Entity lifecycle trong JPA)..." 
+                           class="input input-bordered input-md flex-grow rounded-2xl bg-base-100/60 focus:bg-base-100 transition-all text-xs md:text-sm"
+                           required autocomplete="off" />
 
-                    <button type="submit" id="sendBtn" class="btn btn-primary rounded-2xl shadow-lg shadow-primary/25 px-5 gap-2">
+                    <button type="submit" id="sendBtn" class="btn btn-primary btn-md rounded-2xl shadow-lg shadow-primary/20 gap-2">
                         <span>Gửi</span>
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
@@ -271,6 +266,8 @@
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const courseId = /*[[${course.id}]]*/ 1;
+        const isProUser = /*[[${isPro}]]*/ false;
+        const initialQuota = /*[[${remainingQuota}]]*/ 50;
         const chatContainer = document.getElementById('chatMessagesContainer');
         const chatForm = document.getElementById('chatForm');
         const questionInput = document.getElementById('chatQuestionInput');
@@ -278,6 +275,17 @@
         const sendBtn = document.getElementById('sendBtn');
         const typingIndicator = document.getElementById('typingIndicator');
         const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
+
+        // Khóa input nếu sinh viên Free đã hết hạn ngạch
+        if (!isProUser && initialQuota === 0) {
+            if (questionInput) {
+                questionInput.placeholder = '🛑 Bạn đã sử dụng hết 50 câu hôm nay. Hãy nâng cấp Gói Pro!';
+                questionInput.disabled = true;
+            }
+            if (sendBtn) {
+                sendBtn.disabled = true;
+            }
+        }
 
         // Tự động cuộn xuống đáy
         function scrollToBottom() {
@@ -291,7 +299,7 @@
         quickPromptBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const prompt = this.getAttribute('data-prompt');
-                if (questionInput) {
+                if (questionInput && !questionInput.disabled) {
                     questionInput.value = prompt;
                     questionInput.focus();
                 }
@@ -343,7 +351,12 @@
                         sessionIdInput.value = data.sessionId;
                     }
 
-                    // 5. Append AI Answer to UI
+                    // 5. Cập nhật thanh tiến trình hạn ngạch Realtime
+                    if (data.remainingQuota !== undefined && data.remainingQuota !== null) {
+                        updateQuotaUI(data.remainingQuota);
+                    }
+
+                    // 6. Append AI Answer to UI
                     appendAiMessage(data.answer, data.citations);
 
                 } catch (error) {
@@ -351,12 +364,54 @@
                     appendAiMessage(`❌ **Đã xảy ra lỗi khi gửi câu hỏi:** ${error.message}\n\nVui lòng thử lại hoặc tải lại trang.`);
                 } finally {
                     typingIndicator.classList.add('hidden');
-                    questionInput.disabled = false;
-                    sendBtn.disabled = false;
-                    questionInput.focus();
+                    // Chỉ mở lại input nếu còn quota
+                    const currentQuotaText = document.getElementById('quotaText');
+                    const isExhausted = !isProUser && currentQuotaText && currentQuotaText.innerText.startsWith('0/');
+                    if (!isExhausted) {
+                        questionInput.disabled = false;
+                        sendBtn.disabled = false;
+                        questionInput.focus();
+                    }
                     scrollToBottom();
                 }
             });
+        }
+
+        function updateQuotaUI(remaining) {
+            if (isProUser || remaining === -1) return;
+
+            const quotaText = document.getElementById('quotaText');
+            const quotaProgressBar = document.getElementById('quotaProgressBar');
+
+            if (quotaText) {
+                quotaText.innerText = `${remaining}/50 câu còn lại`;
+            }
+
+            if (quotaProgressBar) {
+                const percent = Math.max(0, Math.min(100, remaining * 2));
+                quotaProgressBar.style.width = `${percent}%`;
+
+                if (remaining <= 5) {
+                    quotaProgressBar.className = 'h-full bg-error transition-all duration-500';
+                    if (quotaText) quotaText.className = 'text-error font-extrabold';
+                } else if (remaining <= 20) {
+                    quotaProgressBar.className = 'h-full bg-warning transition-all duration-500';
+                    if (quotaText) quotaText.className = 'text-warning font-extrabold';
+                } else {
+                    quotaProgressBar.className = 'h-full bg-gradient-to-r from-primary to-accent transition-all duration-500';
+                    if (quotaText) quotaText.className = 'text-primary font-extrabold';
+                }
+            }
+
+            if (remaining <= 0) {
+                if (questionInput) {
+                    questionInput.placeholder = '🛑 Bạn đã hết 50 câu hỏi hôm nay. Vui lòng nâng cấp Pro!';
+                    questionInput.disabled = true;
+                }
+                if (sendBtn) {
+                    sendBtn.disabled = true;
+                }
+            }
         }
 
         function appendUserMessage(text) {
@@ -384,7 +439,7 @@
 
             let citationsHtml = '';
             if (citations && citations.length > 0) {
-                let snippetsHtml = citations.map(c =>
+                let snippetsHtml = citations.map(c => 
                     `[#Chunk ${c.chunkIndex} | ${escapeHtml(c.documentFileName || 'Tài liệu')} - Trang ${c.pageNumber}]\n${escapeHtml(c.snippet)}`
                 ).join('\n\n--------------------\n\n');
 

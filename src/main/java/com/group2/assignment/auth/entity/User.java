@@ -3,8 +3,8 @@ package com.group2.assignment.auth.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users", indexes = {
@@ -40,12 +40,14 @@ public class User {
 
     @Column(length = 20)
     @Builder.Default
-    private String subscriptionTier = "FREE";
+    private String subscriptionTier = "FREE"; // "FREE", "PRO", "CAMPUS"
 
     @Builder.Default
-    private Integer dailyRagCount = 0;
-    private LocalDate lastRagResetDate;
-    private LocalDateTime tierExpiresAt;
+    private Integer dailyRagCount = 0; // Đếm số câu chat RAG trong ngày
+
+    private LocalDate lastRagResetDate; // Ngày reset gần nhất
+
+    private LocalDateTime tierExpiresAt; // Ngày hết hạn gói Pro
 
     @Column(length = 20)
     @Builder.Default
@@ -66,6 +68,15 @@ public class User {
         this.updatedAt = LocalDateTime.now();
         if (this.role == null || this.role.isBlank()) {
             this.role = "ROLE_STUDENT";
+        }
+        if (this.subscriptionTier == null || this.subscriptionTier.isBlank()) {
+            this.subscriptionTier = "FREE";
+        }
+        if (this.dailyRagCount == null) {
+            this.dailyRagCount = 0;
+        }
+        if (this.lastRagResetDate == null) {
+            this.lastRagResetDate = LocalDate.now();
         }
         if (this.provider == null || this.provider.isBlank()) {
             this.provider = "local";

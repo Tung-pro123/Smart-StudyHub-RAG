@@ -6,6 +6,7 @@ import com.group2.assignment.core.entity.Chunk;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
 import com.group2.assignment.core.repository.CourseRepository;
+import com.group2.assignment.rag.config.LlmProperties;
 import com.group2.assignment.rag.dto.ChatResponseDto;
 import com.group2.assignment.rag.dto.CitationDto;
 import com.group2.assignment.rag.entity.ChatMessage;
@@ -36,6 +37,9 @@ public class RagEngineService {
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ObjectMapper objectMapper;
+    private final LlmKeyRotator llmKeyRotator;
+    private final LlmProperties llmProperties;
+
     private static final List<String> GEMINI_MODELS = List.of(
             "gemini-2.5-flash",
             "gemini-2.0-flash",
@@ -202,10 +206,18 @@ public class RagEngineService {
     }
 
     /**
-     * Gửi yêu cầu RAG Chatbot giáo trình
+     * Gửi yêu cầu RAG Chatbot giáo trình (Hỗ trợ gọi quá tải với HttpSession cho backward compatibility)
      */
     @Transactional
     public ChatResponseDto chatWithCourse(Long courseId, Long sessionId, String question, HttpSession session) {
+        return chatWithCourse(courseId, sessionId, question);
+    }
+
+    /**
+     * Gửi yêu cầu RAG Chatbot giáo trình sử dụng Centralized System Key & Multi-Key Rotator
+     */
+    @Transactional
+    public ChatResponseDto chatWithCourse(Long courseId, Long sessionId, String question) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học với ID: " + courseId));
 
@@ -225,18 +237,19 @@ public class RagEngineService {
             chatSession = chatSessionRepository.save(chatSession);
         }
 
-        // 2. Lấy API Key hệ thống
-        String apiKey = systemAiKeyService.getApiKey();
-
-        // 3. Tìm kiếm Chunks liên quan
+        // 2. Tìm kiếm Chunks liên quan
         List<Chunk> relevantChunks = findRelevantChunks(courseId, question, 4);
         List<CitationDto> citations = buildCitations(relevantChunks);
         String ragContextText = buildSystemPrompt(relevantChunks, question);
 
-        // 4. Nếu chưa có API Key -> Fallback hướng dẫn người dùng
-        if (apiKey == null || apiKey.trim().isBlank()) {
-            String fallbackAnswer = "⚠️ **Chưa cấu hình Google Gemini API Key!**\n\n" +
-                    "Vui lòng liên hệ quản trị viên để cấu hình khóa AI hệ thống trước khi sử dụng Trợ lý AI giáo trình.\n\n" +
+        // 3. Kiểm tra xem hệ thống đã nạp Centralized System Key chưa
+        boolean hasKey = (systemAiKeyService != null && systemAiKeyService.isConfigured())
+                || llmKeyRotator.hasConfiguredKeys()
+                || (llmProperties.getBaseUrl() != null && !llmProperties.getBaseUrl().isBlank());
+
+        if (!hasKey) {
+            String fallbackAnswer = "⚠️ **Chưa cấu hình Centralized System AI Key trên máy chủ!**\n\n" +
+                    "Vui lòng thiết lập biến môi trường `GEMINI_API_KEYS` hoặc liên hệ Quản trị viên để kích hoạt Trợ lý AI giáo trình.\n\n" +
                     "> **Gợi ý trích xuất từ tài liệu:** Tìm thấy " + relevantChunks.size() + " đoạn văn bản có khả năng liên quan đến câu hỏi của bạn.";
 
             // Lưu tin nhắn USER và thông báo cảnh báo
@@ -249,13 +262,13 @@ public class RagEngineService {
                     .citations(citations)
                     .createdAt(LocalDateTime.now())
                     .success(false)
-                    .errorMessage("Chưa cấu hình Google Gemini API Key")
+                    .errorMessage("Chưa cấu hình Centralized System AI Key")
                     .build();
         }
 
-        // 5. Gọi Gemini API 1.5 Flash bằng Spring 6 RestClient
+        // 4. Gọi AI với cơ chế xoay vòng Multi-Key hoặc LiteLLM Gateway
         try {
-            String aiAnswer = callGeminiApi(apiKey.trim(), ragContextText);
+            String aiAnswer = callLlmWithRotation(ragContextText);
 
             // Lưu tin nhắn của Sinh viên và AI
             saveMessages(chatSession, question, aiAnswer, ragContextText);
@@ -270,10 +283,10 @@ public class RagEngineService {
                     .build();
 
         } catch (Exception e) {
-            log.error("Lỗi khi gọi Gemini API cho RAG Chat: {}", e.getMessage(), e);
-            String errorAnswer = "❌ **Đã xảy ra lỗi khi trao đổi với AI Gemini:**\n\n" +
+            log.error("Lỗi khi gọi AI cho RAG Chat: {}", e.getMessage(), e);
+            String errorAnswer = "❌ **Đã xảy ra lỗi khi trao đổi với AI:**\n\n" +
                     "Chi tiết: " + e.getMessage() + "\n\n" +
-                    "Vui lòng kiểm tra lại kết nối mạng hoặc thử lại với API Key hợp lệ tại trang `/settings`.";
+                    "Hệ thống đang tự động điều phối lại cụm API Keys. Vui lòng thử lại sau giây lát.";
 
             saveMessages(chatSession, question, errorAnswer, ragContextText);
 
@@ -289,6 +302,74 @@ public class RagEngineService {
         }
     }
 
+    /**
+     * Gọi LLM với cơ chế xoay vòng Multi-Key Round-Robin & Cooldown khi gặp 429
+     */
+    public String callLlmWithRotation(String prompt) throws Exception {
+        // 1. Nếu cấu hình LiteLLM Base URL -> Gọi qua LiteLLM / OpenAI endpoint
+        String baseUrl = llmProperties.getBaseUrl();
+        if (baseUrl != null && !baseUrl.isBlank()) {
+            return callLiteLlmProxy(baseUrl.trim(), prompt);
+        }
+
+        // 2. Gọi trực tiếp Google Gemini API qua danh sách Multi-Keys
+        int totalKeys = Math.max(1, llmKeyRotator.getTotalKeysCount());
+        Exception lastException = null;
+
+        for (int attempt = 0; attempt < totalKeys; attempt++) {
+            String currentKey = llmKeyRotator.getNextKey();
+            if (currentKey == null && systemAiKeyService != null && systemAiKeyService.isConfigured()) {
+                currentKey = systemAiKeyService.getApiKey();
+            }
+            if (currentKey == null) break;
+
+            try {
+                return callGeminiApi(currentKey, prompt);
+            } catch (Exception e) {
+                log.warn("Gọi Gemini API với Key thất bại (lần thử {}/{}): {}", attempt + 1, totalKeys, e.getMessage());
+                llmKeyRotator.markKeyFailed(currentKey, 429, e.getMessage());
+                lastException = e;
+            }
+        }
+
+        throw (lastException != null) ? lastException : new RuntimeException("Tất cả System API Keys đều thất bại hoặc đang trong thời gian Cooldown!");
+    }
+
+    /**
+     * Gọi LiteLLM Proxy hoặc OpenAI-compatible API
+     */
+    private String callLiteLlmProxy(String baseUrl, String prompt) throws Exception {
+        RestClient restClient = RestClient.builder().build();
+        String apiKey = llmKeyRotator.hasConfiguredKeys() ? llmKeyRotator.getNextKey() : "sk-litellm-proxy";
+        String model = (llmProperties.getModel() != null && !llmProperties.getModel().isBlank()) ? llmProperties.getModel() : "gpt-3.5-turbo";
+
+        String endpoint = baseUrl.endsWith("/chat/completions") ? baseUrl :
+                (baseUrl.endsWith("/") ? baseUrl + "chat/completions" : baseUrl + "/chat/completions");
+
+        Map<String, Object> requestBody = Map.of(
+                "model", model,
+                "messages", List.of(Map.of("role", "user", "content", prompt))
+        );
+
+        String responseJson = restClient.post()
+                .uri(endpoint)
+                .header("Authorization", "Bearer " + (apiKey != null ? apiKey : ""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(requestBody)
+                .retrieve()
+                .body(String.class);
+
+        JsonNode root = objectMapper.readTree(responseJson);
+        JsonNode choices = root.path("choices");
+        if (choices.isArray() && !choices.isEmpty()) {
+            return choices.get(0).path("message").path("content").asText();
+        }
+        throw new RuntimeException("Không tìm thấy kết quả từ LiteLLM endpoint: " + responseJson);
+    }
+
+    /**
+     * Gọi Google Gemini REST API trực tiếp
+     */
     private String callGeminiApi(String apiKey, String prompt) throws Exception {
         RestClient restClient = RestClient.builder().build();
 
@@ -300,7 +381,7 @@ public class RagEngineService {
 
         for (String model : GEMINI_MODELS) {
             try {
-                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent";
+                String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
                 String responseJson = restClient.post()
                         .uri(url)
                         .header("x-goog-api-key", apiKey)
@@ -320,6 +401,10 @@ public class RagEngineService {
             } catch (Exception e) {
                 log.warn("Gọi Gemini model '{}' thất bại: {}. Đang thử model tiếp theo...", model, e.getMessage());
                 lastException = e;
+                if (e.getMessage() != null && (e.getMessage().contains("429") || e.getMessage().contains("RESOURCE_EXHAUSTED"))) {
+                    // Nếu lỗi rate limit thì ngắt ngay để xoay sang API key kế tiếp
+                    throw e;
+                }
             }
         }
 
