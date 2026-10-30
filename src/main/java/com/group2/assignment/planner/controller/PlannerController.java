@@ -1,5 +1,7 @@
 package com.group2.assignment.planner.controller;
 
+import com.group2.assignment.auth.controller.AuthController;
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.CourseRepository;
 import com.group2.assignment.planner.dto.StudyPlanRequestDto;
@@ -38,6 +40,8 @@ public class PlannerController {
         // Giữ lựa chọn môn học nếu điều hướng từ trang chủ (?courseId=...)
         model.addAttribute("selectedCourseId", courseId);
 
+        addSubscriptionAttributes(model, getCurrentUser(session));
+
         return "planner/index";
     }
 
@@ -46,6 +50,19 @@ public class PlannerController {
             @ModelAttribute StudyPlanRequestDto dto,
             RedirectAttributes redirectAttributes,
             HttpSession session) {
+
+        User currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        // Feature gating: AI Study Planner chỉ dành cho gói PRO/CAMPUS (và ADMIN)
+        if (!isPlannerUnlocked(currentUser)) {
+            redirectAttributes.addFlashAttribute("error",
+                    "🔒 AI Study Planner là tính năng của Gói Pro. Nâng cấp để mở khóa lộ trình ôn thi cá nhân hóa!");
+            redirectAttributes.addFlashAttribute("showUpgradeModal", true);
+            return "redirect:/planner";
+        }
 
         // Validate input
         if (dto.getCourseId() == null) {
@@ -58,7 +75,7 @@ public class PlannerController {
         }
 
         try {
-            StudyPlan plan = studyPlannerService.generateStudyPlan(dto, session);
+            StudyPlan plan = studyPlannerService.generateStudyPlan(dto);
             redirectAttributes.addFlashAttribute("success", "Tạo kế hoạch học tập thành công!");
             return "redirect:/planner/" + plan.getId();
         } catch (Exception e) {
@@ -102,13 +119,38 @@ public class PlannerController {
     public String getHistory(
             @PathVariable Long courseId,
             Model model,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
 
         List<StudyPlan> plans = studyPlannerService.getPlansByCourseId(courseId);
         model.addAttribute("plans", plans);
         model.addAttribute("courses", courseRepository.findAll());
         model.addAttribute("selectedCourseId", courseId);
 
+        User currentUser = getCurrentUser(session);
+        addSubscriptionAttributes(model, currentUser);
+
         return "planner/index";
+    }
+
+    private User getCurrentUser(HttpSession session) {
+        if (session == null) {
+            return null;
+        }
+        return (User) session.getAttribute(AuthController.SESSION_USER);
+    }
+
+    private boolean isPlannerUnlocked(User user) {
+        return user != null && user.isPro();
+    }
+
+    private void addSubscriptionAttributes(Model model, User user) {
+        boolean unlocked = isPlannerUnlocked(user);
+        String tier = user != null && user.getSubscriptionTier() != null
+                ? user.getSubscriptionTier()
+                : "FREE";
+        model.addAttribute("isPro", unlocked);
+        model.addAttribute("plannerLocked", !unlocked);
+        model.addAttribute("subscriptionTier", tier);
     }
 }

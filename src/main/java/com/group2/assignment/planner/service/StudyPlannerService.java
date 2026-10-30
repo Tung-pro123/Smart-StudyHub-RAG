@@ -13,7 +13,6 @@ import com.group2.assignment.planner.entity.StudyTask;
 import com.group2.assignment.planner.repository.StudyPlanRepository;
 import com.group2.assignment.planner.repository.StudyTaskRepository;
 import com.group2.assignment.settings.service.SystemAiKeyService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,8 +42,8 @@ public class StudyPlannerService {
             .build();
 
     @Transactional
-    public StudyPlan generateStudyPlan(StudyPlanRequestDto dto, HttpSession session) {
-        // 1. Lấy API Key hệ thống
+    public StudyPlan generateStudyPlan(StudyPlanRequestDto dto) {
+        // 1. Lấy API Key hệ thống (Centralized System Key, không lấy từ session người dùng)
         String apiKey = systemAiKeyService.getApiKey();
 
         // 2. Lấy Course entity từ DB (fallback về stub nếu không tìm thấy)

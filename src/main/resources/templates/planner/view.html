@@ -99,10 +99,11 @@
                     <div class="text-xs text-base-content/50" th:text="${task.dayOfWeek}">Thứ 3</div>
                 </div>
                 <div class="timeline-middle">
-                    <button type="button" class="btn btn-circle btn-sm toggle-task"
+                    <button type="button" class="btn btn-circle btn-sm toggle-task inline-flex items-center justify-center p-0 leading-none"
                             th:data-task-id="${task.id}"
                             th:classappend="${task.isCompleted} ? 'btn-success' : 'btn-outline'">
-                        <i class="fa-solid" th:classappend="${task.isCompleted} ? 'fa-check' : 'fa-circle'"></i>
+                        <i class="fa-solid flex h-full w-full items-center justify-center text-[10px] leading-none"
+                           th:classappend="${task.isCompleted} ? 'fa-check' : 'fa-circle'"></i>
                     </button>
                 </div>
                 <div class="timeline-end timeline-box mb-4 w-full"
@@ -159,11 +160,11 @@
                             </span>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-xs toggle-task"
+                            <button type="button" class="btn btn-xs toggle-task w-28 justify-center gap-1.5 whitespace-nowrap"
                                     th:data-task-id="${task.id}"
                                     th:classappend="${task.isCompleted} ? 'btn-success' : 'btn-outline'">
-                                <i class="fa-solid" th:classappend="${task.isCompleted} ? 'fa-check' : 'fa-circle'"></i>
-                                <span th:text="${task.isCompleted} ? 'Hoàn thành' : 'Chưa xong'">Chưa xong</span>
+                                <i class="fa-solid shrink-0" th:classappend="${task.isCompleted} ? 'fa-check' : 'fa-circle'"></i>
+                                <span class="leading-none" th:text="${task.isCompleted} ? 'Hoàn thành' : 'Chưa xong'">Chưa xong</span>
                             </button>
                         </td>
                     </tr>
