@@ -82,7 +82,7 @@ public class ApiKeyService {
         try {
             String provider = normalizeProvider(dto.getProvider());
             String key = dto.getApiKey();
-            if ((key == null || key.isBlank()) && provider.equals(getProvider(session))) {
+            if ((key == null || key.isBlank()) && session != null && provider.equals(getProvider(session))) {
                 key = getApiKey(session);
             }
             String validatedKey = normalizeKey(key);

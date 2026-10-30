@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "users", indexes = {
@@ -36,6 +37,15 @@ public class User {
     @Column(length = 30)
     @Builder.Default
     private String role = "ROLE_STUDENT"; // ROLE_STUDENT, ROLE_ADMIN
+
+    @Column(length = 20)
+    @Builder.Default
+    private String subscriptionTier = "FREE";
+
+    @Builder.Default
+    private Integer dailyRagCount = 0;
+    private LocalDate lastRagResetDate;
+    private LocalDateTime tierExpiresAt;
 
     @Column(length = 20)
     @Builder.Default

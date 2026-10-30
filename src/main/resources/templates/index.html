@@ -40,8 +40,8 @@
                 <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
                     <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
                 </button>
-                <a th:href="@{/settings}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-key mr-1"></i> Cấu Hình API Key
+                <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                    <i class="fa-solid fa-key mr-1"></i> Trung tâm quản trị
                 </a>
                 <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
                     <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi

@@ -34,6 +34,15 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
 
+        if (currentUser != null && currentUser.getId() != null) {
+            currentUser = authService.findByUsername(currentUser.getUsername()).orElse(null);
+            if (currentUser == null) {
+                session.removeAttribute(AuthController.SESSION_USER);
+            } else {
+                session.setAttribute(AuthController.SESSION_USER, currentUser);
+            }
+        }
+
         // 1. Đã đăng nhập trong Session -> Cho qua
         if (currentUser != null) {
             return true;

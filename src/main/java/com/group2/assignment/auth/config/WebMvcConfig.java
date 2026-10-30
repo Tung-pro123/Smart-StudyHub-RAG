@@ -29,7 +29,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/quiz",
                         "/quiz/**",
                         "/settings",
-                        "/settings/**"
+                        "/settings/**",
+                        "/admin", "/admin/**"
                 )
                 // Loại trừ các tuyến đường công khai và tài nguyên tĩnh
                 .excludePathPatterns(
