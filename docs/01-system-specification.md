@@ -89,14 +89,17 @@ flowchart TD
 ## ⚙️ 3. ĐẶC TẢ YÊU CẦU CHỨC NĂNG TỪNG MODULE (FUNCTIONAL SPECIFICATIONS)
 
 ### 3.1. Module Core & Quản lý Khóa học (Tùng - Lead)
-* **CRUD Khóa học**:
+* **CRUD Khóa học & Cá nhân hóa Môn học (Course Data Isolation)**:
   - Tạo mới môn học: Nhập mã môn (VD: `HSF302`, `PRJ301`), tên môn, số tín chỉ, học kỳ, mô tả, chọn màu gradient Tailwind và FontAwesome icon.
-  - Xem danh sách môn học: Hiển thị dạng lưới (Card Grid) kèm tiến độ, số lượng tài liệu đã tải lên, số câu trắc nghiệm hiện có.
-  - Chỉnh sửa thông tin môn học và xóa môn học (Cơ chế Cascade tự động dọn dẹp Document, Chunks, Quizzes và Study Plans tương ứng).
-* **Quản trị phân vùng dữ liệu (Course Isolation)**:
-  - Mọi tài nguyên học tập (Tài liệu PDF, Chunks, Phiên Chat, Kế hoạch ôn tập, Đề thi) bắt buộc gắn liền với một `course_id` cụ thể, không bị trộn lẫn dữ liệu giữa các môn.
-* **Điều hướng tập trung**:
-  - Cung cấp Gateway điều hướng thông minh tại `GET /` và `GET /courses`.
+  - **Phân lập Dữ liệu Môn học Cá nhân (Data Isolation)**: Bảng `courses` liên kết trực tiếp `@ManyToOne User user` (`user_id`). Sinh viên đăng nhập chỉ nhìn thấy môn học do chính mình tạo ra (`c.user.id = currentUser.id`), chấm dứt hoàn toàn tình trạng tài khoản này thấy dữ liệu của tài khoản khác.
+  - **Composite Unique Constraint `(user_id, code)`**: Loại bỏ ràng buộc unique toàn cục trên `code`, cho phép các sinh viên khác nhau cùng lớp tự do tạo môn học cùng mã (cùng học `HSF302`) cho không gian tài liệu riêng của mình mà không bao giờ bị lỗi trùng mã.
+  - **Bảo mật quyền sở hữu (Ownership Validation)**: Sinh viên chỉ được phép chỉnh sửa hoặc xóa môn học do chính mình tạo ra. Mọi hành vi cố tình sửa/xóa môn của người khác bị hệ thống chặn bằng ngoại lệ bảo mật `SecurityException`.
+* **Kiểm soát Hạn ngạch Môn học theo Gói cước**:
+  - Gói `FREE`: Tối đa **3 môn học** (`MAX_COURSES_FREE = 3`). Khi chạm mốc 3 môn, nút tạo môn trên giao diện chuyển thành cảnh báo *"Nâng Cấp Tạo Thêm Môn"* kèm tooltip và mở Modal Bảng giá; xóa bớt 1 môn cũ thì tạo lại được ngay.
+  - Gói `PRO` & `SQUAD`: Không giới hạn số lượng môn học.
+* **Tự động Điều hướng Phân quyền (Role-based Navigation)**:
+  - Khi tài khoản `ROLE_ADMIN` đăng nhập hoặc truy cập `/` / `/dashboard`, hệ thống tự động đưa thẳng vào **Admin Command Center** (`/admin/dashboard`), không bị đẩy nhầm sang màn hình sinh viên.
+  - Thanh Navbar và Sidebar phân định rạch ròi giữa giao diện Quản trị viên (KPI, Quản lý sinh viên, Cấu hình AI) và Sinh viên (Môn học, Lịch học, Trắc nghiệm).
 
 ### 3.2. Module Xác thực, Phân quyền & JWT (Trường)
 * **Đăng ký tài khoản (Local Registration)**:
@@ -157,18 +160,19 @@ flowchart TD
   - Lưu lại lần thi (`QuizAttempt`) kèm chi tiết từng đáp án đã chọn.
   - Trang kết quả (`/quiz/attempts/{id}`): Đổi màu trực quan (Xanh = Đúng, Đỏ = Sai) và mở hộp Accordion giải thích lý do vì sao đáp án đúng dựa trên giáo trình.
 
-### 3.6. Module Admin Dashboard, System Analytics & Quản trị Gói cước (Ân)
-* **Bảng điều khiển Thống kê KPI Thời gian thực (Real-time Analytics Dashboard)**:
-  - Giao diện `/admin/dashboard` hiển thị các chỉ số vận hành hệ thống: Tổng số người dùng (phân chia theo gói Free/Pro), tỷ lệ chuyển đổi Pro, tổng số môn học, tổng số đoạn Chunks và tổng số lượt truy vấn RAG trong ngày.
-  - Biểu đồ tiến trình Radial Progress thể hiện tỷ lệ % người dùng Pro.
-* **Quản trị Sinh viên & Can thiệp Gói cước 1-Click (User & Tier Management)**:
-  - Bảng danh sách toàn bộ sinh viên, hiển thị chi tiết số câu hỏi đã dùng hôm nay và gói cước hiện tại.
-  - Cung cấp nút 1-Click chuyển đổi gói cước: Nâng cấp `PRO` hoặc Hạ cấp `FREE` ngay tức thì phục vụ demo và vận hành.
-* **Cung cấp Centralized System API Key & Kiểm tra Kết nối AI**:
-  - Hệ thống cung cấp sẵn 1 System API Key duy nhất, sinh viên không cần tự dán key cá nhân.
-  - Quản trị viên có thể cập nhật key hệ thống và thực hiện Ping Test đo độ trễ mạng mili-giây (ms) tới Google Gemini API.
-* **Động cơ Kiểm soát Hạn ngạch (Quota Engine)**:
-  - Kiểm soát giới hạn: Gói Free tối đa 3 môn học, 50 câu hỏi RAG/ngày (tự động reset lúc 00:00), khóa tính năng AI Study Planner. Gói Pro mở khóa toàn bộ.
+### 3.6. Module Admin Command Center & Thống Kê KPI Toàn Diện (Ân)
+* **Trung tâm Điều hành Toàn diện (Admin Command Center - `/admin/dashboard`)**:
+  - Thống kê phân rã chi tiết cả 3 gói cước: Số sinh viên `FREE` ($0), `PRO` ($2/tháng), và `SQUAD` ($5/tháng nhóm 5 bạn).
+  - Đo lường Tỷ lệ Người dùng Trả phí (Paying Conversion Rate): $\text{paidConversionRate} = \frac{PRO + SQUAD}{\text{TotalStudents}} \times 100\%$.
+  - Bộ 4 thẻ KPI Glassmorphism: Tổng Người Dùng, Kho Môn Học & Chunks Toàn Trường, Lưu Lượng RAG Hôm Nay (GMT+7), Tình Trạng AI Live Ping Latency (ms).
+  - Bảng Hoạt Động Mới Nhất hiển thị 5 tài khoản đăng ký gần đây.
+* **Quản trị Sinh viên & Can thiệp Gói cước 1-Click (`/admin/users`)**:
+  - Thanh tìm kiếm sinh viên theo Tên, Username hoặc Email; bộ nút lọc nhanh theo từng gói.
+  - Bộ nút tác vụ 1-Click: ⚡ **Nâng cấp PRO**, 👥 **Kích hoạt SQUAD**, ↩️ **Hạ về FREE**, 🔄 **Reset Quota RAG** khôi phục 50 câu RAG hôm nay tức thì.
+  - Thanh mini progress-bar đổi màu trực quan cảnh báo khi sinh viên Free chạm ngưỡng giới hạn RAG.
+* **Quản lý Khóa Hệ thống Tập trung & An toàn (`/admin/settings`)**:
+  - Che giấu khóa (API Key Masking `AIzaSy...****`) bảo mật chống lộ khi trình chiếu demo.
+  - Nút Test Ping đo thời gian phản hồi mili-giây (ms) tới Google Gemini API.
 
 ### 3.7. Module Marketing Landing Page & WebGL2 (Nhật & Team)
 * **Cổng chào tiếp thị hiện đại (Marketing Gateway)**:
@@ -190,6 +194,7 @@ Cơ sở dữ liệu sử dụng **H2 Database** lưu bền vững ra file đĩa
 
 ```mermaid
 erDiagram
+    USERS ||--o{ COURSES : owns
     COURSES ||--o{ CHUNKS : contains
     COURSES ||--o{ DOCUMENTS : owns
     COURSES ||--o{ STUDY_PLANS : plans

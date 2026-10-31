@@ -64,6 +64,31 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 5: DÙNG AI TRIỂN KHAI PHÂN LẬP DỮ LIỆU MÔN HỌC (DATA ISOLATION), HẠN NGẠCH GÓI CƯỚC VÀ ĐIỀU HƯỚNG ADMIN DASHBOARD
+* **Mục tiêu**: 
+  1. Khắc phục triệt để lỗi rò rỉ dữ liệu khi sinh viên đăng nhập nhìn thấy môn học của người khác do `Course` thiếu liên kết `User` và `CourseService` query toàn cục.
+  2. Bỏ ràng buộc unique toàn cục trên `code`, thay bằng khóa tổng hợp `(user_id, code)` để mỗi sinh viên tự do tạo môn học riêng (ví dụ nhiều sinh viên cùng tạo `HSF302`).
+  3. Kiểm soát hạn mức 3 môn học cá nhân cho tài khoản Free (`MAX_COURSES_FREE = 3`), vô hiệu hóa nút tạo môn khi chạm trần.
+  4. Điều hướng thông minh cho tài khoản `ROLE_ADMIN` tự động vào `/admin/dashboard` và cách ly hoàn toàn giao diện Navbar/Sidebar của Quản trị viên khỏi các chức năng sinh viên.
+* **Câu Prompt đã dùng**:
+  ```text
+  Tôi cần xử lý bài toán Data Isolation và Gói cước trong Spring Boot 3 + JPA:
+  1. Thêm quan hệ @ManyToOne User user vào Course.java, bỏ unique toàn cục trên code và tạo Composite Unique Constraint: uk_courses_user_code (user_id, code).
+  2. Cập nhật CourseRepository và CourseService: Thêm các method truy vấn theo userId (findAllByUserId, countByUserId, existsByCodeIgnoreCaseAndUserId), chỉ cho phép người dùng xem/sửa/xóa môn của chính mình (Admin được xem tất cả).
+  3. Áp dụng Business Rule hạn ngạch gói FREE tối đa 3 môn học cá nhân.
+  4. Cấu hình AuthController và HomeController tự động redirect ROLE_ADMIN về /admin/dashboard. Tách biệt Navbar và Sidebar để Admin không nhìn thấy các nút sinh viên (Lịch học vừa sức, Luyện đề, Nâng cấp Pro).
+  5. Viết bộ kiểm thử Unit Test và Integration Test kiểm tra toàn bộ luồng Data Isolation.
+  ```
+* **Kết quả nhận được từ AI**:
+  - Mã nguồn backend và repository được cập nhật chuẩn mực với đầy đủ kiểm tra quyền sở hữu (`SecurityException` nếu cố tình truy cập môn của người khác).
+  - Tách biệt hoàn hảo Navbar và Sidebar cho Admin và Student.
+  - Bộ 105 bài kiểm thử chạy qua 100% xanh (`mvn clean test`).
+  - PR #27 được tích hợp thành công vào nhánh `main`.
+* **Đánh giá & Điều chỉnh của bản thân**: 
+  - Đã rà soát cơ sở dữ liệu H2 thực tế, phát hiện dữ liệu cũ (`user_id IS NULL`) bị hiển thị chung do cờ `includeShared = true`. Đã chủ động điều chỉnh `includeShared = false` và cập nhật dữ liệu môn học cũ gán về đúng chủ sở hữu `student`.
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM CỦA LEADER
 * **AI hỗ trợ tốt nhất**: Tự động sinh boilerplate code, cấu trúc SQL migration, viết regex kiểm tra chuẩn mực CI/CD và sinh nhanh các ca kiểm thử Unit Test.
 * **Kinh nghiệm chỉ huy**: Phải luôn phân rõ ranh giới Package trước khi cho các thành viên code thì AI mới sinh ra code khớp nhau 100%.

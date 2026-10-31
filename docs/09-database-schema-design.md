@@ -29,6 +29,7 @@
 
 ```mermaid
 erDiagram
+    USERS ||--o{ COURSES : "sở hữu môn học cá nhân (1:N)"
     COURSES ||--o{ DOCUMENTS : "chứa nhiều tài liệu (1:N)"
     COURSES ||--o{ CHUNKS : "truy vấn nhanh RAG (1:N)"
     COURSES ||--o{ CHAT_SESSIONS : "quản lý hội thoại (1:N)"
@@ -41,9 +42,27 @@ erDiagram
     QUIZZES ||--o{ QUIZ_QUESTIONS : "danh sách câu trắc nghiệm (1:N)"
     QUIZZES ||--o{ QUIZ_ATTEMPTS : "lịch sử làm bài sinh viên (1:N)"
 
+    USERS {
+        bigint id PK
+        varchar username UK "Tên đăng nhập duy nhất"
+        varchar email UK "Email sinh viên"
+        varchar password "BCrypt hash 60 ký tự"
+        varchar full_name "Họ và tên đầy đủ"
+        varchar role "ROLE_STUDENT, ROLE_ADMIN"
+        varchar subscription_tier "FREE, PRO, SQUAD"
+        varchar squad_leader_username "Username nhóm trưởng"
+        int daily_rag_count "Số câu RAG đã dùng hôm nay"
+        date last_rag_reset_date "Ngày reset hạn ngạch"
+        varchar provider "local, google"
+        varchar avatar "URL avatar"
+        timestamp created_at
+        timestamp updated_at
+    }
+
     COURSES {
         bigint id PK
-        varchar code UK "HSF302, PRJ301"
+        bigint user_id FK "Liên kết sinh viên sở hữu"
+        varchar code "Mã môn (Unique theo user_id, code)"
         varchar name "Tên môn học"
         varchar description "Mô tả môn"
         varchar color "Gradient Tailwind"
@@ -172,7 +191,32 @@ erDiagram
 
 ---
 
-### 1️⃣ BẢNG `courses` & `chunks` (Dữ Liệu Nền Tảng Dùng Chung - TÙNG & CORE)
+### 0️⃣ BẢNG `users` (Xác Thực, Phân Quyền & Quản Lý Gói Cước - TRƯỜNG & TEAM)
+- **Package**: `com.group2.assignment.auth`
+- **File Entity**: [`User.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/group2/assignment/auth/entity/User.java)
+- **Repository**: [`UserRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/group2/assignment/auth/repository/UserRepository.java)
+- **Vai trò**: Quản lý định danh người dùng (Local & Google OAuth2), phân quyền (`ROLE_STUDENT`, `ROLE_ADMIN`), lưu trữ trạng thái gói cước (`FREE`, `PRO`, `SQUAD`) và bộ đếm hạn ngạch RAG hàng ngày.
+
+| Cột (Bảng `users`) | Kiểu dữ liệu | Ràng buộc | Mục đích & Giải thích kỹ thuật |
+|:---|:---|:---|:---|
+| `id` | `BIGINT` | PRIMARY KEY, AUTO_INCREMENT | Khóa chính tự tăng |
+| `username` | `VARCHAR(50)` | NOT NULL, UNIQUE, INDEX | Tên đăng nhập duy nhất trong toàn hệ thống |
+| `email` | `VARCHAR(100)` | NOT NULL, UNIQUE, INDEX | Email sinh viên chuẩn RFC 5322 |
+| `password` | `VARCHAR(255)` | NOT NULL | Mật khẩu mã hóa BCrypt 10 rounds một chiều |
+| `full_name` | `VARCHAR(100)` | NOT NULL | Họ và tên sinh viên hiển thị trên giao diện |
+| `role` | `VARCHAR(20)` | DEFAULT `'ROLE_STUDENT'` | Quyền hạn: `ROLE_STUDENT` hoặc `ROLE_ADMIN` |
+| `subscription_tier` | `VARCHAR(20)` | DEFAULT `'FREE'` | Hạng gói cước: `FREE` ($0), `PRO` ($2), `SQUAD` ($5) |
+| `squad_leader_username`| `VARCHAR(50)` | NULL | Username nhóm trưởng sở hữu gói Study Squad |
+| `daily_rag_count` | `INT` | DEFAULT `0` | Số câu hỏi RAG đã dùng trong ngày (Giới hạn 50 câu/ngày với Free) |
+| `last_rag_reset_date` | `DATE` | NOT NULL | Ngày reset hạn ngạch theo múi giờ `Asia/Ho_Chi_Minh` |
+| `provider` | `VARCHAR(20)` | DEFAULT `'local'` | Phương thức đăng nhập: `local` hoặc `google` |
+| `avatar` | `VARCHAR(255)` | NULL | URL ảnh đại diện DiceBear SVG hoặc Google Profile Photo |
+| `created_at` | `TIMESTAMP` | NOT NULL | Thời điểm khởi tạo tài khoản |
+| `updated_at` | `TIMESTAMP` | NOT NULL | Thời điểm cập nhật hồ sơ gần nhất |
+
+---
+
+### 1️⃣ BẢNG `courses` & `chunks` (Dữ Liệu Nền Tảng & Phân Lập Môn Học - TÙNG & CORE)
 - **Package**: `com.group2.assignment.core`
 - **File Entities**: [`Course.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/entity/Course.java), [`Chunk.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/entity/Chunk.java)
 - **Repositories**: [`CourseRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/repository/CourseRepository.java), [`ChunkRepository.java`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/src/main/java/com/tung/assignment/core/repository/ChunkRepository.java)
@@ -182,7 +226,8 @@ erDiagram
 | Cột (Bảng `courses`) | Kiểu dữ liệu | Ràng buộc | Mục đích & Giải thích kỹ thuật |
 |:---|:---|:---|:---|
 | `id` | `BIGINT` | PRIMARY KEY, AUTO_INCREMENT | Khóa chính tự tăng |
-| `code` | `VARCHAR(50)` | NOT NULL, UNIQUE, INDEX | Mã môn học chuẩn (HSF302, MAS291). Đánh Unique Index ngăn chặn tạo trùng môn |
+| `user_id` | `BIGINT` | NULLABLE, FK, INDEX | **Phân lập dữ liệu (Data Isolation)**: Khóa ngoại liên kết tới `users(id)`. Xác định chủ sở hữu môn học. NULL với môn mẫu hệ thống |
+| `code` | `VARCHAR(50)` | NOT NULL, INDEX | Mã môn học (HSF302, PRJ301). Đánh **Composite Unique Constraint `(user_id, code)`** cho phép các bạn sinh viên khác nhau cùng tự do tạo môn `HSF302` cho riêng mình |
 | `name` | `VARCHAR(200)` | NOT NULL | Tên môn học đầy đủ |
 | `description` | `VARCHAR(1000)`| NULL | Tóm tắt mục tiêu môn học |
 | `color` | `VARCHAR(100)` | DEFAULT `'from-indigo-600 to-purple-600'` | Class gradient Tailwind tạo phong cách Glassmorphism đồng nhất |

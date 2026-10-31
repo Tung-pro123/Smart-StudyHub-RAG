@@ -20,6 +20,7 @@
 ## 👥 2. PHÂN CHIA NHIỆM VỤ CHI TIẾT CHO 6 THÀNH VIÊN
 
 ### 👑 1. TÙNG (LEAD) - CORE & CÁ NHÂN HÓA MÔN HỌC (DATA ISOLATION & QUOTA)
+* **Trạng thái**: **Đã hoàn thành xuất sắc & Đã merge vào main (PR #27)** ✅
 * **Nhánh Git**: `feature/pricing-core-tung`
 * **Package Backend**: `com.group2.assignment.core`
 * **Thư mục View**: `templates/index.html`, `templates/courses/`

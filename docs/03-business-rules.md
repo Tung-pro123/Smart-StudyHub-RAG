@@ -48,14 +48,15 @@ $$\mathbf{BR\text{-}[MODULE]\text{-}[NUMBER]}$$
 
 ## 📚 3. QUY TẮC PHÂN HỆ QUẢN LÝ MÔN HỌC (CORE & COURSES)
 
-### 📌 BR-CORE-001: Tính duy nhất và Định dạng của Mã Môn học (Course Code)
+### 📌 BR-CORE-001: Tính duy nhất theo User và Định dạng của Mã Môn học (Composite Unique Code)
 * **Mức độ**: `CRITICAL`
-* **Mô tả**: Mã môn học (`code`) là định danh duy nhất của môn học trong toàn bộ hệ thống (Unique Constraint).
+* **Mô tả**: Mã môn học (`code`) là định danh duy nhất của môn học **theo từng tài khoản sinh viên** (Composite Unique Constraint: `user_id, code`).
 * **Ràng buộc**:
   - Độ dài từ 3 đến 20 ký tự.
   - Chỉ chấp nhận các ký tự chữ hoa không dấu và chữ số, không chứa khoảng trắng hoặc ký tự đặc biệt (Regex: `^[A-Z0-9]{3,20}$`).
   - Hệ thống tự động chuyển thành chữ hoa (`toUpperCase().trim()`) trước khi lưu vào CSDL.
-* **Xử lý vi phạm**: Ném `IllegalArgumentException("Mã môn học đã tồn tại hoặc không đúng định dạng!")`, báo lỗi đỏ trên form.
+  - **Phân lập nhiều người dùng**: Hai sinh viên A và B cùng lớp hoàn toàn có thể tự tạo môn học có cùng mã `HSF302` cho không gian tài liệu riêng mà không bao giờ bị lỗi trùng mã.
+* **Xử lý vi phạm**: Nếu cùng 1 sinh viên cố tình tạo 2 môn trùng mã code, ném `IllegalArgumentException("Bạn đã sở hữu một môn học có mã này rồi!")`, báo lỗi đỏ trên form.
 
 ### 📌 BR-CORE-002: Ràng buộc Xóa tầng Dữ liệu (Cascade Deletion Integrity)
 * **Mức độ**: `CRITICAL`
@@ -64,12 +65,13 @@ $$\mathbf{BR\text{-}[MODULE]\text{-}[NUMBER]}$$
   - Xóa tầng tự động (Database Cascade / JPA Cascade): Toàn bộ `Document`, `Chunk`, `ChatSession`, `ChatMessage`, `StudyPlan`, `StudyTask`, `Quiz`, `QuizQuestion`, `QuizAttempt` có `course_id` tương ứng bị xóa hoàn toàn.
   - Dọn dẹp tệp vật lý: Toàn bộ thư mục tệp upload `./uploads/courses/{courseId}/` được xóa khỏi ổ cứng server.
 
-### 📌 BR-CORE-003: Phân lập Không gian Học tập (Course Data Isolation)
-* **Mức độ**: `HIGH`
-* **Mô tả**: Dữ liệu của một môn học phải hoàn toàn độc lập với các môn học khác.
+### 📌 BR-CORE-003: Phân lập Không gian Học tập & Quyền Sở Hữu (Course Data Isolation & Ownership)
+* **Mức độ**: `CRITICAL`
+* **Mô tả**: Dữ liệu môn học phải hoàn toàn độc lập giữa các môn học và **giữa các tài khoản sinh viên khác nhau**.
 * **Hành vi**:
-  - Không cho phép gán hoặc tái sử dụng Chunks tài liệu của môn này cho môn khác.
-  - Khi sinh viên đang trong ngữ cảnh của môn HSF302, các chức năng RAG Chat, Quiz và Study Planner chỉ được đọc dữ liệu thuộc về `courseId` đó.
+  - **Phân lập theo User ID**: Bảng `courses` lưu `user_id`. Khi sinh viên đăng nhập truy vấn danh sách môn học (`/courses`), hệ thống áp dụng bộ lọc nghiêm ngặt `c.user.id = currentUser.id`. Sinh viên chỉ thấy môn của chính mình, hoàn toàn không bị nhìn thấy môn của sinh viên khác.
+  - **Bảo mật quyền sở hữu (Ownership Validation)**: Sinh viên chỉ được phép chỉnh sửa hoặc xóa môn học do chính mình tạo ra (`isOwnedBy(currentUser.id)`). Mọi hành vi cố tình sửa hoặc xóa môn của người khác bị hệ thống chặn bằng ngoại lệ `SecurityException("Bạn không có quyền sửa/xóa môn học của người khác!")`.
+  - **Quản trị viên toàn quyền**: Quản trị viên (`ROLE_ADMIN`) xem được toàn bộ môn học trong hệ thống (`searchAll`) kèm nhãn chủ sở hữu phục vụ giám sát và có quyền dọn dẹp dữ liệu rác.
 
 ---
 
@@ -342,3 +344,12 @@ $$\text{Score} = \operatorname{round}\left(\frac{\text{Số câu đúng}}{\text{
 
 ### 📌 BR-SYS-002: Nguyên tắc Dự phòng Thân thiện (Graceful Degradation Fallback)
 * Nếu hệ thống AI gặp sự cố gián đoạn mạng tạm thời, hệ thống tự động chuyển sang Mock Timeline hoặc ngân hàng câu hỏi mẫu, tuyệt đối không gây lỗi Crash HTTP 500.
+
+
+### 📌 BR-SYS-004: Tự động Chuyển tiếp Quản Trị Viên (Admin Auto-Redirection)
+* **Mức độ**: `HIGH`
+* **Mô tả**: Đảm bảo Quản trị viên (`ROLE_ADMIN`) luôn được đưa vào đúng không gian làm việc quản trị.
+* **Hành vi**:
+  - Khi tài khoản `ROLE_ADMIN` đăng nhập thành công (`POST /login`), hệ thống tự động chuyển tiếp vào **Admin Command Center** (`redirect:/admin/dashboard`).
+  - Khi Admin truy cập trang chủ (`GET /`), trang đăng nhập (`GET /login`) hoặc alias (`GET /dashboard`), hệ thống tự động đưa thẳng vào `/admin/dashboard`.
+  - Thanh Navbar và Sidebar phân định riêng biệt menu quản trị (KPI, Quản lý sinh viên, Cấu hình AI) và ẩn hoàn toàn các tính năng học tập cá nhân của sinh viên.
