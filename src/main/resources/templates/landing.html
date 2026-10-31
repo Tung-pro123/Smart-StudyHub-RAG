@@ -573,7 +573,7 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#features">Tính Năng</a>
 <a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#how-it-works">Quy Trình</a>
 <a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#pricing">Gói Học Tập</a>
-<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#team">Đội Ngũ</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#faq">Hỏi Đáp</a>
 <a th:href="@{/courses}" class="relative py-1 text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1.5 font-semibold after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300">
 <i class="fa-solid fa-folder-plus text-xs"></i>
 <span>Tự Tạo Môn</span>
@@ -610,7 +610,7 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <li><a class="hover:text-violet-400" href="#features">Tính Năng</a></li>
 <li><a class="hover:text-violet-400" href="#how-it-works">Quy Trình Tự Học</a></li>
 <li><a class="hover:text-violet-400" href="#pricing">Gói Học Tập</a></li>
-<li><a class="hover:text-violet-400" href="#team">Đội Ngũ Dự Án</a></li>
+<li><a class="hover:text-violet-400" href="#faq">Hỏi Đáp (FAQ)</a></li>
 <li><a th:href="@{/courses}" class="hover:text-violet-400 font-semibold"><i class="fa-solid fa-folder-plus text-xs mr-1"></i>Tự Tạo Môn</a></li>
 <div class="divider my-1 border-white/10"></div>
 <th:block th:if="${session.currentUser != null}">
@@ -1711,325 +1711,90 @@ AI tự động sinh đề thi trắc nghiệm A/B/C/D bám sát slide có chấ
 </div>
 </section>
 
-<!-- PROJECT CONTRIBUTORS: NHÓM 2 (GROUP 2) - HSF302 -->
-<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="team">
+<!-- i. FREQUENTLY ASKED QUESTIONS (FAQ) -->
+<section class="py-24 md:py-32 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" id="faq">
 <div class="reveal text-center max-w-3xl mx-auto mb-16">
 <span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
-BÀI TẬP LỚN MÔN HỌC HSF302
+GIẢI ĐÁP THẮC MẮC
 </span>
 <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
-Đội Ngũ Thực Hiện <span class="text-gradient">Nhóm 2 (Group 2)</span>
+Câu Hỏi <span class="text-gradient">Thường Gặp (FAQ)</span>
 </h2>
 <p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
-6 thành viên hợp tác xây dựng hệ thống kiến trúc Package-by-Feature, kết hợp Spring Boot 3, RAG AI, JPA, JWT Security và Master Layout Glassmorphism.
+Mọi điều bạn cần biết về cách thức vận hành, bảo mật dữ liệu môn học và quyền lợi các gói học tập trên StudyHub AI.
 </p>
 </div>
 
-<!-- 6 Members Grid -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-<!-- Member 1: Tùng (Lead) -->
-<div class="reveal reveal-delay-100 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-indigo-500/30">
-<div>
-<div class="flex items-center gap-3.5 mb-4">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-indigo-500/30">
-T
+<div class="space-y-4">
+<!-- FAQ 1: BYO Courseware -->
+<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
+<input type="radio" name="faq-accordion" checked="checked" />
+<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<i class="fa-solid fa-circle-question text-violet-400 text-base"></i>
+<span>Nền tảng có sẵn giáo trình các môn không, hay tôi phải tự tải lên?</span>
 </div>
-<div>
-<h4 class="font-bold text-white text-base flex items-center gap-2">
-TÙNG <span>👑</span>
-</h4>
-<p class="text-xs text-indigo-400 font-semibold">Project Lead • Core Architecture</p>
-</div>
-</div>
-<p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-Phụ trách kiến trúc Package-by-Feature, Phân lập dữ liệu môn học cá nhân (Data Isolation), Hạn ngạch 3 môn gói Free, Master Layout Glassmorphism và CI/CD PR Bot.
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+StudyHub là nền tảng tự học cá nhân hóa (Bring Your Own Courseware): Bạn hoàn toàn chủ động tạo môn học theo kỳ học thực tế của mình (ví dụ: HSF302, PRJ301, MAS291...) và tải lên file PDF slide bài giảng của chính giảng viên bạn học. Hệ thống không bán sẵn hay đóng gói cố định giáo trình.
 </p>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border-none">Core CRUD</span>
-<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border-none">Data Isolation</span>
-<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border-none">CI/CD PR Bot</span>
 </div>
 </div>
 
-<!-- Member 2: Thắng (Planner) -->
-<div class="reveal reveal-delay-200 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-emerald-500/30">
-<div>
-<div class="flex items-center gap-3.5 mb-4">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-emerald-500/30">
-T
+<!-- FAQ 2: Data Isolation -->
+<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
+<input type="radio" name="faq-accordion" />
+<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
+<span>Slide bài giảng và lịch sử chat của tôi có bị sinh viên khác nhìn thấy không?</span>
 </div>
-<div>
-<h4 class="font-bold text-white text-base flex items-center gap-2">
-THẮNG <span>📅</span>
-</h4>
-<p class="text-xs text-emerald-400 font-semibold">AI Study Planner Lead</p>
-</div>
-</div>
-<p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-Xây dựng AI Study Planner: Phân tích khối lượng chunks và thời gian rảnh để sinh lộ trình Timeline vừa sức, hỗ trợ phân công nhiệm vụ đồ án nhóm (Team Tasks) cho gói SQUAD.
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Hoàn toàn không. Hệ thống áp dụng cơ chế <strong>Phân lập dữ liệu tuyệt đối (Data Isolation)</strong>: Mỗi môn học, file tài liệu và phiên hỏi đáp đều được liên kết duy nhất với tài khoản của bạn. Sinh viên khác không thể xem, sửa hay truy cập tài liệu trong không gian học tập của bạn.
 </p>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none">AI Study Planner</span>
-<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none">Timeline Steps</span>
-<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none">Squad Team Tasks</span>
 </div>
 </div>
 
-<!-- Member 3: Bình (RAG Engine) -->
-<div class="reveal reveal-delay-300 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-violet-500/30">
-<div>
-<div class="flex items-center gap-3.5 mb-4">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-pink-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-violet-500/30">
-B
+<!-- FAQ 3: RAG Citations & Zero Hallucination -->
+<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
+<input type="radio" name="faq-accordion" />
+<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<i class="fa-solid fa-quote-left text-pink-400 text-base"></i>
+<span>RAG AI có bị ảo giác (bịa thông tin) khi giải đáp kiến thức không?</span>
 </div>
-<div>
-<h4 class="font-bold text-white text-base flex items-center gap-2">
-BÌNH <span>🌟</span>
-</h4>
-<p class="text-xs text-violet-400 font-semibold">RAG Engine Specialist</p>
-</div>
-</div>
-<p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-Phát triển quy trình RAG khép kín: Trích xuất Apache PDFBox, cắt Chunks ngữ cảnh, tính toán Cosine Similarity trên H2 nhúng, và kiểm soát hạn ngạch tối đa 3 tài liệu PDF cho gói Free.
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Không. Nhờ kiến trúc RAG (Retrieval-Augmented Generation), mô hình Gemini 1.5 Flash chỉ trả lời dựa trên các đoạn văn bản (chunks) được trích xuất trực tiếp từ file PDF bạn tải lên. Mọi câu trả lời đều đính kèm <strong>Citation Card ghi rõ số trang đối chứng</strong> trong giáo trình để bạn kiểm tra nguồn gốc.
 </p>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none">Apache PDFBox</span>
-<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none">Vector RAG</span>
-<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none">Chunk Visualizer</span>
 </div>
 </div>
 
-<!-- Member 4: Trường (Auth & Security) -->
-<div class="reveal reveal-delay-100 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-blue-500/30">
-<div>
-<div class="flex items-center gap-3.5 mb-4">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-blue-500/30">
-T
+<!-- FAQ 4: Study Squad -->
+<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
+<input type="radio" name="faq-accordion" />
+<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<i class="fa-solid fa-users text-cyan-400 text-base"></i>
+<span>Gói Nhóm Học Tập (Study Squad) hoạt động như thế nào?</span>
 </div>
-<div>
-<h4 class="font-bold text-white text-base flex items-center gap-2">
-TRƯỜNG <span>🛡️</span>
-</h4>
-<p class="text-xs text-blue-400 font-semibold">Auth, JWT Security &amp; Squad</p>
-</div>
-</div>
-<p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-Hiện thực hóa xác thực JWT Token (HS256 24h), mã hóa mật khẩu BCrypt, quản lý nhóm học tập Study Squad 5 thành viên tại trang profile và chủ biên tài liệu User Guide.
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Gói Study Squad ($5/tháng) cho phép 1 bạn nhóm trưởng mời thêm tối đa 4 thành viên khác vào nhóm thông qua username tại trang Hồ Sơ. Toàn bộ 5 bạn trong nhóm đều được hưởng trọn vẹn đặc quyền PRO (không giới hạn môn, không giới hạn RAG) và mở khóa tính năng phân công nhiệm vụ đồ án nhóm (Team Tasks).
 </p>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-<span class="badge badge-xs bg-blue-500/20 text-blue-300 border-none">JWT Security</span>
-<span class="badge badge-xs bg-blue-500/20 text-blue-300 border-none">BCrypt</span>
-<span class="badge badge-xs bg-blue-500/20 text-blue-300 border-none">Study Squad (5 TV)</span>
 </div>
 </div>
 
-<!-- Member 5: Ân (Admin Command Center) -->
-<div class="reveal reveal-delay-200 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-amber-500/30">
-<div>
-<div class="flex items-center gap-3.5 mb-4">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-amber-500/30">
-A
+<!-- FAQ 5: Pricing & Cost -->
+<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
+<input type="radio" name="faq-accordion" />
+<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<i class="fa-solid fa-wallet text-amber-400 text-base"></i>
+<span>Tôi có cần nhập thẻ ngân hàng hay thanh toán khi đăng ký tài khoản không?</span>
 </div>
-<div>
-<h4 class="font-bold text-white text-base flex items-center gap-2">
-ÂN <span>📊</span>
-</h4>
-<p class="text-xs text-amber-400 font-semibold">Admin Command Center</p>
-</div>
-</div>
-<p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-Xây dựng Admin Dashboard: Thống kê 4 thẻ KPI thời gian thực của 3 gói cước (Free/Pro/Squad), bộ nút 1-Click nâng/hạ gói cước và quản lý tập trung System Gemini API Key.
-</p>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-<span class="badge badge-xs bg-amber-500/20 text-amber-300 border-none">Admin Hub</span>
-<span class="badge badge-xs bg-amber-500/20 text-amber-300 border-none">KPI Analytics</span>
-<span class="badge badge-xs bg-amber-500/20 text-amber-300 border-none">System AI Key</span>
-</div>
-</div>
-
-<!-- Member 6: Nhật (Quiz Generator) -->
-<div class="reveal reveal-delay-300 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-rose-500/30">
-<div>
-<div class="flex items-center gap-3.5 mb-4">
-<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-600 to-pink-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-rose-500/30">
-N
-</div>
-<div>
-<h4 class="font-bold text-white text-base flex items-center gap-2">
-NHẬT <span>🚀</span>
-</h4>
-<p class="text-xs text-rose-400 font-semibold">AI Quiz Generator Lead</p>
-</div>
-</div>
-<p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-4">
-Phát triển module sinh đề thi trắc nghiệm AI từ slide/giáo trình PDF, bộ lọc độ khó theo chương, phòng thi chia đôi màn hình Split-view và tự động chấm điểm giải thích nguồn gốc.
-</p>
-</div>
-<div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
-<span class="badge badge-xs bg-rose-500/20 text-rose-300 border-none">AI Quiz Engine</span>
-<span class="badge badge-xs bg-rose-500/20 text-rose-300 border-none">Split-view Exam</span>
-<span class="badge badge-xs bg-rose-500/20 text-rose-300 border-none">Auto Grading</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-
-<!-- i. BLOG / RECENT NEWS -->
-<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="blog">
-<div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
-<div>
-<span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
-Hướng Dẫn &amp; Kiến Thức
-</span>
-<h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
-Study Guides &amp; <span class="text-gradient">Tech Insights</span>
-</h2>
-</div>
-<a class="text-sm font-semibold text-violet-400 hover:text-violet-300 flex items-center gap-2 group" href="#blog">
-<span>Xem Tất Cả Bài Viết</span>
-<i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-</a>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-<!-- Post 1: RAG Hallucination Tech Preview -->
-<article class="reveal reveal-delay-100 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-violet-500/30 transition-all duration-300">
-<div>
-<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 font-mono text-xs flex flex-col justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
-<div class="flex items-center gap-1.5 mb-3 opacity-70">
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="ml-2 text-[10px] text-gray-500">rag_pipeline.java</span>
-</div>
-<div class="space-y-1.5 text-[11px]">
-<div class="text-indigo-400"><span class="text-pink-400">&gt;</span> pdfBox.extractChunks(<span class="text-emerald-300">"HSF302_Syllabus.pdf"</span>)</div>
-<div class="text-gray-400 flex items-center gap-2">
-<span>✓ Extracted 142 Chunks</span>
-<span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">768-D</span>
-</div>
-<div class="text-violet-300/80 text-[10px] truncate">&gt;&gt; Zero Hallucination Grounded: 100%</div>
-</div>
-<span class="absolute top-4 right-4 badge badge-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">RAG Engine</span>
-</div>
-<div class="p-6">
-<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
-<span>Đồ Án AI</span>
-<span>•</span>
-<span>5 phút đọc</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 group-hover:text-violet-300 transition-colors">
-Cách RAG Triệt Tiêu Hoàn Toàn Ảo Giác Khi Ôn Thi Slide 300 Trang
-</h3>
-<p class="text-gray-300 text-sm leading-relaxed">
-Phân tích cơ chế Grounded Generation kết hợp trích dẫn số trang (Citations) giúp sinh viên tra cứu tài liệu với độ chính xác tuyệt đối.
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Không cần bất kỳ thông tin thanh toán nào. Gói <strong>Sinh Viên Tự Học (FREE)</strong> hoàn toàn miễn phí vĩnh viễn, bạn chỉ cần tạo tài khoản với tên đăng nhập và mật khẩu là có thể tự tạo môn học và hỏi đáp với AI ngay tức thì.
 </p>
 </div>
 </div>
-<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
-<div class="w-8 h-8 rounded-full bg-violet-600/30 flex items-center justify-center text-xs font-bold text-violet-300">
-G2
-</div>
-<span class="text-xs font-medium text-gray-300">Group 2 • RAG Core Team</span>
-</div>
-</article>
-
-<!-- Post 2: Embedded H2 DB Tech Preview -->
-<article class="reveal reveal-delay-200 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-pink-500/10 hover:border-pink-500/30 transition-all duration-300">
-<div>
-<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 flex items-center justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
-<div class="grid grid-cols-3 gap-2 w-full max-w-[240px]">
-<div class="col-span-2 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 p-2 flex flex-col justify-between">
-<div class="w-12 h-2 rounded-full bg-purple-400/50"></div>
-<div class="w-20 h-1.5 rounded-full bg-pink-400/30"></div>
-</div>
-<div class="h-14 rounded-xl bg-slate-800/60 border border-white/10 flex flex-col items-center justify-center p-1">
-<i class="fa-solid fa-database text-pink-400/80 text-sm"></i>
-<span class="text-[9px] text-gray-400 mt-1 font-mono">H2 DB</span>
-</div>
-<div class="h-12 rounded-xl bg-slate-800/60 border border-white/10 flex items-center justify-center">
-<i class="fa-solid fa-bolt text-purple-400/80 text-xs"></i>
-</div>
-<div class="col-span-2 h-12 rounded-xl bg-gradient-to-r from-pink-500/20 to-violet-500/20 border border-pink-500/30 flex items-center justify-between px-3">
-<span class="text-[10px] text-pink-200 font-mono">Cosine Sim</span>
-<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-</div>
-</div>
-<span class="absolute top-4 right-4 badge badge-sm bg-pink-500/20 text-pink-300 border border-pink-400/30">Database</span>
-</div>
-<div class="p-6">
-<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
-<span>Kiến Trúc $0</span>
-<span>•</span>
-<span>7 phút đọc</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 group-hover:text-pink-300 transition-colors">
-Tối Ưu Hóa Vector Search 768 Chiều Trên H2 Database Nhúng Chi Phí $0
-</h3>
-<p class="text-gray-300 text-sm leading-relaxed">
-Cách lưu trữ bền vững vector nhúng xuống đĩa cứng bằng Java thuần và tính toán Cosine Similarity không phụ thuộc hạ tầng đám mây.
-</p>
-</div>
-</div>
-<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
-<div class="w-8 h-8 rounded-full bg-pink-600/30 flex items-center justify-center text-xs font-bold text-pink-300">
-BE
-</div>
-<span class="text-xs font-medium text-gray-300">Backend Lead • Spring Boot</span>
-</div>
-</article>
-
-<!-- Post 3: Study Planner & Spaced Repetition -->
-<article class="reveal reveal-delay-300 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-cyan-500/30 transition-all duration-300">
-<div>
-<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 flex items-center justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
-<div class="flex items-center justify-between w-full max-w-[240px] px-2">
-<div class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-emerald-500/30">
-<i class="fa-solid fa-calendar-check text-emerald-400 text-sm"></i>
-<span class="text-[9px] text-gray-300 font-bold">Lịch Rảnh</span>
-<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none text-[8px]">Auto</span>
-</div>
-<div class="flex-1 flex flex-col items-center">
-<span class="text-[8px] text-cyan-400 font-mono mb-1">Spaced Rep</span>
-<div class="w-full h-0.5 bg-gradient-to-r from-emerald-500 via-cyan-400 to-indigo-500 relative">
-<span class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-300 animate-pulse"></span>
-</div>
-<span class="text-[8px] text-gray-400 mt-1">Vừa Sức</span>
-</div>
-<div class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-indigo-500/30">
-<i class="fa-solid fa-brain text-indigo-400 text-sm"></i>
-<span class="text-[9px] text-gray-300 font-bold">Quiz A/B/C/D</span>
-<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border-none text-[8px]">100%</span>
-</div>
-</div>
-<span class="absolute top-4 right-4 badge badge-sm bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">Phương Pháp Học</span>
-</div>
-<div class="p-6">
-<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
-<span>Khoa Học Học Tập</span>
-<span>•</span>
-<span>4 phút đọc</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
-Ứng Dụng Thuật Toán Spaced Repetition Và AI Lập Kế Hoạch Học Tập
-</h3>
-<p class="text-gray-300 text-sm leading-relaxed">
-Tối ưu hóa đường cong lãng quên thông qua thời khóa biểu học tập phân tán và sinh đề trắc nghiệm ngẫu nhiên theo từng chương giáo trình.
-</p>
-</div>
-</div>
-<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
-<div class="w-8 h-8 rounded-full bg-cyan-600/30 flex items-center justify-center text-xs font-bold text-cyan-300">
-AI
-</div>
-<span class="text-xs font-medium text-gray-300">AI Tutor Mentor</span>
-</div>
-</article>
 </div>
 </section>
 
@@ -2101,7 +1866,7 @@ Nền tảng quản lý và hỗ trợ học tập thông minh đa môn học ch
 <li><a class="hover:text-white transition" href="#features">Tính Năng Cốt Lõi</a></li>
 <li><a class="hover:text-white transition" href="#how-it-works">Quy Trình Tự Học</a></li>
 <li><a class="hover:text-white transition" href="#pricing">Gói Học Tập</a></li>
-<li><a class="hover:text-white transition" href="#team">Đội Ngũ Đồ Án</a></li>
+<li><a class="hover:text-white transition" href="#faq">Câu Hỏi Thường Gặp</a></li>
 </ul>
 </div>
 <!-- Col 3: Tech Stack -->
