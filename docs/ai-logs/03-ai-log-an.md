@@ -41,3 +41,14 @@ Bỏ form key cá nhân, chuyển các caller hiện tại sang nguồn key chun
 Kiểm thử bao gồm quyền Admin lấy từ DB, CSRF, khôi phục phiên từ cookie JWT, đổi gói có hiệu lực ở request tiếp theo, bảo mật key, KPI, reset ngày và giới hạn 50. Test quota đồng thời nạp cùng dữ liệu User cũ trong nhiều transaction để kiểm tra cập nhật counter dưới khóa hàng DB. Fixture RAG dùng tài khoản thật từ repository thay cho user ID giả để tương thích cơ chế làm mới phiên.
 
 Kết quả: `mvn clean test` trên Java 21 thành công với 75 tests, 0 failures/errors/skipped; `git diff --check` đạt. Ping dùng mock, chưa chạy với key thật và chưa kiểm tra giao diện bằng trình duyệt.
+
+
+## Sprint 31/10/2026 — Đồng bộ ba gói và mở rộng Admin Command Center
+
+Yêu cầu: kiểm tra task của tài khoản AnNT206, hoàn thiện theo Ponytail, push và tạo PR; chờ chủ tài khoản yêu cầu kiểm thử trước khi merge.
+
+Đã fetch main và đọc `docs/tasks/task-2026-10-31-pricing-tiers.md`. Nhánh `feature/pricing-admin-an` bổ sung thống kê sinh viên FREE/PRO/SQUAD, tỷ lệ trả phí không tính admin, hoạt động mới nhất, tìm/lọc sinh viên, kích hoạt SQUAD, reset RAG, che key và trạng thái ping. Tái sử dụng quyền xem/xóa môn trong Core và thêm nhãn chủ sở hữu; không thêm dependency hoặc cơ chế quản lý nhóm thuộc Auth.
+
+Kiểm thử bổ sung cho endpoint mới, quyền/CSRF, tài khoản không tồn tại, bảo toàn role và counter khi đổi gói, tìm theo ba trường kết hợp gói, thống kê SQUAD, danh sách gần đây và che key ngắn. Lần chạy đầu phát hiện thư viện mock chưa hỗ trợ Java 25 mặc định; chạy với `-DargLine=-Dnet.bytebuddy.experimental=true` thay vì sửa dependency của nhóm. Bộ kiểm thử Settings đạt 46 ca, không lỗi hoặc bỏ qua. Không thực hiện ping thật hoặc tạo ảnh minh chứng giả.
+
+Kết quả cuối: toàn bộ 126 kiểm thử đạt, 0 lỗi, 0 bỏ qua; git diff --check đạt. Chưa kiểm tra giao diện bằng trình duyệt hoặc ping Gemini thật. PR để nháp để bot không tự merge trước yêu cầu kiểm thử của chủ tài khoản.

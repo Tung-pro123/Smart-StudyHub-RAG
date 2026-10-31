@@ -59,8 +59,18 @@ public class SubscriptionQuotaService {
     }
 
     @Transactional
+    public void resetRagQuota(Long userId) {
+        User user = lockedUser(userId);
+        if (!"ROLE_STUDENT".equals(user.getRole())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Chỉ được reset hạn ngạch cho sinh viên.");
+        }
+        user.setDailyRagCount(0);
+        user.setLastRagResetDate(LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")));
+    }
+
+    @Transactional
     public void changeTier(Long userId, String tier) {
-        if (!"FREE".equals(tier) && !"PRO".equals(tier)) throw new IllegalArgumentException("Gói cước không hợp lệ.");
+        if (!"FREE".equals(tier) && !"PRO".equals(tier) && !"SQUAD".equals(tier)) throw new IllegalArgumentException("Gói cước không hợp lệ.");
         User user = lockedUser(userId);
         if (!"ROLE_STUDENT".equals(user.getRole())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Chỉ được đổi gói cho sinh viên.");

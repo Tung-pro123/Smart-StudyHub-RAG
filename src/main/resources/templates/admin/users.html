@@ -5,16 +5,23 @@
     <h1 class="text-3xl font-extrabold">Quản lý gói cước sinh viên</h1>
     <div th:if="${successMessage}" role="status" class="alert alert-success" th:text="${successMessage}"></div>
     <p>Thay đổi gói có hiệu lực từ request tiếp theo. Thao tác cấp gói thủ công không thu tiền và không tự gia hạn.</p>
+    <form th:action="@{/admin/users}" method="get" class="flex flex-wrap gap-3">
+<label class="input input-bordered flex items-center gap-2 flex-1" for="student-search">Tìm kiếm<input id="student-search" class="grow" name="keyword" th:value="${keyword}" placeholder="Tên, username hoặc email" /></label>
+<label class="sr-only" for="student-tier">Lọc theo gói</label><select id="student-tier" name="tier" class="select select-bordered"><option value="">Tất cả</option><option th:each="option : ${ {'FREE', 'PRO', 'SQUAD'} }" th:value="${option}" th:text="${option}" th:selected="${tier == option}"></option></select><button class="btn btn-primary" type="submit">Tìm và lọc</button><a th:href="@{/admin/users}" class="btn btn-ghost">Xóa bộ lọc</a></form>
+<div class="flex flex-wrap gap-2" aria-label="Lọc nhanh"><a th:each="filter : ${ {'', 'FREE', 'PRO', 'SQUAD'} }" th:href="@{/admin/users(keyword=${keyword},tier=${filter})}" class="btn btn-sm" th:classappend="${tier == filter} ? 'btn-primary' : 'btn-ghost'" th:text="${filter == '' ? 'Tất cả' : filter}"></a></div>
     <div class="glass-card rounded-2xl overflow-x-auto">
-        <table class="table"><caption class="sr-only">Danh sách sinh viên và gói cước</caption><thead><tr><th>Sinh viên</th><th>Email</th><th>Gói hiện tại</th><th>RAG hôm nay</th><th>Thao tác</th></tr></thead>
+        <table class="table"><caption class="sr-only">Danh sách sinh viên và gói cước</caption><thead><tr><th>Sinh viên</th><th>Email</th><th>Gói hiện tại</th><th>RAG hôm nay</th><th>Hết hạn</th><th>Thao tác</th></tr></thead>
             <tbody><tr th:each="student : ${students}">
                 <td><div class="flex items-center gap-3"><img th:src="${student.avatar}" alt="" class="w-9 h-9 rounded-full" /><div><p th:text="${student.fullName}"></p><p class="text-xs" th:text="${student.username}"></p></div></div></td>
-                <td th:text="${student.email}"></td><td><span class="badge badge-outline" th:text="${student.subscriptionTier ?: 'FREE'}"></span></td>
-                <td th:text="${student.lastRagResetDate == today and student.dailyRagCount != null} ? ${student.dailyRagCount} : 0"></td>
-                <td><form th:if="${student.subscriptionTier == null or student.subscriptionTier == 'FREE'}" th:action="@{/admin/users/{id}/upgrade-pro(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-primary" type="submit" th:attr="aria-label=|Nâng cấp PRO cho ${student.username}|">⚡ Nâng cấp PRO</button></form>
-                    <form th:if="${student.subscriptionTier == 'PRO'}" th:action="@{/admin/users/{id}/downgrade-free(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-outline" type="submit" th:attr="aria-label=|Hạ về FREE cho ${student.username}|">Hạ về FREE</button></form>
+                <td th:text="${student.email}"></td><td><span class="badge" th:classappend="${student.subscriptionTier == 'SQUAD'} ? 'badge-info' : (${student.subscriptionTier == 'PRO'} ? 'badge-secondary' : 'badge-ghost')" th:text="${student.subscriptionTier ?: 'FREE'}"></span></td>
+                <td th:with="used=${student.lastRagResetDate == today and student.dailyRagCount != null ? student.dailyRagCount : 0}"><span th:text="${student.pro} ? |${used} · ∞| : |${used} / 50|"></span><progress class="progress block w-24" max="50" th:value="${used}" th:classappend="${used &lt; 30} ? 'progress-success' : (${used &lt; 45} ? 'progress-warning' : 'progress-error')" aria-label="Lượt RAG đã dùng trên hạn mức FREE"></progress></td>
+<td th:text="${student.tierExpiresAt != null ? #temporals.format(student.tierExpiresAt, 'dd/MM/yyyy HH:mm') : 'Không đặt hạn'}"></td>
+                <td><form th:if="${student.subscriptionTier == null or student.subscriptionTier == 'FREE' or student.subscriptionTier == 'SQUAD'}" th:action="@{/admin/users/{id}/upgrade-pro(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-primary" type="submit" th:attr="aria-label=|Nâng cấp PRO cho ${student.username}|">⚡ Nâng cấp PRO</button></form>
+                    <form th:if="${student.subscriptionTier == 'PRO' or student.subscriptionTier == 'SQUAD'}" th:action="@{/admin/users/{id}/downgrade-free(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-outline" type="submit" th:attr="aria-label=|Hạ về FREE cho ${student.username}|">Hạ về FREE</button></form>
+                    <form th:if="${student.subscriptionTier != 'SQUAD' and student.subscriptionTier != 'CAMPUS'}" th:action="@{/admin/users/{id}/upgrade-squad(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-info" type="submit" th:attr="aria-label=|Kích hoạt SQUAD cho ${student.username}|">👥 Kích hoạt SQUAD</button></form>
+<form th:action="@{/admin/users/{id}/reset-rag(id=${student.id})}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button class="btn btn-sm btn-ghost" type="submit" th:attr="aria-label=|Reset RAG cho ${student.username}|">🔄 Reset RAG</button></form>
                     <span th:if="${student.subscriptionTier == 'CAMPUS'}">Gói CAMPUS</span></td>
-            </tr><tr th:if="${#lists.isEmpty(students)}"><td colspan="5">Chưa có sinh viên.</td></tr></tbody>
+            </tr><tr th:if="${#lists.isEmpty(students)}"><td colspan="6">Không có sinh viên phù hợp.</td></tr></tbody>
         </table>
     </div>
 </section></body></html>

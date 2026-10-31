@@ -196,6 +196,7 @@
         <div th:unless="${courses.empty}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div th:each="course : ${courses}" class="glass-card rounded-3xl p-6 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group border border-base-200">
                 <div class="space-y-4">
+                    <p th:if="${currentUser != null and currentUser.admin}" class="text-xs text-base-content/60" th:text="${course.ownerUsername != null} ? |Bởi: ${course.ownerUsername}| : 'Môn mẫu hệ thống'"></p>
                     <!-- Card Top Header -->
                     <div class="flex items-start justify-between">
                         <div class="flex items-center gap-3">

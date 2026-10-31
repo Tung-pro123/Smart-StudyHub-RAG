@@ -26,6 +26,8 @@ public class AdminController {
     private final AdminAnalyticsService analytics;
     private final SubscriptionQuotaService quota;
     private final SystemAiKeyService systemKey;
+    @org.springframework.beans.factory.annotation.Value("${settings.gemini.model:${studyhub.ai.model:gemini-2.5-flash}}")
+    private String geminiModel;
 
     @ModelAttribute
     public void authorize(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model) {
@@ -53,12 +55,22 @@ public class AdminController {
     @GetMapping({"", "/dashboard"})
     public String dashboard(Model model) {
         model.addAttribute("stats", analytics.getStats());
+        model.addAttribute("recentUsers", analytics.getRecentUsers());
+        model.addAttribute("recentCourses", analytics.getRecentCourses());
+        model.addAttribute("ping", systemKey.getLastPing());
+        model.addAttribute("geminiModel", geminiModel);
         return "admin/dashboard";
     }
 
     @GetMapping("/users")
-    public String users(Model model) {
-        model.addAttribute("students", users.findByRoleOrderByUsernameAsc("ROLE_STUDENT"));
+    public String users(@RequestParam(defaultValue = "") String keyword,
+                        @RequestParam(defaultValue = "") String tier, Model model) {
+        if (!java.util.List.of("", "FREE", "PRO", "SQUAD").contains(tier)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Gói cước không hợp lệ.");
+        }
+        model.addAttribute("keyword", keyword.trim());
+        model.addAttribute("tier", tier);
+        model.addAttribute("students", users.searchStudents(keyword.trim(), tier));
         model.addAttribute("today", java.time.LocalDate.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh")));
         return "admin/users";
     }
@@ -67,6 +79,20 @@ public class AdminController {
     public String upgrade(@PathVariable Long id, RedirectAttributes redirect) {
         quota.changeTier(id, "PRO");
         redirect.addFlashAttribute("successMessage", "Đã nâng cấp PRO cho sinh viên.");
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/users/{id}/upgrade-squad")
+    public String upgradeSquad(@PathVariable Long id, RedirectAttributes redirect) {
+        quota.changeTier(id, "SQUAD");
+        redirect.addFlashAttribute("successMessage", "Đã kích hoạt SQUAD cho sinh viên.");
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/users/{id}/reset-rag")
+    public String resetRag(@PathVariable Long id, RedirectAttributes redirect) {
+        quota.resetRagQuota(id);
+        redirect.addFlashAttribute("successMessage", "Đã reset hạn ngạch RAG hôm nay cho sinh viên.");
         return "redirect:/admin/users";
     }
 
@@ -80,6 +106,7 @@ public class AdminController {
     @GetMapping("/settings")
     public String settings(Model model) {
         model.addAttribute("configured", systemKey.isConfigured());
+        model.addAttribute("maskedKey", systemKey.getMaskedKey());
         model.addAttribute("ping", systemKey.getLastPing());
         return "admin/settings";
     }
