@@ -37,21 +37,37 @@
                 Quản lý môn học thông minh, tải lên giáo trình PDF để tự động cắt nhỏ đoạn Chunks, trò chuyện hỏi đáp chuyên sâu bám sát tài liệu và sinh đề thi trắc nghiệm AI tức thì.
             </p>
             <div class="pt-2 flex flex-wrap gap-3">
-                <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
-                    <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
-                </button>
-                <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning text-white shadow-lg shadow-amber-500/30 rounded-xl font-bold">
-                    <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Tạo Thêm Môn
-                </button>
-                <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
-                </button>
-                <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-key mr-1"></i> Trung tâm quản trị
-                </a>
-                <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
-                </a>
+                <!-- Nút dành riêng cho Quản Trị Viên (Admin) -->
+                <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+                    <a th:href="@{/admin/dashboard}" class="btn btn-primary bg-purple-600 hover:bg-purple-700 border-none text-white shadow-lg shadow-purple-500/30 rounded-xl font-bold">
+                        <i class="fa-solid fa-chart-line mr-1"></i> Admin Command Center
+                    </a>
+                    <a th:href="@{/admin/users}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-users mr-1"></i> Quản Lý Sinh Viên
+                    </a>
+                    <a th:href="@{/admin/settings}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-key mr-1"></i> Cấu Hình System AI Key
+                    </a>
+                    <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Mẫu Hệ Thống
+                    </button>
+                </th:block>
+
+                <!-- Nút dành cho Sinh Viên / Khách -->
+                <th:block th:unless="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+                    <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
+                        <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
+                    </button>
+                    <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning text-white shadow-lg shadow-amber-500/30 rounded-xl font-bold">
+                        <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Tạo Thêm Môn
+                    </button>
+                    <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
+                    </button>
+                    <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
+                    </a>
+                </th:block>
             </div>
         </div>
         <!-- Decorative Circle -->
@@ -79,8 +95,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Mini Upgrade Button if Free -->
-            <button th:if="${!isProUser}" onclick="document.getElementById('modal-pricing-upgrade').showModal()"
+            <!-- Mini Upgrade Button if Free (Ẩn với Admin) -->
+            <button th:if="${session.currentUser == null or (session.currentUser.role != 'ROLE_ADMIN' and !isProUser)}" onclick="document.getElementById('modal-pricing-upgrade').showModal()"
                     class="btn btn-xs btn-outline btn-primary rounded-lg text-[11px] gap-1 hover:text-white"
                     title="Nâng cấp gói để không giới hạn môn học">
                 <i class="fa-solid fa-bolt text-amber-400"></i> Nâng cấp

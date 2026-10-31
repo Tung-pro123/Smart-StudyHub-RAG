@@ -30,7 +30,11 @@ public class HomeController {
      * Alias tương thích ngược cho Dashboard môn học
      */
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(HttpSession session) {
+        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        if (currentUser != null && "ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+            return "redirect:/admin/dashboard";
+        }
         return "redirect:/courses";
     }
 }
