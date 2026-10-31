@@ -25,7 +25,7 @@ public class CourseController {
     private final ChunkRepository chunkRepository;
 
     /**
-     * Màn hình danh sách môn học / Dashboard (Yêu cầu đăng nhập)
+     * Màn hình danh sách môn học / Dashboard (Yêu cầu đăng nhập, cách ly dữ liệu theo User)
      */
     @GetMapping
     public String listCourses(
@@ -35,9 +35,11 @@ public class CourseController {
             Model model) {
 
         User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
-        List<CourseCardDto> courses = courseService.getAllCoursesWithStats(keyword, semester);
+        List<CourseCardDto> courses = courseService.getAllCoursesWithStats(keyword, semester, currentUser);
         List<String> semesters = courseService.getAllSemesters();
-        long totalCourses = courseService.countCourses();
+        long totalCourses = (currentUser != null && currentUser.getId() != null && !currentUser.isAdmin())
+                ? courseService.countCoursesByUser(currentUser)
+                : courseService.countCourses();
 
         model.addAttribute("courses", courses);
         model.addAttribute("totalCourses", totalCourses);
@@ -45,6 +47,7 @@ public class CourseController {
         model.addAttribute("currentKeyword", keyword != null ? keyword : "");
         model.addAttribute("currentSemester", semester != null ? semester : "ALL");
         model.addAttribute("newCourse", new Course());
+        model.addAttribute("currentUser", currentUser);
 
         // Thông tin hạn ngạch gói cước
         model.addAttribute("maxCoursesFree", CourseService.MAX_COURSES_FREE);
@@ -74,7 +77,7 @@ public class CourseController {
     }
 
     /**
-     * Xử lý tạo môn học mới (kèm kiểm tra hạn ngạch gói cước)
+     * Xử lý tạo môn học mới (kèm kiểm tra hạn ngạch gói cước và gán người sở hữu)
      */
     @PostMapping({"/create", ""})
     public String createCourse(
@@ -101,7 +104,7 @@ public class CourseController {
     }
 
     /**
-     * Xử lý cập nhật thông tin môn học
+     * Xử lý cập nhật thông tin môn học (Kiểm tra quyền sở hữu)
      */
     @PostMapping("/{id}/edit")
     public String editCourse(
@@ -117,9 +120,11 @@ public class CourseController {
         }
 
         try {
-            courseService.updateCourse(id, course);
+            courseService.updateCourse(id, course, currentUser);
             redirectAttributes.addFlashAttribute("successMessage",
                     "Cập nhật thành công thông tin môn học " + course.getCode() + "!");
+        } catch (SecurityException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "⛔ " + e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
@@ -131,7 +136,7 @@ public class CourseController {
     }
 
     /**
-     * Xử lý xóa môn học
+     * Xử lý xóa môn học (Kiểm tra quyền sở hữu)
      */
     @GetMapping("/delete/{id}")
     public String deleteCourse(@PathVariable("id") Long id, HttpSession session, RedirectAttributes redirectAttributes) {
@@ -144,9 +149,11 @@ public class CourseController {
         try {
             Course course = courseService.getCourseById(id).orElse(null);
             String courseCode = course != null ? course.getCode() : "#" + id;
-            courseService.deleteCourse(id);
+            courseService.deleteCourse(id, currentUser);
             redirectAttributes.addFlashAttribute("successMessage",
                     "Đã xóa môn học [" + courseCode + "] và toàn bộ dữ liệu liên quan thành công!");
+        } catch (SecurityException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "⛔ " + e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi xóa môn học: " + e.getMessage());
         }

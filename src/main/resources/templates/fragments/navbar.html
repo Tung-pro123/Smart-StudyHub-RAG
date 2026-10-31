@@ -62,8 +62,9 @@
                 <li class="menu-title px-4 py-2 border-b border-base-200/60">
                     <div class="flex items-center justify-between">
                         <span class="font-extrabold text-base-content text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
-                        <span th:if="${session.currentUser.isPro()}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
-                        <span th:unless="${session.currentUser.isPro()}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
+                        <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge badge-info badge-xs text-[9px] font-bold">SQUAD</span>
+                        <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.subscriptionTier != 'SQUAD' and session.currentUser.subscriptionTier != 'CAMPUS'}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
+                        <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
                     </div>
                     <span class="text-[10px] text-base-content/60 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>
                 </li>

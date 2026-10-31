@@ -233,10 +233,16 @@
                     </div>
 
                     <!-- Course Stats Badge -->
-                    <div class="flex items-center gap-2 pt-1">
+                    <div class="flex items-center gap-2 pt-1 flex-wrap">
                         <span class="badge badge-sm badge-outline badge-primary font-bold text-[10px]">
                             <i class="fa-solid fa-puzzle-piece mr-1"></i>
                             <span th:text="${course.chunkCount}">0</span> Chunks
+                        </span>
+                        <span th:if="${course.isSystemSample()}" class="badge badge-sm bg-indigo-500/15 text-indigo-400 font-bold text-[10px] border-none">
+                            <i class="fa-solid fa-cubes mr-1"></i> Mẫu chung
+                        </span>
+                        <span th:unless="${course.isSystemSample()}" class="badge badge-sm bg-emerald-500/15 text-emerald-400 font-bold text-[10px] border-none">
+                            <i class="fa-solid fa-user-check mr-1"></i> Môn của bạn
                         </span>
                         <span class="badge badge-sm badge-ghost text-base-content/60 text-[10px]">
                             <i class="fa-solid fa-clock mr-1"></i> <span th:text="${#temporals.format(course.createdAt, 'dd/MM/yyyy')}">18/10/2026</span>

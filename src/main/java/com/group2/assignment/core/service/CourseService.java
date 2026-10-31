@@ -28,19 +28,22 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public List<CourseCardDto> getAllCoursesWithStats(String keyword, String semester) {
-        List<Course> courses;
-        boolean hasKeyword = keyword != null && !keyword.trim().isBlank();
-        boolean hasSemester = semester != null && !semester.trim().isBlank() && !semester.equalsIgnoreCase("ALL");
+    /**
+     * Lấy danh sách môn học kèm thống kê và lọc theo người dùng (Data Isolation)
+     * - Admin: Xem được toàn bộ môn học trong hệ thống
+     * - Sinh viên: Xem môn học của chính mình (+ môn học mẫu hệ thống)
+     */
+    public List<CourseCardDto> getAllCoursesWithStats(String keyword, String semester, User currentUser) {
+        String kw = (keyword != null && !keyword.trim().isBlank()) ? keyword.trim() : null;
+        String sem = (semester != null && !semester.trim().isBlank() && !semester.equalsIgnoreCase("ALL")) ? semester.trim() : null;
 
-        if (hasKeyword && hasSemester) {
-            courses = courseRepository.findBySemesterIgnoreCaseAndNameContainingIgnoreCase(semester.trim(), keyword.trim());
-        } else if (hasKeyword) {
-            courses = courseRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCaseOrSemesterContainingIgnoreCase(keyword.trim(), keyword.trim(), keyword.trim());
-        } else if (hasSemester) {
-            courses = courseRepository.findBySemesterIgnoreCase(semester.trim());
+        List<Course> courses;
+        if (currentUser != null && currentUser.isAdmin()) {
+            courses = courseRepository.searchAll(kw, sem);
+        } else if (currentUser != null && currentUser.getId() != null) {
+            courses = courseRepository.searchCoursesByUser(currentUser.getId(), kw, sem, true);
         } else {
-            courses = courseRepository.findAll();
+            courses = courseRepository.searchAll(kw, sem);
         }
 
         return courses.stream()
@@ -51,14 +54,21 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Quá tải tương thích ngược (Backward Compatibility)
+     */
+    public List<CourseCardDto> getAllCoursesWithStats(String keyword, String semester) {
+        return getAllCoursesWithStats(keyword, semester, null);
+    }
+
     public Optional<Course> getCourseById(Long id) {
         return courseRepository.findById(id);
     }
 
     public CourseCardDto getCourseWithStats(Long id) {
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học với ID: " + id));
-        long chunks = chunkRepository.countByCourseId(course.getId());
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + id));
+        long chunks = chunkRepository.countByCourseId(id);
         return CourseCardDto.fromEntity(course, chunks);
     }
 
@@ -73,7 +83,6 @@ public class CourseService {
 
     /**
      * Kiểm tra người dùng có quyền tạo thêm môn học hay không (dựa trên hạn ngạch gói cước)
-     * Khách vãng lai (user == null) không có quyền tạo môn học.
      */
     public boolean canCreateCourse(User user) {
         if (user == null) {
@@ -82,7 +91,20 @@ public class CourseService {
         if (user.isPro()) {
             return true;
         }
+        if (user.getId() != null) {
+            return countCoursesByUser(user) < MAX_COURSES_FREE;
+        }
         return countCourses() < MAX_COURSES_FREE;
+    }
+
+    /**
+     * Đếm số lượng môn học do một người dùng cụ thể sở hữu
+     */
+    public long countCoursesByUser(User user) {
+        if (user == null || user.getId() == null) {
+            return 0;
+        }
+        return courseRepository.countByUserId(user.getId());
     }
 
     public Course saveCourse(Course course) {
@@ -106,14 +128,31 @@ public class CourseService {
         course.setCode(course.getCode().trim().toUpperCase());
         course.setName(course.getName().trim());
 
-        // Validate trùng code
-        if (course.getId() == null) {
-            if (courseRepository.existsByCodeIgnoreCase(course.getCode())) {
-                throw new IllegalArgumentException("Mã môn học '" + course.getCode() + "' đã tồn tại trong hệ thống!");
+        // Validate trùng code theo từng người dùng
+        if (user != null && user.getId() != null) {
+            if (course.getId() == null) {
+                if (courseRepository.existsByCodeIgnoreCaseAndUserId(course.getCode(), user.getId())) {
+                    throw new IllegalArgumentException("Mã môn học '" + course.getCode() + "' đã tồn tại trong danh sách môn của bạn!");
+                }
+            } else {
+                if (courseRepository.existsByCodeIgnoreCaseAndUserIdAndIdNot(course.getCode(), user.getId(), course.getId())) {
+                    throw new IllegalArgumentException("Mã môn học '" + course.getCode() + "' đã thuộc về một môn khác của bạn!");
+                }
             }
+            course.setUser(user);
         } else {
-            if (courseRepository.existsByCodeIgnoreCaseAndIdNot(course.getCode(), course.getId())) {
-                throw new IllegalArgumentException("Mã môn học '" + course.getCode() + "' đã thuộc về một môn khác!");
+            // Trường hợp fallback khi chưa có user hoặc test nội bộ
+            if (course.getId() == null) {
+                if (courseRepository.existsByCodeIgnoreCase(course.getCode())) {
+                    throw new IllegalArgumentException("Mã môn học '" + course.getCode() + "' đã tồn tại trong hệ thống!");
+                }
+            } else {
+                if (courseRepository.existsByCodeIgnoreCaseAndIdNot(course.getCode(), course.getId())) {
+                    throw new IllegalArgumentException("Mã môn học '" + course.getCode() + "' đã thuộc về một môn khác!");
+                }
+            }
+            if (user != null) {
+                course.setUser(user);
             }
         }
 
@@ -121,13 +160,26 @@ public class CourseService {
     }
 
     @Transactional
-    public Course updateCourse(Long id, Course updatedData) {
+    public Course updateCourse(Long id, Course updatedData, User user) {
         Course existing = courseRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + id));
 
+        // Kiểm tra quyền sở hữu (Ownership Validation)
+        if (user != null && !user.isAdmin()) {
+            if (existing.getUser() != null && !existing.getUser().getId().equals(user.getId())) {
+                throw new SecurityException("Bạn không có quyền chỉnh sửa môn học của người khác!");
+            }
+        }
+
         String newCode = updatedData.getCode().trim().toUpperCase();
-        if (courseRepository.existsByCodeIgnoreCaseAndIdNot(newCode, id)) {
-            throw new IllegalArgumentException("Mã môn học '" + newCode + "' đã tồn tại ở môn khác!");
+        if (user != null && user.getId() != null) {
+            if (courseRepository.existsByCodeIgnoreCaseAndUserIdAndIdNot(newCode, user.getId(), id)) {
+                throw new IllegalArgumentException("Mã môn học '" + newCode + "' đã tồn tại ở môn khác của bạn!");
+            }
+        } else {
+            if (courseRepository.existsByCodeIgnoreCaseAndIdNot(newCode, id)) {
+                throw new IllegalArgumentException("Mã môn học '" + newCode + "' đã tồn tại ở môn khác!");
+            }
         }
 
         existing.setCode(newCode);
@@ -147,9 +199,29 @@ public class CourseService {
     }
 
     @Transactional
-    public void deleteCourse(Long id) {
+    public Course updateCourse(Long id, Course updatedData) {
+        return updateCourse(id, updatedData, null);
+    }
+
+    @Transactional
+    public void deleteCourse(Long id, User user) {
+        Course existing = courseRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + id));
+
+        // Kiểm tra quyền sở hữu (Ownership Validation)
+        if (user != null && !user.isAdmin()) {
+            if (existing.getUser() != null && !existing.getUser().getId().equals(user.getId())) {
+                throw new SecurityException("Bạn không có quyền xóa môn học của người khác!");
+            }
+        }
+
         chunkRepository.deleteAllByCourseId(id);
         courseRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteCourse(Long id) {
+        deleteCourse(id, null);
     }
 
     public long countCourses() {
