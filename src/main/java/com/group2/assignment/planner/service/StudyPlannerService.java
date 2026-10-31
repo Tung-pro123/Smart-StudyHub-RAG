@@ -3,6 +3,7 @@ package com.group2.assignment.planner.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Chunk;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
@@ -15,6 +16,7 @@ import com.group2.assignment.planner.repository.StudyTaskRepository;
 import com.group2.assignment.settings.service.SystemAiKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,12 +39,20 @@ public class StudyPlannerService {
     private final StudyTaskRepository studyTaskRepository;
     private final ObjectMapper objectMapper;
     private final SystemAiKeyService systemAiKeyService;
+
+    @Value("${studyhub.ai.planner-model:gemini-3.8-flash}")
+    private String plannerModel;
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
     @Transactional
-    public StudyPlan generateStudyPlan(StudyPlanRequestDto dto) {
+    public StudyPlan generateStudyPlan(StudyPlanRequestDto dto, User currentUser) {
+        boolean squadTier = currentUser != null && "SQUAD".equalsIgnoreCase(currentUser.getSubscriptionTier());
+        List<String> assignees = squadTier ? sanitizeAssignees(dto.getSquadMembers()) : List.of();
+        if (squadTier && assignees.isEmpty() && currentUser.getUsername() != null) {
+            assignees = List.of(currentUser.getUsername());
+        }
         // 1. Lấy API Key hệ thống (Centralized System Key, không lấy từ session người dùng)
         String apiKey = systemAiKeyService.getApiKey();
 
@@ -52,6 +62,13 @@ public class StudyPlannerService {
             fallback.setId(dto.getCourseId());
             return fallback;
         });
+
+        if (currentUser != null && !currentUser.isAdmin()
+                && (course.getUser() == null
+                || currentUser.getId() == null
+                || !currentUser.getId().equals(course.getUser().getId()))) {
+            throw new SecurityException("Môn học không thuộc tài khoản của bạn.");
+        }
 
         // 3. Lấy danh sách Chunks của môn học
         List<Chunk> chunks = chunkRepository.findAllByCourseId(dto.getCourseId());
@@ -63,14 +80,14 @@ public class StudyPlannerService {
         List<Map<String, Object>> timelineData;
         if (apiKey != null && !apiKey.trim().isBlank()) {
             try {
-                timelineData = callGeminiApi(dto, contextText, apiKey.trim());
+                timelineData = callGeminiApi(dto, contextText, apiKey.trim(), assignees);
             } catch (Exception e) {
                 log.warn("Gọi Gemini API thất bại ({}) -> Dùng mock timeline", e.getMessage());
-                timelineData = generateMockTimeline(dto);
+                timelineData = generateMockTimeline(dto, assignees);
             }
         } else {
             log.info("Không có API Key -> Dùng mock timeline");
-            timelineData = generateMockTimeline(dto);
+            timelineData = generateMockTimeline(dto, assignees);
         }
 
         // 5. Tạo StudyPlan
@@ -102,6 +119,7 @@ public class StudyPlannerService {
                     .taskTitle((String) item.getOrDefault("taskTitle", "Ôn tập"))
                     .taskDescription((String) item.getOrDefault("taskDescription", ""))
                     .durationMinutes(((Number) item.getOrDefault("durationMinutes", 120)).intValue())
+                    .assignee(squadTier ? resolveAssignee(item.get("assignee"), assignees, sortOrder - 1) : null)
                     .isCompleted(false)
                     .sortOrder(sortOrder++)
                     .build();
@@ -113,7 +131,8 @@ public class StudyPlannerService {
         return studyPlan;
     }
 
-    private List<Map<String, Object>> callGeminiApi(StudyPlanRequestDto dto, String contextText, String apiKey) throws Exception {
+    private List<Map<String, Object>> callGeminiApi(StudyPlanRequestDto dto, String contextText, String apiKey,
+                                                   List<String> assignees) throws Exception {
         // Giới hạn context text để không vượt quá token limit
         String truncatedContext = contextText.length() > 6000 ? contextText.substring(0, 6000) : contextText;
 
@@ -126,6 +145,11 @@ public class StudyPlannerService {
                 ? dto.getExamDate().toString()
                 : "Chưa xác định";
 
+        String assigneeExample = assignees.isEmpty() ? "" : ",\n    \"assignee\": \"" + assignees.get(0) + "\"";
+        String assigneeRule = assignees.isEmpty() ? ""
+                : "\n- Gói SQUAD: thêm trường \"assignee\" cho mỗi nhiệm vụ, chỉ chọn trong danh sách: "
+                + String.join(", ", assignees) + ".";
+
         String systemPrompt = "Bạn là chuyên gia lập kế hoạch học tập thông minh. Hãy phân tích nội dung giáo trình và lịch rảnh của sinh viên, sau đó tạo lộ trình học tập chi tiết.\n"
                 + "Quy tắc bắt buộc: Phải trả về một mảng JSON thuần túy (JSON Array) gồm các đối tượng có cấu trúc:\n"
                 + "[\n"
@@ -134,7 +158,7 @@ public class StudyPlannerService {
                 + "    \"dayOfWeek\": \"Thứ 3\",\n"
                 + "    \"taskTitle\": \"Ôn tập Spring Core - IoC Container\",\n"
                 + "    \"taskDescription\": \"Tìm hiểu @Component, @Autowired, @Bean\",\n"
-                + "    \"durationMinutes\": 120\n"
+                + "    \"durationMinutes\": 120" + assigneeExample + "\n"
                 + "  }\n"
                 + "]\n"
                 + "Ngày rảnh: " + daysList + "\n"
@@ -151,20 +175,13 @@ public class StudyPlannerService {
 
         Map<String, Object> requestBody = Map.of(
                 "contents", List.of(
-                        Map.of("parts", List.of(Map.of("text", systemPrompt)))
+                        Map.of("parts", List.of(Map.of("text", systemPrompt + assigneeRule)))
                 ),
                 "generationConfig", generationConfig
         );
 
         String jsonPayload = objectMapper.writeValueAsString(requestBody);
-        List<String> models = List.of(
-                "gemini-2.5-flash",
-                "gemini-2.0-flash",
-                "gemini-1.5-flash-latest",
-                "gemini-1.5-flash",
-                "gemini-1.5-pro",
-                "gemini-2.5-flash-lite"
-        );
+        List<String> models = candidateModels();
 
         Exception lastException = null;
 
@@ -208,7 +225,7 @@ public class StudyPlannerService {
         throw lastException != null ? lastException : new RuntimeException("Tất cả candidate Gemini models đều không phản hồi.");
     }
 
-    private List<Map<String, Object>> generateMockTimeline(StudyPlanRequestDto dto) {
+    private List<Map<String, Object>> generateMockTimeline(StudyPlanRequestDto dto, List<String> assignees) {
         List<Map<String, Object>> timeline = new ArrayList<>();
 
         // Tính số tuần từ ngày hiện tại đến ngày thi
@@ -235,14 +252,32 @@ public class StudyPlannerService {
             task.put("taskTitle", "Tuần " + week + ": " + defaultTopics[(week - 1) % defaultTopics.length]);
             task.put("taskDescription", "Học và ôn tập nội dung tuần " + week + " theo giáo trình");
             task.put("durationMinutes", 120);
+            if (!assignees.isEmpty()) {
+                task.put("assignee", assignees.get((week - 1) % assignees.size()));
+            }
             timeline.add(task);
         }
 
         return timeline;
     }
 
-    public Optional<StudyPlan> getPlanById(Long planId) {
-        return studyPlanRepository.findById(planId);
+    public Optional<StudyPlan> getPlanById(Long planId, User currentUser) {
+        if (currentUser == null) {
+            return Optional.empty();
+        }
+
+        Optional<StudyPlan> planOpt = currentUser.isAdmin()
+                ? studyPlanRepository.findById(planId)
+                : currentUser.getId() != null
+                    ? studyPlanRepository.findByIdAndCourseUserId(planId, currentUser.getId())
+                    : Optional.empty();
+
+        planOpt.ifPresent(plan -> {
+            if (plan.getCourse() != null) {
+                plan.getCourse().getName();
+            }
+        });
+        return planOpt;
     }
 
     public List<StudyTask> getTasksByPlanId(Long planId) {
@@ -250,10 +285,13 @@ public class StudyPlannerService {
     }
 
     @Transactional
-    public StudyTask toggleTaskCompletion(Long taskId) {
+    public StudyTask toggleTaskCompletion(Long taskId, User currentUser) {
         Optional<StudyTask> taskOpt = studyTaskRepository.findById(taskId);
         if (taskOpt.isPresent()) {
             StudyTask task = taskOpt.get();
+            if (!canAccess(task.getPlan(), currentUser)) {
+                return null;
+            }
             task.setIsCompleted(!task.getIsCompleted());
             if (task.getIsCompleted()) {
                 task.setCompletedAt(java.time.LocalDateTime.now());
@@ -290,19 +328,94 @@ public class StudyPlannerService {
         }
     }
 
-    public List<StudyPlan> getPlansByCourseId(Long courseId) {
-        return studyPlanRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId);
+    public List<StudyPlan> getPlansByCourseId(Long courseId, User currentUser) {
+        if (currentUser == null) {
+            return List.of();
+        }
+        if (currentUser.isAdmin()) {
+            return studyPlanRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId);
+        }
+        if (currentUser.getId() == null) {
+            return List.of();
+        }
+        return studyPlanRepository.findAllByCourseIdAndCourseUserIdOrderByCreatedAtDesc(
+                courseId, currentUser.getId());
     }
 
     @Transactional(readOnly = true)
-    public List<StudyPlan> getRecentPlans() {
-        List<StudyPlan> plans = studyPlanRepository.findAllByOrderByCreatedAtDesc();
-        // Khởi tạo quan hệ lazy để template đọc được tên môn học
+    public List<StudyPlan> getRecentPlans(User currentUser) {
+        if (currentUser == null) {
+            return List.of();
+        }
+
+        List<StudyPlan> plans;
+        if (currentUser.isAdmin()) {
+            plans = studyPlanRepository.findAllByOrderByCreatedAtDesc();
+        } else if (currentUser.getId() != null) {
+            plans = studyPlanRepository.findAllByCourseUserIdOrderByCreatedAtDesc(currentUser.getId());
+        } else {
+            return List.of();
+        }
+
         plans.forEach(plan -> {
             if (plan.getCourse() != null) {
                 plan.getCourse().getName();
             }
         });
         return plans;
+    }
+
+    private List<String> candidateModels() {
+        LinkedHashSet<String> models = new LinkedHashSet<>();
+        if (plannerModel != null && !plannerModel.isBlank()) {
+            models.add(plannerModel.trim());
+        }
+        models.addAll(List.of(
+                "gemini-3.8-flash",
+                "gemini-flash-latest",
+                "gemini-2.5-flash-lite"
+        ));
+        return new ArrayList<>(models);
+    }
+
+    private List<String> sanitizeAssignees(List<String> rawAssignees) {
+        if (rawAssignees == null) {
+            return List.of();
+        }
+        return rawAssignees.stream()
+                .filter(Objects::nonNull)
+                .flatMap(value -> Arrays.stream(value.split(",")))
+                .map(String::trim)
+                .filter(value -> !value.isBlank())
+                .distinct()
+                .limit(10)
+                .toList();
+    }
+
+    private String resolveAssignee(Object rawAssignee, List<String> assignees, int index) {
+        if (assignees.isEmpty()) {
+            return null;
+        }
+        String candidate = rawAssignee instanceof String value ? value.trim() : "";
+        if (!candidate.isBlank()) {
+            return assignees.stream()
+                    .filter(assignee -> assignee.equalsIgnoreCase(candidate))
+                    .findFirst()
+                    .orElseGet(() -> assignees.get(index % assignees.size()));
+        }
+        return assignees.get(index % assignees.size());
+    }
+
+    private boolean canAccess(StudyPlan plan, User currentUser) {
+        if (plan == null || currentUser == null) {
+            return false;
+        }
+        if (currentUser.isAdmin()) {
+            return true;
+        }
+        if (currentUser.getId() == null || plan.getCourse() == null || plan.getCourse().getUser() == null) {
+            return false;
+        }
+        return currentUser.getId().equals(plan.getCourse().getUser().getId());
     }
 }

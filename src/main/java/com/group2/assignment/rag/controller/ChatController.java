@@ -76,7 +76,7 @@ public class ChatController {
             currentUser = checkAndResetDailyQuota(currentUser, session);
         }
 
-        boolean isPro = currentUser != null && ("PRO".equalsIgnoreCase(currentUser.getSubscriptionTier()) || "ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole()));
+        boolean isPro = currentUser != null && currentUser.isPro();
         int dailyCount = (currentUser != null && currentUser.getDailyRagCount() != null) ? currentUser.getDailyRagCount() : 0;
         int remainingQuota = isPro ? -1 : Math.max(0, 50 - dailyCount);
 
@@ -123,7 +123,7 @@ public class ChatController {
         // Tự động kiểm tra reset ngày mới
         currentUser = checkAndResetDailyQuota(currentUser, session);
 
-        boolean isPro = "PRO".equalsIgnoreCase(currentUser.getSubscriptionTier()) || "ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole());
+        boolean isPro = currentUser.isPro();
         int dailyCount = currentUser.getDailyRagCount() != null ? currentUser.getDailyRagCount() : 0;
 
         // Kiểm tra chặn nếu là gói FREE và đã đạt 50 câu/ngày
@@ -187,7 +187,7 @@ public class ChatController {
         }
 
         currentUser = checkAndResetDailyQuota(currentUser, session);
-        boolean isPro = "PRO".equalsIgnoreCase(currentUser.getSubscriptionTier()) || "ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole());
+        boolean isPro = currentUser.isPro();
         int dailyCount = currentUser.getDailyRagCount() != null ? currentUser.getDailyRagCount() : 0;
 
         if (!isPro && dailyCount >= 50) {

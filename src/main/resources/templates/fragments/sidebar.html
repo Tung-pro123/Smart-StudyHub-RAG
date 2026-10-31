@@ -16,39 +16,64 @@
                 </div>
             </div>
 
-            <!-- Navigation Menu -->
+            <!-- Navigation Menu (Phân quyền Admin vs Sinh Viên) -->
             <ul class="menu p-0 mt-6 gap-1">
-                <li class="menu-title text-xs uppercase tracking-wider font-bold text-base-content/50">Hệ Sinh Thái Học Tập</li>
-                <li>
-                    <a th:href="@{/courses}" class="active:bg-indigo-600 font-semibold py-3">
-                        <i class="fa-solid fa-layer-group text-indigo-500 w-5"></i> Quản Lý Môn Học
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/planner}" class="font-semibold py-3">
-                        <i class="fa-solid fa-calendar-check text-emerald-500 w-5"></i> Lịch Học Vừa Sức
-                        <span class="badge badge-sm badge-success text-white">Module 4</span>
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/quiz}" class="font-semibold py-3">
-                        <i class="fa-solid fa-list-check text-amber-500 w-5"></i> Luyện Đề Trắc Nghiệm
-                        <span class="badge badge-sm badge-warning text-white">Module 5</span>
-                    </a>
-                </li>
-                <li>
-                    <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="font-semibold py-3">
-                        <i class="fa-solid fa-key text-purple-500 w-5"></i> Trung tâm quản trị
-                        <span class="badge badge-sm badge-outline">Module 3</span>
-                    </a>
-                </li>
+                <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+                    <li class="menu-title text-xs uppercase tracking-wider font-bold text-purple-600">Bảng Điều Khiển Quản Trị</li>
+                    <li>
+                        <a th:href="@{/admin/dashboard}" class="font-semibold py-3 text-purple-600">
+                            <i class="fa-solid fa-chart-line text-purple-500 w-5"></i> Admin Command Center
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/users}" class="font-semibold py-3">
+                            <i class="fa-solid fa-users text-indigo-500 w-5"></i> Quản Lý Sinh Viên & Gói
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/admin/settings}" class="font-semibold py-3">
+                            <i class="fa-solid fa-key text-amber-500 w-5"></i> Cấu Hình System AI Key
+                        </a>
+                    </li>
+                    <li class="menu-title mt-4 text-xs uppercase tracking-wider font-bold text-base-content/50">Dữ Liệu Hệ Thống</li>
+                    <li>
+                        <a th:href="@{/courses}" class="font-semibold py-3 text-slate-600">
+                            <i class="fa-solid fa-layer-group text-indigo-400 w-5"></i> Danh Sách Môn Học Toàn Trường
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/h2-console}" target="_blank" class="font-semibold py-3 text-slate-500">
+                            <i class="fa-solid fa-database w-5 text-indigo-400"></i> H2 Database Console
+                        </a>
+                    </li>
+                </th:block>
 
-                <li class="menu-title mt-6 text-xs uppercase tracking-wider font-bold text-base-content/50">Quản Trị Hệ Thống</li>
-                <li>
-                    <a th:href="@{/h2-console}" target="_blank" class="font-semibold py-3 text-slate-500">
-                        <i class="fa-solid fa-database w-5 text-indigo-400"></i> H2 Database Console
-                    </a>
-                </li>
+                <th:block th:unless="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+                    <li class="menu-title text-xs uppercase tracking-wider font-bold text-base-content/50">Hệ Sinh Thái Học Tập</li>
+                    <li>
+                        <a th:href="@{/courses}" class="active:bg-indigo-600 font-semibold py-3">
+                            <i class="fa-solid fa-layer-group text-indigo-500 w-5"></i> Quản Lý Môn Học
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/planner}" class="font-semibold py-3">
+                            <i class="fa-solid fa-calendar-check text-emerald-500 w-5"></i> Lịch Học Vừa Sức
+                            <span class="badge badge-sm badge-success text-white">Module 4</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/quiz}" class="font-semibold py-3">
+                            <i class="fa-solid fa-list-check text-amber-500 w-5"></i> Luyện Đề Trắc Nghiệm
+                            <span class="badge badge-sm badge-warning text-white">Module 5</span>
+                        </a>
+                    </li>
+                    <li class="menu-title mt-6 text-xs uppercase tracking-wider font-bold text-base-content/50">Quản Trị Hệ Thống</li>
+                    <li>
+                        <a th:href="@{/h2-console}" target="_blank" class="font-semibold py-3 text-slate-500">
+                            <i class="fa-solid fa-database w-5 text-indigo-400"></i> H2 Database Console
+                        </a>
+                    </li>
+                </th:block>
             </ul>
         </div>
 

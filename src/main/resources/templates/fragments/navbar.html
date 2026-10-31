@@ -21,20 +21,34 @@
         </a>
     </div>
 
-    <!-- Quick Navigation Links -->
+    <!-- Quick Navigation Links (Phân quyền Admin vs Sinh Viên) -->
     <div class="flex-none hidden md:flex items-center gap-2">
-        <a th:href="@{/courses}" class="btn btn-ghost btn-sm font-semibold">
-            <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Môn Học
-        </a>
-        <a th:href="@{/planner}" class="btn btn-ghost btn-sm font-semibold">
-            <i class="fa-solid fa-calendar-check mr-1 text-emerald-500"></i> Lịch Học Vừa Sức
-        </a>
-        <a th:href="@{/quiz}" class="btn btn-ghost btn-sm font-semibold">
-            <i class="fa-solid fa-list-check mr-1 text-amber-500"></i> Luyện Đề Trắc Nghiệm
-        </a>
-        <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="btn btn-ghost btn-sm font-semibold text-purple-600">
-            <i class="fa-solid fa-chart-line mr-1"></i> Quản Trị Admin
-        </a>
+        <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+            <a th:href="@{/admin/dashboard}" class="btn btn-ghost btn-sm font-semibold text-purple-600">
+                <i class="fa-solid fa-chart-line mr-1"></i> Admin Dashboard
+            </a>
+            <a th:href="@{/admin/users}" class="btn btn-ghost btn-sm font-semibold text-indigo-600">
+                <i class="fa-solid fa-users mr-1"></i> Quản Lý Sinh Viên
+            </a>
+            <a th:href="@{/admin/settings}" class="btn btn-ghost btn-sm font-semibold text-amber-600">
+                <i class="fa-solid fa-key mr-1"></i> Cấu Hình AI
+            </a>
+            <a th:href="@{/courses}" class="btn btn-ghost btn-sm font-semibold text-base-content/70">
+                <i class="fa-solid fa-book-open mr-1"></i> Môn Học Hệ Thống
+            </a>
+        </th:block>
+
+        <th:block th:unless="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+            <a th:href="@{/courses}" class="btn btn-ghost btn-sm font-semibold">
+                <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Môn Học
+            </a>
+            <a th:href="@{/planner}" class="btn btn-ghost btn-sm font-semibold">
+                <i class="fa-solid fa-calendar-check mr-1 text-emerald-500"></i> Lịch Học Vừa Sức
+            </a>
+            <a th:href="@{/quiz}" class="btn btn-ghost btn-sm font-semibold">
+                <i class="fa-solid fa-list-check mr-1 text-amber-500"></i> Luyện Đề Trắc Nghiệm
+            </a>
+        </th:block>
     </div>
 
     <!-- Theme Controller (DaisyUI) -->
@@ -62,14 +76,15 @@
                 <li class="menu-title px-4 py-2 border-b border-base-200/60">
                     <div class="flex items-center justify-between">
                         <span class="font-extrabold text-base-content text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
-                        <span th:if="${session.currentUser.isPro()}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
-                        <span th:unless="${session.currentUser.isPro()}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
+                        <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge badge-info badge-xs text-[9px] font-bold">SQUAD</span>
+                        <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.subscriptionTier != 'SQUAD' and session.currentUser.subscriptionTier != 'CAMPUS'}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
+                        <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
                     </div>
                     <span class="text-[10px] text-base-content/60 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>
                 </li>
                 <li><a th:href="@{/profile}"><i class="fa-solid fa-user text-indigo-500"></i> Hồ Sơ Cá Nhân</a></li>
                 <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/dashboard}"><i class="fa-solid fa-chart-line text-purple-600"></i> Quản Trị Admin</a></li>
-                <li th:if="${!session.currentUser.isPro()}"><a href="javascript:void(0)" onclick="const m = document.getElementById('modal-pricing-upgrade'); if(m) m.showModal(); else window.location.href='/courses';" class="text-purple-600 font-bold"><i class="fa-solid fa-bolt text-amber-500"></i> Nâng Cấp Gói Pro</a></li>
+                <li th:if="${session.currentUser.role != 'ROLE_ADMIN' and !session.currentUser.isPro()}"><a href="javascript:void(0)" onclick="const m = document.getElementById('modal-pricing-upgrade'); if(m) m.showModal(); else window.location.href='/courses';" class="text-purple-600 font-bold"><i class="fa-solid fa-bolt text-amber-500"></i> Nâng Cấp Gói Pro</a></li>
                 <li><a th:href="@{/settings}"><i class="fa-solid fa-key text-purple-500"></i> Cài Đặt Hệ Thống</a></li>
                 <li class="border-t border-base-200/60 mt-1 pt-1">
                     <a th:href="@{/logout}" class="text-rose-500 hover:bg-rose-500/10"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a>

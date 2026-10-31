@@ -1,5 +1,6 @@
 package com.group2.assignment.rag.service;
 
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Chunk;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
@@ -33,6 +34,7 @@ public class PdfChunkingService {
     public static final long MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB
     public static final int DEFAULT_MIN_WORDS = 300;
     public static final int DEFAULT_MAX_WORDS = 500;
+    public static final int MAX_DOCS_FREE = 3;
 
     private final DocumentRepository documentRepository;
     private final ChunkRepository chunkRepository;
@@ -42,10 +44,25 @@ public class PdfChunkingService {
      * Tiếp nhận file PDF, validate, lưu trữ, trích xuất text từng trang và cắt chunks
      */
     public Document processPdf(Long courseId, MultipartFile file) {
+        return processPdf(courseId, file, null);
+    }
+
+    /**
+     * Tiếp nhận file PDF có kiểm tra hạn mức gói cước người dùng
+     */
+    public Document processPdf(Long courseId, MultipartFile file, User currentUser) {
         validateFile(file);
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học với ID: " + courseId));
+
+        boolean isPro = currentUser != null && currentUser.isPro();
+        if (!isPro) {
+            long currentDocs = documentRepository.countByCourseId(courseId);
+            if (currentDocs >= MAX_DOCS_FREE) {
+                throw new IllegalStateException("Gói Free giới hạn 3 tài liệu/môn để đảm bảo độ chính xác RAG. Vui lòng nâng cấp để tải trọn bộ giáo trình!");
+            }
+        }
 
         String originalFilename = file.getOriginalFilename() != null ? file.getOriginalFilename() : "document.pdf";
         

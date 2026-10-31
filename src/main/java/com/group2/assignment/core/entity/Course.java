@@ -1,5 +1,6 @@
 package com.group2.assignment.core.entity;
 
+import com.group2.assignment.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,7 +8,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "courses", indexes = {
-        @Index(name = "idx_courses_code", columnList = "code", unique = true)
+        @Index(name = "idx_courses_user_id", columnList = "user_id"),
+        @Index(name = "idx_courses_code", columnList = "code")
 })
 @Getter
 @Setter
@@ -20,7 +22,11 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user; // Người sở hữu môn học (null = môn mẫu hệ thống)
+
+    @Column(nullable = false, length = 50)
     private String code; // Mã môn học: e.g. HSF302, PRJ301, MAS291
 
     @Column(nullable = false, length = 200)
@@ -70,5 +76,13 @@ public class Course {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public Long getUserId() {
+        return user != null ? user.getId() : null;
+    }
+
+    public String getOwnerUsername() {
+        return user != null ? user.getUsername() : null;
     }
 }

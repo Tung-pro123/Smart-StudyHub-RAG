@@ -177,6 +177,32 @@
 
 ---
 
+
+---
+
+### 🔹 GIAI ĐOẠN 4: KIỂM SOÁT HẠN MỨC 3 TÀI LIỆU PDF/MÔN (GÓI FREE) VÀ NÂNG CẤP GIAO DIỆN DOCUMENTS
+
+* **Mục tiêu**:
+  - Triển khai quy tắc chống nhồi tài liệu làm loãng vector search RAG: Giới hạn sinh viên gói FREE tối đa **3 tài liệu PDF / môn** (`MAX_DOCS_FREE = 3`).
+  - Mở khóa không giới hạn tài liệu cho gói `PRO` và `SQUAD` (Nhóm học tập 5 bạn).
+  - Nâng cấp giao diện `documents.html`: Thêm thanh tiến độ `X / 3 tài liệu`, tự động khóa Dropzone upload và hiển thị cảnh báo đạt giới hạn kèm nút kêu gọi nâng cấp gói Pro.
+  - Viết bộ kiểm thử toàn diện `RagDocumentQuotaTest.java` xác minh chặt chẽ cơ chế kiểm soát tài liệu và bảo đảm 100% tests của dự án pass.
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi cần hoàn thiện task kiểm soát tài liệu PDF theo 3 gói cước cho Bình trong module RAG:
+  1. Trong PdfChunkingService.java: Thêm hằng số MAX_DOCS_FREE = 3. Thêm phương thức processPdf(courseId, file, currentUser). Nếu !currentUser.isPro() và số tài liệu hiện có trong môn >= 3 thì ném IllegalStateException: "Gói Free giới hạn 3 tài liệu/môn để đảm bảo độ chính xác RAG. Vui lòng nâng cấp để tải trọn bộ giáo trình!".
+  2. Trong DocumentController.java: Lấy User từ session, truyền vào service. Tại GET /courses/{courseId}/documents truyền isPro, currentDocCount, maxDocsFree, isDocLimitReached vào model.
+  3. Trong documents.html: Thêm widget thanh tiến độ X/3 tài liệu (cho Free) hoặc badge TẢI VÔ HẠN (cho Pro/Squad). Nếu isDocLimitReached thì ẩn/khóa form upload và hiển thị card cảnh báo đỏ kèm nút nâng cấp Pro.
+  4. Viết RagDocumentQuotaTest.java: Kiểm thử đầy đủ các kịch bản Free tải dưới 3 file, Free bị chặn khi tải file thứ 4, Pro/Squad tải không giới hạn, và Free xóa bớt file thì tải lại được.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - AI đã thiết kế giải pháp quá tải nhẹ (overload) `processPdf(courseId, file, currentUser)` giữ trọn vẹn tương thích ngược với các test case cũ gọi `processPdf(courseId, file)`.
+  - Thiết kế UI `documents.html` cực kỳ trực quan với hiệu ứng Glassmorphism, thanh tiến độ tự động chuyển sang màu đỏ khi đầy 3/3 tài liệu và card thông báo nâng cấp kích thích chuyển đổi (Call to Action).
+  - Viết bộ test `RagDocumentQuotaTest.java` gồm 6 ca kiểm thử chi tiết bao phủ cả MockMvc Web layer lẫn Service layer.
+* **Đánh giá & Điều chỉnh của bản thân**:
+  - Tích hợp chặt chẽ với phương thức `User.isPro()` để tài khoản hạng `SQUAD` (Nhóm học tập) cũng tự động được hưởng quyền tải không giới hạn như `PRO`.
+  - Chạy `mvn test` xác thực toàn bộ **111/111 test cases** đều PASS xanh 100%.
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM KHI DÙNG AI
 * **AI đã giúp ích nhiều nhất cho bạn ở khâu nào?**: 
   - Khâu thiết kế kiến trúc Multi-Key Rotator kết hợp Cooldown Map và quy trình làm rõ yêu cầu qua `/grill-me`. AI đã phân tích từng nhánh thiết kế, đề xuất giải pháp nội bộ nhẹ gọn không cần cài thêm service ngoài mà vẫn giải quyết triệt để bài toán nghẽn hạn ngạch (Rate Limit 15 RPM của Gemini Free).

@@ -37,21 +37,37 @@
                 Quản lý môn học thông minh, tải lên giáo trình PDF để tự động cắt nhỏ đoạn Chunks, trò chuyện hỏi đáp chuyên sâu bám sát tài liệu và sinh đề thi trắc nghiệm AI tức thì.
             </p>
             <div class="pt-2 flex flex-wrap gap-3">
-                <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
-                    <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
-                </button>
-                <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning text-white shadow-lg shadow-amber-500/30 rounded-xl font-bold">
-                    <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Tạo Thêm Môn
-                </button>
-                <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
-                </button>
-                <a th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" th:href="@{/admin/dashboard}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-key mr-1"></i> Trung tâm quản trị
-                </a>
-                <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
-                    <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
-                </a>
+                <!-- Nút dành riêng cho Quản Trị Viên (Admin) -->
+                <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+                    <a th:href="@{/admin/dashboard}" class="btn btn-primary bg-purple-600 hover:bg-purple-700 border-none text-white shadow-lg shadow-purple-500/30 rounded-xl font-bold">
+                        <i class="fa-solid fa-chart-line mr-1"></i> Admin Command Center
+                    </a>
+                    <a th:href="@{/admin/users}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-users mr-1"></i> Quản Lý Sinh Viên
+                    </a>
+                    <a th:href="@{/admin/settings}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-key mr-1"></i> Cấu Hình System AI Key
+                    </a>
+                    <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Mẫu Hệ Thống
+                    </button>
+                </th:block>
+
+                <!-- Nút dành cho Sinh Viên / Khách -->
+                <th:block th:unless="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
+                    <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
+                        <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
+                    </button>
+                    <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning text-white shadow-lg shadow-amber-500/30 rounded-xl font-bold">
+                        <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Tạo Thêm Môn
+                    </button>
+                    <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
+                    </button>
+                    <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
+                        <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
+                    </a>
+                </th:block>
             </div>
         </div>
         <!-- Decorative Circle -->
@@ -79,8 +95,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Mini Upgrade Button if Free -->
-            <button th:if="${!isProUser}" onclick="document.getElementById('modal-pricing-upgrade').showModal()"
+            <!-- Mini Upgrade Button if Free (Ẩn với Admin) -->
+            <button th:if="${session.currentUser == null or (session.currentUser.role != 'ROLE_ADMIN' and !isProUser)}" onclick="document.getElementById('modal-pricing-upgrade').showModal()"
                     class="btn btn-xs btn-outline btn-primary rounded-lg text-[11px] gap-1 hover:text-white"
                     title="Nâng cấp gói để không giới hạn môn học">
                 <i class="fa-solid fa-bolt text-amber-400"></i> Nâng cấp
@@ -233,10 +249,16 @@
                     </div>
 
                     <!-- Course Stats Badge -->
-                    <div class="flex items-center gap-2 pt-1">
+                    <div class="flex items-center gap-2 pt-1 flex-wrap">
                         <span class="badge badge-sm badge-outline badge-primary font-bold text-[10px]">
                             <i class="fa-solid fa-puzzle-piece mr-1"></i>
                             <span th:text="${course.chunkCount}">0</span> Chunks
+                        </span>
+                        <span th:if="${course.isSystemSample()}" class="badge badge-sm bg-indigo-500/15 text-indigo-400 font-bold text-[10px] border-none">
+                            <i class="fa-solid fa-cubes mr-1"></i> Mẫu chung
+                        </span>
+                        <span th:unless="${course.isSystemSample()}" class="badge badge-sm bg-emerald-500/15 text-emerald-400 font-bold text-[10px] border-none">
+                            <i class="fa-solid fa-user-check mr-1"></i> Môn của bạn
                         </span>
                         <span class="badge badge-sm badge-ghost text-base-content/60 text-[10px]">
                             <i class="fa-solid fa-clock mr-1"></i> <span th:text="${#temporals.format(course.createdAt, 'dd/MM/yyyy')}">18/10/2026</span>
@@ -532,7 +554,7 @@
                             </li>
                             <li class="flex items-start gap-2.5 font-bold text-white">
                                 <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
-                                <span>Truy vấn RAG Gemini 1.5 không giới hạn</span>
+                                <span>Truy vấn RAG AI giáo trình không giới hạn</span>
                             </li>
                             <li class="flex items-start gap-2.5">
                                 <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
@@ -565,53 +587,61 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Giảng Viên & Lớp Học (Campus) -->
-                <div class="rounded-3xl p-6 bg-slate-900/80 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                <!-- Card 3: Nhóm Học Tập (Study Squad) -->
+                <div class="rounded-3xl p-6 bg-slate-900/80 border border-slate-800 flex flex-col justify-between hover:border-cyan-500/50 transition-all">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
-                            <h4 class="text-lg font-bold text-white">Giảng Viên & Lớp Học</h4>
-                            <span class="badge badge-info badge-sm font-semibold text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">Khoa / Lớp</span>
+                            <h4 class="text-lg font-bold text-white">Nhóm Học Tập</h4>
+                            <span class="badge badge-info badge-sm font-semibold text-xs bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Study Squad</span>
                         </div>
                         <p class="text-xs text-slate-400 leading-relaxed min-h-[36px]">
-                            Dành cho giảng viên hoặc ban cán sự muốn tạo kho tài liệu chung cho lớp.
+                            Dành cho nhóm bạn cùng lớp hoặc làm đồ án môn học (HSF, SWP, PRJ...).
                         </p>
                         <div class="pt-2">
-                            <span class="text-3xl font-extrabold text-white">$Campus</span>
-                            <span class="text-xs text-slate-500 font-semibold">/ học kỳ</span>
+                            <span class="text-3xl font-extrabold text-white">$5</span>
+                            <span class="text-xs text-slate-500 font-semibold">/ tháng (~24k VNĐ/bạn)</span>
                         </div>
 
                         <div class="divider my-2 border-slate-800"></div>
 
                         <!-- Features Checklist -->
                         <ul class="space-y-2.5 text-xs text-slate-300">
-                            <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
-                                <span>Không gian lớp học dùng chung cho cả lớp</span>
+                            <li class="flex items-start gap-2.5 font-bold text-cyan-300">
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span>Mở khóa PRO cho nhóm 5 thành viên</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
-                                <span>Tải lên trọn bộ slide giáo trình môn học</span>
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span>Kho tài liệu &amp; Slide giáo trình dùng chung</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
-                                <span>Dashboard theo dõi tiến độ hiểu bài sinh viên</span>
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span>Team Study Planner: Phân chia timeline đồ án &amp; bài tập</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
-                                <span>Ngân hàng đề thi trắc nghiệm bảo mật nội bộ</span>
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span>Đấu trường Quiz nhóm &amp; Bảng xếp hạng điểm số</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-blue-400 mt-0.5"></i>
-                                <span>Hỗ trợ kỹ thuật trực tiếp cho Giảng viên</span>
+                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <span>Truy vấn RAG AI giáo trình không giới hạn</span>
                             </li>
                         </ul>
                     </div>
 
                     <div class="pt-6 mt-4">
-                        <a href="mailto:admin@fpt.edu.vn?subject=Lien%20He%20Goi%20Campus%20StudyHub"
-                           class="btn btn-sm btn-outline rounded-xl w-full border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 font-bold">
-                            <i class="fa-solid fa-envelope mr-1"></i> Liên Hệ Bộ Môn
-                        </a>
+                        <div th:if="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}">
+                            <button type="button" disabled class="btn btn-sm btn-info rounded-xl w-full text-white font-extrabold shadow-md gap-1">
+                                <i class="fa-solid fa-users text-cyan-200"></i> Đang Kích Hoạt Gói Nhóm
+                            </button>
+                        </div>
+                        <div th:unless="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}">
+                            <form th:action="@{/auth/upgrade-squad}" method="post">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white font-bold border-none shadow-lg shadow-cyan-500/30">
+                                    <i class="fa-solid fa-user-group mr-1"></i> Kích Hoạt Gói Nhóm
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
 

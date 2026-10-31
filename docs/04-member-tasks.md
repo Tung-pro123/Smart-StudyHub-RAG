@@ -16,14 +16,14 @@ Tài liệu này là **kim chỉ nam thực thi từ A - Z** cho từng bạn tr
 
 ## 📌 BẢNG TỔNG QUAN PHÂN CÔNG VÀ RANH GIỚI MÃ NGUỒN
 
-| Thành viên | Tên nhánh Git | Package Backend | Thư mục Giao diện | Nhiệm vụ chính | Trạng thái |
+| Thành viên | Tên nhánh Git | Package Backend | Thư mục Giao diện | Nhiệm vụ chính | Trạng thái (Sprint 31/10) |
 |:---|:---|:---|:---|:---|:---:|
-| **TÙNG** (Lead) 👑 | `feature/core-courses` | `com.group2.assignment.core` | `templates/`, `fragments/` | Nền móng dự án, CRUD Môn học, Layout Glassmorphism | **Hoàn thành** ✅ |
-| **BÌNH** 🌟 | `feature/rag-engine` | `com.group2.assignment.rag` | `templates/rag/` | Upload PDF, Cắt Chunks (PDFBox), RAG Chatbot giáo trình | **Hoàn thành** ✅ |
-| **ÂN** 📊 | `feature/admin-dashboard` | `com.group2.assignment.settings` | `templates/admin/` | Admin Hub, Thống kê KPI, Quản lý Gói cước (Free/Pro), System AI Key | **Đang nâng cấp** ⏳ |
-| **THẮNG** 📅 | `feature/study-planner` | `com.group2.assignment.planner` | `templates/planner/` | Form chọn lịch rảnh, AI Study Planner Timeline theo Chunks | *Đang làm* ⏳ |
-| **NHẬT** 🚀 | `feature/quiz-generator` | `com.group2.assignment.quiz` | `templates/quiz/` | Bộ lọc độ khó, Sinh đề trắc nghiệm AI JSON, Chấm điểm tự động | **Hoàn thành** ✅ |
-| **TRƯỜNG** 🛡️ | `feature/auth-jwt-security` | `com.group2.assignment.auth` | `templates/auth/` | Đăng ký, Đăng nhập, Bảo mật JWT, Google OAuth2, Slide & User Guide | **Hoàn thành** ✅ |
+| **TÙNG** (Lead) 👑 | `feature/pricing-core-tung` | `com.group2.assignment.core` | `templates/`, `fragments/` | Phân lập dữ liệu môn học cá nhân (Data Isolation), Hạn ngạch 3 môn, Điều hướng Admin Dashboard | **Hoàn thành PR #27** ✅ |
+| **TRƯỜNG** 🛡️ | `feature/pricing-auth-squad-truong` | `com.group2.assignment.auth` | `templates/auth/` | Quản lý thành viên Nhóm Học Tập (Study Squad: tối đa 5 bạn) tại `profile.html` | *Đang làm (Hạn 20h)* ⏳ |
+| **BÌNH** 🌟 | `feature/pricing-rag-binh` | `com.group2.assignment.rag` | `templates/rag/` | RAG Chatbot 50 câu/ngày, Giới hạn tối đa 3 tài liệu PDF/môn cho gói Free | *Đang làm (Hạn 20h)* ⏳ |
+| **THẮNG** 📅 | `feature/pricing-planner-thang` | `com.group2.assignment.planner` | `templates/planner/` | Feature Gating khóa Free, Mở khóa Timeline cho Pro và Team Task cho Squad | *Đang làm (Hạn 20h)* ⏳ |
+| **NHẬT** 🚀 | `feature/pricing-quiz-nhat` | `com.group2.assignment.quiz` | `templates/quiz/` | Khóa đề dài & Xuất PDF cho Free, Mở đề 20 câu cho Pro, Leaderboard nhóm cho Squad | *Đang làm (Hạn 20h)* ⏳ |
+| **ÂN** 📊 | `feature/pricing-admin-an` | `com.group2.assignment.settings` | `templates/admin/` | Admin Command Center, Thống kê 3 gói (Free/Pro/Squad), Quản lý sinh viên 1-Click | *Đang làm (Hạn 20h)* ⏳ |
 
 ---
 
