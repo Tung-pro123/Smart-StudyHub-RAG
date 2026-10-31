@@ -76,9 +76,27 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 5: TÍCH HỢP MÔ HÌNH GÓI CƯỚC SAAS, KIỂM SOÁT HẠN NGẠCH RAG & BỔ SUNG UNIT TEST TOÀN DIỆN
+* **Mục tiêu**: Đồng bộ hóa `User.java` theo kiến trúc SaaS của nhóm (`subscriptionTier`, `dailyRagCount`, `lastRagResetDate`), hiện đại hóa giao diện `profile.html` hiển thị hạn ngạch RAG 50 câu/ngày và mở rộng bài kiểm thử lên 11 test cases trong `AuthServiceTest.java`.
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi cần đồng bộ module Auth với mô hình gói cước SaaS của dự án Smart StudyHub:
+  1. Thêm phương thức upgradeSubscriptionTier(username, tier) trong AuthService và controller POST /auth/upgrade-pro.
+  2. Bổ sung các test case trong AuthServiceTest kiểm tra nâng cấp từ FREE lên PRO thành công, bắt ngoại lệ khi user không tồn tại, và xác nhận 3 tài khoản demo (student, pro_student, admin) khởi tạo đúng vai trò và gói cước.
+  3. Cập nhật giao diện profile.html dạng Glassmorphism: hiển thị huy hiệu PRO VIP / FREE, thanh tiến trình đo hạn ngạch 50 câu RAG/ngày (kèm cảnh báo màu khi sắp hết lượt), và nút nâng cấp 1-Click gọi POST /auth/upgrade-pro.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - Tối ưu hóa UI/UX: Xây dựng thẻ hạn ngạch RAG động bằng Tailwind CSS + DaisyUI với thanh progress bar chuyển màu thông minh (xanh $\rightarrow$ cam $\rightarrow$ đỏ) khi người dùng tiến gần mốc 50 câu hỏi trong ngày.
+  - Thiết kế phương thức `upgradeSubscriptionTier` an toàn, cập nhật trạng thái session ngay lập tức mà không bắt buộc sinh viên phải đăng xuất.
+  - Viết thêm 3 unit tests mới nâng tổng số bài kiểm thử module Auth lên 11 bài test xanh hoàn hảo (11/11 tests passed).
+* **Ảnh chụp màn hình**: `![Trường hoàn thiện giao diện Quota và Unit Test](images/truong-step5-quota-tests.png)`
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM
 * **Bài học rút ra**:
   1. Sử dụng kết hợp **Cookie HttpOnly lưu JWT Token** cùng với **HttpSession** giúp ứng dụng vừa có tốc độ xử lý nhanh của Session, vừa có tính năng ghi nhớ đăng nhập dài hạn của JWT.
   2. Bắt buộc băm mật khẩu với `BCryptPasswordEncoder` (10 rounds) trước khi lưu vào database để đảm bảo an toàn thông tin người dùng.
   3. Khi gặp lỗi IDE báo đỏ, cần kiểm tra sự tương thích giữa phiên bản JDK của dự án (Java 17/21) và Java Runtime của máy tính thay vì chỉ sửa code Java.
   4. Khi tích hợp dịch vụ OAuth2 từ bên thứ ba (Google/Facebook/GitHub), luôn áp dụng mô hình **Conditional Configuration (Graceful Degradation)** để môi trường kiểm thử tự động CI/CD và máy local của đồng đội không bị gián đoạn khi chưa có credentials thực tế.
+  5. Khi thiết kế mô hình SaaS Freemium (Free vs Pro), việc phân tách ranh giới rõ ràng giữa Auth (quản lý trạng thái và gói cước của User) và Quota Engine (chặn lượt truy vấn RAG và kiểm tra số môn học) giúp kiến trúc micro-modular bền vững, không gây coupling chéo giữa các module.

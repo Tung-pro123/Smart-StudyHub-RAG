@@ -36,6 +36,12 @@
                 <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <h2 class="text-2xl font-black text-base-content" th:text="${user.fullName}">Nguyễn Văn Sinh Viên</h2>
                     <span class="badge badge-primary font-bold text-xs" th:text="${user.role}">ROLE_STUDENT</span>
+                    <span th:if="${user.isPro()}" class="badge badge-secondary gap-1 font-black text-xs bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none shadow-sm">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> PRO VIP
+                    </span>
+                    <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1 font-bold text-xs border border-base-300">
+                        <i class="fa-solid fa-leaf text-emerald-500"></i> FREE
+                    </span>
                 </div>
                 <p class="text-xs text-base-content/60 font-mono" th:text="'@' + ${user.username}">@student</p>
                 <p class="text-xs text-base-content/70 flex items-center justify-center sm:justify-start gap-1.5 pt-1">
@@ -51,6 +57,61 @@
         </div>
         <!-- Decorative Glow -->
         <div class="absolute -right-16 -bottom-16 w-56 h-56 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    </div>
+
+    <!-- Subscription Tier & Daily RAG Quota Card -->
+    <div class="glass-card rounded-3xl p-6 shadow-xl border border-white/20 relative overflow-hidden bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <!-- Left: Tier Status & Info -->
+            <div class="space-y-2 text-center md:text-left flex-1">
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-base-content/60">Gói Dịch Vụ:</span>
+                    <span th:if="${user.isPro()}" class="badge badge-secondary gap-1.5 font-black text-xs px-3 py-3 shadow-md bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> PRO VIP (Ôn Thi Cấp Tốc)
+                    </span>
+                    <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1.5 font-bold text-xs px-3 py-3 border border-base-300">
+                        <i class="fa-solid fa-leaf text-emerald-500"></i> FREE (Sinh Viên Tự Học)
+                    </span>
+                </div>
+                <p th:if="${user.isPro()}" class="text-xs text-base-content/80">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Không giới hạn môn học, RAG AI Chatbot không giới hạn câu hỏi &amp; mở khóa trọn bộ AI Study Planner.
+                </p>
+                <p th:unless="${user.isPro()}" class="text-xs text-base-content/80">
+                    <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Tối đa 3 môn học, 50 câu hỏi RAG/ngày. Cần nâng cấp gói để mở khóa AI Study Planner.
+                </p>
+            </div>
+
+            <!-- Middle: Daily RAG Quota Meter -->
+            <div class="w-full md:w-64 bg-base-100/70 p-4 rounded-2xl border border-base-200/80 backdrop-blur-sm space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-base-content/70 flex items-center gap-1.5">
+                        <i class="fa-solid fa-comments text-indigo-500"></i> Hạn ngạch RAG hôm nay:
+                    </span>
+                    <span th:if="${user.isPro()}" class="badge badge-secondary badge-sm font-bold text-[10px]">VÔ HẠN</span>
+                    <span th:unless="${user.isPro()}" class="font-mono font-bold text-xs text-base-content" th:text="${(user.dailyRagCount != null ? user.dailyRagCount : 0) + ' / 50'}">0 / 50</span>
+                </div>
+                <div th:unless="${user.isPro()}" class="w-full bg-base-200 rounded-full h-2.5 overflow-hidden">
+                    <div class="h-2.5 rounded-full transition-all duration-500"
+                         th:style="'width: ' + (${user.dailyRagCount != null ? (user.dailyRagCount * 100 / 50) : 0} > 100 ? 100 : ${user.dailyRagCount != null ? (user.dailyRagCount * 100 / 50) : 0}) + '%;'"
+                         th:classappend="${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 45} ? 'bg-rose-500' : (${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 30} ? 'bg-amber-500' : 'bg-gradient-to-r from-indigo-500 to-purple-600')">
+                    </div>
+                </div>
+                <div th:if="${user.isPro()}" class="w-full bg-purple-500/20 rounded-full h-2.5 overflow-hidden">
+                    <div class="h-2.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 w-full animate-pulse"></div>
+                </div>
+                <p th:unless="${user.isPro()}" class="text-[10px] text-base-content/60 text-right">Reset hạn ngạch lúc 00:00 hàng ngày</p>
+                <p th:if="${user.isPro()}" class="text-[10px] text-purple-600 font-semibold text-right">Đặc quyền tài khoản PRO</p>
+            </div>
+
+            <!-- Right: Action Upgrade Button -->
+            <div th:unless="${user.isPro()}" class="flex-none">
+                <form th:action="@{/auth/upgrade-pro}" method="post">
+                    <button type="submit" class="btn btn-primary rounded-2xl text-xs font-black bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none shadow-lg shadow-purple-500/30 px-5 gap-2">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> Nâng Cấp Gói PRO ($2)
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Forms Grid: Update Profile & Change Password -->
@@ -177,7 +238,7 @@
     <!-- Security & JWT Status Card -->
     <div class="glass-card rounded-3xl p-6 shadow-sm border border-base-200 space-y-4">
         <h3 class="font-extrabold text-base text-base-content flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-emerald-500"></i> Trạng Thái Bảo Mật & JWT Token
+            <i class="fa-solid fa-shield-halved text-emerald-500"></i> Trạng Thái Bảo Mật &amp; JWT Token
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
             <div class="bg-base-100/50 p-4 rounded-2xl border border-base-200">
@@ -189,8 +250,8 @@
                 <p class="font-bold text-indigo-600 mt-1">JWT (HS256) HttpOnly Cookie</p>
             </div>
             <div class="bg-base-100/50 p-4 rounded-2xl border border-base-200">
-                <p class="text-base-content/60 font-semibold">Thời hạn phiên đăng nhập:</p>
-                <p class="font-bold text-base-content mt-1">24 Giờ (Tự động gia hạn)</p>
+                <p class="text-base-content/60 font-semibold">Hạng gói cước:</p>
+                <p class="font-bold text-purple-600 mt-1" th:text="${user.subscriptionTier != null ? user.subscriptionTier : 'FREE'}">FREE</p>
             </div>
             <div class="bg-base-100/50 p-4 rounded-2xl border border-base-200">
                 <p class="text-base-content/60 font-semibold">Ngày tham gia hệ thống:</p>
