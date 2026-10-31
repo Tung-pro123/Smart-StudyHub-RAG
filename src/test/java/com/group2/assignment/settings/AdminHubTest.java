@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdminHubTest {
     @Autowired MockMvc mvc;
     @Autowired UserRepository users;
+    @Autowired com.group2.assignment.core.repository.CourseRepository courses;
     @Autowired JwtService jwt;
     @Autowired SubscriptionQuotaService quota;
     @Autowired AdminAnalyticsService analytics;
@@ -70,7 +71,10 @@ class AdminHubTest {
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(content().string(not(containsString("test-system-key"))))
                 .andExpect(content().string(not(containsString(student.getPassword()))));
-        mvc.perform(get(path).session(sessionFor(student))).andExpect(status().isForbidden());
+        mvc.perform(get(path).session(sessionFor(student))).andExpect(status().isForbidden())
+                .andExpect(view().name("admin/error"))
+                .andExpect(content().string(containsString("Chỉ quản trị viên được truy cập.")))
+                .andExpect(content().string(not(containsString("ResponseStatusException"))));
         mvc.perform(get(path)).andExpect(redirectedUrl("/login?error=unauthorized"));
     }
 
@@ -284,6 +288,36 @@ class AdminHubTest {
         assertThat(systemKey.getMaskedKey()).isEqualTo("AIzaSy...****");
         systemKey.update("short");
         assertThat(systemKey.getMaskedKey()).isEqualTo("********");
+    }
+
+    @Test
+    void adminCourseMonitoringShowsActualOwnerInsteadOfClaimingOwnership() throws Exception {
+        courses.saveAndFlush(com.group2.assignment.core.entity.Course.builder()
+                .code("QA31").name("Admin UI course").user(student).build());
+        mvc.perform(get("/courses").session(session)).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Bởi: " + student.getUsername())))
+                .andExpect(content().string(containsString("Môn sinh viên")));
+        mvc.perform(get("/courses").session(sessionFor(student))).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Môn của bạn")))
+                .andExpect(content().string(not(containsString("Bởi: " + student.getUsername()))));
+    }
+
+    @Test
+    void logoutClearsJwtCookieAndPreventsRestoringAdminSession() throws Exception {
+        String token = jwt.generateToken(admin.getUsername(), "ROLE_ADMIN", admin.getFullName());
+        mvc.perform(get("/admin/dashboard").session(session)
+                .cookie(new Cookie(AuthController.AUTH_COOKIE_NAME, token))).andExpect(status().isOk());
+        var response = mvc.perform(get("/logout").session(session)
+                        .cookie(new Cookie(AuthController.AUTH_COOKIE_NAME, token)))
+                .andExpect(redirectedUrl("/login?logout"))
+                .andExpect(cookie().maxAge(AuthController.AUTH_COOKIE_NAME, 0))
+                .andExpect(cookie().path(AuthController.AUTH_COOKIE_NAME, "/"))
+                .andReturn().getResponse();
+        assertThat(session.isInvalid()).isTrue();
+        Cookie expired = response.getCookie(AuthController.AUTH_COOKIE_NAME);
+        assertThat(expired).isNotNull();
+        mvc.perform(get("/admin/dashboard").cookie(expired))
+                .andExpect(redirectedUrl("/login?error=unauthorized"));
     }
 
     @Test

@@ -259,7 +259,7 @@
                             <i class="fa-solid fa-cubes mr-1"></i> Mẫu chung
                         </span>
                         <span th:unless="${course.isSystemSample()}" class="badge badge-sm bg-emerald-500/15 text-emerald-400 font-bold text-[10px] border-none">
-                            <i class="fa-solid fa-user-check mr-1"></i> Môn của bạn
+                            <i class="fa-solid fa-user-check mr-1"></i> <span th:text="${currentUser != null and course.isOwnedBy(currentUser.id)} ? 'Môn của bạn' : 'Môn sinh viên'">Môn của bạn</span>
                         </span>
                         <span class="badge badge-sm badge-ghost text-base-content/60 text-[10px]">
                             <i class="fa-solid fa-clock mr-1"></i> <span th:text="${#temporals.format(course.createdAt, 'dd/MM/yyyy')}">18/10/2026</span>

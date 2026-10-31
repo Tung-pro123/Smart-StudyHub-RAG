@@ -52,6 +52,15 @@ public class AdminController {
         model.addAttribute("csrfToken", token);
     }
 
+    @ExceptionHandler(ResponseStatusException.class)
+    public org.springframework.web.servlet.ModelAndView adminError(ResponseStatusException exception) {
+        var view = new org.springframework.web.servlet.ModelAndView("admin/error");
+        view.setStatus(exception.getStatusCode());
+        view.addObject("statusCode", exception.getStatusCode().value());
+        view.addObject("errorMessage", exception.getReason());
+        return view;
+    }
+
     @GetMapping({"", "/dashboard"})
     public String dashboard(Model model) {
         model.addAttribute("stats", analytics.getStats());
