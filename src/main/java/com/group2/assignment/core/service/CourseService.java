@@ -73,9 +73,13 @@ public class CourseService {
 
     /**
      * Kiểm tra người dùng có quyền tạo thêm môn học hay không (dựa trên hạn ngạch gói cước)
+     * Khách vãng lai (user == null) không có quyền tạo môn học.
      */
     public boolean canCreateCourse(User user) {
-        if (user == null || user.isPro()) {
+        if (user == null) {
+            return false;
+        }
+        if (user.isPro()) {
             return true;
         }
         return countCourses() < MAX_COURSES_FREE;

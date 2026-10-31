@@ -25,7 +25,7 @@ public class CourseController {
     private final ChunkRepository chunkRepository;
 
     /**
-     * Màn hình danh sách môn học / Dashboard
+     * Màn hình danh sách môn học / Dashboard (Yêu cầu đăng nhập)
      */
     @GetMapping
     public String listCourses(
@@ -55,7 +55,7 @@ public class CourseController {
     }
 
     /**
-     * Màn hình chi tiết / Hub điều phối của Môn học
+     * Màn hình chi tiết / Hub điều phối của Môn học (Yêu cầu đăng nhập)
      */
     @GetMapping("/{id}")
     public String viewCourseDetail(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -82,6 +82,11 @@ public class CourseController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để tạo môn học!");
+            return "redirect:/login";
+        }
+
         try {
             courseService.saveCourse(course, currentUser);
             redirectAttributes.addFlashAttribute("successMessage",
@@ -103,7 +108,14 @@ public class CourseController {
             @PathVariable("id") Long id,
             @ModelAttribute Course course,
             @RequestParam(value = "redirect", required = false, defaultValue = "home") String redirect,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để chỉnh sửa môn học!");
+            return "redirect:/login";
+        }
+
         try {
             courseService.updateCourse(id, course);
             redirectAttributes.addFlashAttribute("successMessage",
@@ -122,7 +134,13 @@ public class CourseController {
      * Xử lý xóa môn học
      */
     @GetMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String deleteCourse(@PathVariable("id") Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để xóa môn học!");
+            return "redirect:/login";
+        }
+
         try {
             Course course = courseService.getCourseById(id).orElse(null);
             String courseCode = course != null ? course.getCode() : "#" + id;

@@ -103,10 +103,15 @@ $$\mathbf{BR\text{-}[MODULE]\text{-}[NUMBER]}$$
 ### 📌 BR-AUTH-004: Quy tắc Phân quyền Tuyến đường (Route Protection Policy)
 * **Mức độ**: `CRITICAL`
 * **Mô tả**: Bảo vệ các Endpoint nhạy cảm trước người dùng chưa đăng nhập.
-* **Danh sách Public (Cho phép truy cập tự do)**:
-  - `/`, `/landing`, `/courses`, `/courses/{id}`, `/login`, `/register`, `/css/**`, `/js/**`, `/images/**`.
+* **Danh sách Public (Cho phép truy cập tự do duy nhất cho Khách vãng lai)**:
+  - `/`, `/landing` (Trang giới thiệu tiếp thị & bảng giá).
+  - `/login`, `/register`, `/logout` (Xác thực tài khoản).
+  - `/css/**`, `/js/**`, `/images/**`, `/webjars/**`, `/favicon.ico` (Tài nguyên tĩnh).
 * **Danh sách Sinh viên & Đã đăng nhập (`ROLE_STUDENT`, `ROLE_ADMIN`)**:
-  - `/profile`, `/courses/new`, `/courses/*/edit`, `/courses/*/delete`, `/courses/*/documents/**`, `/courses/*/chat/**`, `/planner/**`, `/quiz/**`.
+  - `/courses`, `/courses/**` (Toàn bộ danh sách môn học cá nhân, chi tiết môn, tạo mới, chỉnh sửa, xóa, nạp tài liệu PDF, Chunks và đàm thoại RAG).
+  - `/profile`, `/profile/**` (Hồ sơ cá nhân).
+  - `/planner`, `/planner/**` (Kế hoạch học tập AI).
+  - `/quiz`, `/quiz/**` (Luyện đề trắc nghiệm AI).
 * **Danh sách Độc quyền Quản trị viên (`ROLE_ADMIN`)**:
   - `/admin/**`, `/admin/dashboard`, `/admin/users/**`, `/admin/settings/**`, `/h2-console/**`.
 * **Xử lý vi phạm**: `JwtAuthInterceptor` chặn đứng request và chuyển hướng về `/login?error=unauthorized` kèm lưu URL đích để sau khi đăng nhập sẽ tự động quay lại.
@@ -120,6 +125,7 @@ $$\mathbf{BR\text{-}[MODULE]\text{-}[NUMBER]}$$
   - Người dùng chưa đăng nhập hoặc phiên làm việc đã hết hạn.
   - `session.getAttribute(AuthController.SESSION_USER) == null` và không có Cookie `STUDYHUB_JWT` hợp lệ.
   - **Không có bản ghi** trong bảng `users` của CSDL. Trạng thái hoàn toàn là Stateless đối với cơ sở dữ liệu.
+  - **Phạm vi được phép**: Chỉ xem Landing Page giới thiệu, tham khảo Bảng giá gói cước và Đăng nhập / Đăng ký. **Tuyệt đối bị chặn xem danh sách môn học, chi tiết môn hoặc dữ liệu học tập cá nhân**.
 * **Sinh viên đã đăng nhập (Authenticated Student - `ROLE_STUDENT`)**:
   - Đã xác thực danh tính thành công qua tài khoản cục bộ hoặc Google OAuth2.
   - Có bản ghi tài khoản `User` trong CSDL gắn với `subscriptionTier` (`FREE` hoặc `PRO`).

@@ -15,13 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtAuthInterceptor)
-                // Các tuyến đường yêu cầu bắt buộc phải đăng nhập
+                // Các tuyến đường yêu cầu bắt buộc phải đăng nhập (Bảo vệ toàn bộ không gian môn học & học tập)
                 .addPathPatterns(
-                        "/courses/new",
-                        "/courses/*/edit",
-                        "/courses/*/delete",
-                        "/courses/*/chat/**",
-                        "/courses/*/documents/**",
+                        "/courses",
+                        "/courses/**",
                         "/profile",
                         "/profile/**",
                         "/planner",
@@ -30,13 +27,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/quiz/**",
                         "/settings",
                         "/settings/**",
-                        "/admin", "/admin/**"
+                        "/admin",
+                        "/admin/**"
                 )
-                // Loại trừ các tuyến đường công khai và tài nguyên tĩnh
+                // Loại trừ các tuyến đường công khai duy nhất cho khách vãng lai và tài nguyên tĩnh
                 .excludePathPatterns(
                         "/",
-                        "/courses",
-                        "/courses/*",
+                        "/landing",
                         "/login",
                         "/register",
                         "/logout",
