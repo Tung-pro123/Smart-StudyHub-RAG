@@ -11,6 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
+    List<Course> findTop5ByOrderByCreatedAtDescIdDesc();
+
     Optional<Course> findByCodeIgnoreCase(String code);
 
     boolean existsByCodeIgnoreCase(String code);

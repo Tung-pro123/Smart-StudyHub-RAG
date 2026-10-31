@@ -7,6 +7,7 @@
     <div th:if="${errorMessage}" role="alert" class="alert alert-error" th:text="${errorMessage}"></div>
     <div class="glass-card rounded-2xl p-6 space-y-4">
         <span class="badge badge-outline" th:text="${configured} ? 'Đã cấu hình' : 'Chưa cấu hình'"></span>
+        <p class="font-mono" th:text="${maskedKey}"></p>
         <p>Khởi tạo từ biến môi trường GEMINI_API_KEY. Khóa không được hiển thị lại hoặc ghi vào database.</p>
         <form th:action="@{/admin/settings/save}" method="post" class="space-y-3" autocomplete="off">
             <input type="hidden" name="csrfToken" th:value="${csrfToken}" />
@@ -15,7 +16,7 @@
             <p id="key-help" class="text-sm text-base-content/70">Cập nhật tại đây có hiệu lực trong bộ nhớ máy chủ đến khi khởi động lại. Muốn lưu bền vững, cập nhật GEMINI_API_KEY trên server.</p>
             <button type="submit" class="btn btn-primary">Cập nhật System Key</button>
         </form>
-        <form th:action="@{/admin/settings/test-ping}" method="post"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button type="submit" class="btn btn-outline">Kiểm tra kết nối</button></form>
+        <form th:action="@{/admin/settings/test-ping}" method="post" onsubmit="this.querySelector('button').disabled=true; this.querySelector('.loading').classList.remove('hidden'); this.setAttribute('aria-busy', 'true')"><input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button type="submit" class="btn btn-outline"><span class="loading loading-spinner loading-sm hidden" aria-hidden="true"></span>Kiểm tra kết nối tức thì</button></form>
         <p class="text-xs">Ping gửi một yêu cầu AI ngắn, có thể sử dụng quota hoặc phát sinh phí theo tài khoản hệ thống.</p>
         <div th:if="${ping != null}" class="alert" th:classappend="${!ping.success()} ? 'alert-error' : (${ping.latencyMs() &lt;= 1200} ? 'alert-success' : 'alert-warning')" role="status">
             <span th:text="${!ping.success()} ? ${ping.message()} : (${ping.latencyMs() &lt;= 1200} ? 'Kết nối siêu tốc' : (${ping.latencyMs() &lt;= 3000} ? 'Bình thường' : 'Kết nối chậm'))"></span><span th:text="|${ping.latencyMs()} ms|"></span>

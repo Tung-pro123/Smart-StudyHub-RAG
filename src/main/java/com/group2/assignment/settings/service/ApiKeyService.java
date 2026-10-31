@@ -23,7 +23,7 @@ public class ApiKeyService {
     private final String geminiModel;
 
     public ApiKeyService(@Qualifier("settingsRestClient") RestClient client,
-                         @Value("${settings.gemini.model:" + SettingsConstants.DEFAULT_MODEL + "}") String geminiModel) {
+                         @Value("${settings.gemini.model:${studyhub.ai.model:" + SettingsConstants.DEFAULT_MODEL + "}}") String geminiModel) {
         this.client = client;
         this.geminiModel = geminiModel;
     }
@@ -116,9 +116,9 @@ public class ApiKeyService {
         } catch (RestClientResponseException ex) {
             String message = switch (ex.getStatusCode().value()) {
                 case 400 -> "Yêu cầu không hợp lệ. Kiểm tra API key và cấu hình model.";
-                case 401, 403 -> "API key không hợp lệ, đã hết hạn hoặc chưa có quyền truy cập model.";
+                case 401, 403 -> "HTTP " + ex.getStatusCode().value() + ": API key không hợp lệ, đã hết hạn hoặc chưa có quyền truy cập model.";
                 case 404 -> "Model không khả dụng. Vui lòng kiểm tra cấu hình model của nhà cung cấp.";
-                case 429 -> "Đã hết hạn mức hoặc gửi quá nhiều yêu cầu. Kiểm tra quota và thử lại sau.";
+                case 429 -> "HTTP 429: Đã hết hạn mức hoặc gửi quá nhiều yêu cầu. Kiểm tra quota và thử lại sau.";
                 default -> "Nhà cung cấp đang gặp lỗi. Vui lòng thử lại sau.";
             };
             return result(false, start, message);

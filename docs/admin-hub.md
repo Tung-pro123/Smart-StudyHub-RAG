@@ -1,54 +1,27 @@
-# Admin Hub & Command Center — Tài liệu Kiến trúc Quản trị Hệ thống
+# Admin Command Center — công việc của Ân, 31/10/2026
 
-## 1. Tổng quan & Luồng Điều Hướng Tự Động (Smart Auto-Redirect)
+## Phạm vi đã triển khai
 
-- **Tài khoản Quản trị**: Tài khoản mang vai trò `ROLE_ADMIN` (mặc định trong hệ thống: `admin` / mật khẩu mã hóa BCrypt, hoặc `truong`).
-- **Tự động điều hướng (Admin Auto-Redirect)**: Khi tài khoản Admin đăng nhập thành công hoặc truy cập trang chủ (`/`), `AuthController` và `HomeController` tự động điều hướng sang Trung tâm Chỉ huy `/admin/dashboard`.
-- **Layout Tách Biệt Hoàn Toàn (Isolated Admin Layout)**:
-  - Navbar Quản trị (`navbar.html`): Chỉ hiển thị biểu tượng Admin, liên kết Dashboard, Quản lý Sinh viên (`/admin/users`), Cấu hình System Key (`/admin/settings`), Badge `ADMIN` và nút Đăng xuất. Tuyệt đối loại bỏ các liên kết học tập của sinh viên (như *Lịch Học Vừa Sức*, *Luyện Đề Trắc Nghiệm*, *Nâng Cấp Gói Pro*).
-  - Sidebar Quản trị (`sidebar.html`): Gồm các mục chuyên biệt cho Quản trị viên (Tổng quan KPI, Quản lý gói cước & Sinh viên, Cấu hình API Key Hệ thống).
+- `/admin/dashboard`: tổng tài khoản; số sinh viên FREE, PRO, SQUAD; tỷ lệ trả phí `(PRO + SQUAD) / tổng sinh viên của ba gói`; tổng môn và chunks đã lưu; tổng lượt RAG còn ghi nhận trong ngày Việt Nam. Quản trị viên không nằm trong thống kê gói sinh viên. CAMPUS cũ vẫn được bảo toàn và không gộp vào SQUAD.
+- Bốn thẻ KPI có thanh phân bổ gói, trạng thái lần ping Gemini gần nhất và model cấu hình thực tế của phép ping. Trạng thái chưa kiểm tra tách biệt với lỗi kết nối. Nút làm mới lấy lại số liệu, không tự gọi AI. Hai danh sách hiển thị tối đa 5 tài khoản và 5 môn mới nhất.
+- `/admin/users?keyword=...&tier=...`: tìm không phân biệt hoa thường theo tên, username hoặc email, kết hợp bộ lọc FREE/PRO/SQUAD. Chỉ hiển thị sinh viên. Có huy hiệu gói, ngày hết hạn và tiến trình RAG: xanh dưới 30, vàng 30–44, đỏ từ 45.
+- Các POST `/admin/users/{id}/upgrade-pro`, `upgrade-squad`, `downgrade-free` thay gói ngay trong database, không đổi role, xóa môn hoặc reset lượt dùng. Phiên sinh viên được nạp lại ở request được bảo vệ tiếp theo.
+- POST `/admin/users/{id}/reset-rag` đặt bộ đếm về 0 và ngày reset về ngày hiện tại ở `Asia/Ho_Chi_Minh`. Dùng cùng khóa hàng với dịch vụ quota để tránh ghi đè bộ đếm khi có request đồng thời.
+- `/admin/settings`: chỉ phản chiếu 6 ký tự đầu kèm `...****`; key ngắn được che hoàn toàn. Form nhập mới dùng kiểu password, không điền lại key. Ping có spinner, khóa nút trong lúc gửi và hiển thị kết quả/độ trễ; lỗi 401/403/429 có mã HTTP, không lộ phản hồi hoặc key của nhà cung cấp.
+- `/courses`: dùng lại quyền xem/xóa toàn hệ thống dành cho admin trong Core, bổ sung nhãn `Bởi: username` hoặc `Môn mẫu hệ thống`. Không tạo thêm luồng xóa hoặc thay đổi quyền sở hữu.
 
-## 2. Các Phân Hệ Quản Trị Chính
+## Bảo mật và tích hợp
 
-### 2.1. Dashboard Chỉ Huy (`/admin/dashboard`)
-- **4 Thẻ KPI Thời Gian Thực**:
-  1. **Tổng số Tài khoản Sinh viên**: Phân bổ theo 3 gói cước (`FREE`, `PRO`, `SQUAD`).
-  2. **Tổng số Môn học Toàn hệ thống**: Thống kê số môn học đã tạo của tất cả sinh viên (tuân thủ Data Isolation ở phía sinh viên).
-  3. **Tổng số Khối Kiến thức (Chunks)**: Đo lường dung lượng tri thức RAG trong database.
-  4. **Tổng lượt RAG AI Trong Ngày**: Thống kê mức độ sử dụng AI trong ngày theo múi giờ `Asia/Ho_Chi_Minh`.
-- **Thống kê Phân bổ 3 Hạng Gói Cước**: Biểu đồ / Thanh tỷ lệ trực quan giữa `FREE`, `PRO` và `SQUAD`.
-- **Trạng thái Kết nối AI (Live Gemini Ping)**: Hiển thị độ trễ kết nối gần nhất (`latencyMs`), model active (`gemini-1.5-flash`), và trạng thái HTTP 200 OK.
+Mọi endpoint Admin kiểm tra ROLE_ADMIN từ database, gửi `Cache-Control: no-store` và `Referrer-Policy: no-referrer`. Mọi POST Admin cần CSRF token của phiên. Không cho thay gói/reset quota cho admin; tài khoản không tồn tại trả 404, gói lọc không hợp lệ trả 400. Gói được cấp thủ công không xử lý thanh toán hoặc tự gia hạn; `tierExpiresAt` được xóa khi quản trị viên cấp lại gói.
 
-### 2.2. Quản Lý Gói Cước & Hạn Ngạch Sinh Viên (`/admin/users`)
-- **Danh sách Sinh viên Toàn diện**: Hiển thị Username, Email, Gói cước hiện tại (`badge-ghost` cho FREE, `badge-secondary` cho PRO, `badge-info` cho SQUAD), Số lượt RAG đã dùng trong ngày, và Ngày hết hạn gói.
-- **Thao tác 1-Click (1-Click Actions)**:
-  - Nâng cấp nhanh sang **Gói PRO** (`POST /admin/users/{id}/tier` với `tier=PRO`).
-  - Nâng cấp nhanh sang **Gói SQUAD** (`tier=SQUAD`) - Nhóm học tập tối đa 5 bạn.
-  - Hạ cấp về **Gói FREE** (`tier=FREE`).
-  - **1-Click Reset Hạn Ngạch RAG**: Reset `daily_rag_count = 0` ngay lập tức để hỗ trợ sinh viên khi cần thiết.
-- **Bảo mật & Tính toàn vẹn**:
-  - Phân quyền nghiêm ngặt với `@PreAuthorize("hasRole('ADMIN')")` và CSRF token bắt buộc trên mọi POST request.
-  - Không cho phép người dùng tự cấp role hoặc gói qua request parameter binding.
-  - Cập nhật tier tức thì trong Database và tự động nạp lại ở request kế tiếp mà không yêu cầu sinh viên phải đăng xuất/đăng nhập lại.
+System key khởi tạo từ `GEMINI_API_KEY`; cập nhật trên giao diện chỉ giữ trong bộ nhớ đến khi khởi động lại, không lưu database, cookie hoặc session. Ping kiểm tra System Key đơn; RAG hiện có cơ chế nhiều key/xoay vòng riêng nên kết quả này không đại diện cho toàn bộ pool hoặc model Planner. Quản lý thành viên nhóm tối đa 5 người thuộc module Auth của Trường; nút kích hoạt SQUAD chỉ cấp gói.
 
-### 2.3. Cấu Hình System AI Key (`/admin/settings`)
-- **Quản lý Tập trung System Key**: Cung cấp Gemini API Key dùng chung cho toàn hệ thống để sinh viên sử dụng RAG, Quiz, và Planner mượt mà.
-- **Bảo mật Che mờ (Masked Key Display)**: Key được che mờ dạng `AIzaSy...xxxx`, tuyệt đối không phản chiếu nguyên văn ra HTML, không lưu vào Cookie, Session hay Database.
-- **Kiểm tra Kết nối Tức thì (Live Ping)**: Nút test ping đo độ trễ thực tế, trả về thời gian phản hồi (ms) và trạng thái kết nối.
-- **Cơ chế Fallback Bền vững**: Khởi tạo tự động từ biến môi trường `GEMINI_API_KEY` trong file `.env` hoặc hệ thống máy chủ.
+Số liệu được lấy khi tải/làm mới trang. Quota reset theo ngày theo cơ chế lười có sẵn, không thêm cron hoặc polling. Tổng RAG là tổng bộ đếm hiện hành, vì vậy thao tác hỗ trợ reset sẽ giảm số KPI; đây không phải sổ lịch sử sử dụng hay doanh thu.
 
-## 3. Kiến Trúc Tích Hợp Dịch Vụ Hạn Ngạch (Quota Integration)
+## Kiểm thử và bàn giao
 
-```java
-quotaService.canQueryRag(user.getId()); // Kiểm tra hạn ngạch: FREE tối đa 50 câu/ngày, PRO/SQUAD không giới hạn
-quotaService.recordSuccessfulRagQuery(user.getId()); // Ghi nhận 1 lượt truy vấn RAG thành công
-```
+`AdminHubTest` kiểm tra render Thymeleaf, xác thực quyền từ DB, CSRF ở tất cả POST Admin, JWT cookie, đổi gói/refresh phiên, SQUAD, reset quota, lọc/tìm kiếm, tỷ lệ trả phí và che key. `ApiKeyServiceTest` giả lập HTTP để kiểm tra payload/header và lỗi nhà cung cấp. `SubscriptionQuotaConcurrencyTest` kiểm tra khóa bộ đếm.
 
-- **Data Isolation**: Môn học được phân lập theo từng tài khoản (`user_id`). Sinh viên A chỉ thấy môn của sinh viên A, không bị thấy môn của người khác hay của Admin.
-- **Reset Lười Theo Ngày (Lazy Reset)**: Tự động reset `daily_rag_count` về 0 khi có lượt truy vấn đầu tiên trong ngày mới (00:00 múi giờ Việt Nam).
-- **Chống Gian Lận (No Reset on Downgrade)**: Khi tài khoản bị hạ từ PRO/SQUAD về FREE, số lượt RAG đã dùng trong ngày được bảo lưu, tránh lạm dụng nâng/hạ liên tục.
+Chạy `mvn clean test`. Máy dùng Java 25 cần `mvn clean test -DargLine=-Dnet.bytebuddy.experimental=true` để thư viện mock hiện có nhận phiên bản Java; không thay dependency của dự án. Không dùng key thật trong test.
 
-## 4. Kiểm Thử Hệ Thống Quản Trị (Testing)
-
-- Chạy kiểm thử toàn bộ hệ thống bằng lệnh: `mvn clean test`
-- Đảm bảo 100% các ca kiểm thử bảo mật Admin (`AdminSecurityTest`, `UserTierManagementTest`, `DataIsolationTest`) đạt kết quả xanh (Green PASS).
+PR phải để nháp trong khi chờ chủ tài khoản yêu cầu kiểm thử. Workflow hiện tại bỏ qua bước tự merge khi PR là nháp; không chuyển sang sẵn sàng hoặc merge trước yêu cầu đó.
