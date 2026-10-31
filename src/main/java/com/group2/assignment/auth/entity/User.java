@@ -45,9 +45,6 @@ public class User {
     @Column(length = 50)
     private String squadLeaderUsername; // Username của nhóm trưởng sở hữu gói SQUAD
 
-    @Column(name = "squad_leader_username", length = 50)
-    private String squadLeaderUsername; // Username nhóm trưởng sở hữu gói Study Squad
-
     @Builder.Default
     private Integer dailyRagCount = 0; // Đếm số câu chat RAG trong ngày
 
@@ -105,7 +102,8 @@ public class User {
     }
 
     public boolean isSquad() {
-        return "SQUAD".equalsIgnoreCase(this.subscriptionTier);
+        return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
+                || (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank());
     }
 
     public boolean isSquadLeader() {
@@ -115,11 +113,6 @@ public class User {
 
     public boolean isAdmin() {
         return "ROLE_ADMIN".equalsIgnoreCase(this.role);
-    }
-
-    public boolean isSquad() {
-        return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
-                || (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank());
     }
 
     public String getEffectiveSquadLeader() {
