@@ -6,6 +6,7 @@ import com.group2.assignment.auth.dto.OAuth2UserInfo;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
 import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
+import com.group2.assignment.auth.repository.UserRepository;
 import com.group2.assignment.auth.service.AuthService;
 import com.group2.assignment.auth.service.JwtService;
 import jakarta.servlet.http.Cookie;
@@ -19,12 +20,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     public static final String AUTH_COOKIE_NAME = "STUDYHUB_JWT";
     public static final String SESSION_USER = "currentUser";
@@ -125,7 +130,21 @@ public class AuthController {
         if (user == null) {
             return "redirect:/login";
         }
+
+        // Tự động làm mới thông tin User từ Database để đồng bộ gói cước và nhóm
+        Optional<User> freshUserOpt = userRepository.findByUsernameIgnoreCase(user.getUsername());
+        if (freshUserOpt.isPresent()) {
+            user = freshUserOpt.get();
+            session.setAttribute(SESSION_USER, user);
+        }
         model.addAttribute("user", user);
+
+        // Nạp danh sách thành viên nhóm học tập Study Squad
+        List<User> squadMembers = authService.getSquadMembers(user.getUsername());
+        model.addAttribute("squadMembers", squadMembers);
+        model.addAttribute("isSquadLeader", user.isSquadLeader());
+        model.addAttribute("maxSquadMembers", AuthService.MAX_SQUAD_MEMBERS);
+
         if (!model.containsAttribute("updateProfileDto")) {
             model.addAttribute("updateProfileDto", UpdateProfileDto.builder()
                     .fullName(user.getFullName())
@@ -220,7 +239,53 @@ public class AuthController {
         session.setAttribute(SESSION_USER, updated);
         redirectAttributes.addFlashAttribute("successMessage",
                 "🎉 Chúc mừng! Bạn đã kích hoạt thành công Gói Nhóm Học Tập (Study Squad) cho 5 thành viên!");
-        return "redirect:/courses";
+        return "redirect:/profile";
+    }
+
+    /**
+     * Thêm thành viên vào Nhóm Học Tập (Study Squad: tối đa 5 người)
+     */
+    @PostMapping("/auth/squad/add-member")
+    public String addSquadMember(
+            @RequestParam("targetUsername") String targetUsername,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+        try {
+            authService.addMemberToSquad(currentUser.getUsername(), targetUsername);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "🎉 Đã thêm thành viên @" + targetUsername.trim() + " vào Nhóm Học Tập thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
+    /**
+     * Xóa thành viên khỏi Nhóm Học Tập (đưa về lại gói FREE)
+     */
+    @PostMapping("/auth/squad/remove-member")
+    public String removeSquadMember(
+            @RequestParam("targetUsername") String targetUsername,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+        try {
+            authService.removeMemberFromSquad(currentUser.getUsername(), targetUsername);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đã xóa thành viên @" + targetUsername.trim() + " khỏi Nhóm Học Tập!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
     }
 
 
