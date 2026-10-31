@@ -180,6 +180,13 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để nâng cấp gói tài khoản!");
             return "redirect:/login";
         }
+
+        // CHỐNG CLICK SPAM (IDEMPOTENCY): Nếu đã là PRO, không cập nhật lặp lại
+        if (currentUser.isPro()) {
+            redirectAttributes.addFlashAttribute("successMessage", "Tài khoản của bạn hiện đã là gói PRO!");
+            return "redirect:/courses";
+        }
+
         User updated = authService.upgradeSubscriptionTier(currentUser.getUsername(), "PRO");
         session.setAttribute(SESSION_USER, updated);
         redirectAttributes.addFlashAttribute("successMessage",

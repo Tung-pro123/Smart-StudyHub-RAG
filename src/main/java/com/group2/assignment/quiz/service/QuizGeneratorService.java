@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.group2.assignment.quiz.entity.QuizQuestion;
-import lombok.RequiredArgsConstructor;
+import com.group2.assignment.settings.service.SystemAiKeyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +20,19 @@ import java.util.*;
 public class QuizGeneratorService {
 
     private final ObjectMapper objectMapper;
+    private final SystemAiKeyService systemAiKeyService;
     private final HttpClient httpClient;
 
-    public QuizGeneratorService(ObjectMapper objectMapper) {
+    public QuizGeneratorService(ObjectMapper objectMapper, SystemAiKeyService systemAiKeyService) {
         this.objectMapper = objectMapper;
+        this.systemAiKeyService = systemAiKeyService;
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
     }
 
-    public List<QuizQuestion> generateQuestions(String contextText, int count, String difficulty, String apiKey) {
+    public List<QuizQuestion> generateQuestions(String contextText, int count, String difficulty) {
+        String apiKey = systemAiKeyService.getApiKey();
         if (apiKey != null && !apiKey.trim().isBlank()) {
             try {
                 return callGeminiAi(contextText, count, difficulty, apiKey.trim());

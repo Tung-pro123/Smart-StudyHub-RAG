@@ -13,7 +13,6 @@ import com.group2.assignment.quiz.entity.QuizQuestion;
 import com.group2.assignment.quiz.repository.QuizAttemptRepository;
 import com.group2.assignment.quiz.repository.QuizQuestionRepository;
 import com.group2.assignment.quiz.repository.QuizRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,79 +62,79 @@ public class QuizService {
                 if (courses.isEmpty()) return;
                 Course hsf = courses.get(0);
 
-            Quiz sampleQuiz = Quiz.builder()
-                    .course(hsf)
-                    .title("Đề Ôn Tập: Kiến Trúc Spring Boot 3 & JPA Nền Tảng")
-                    .chapterTopic("Chương 1: IoC Container & Dependency Injection")
-                    .difficulty("MEDIUM")
-                    .totalQuestions(5)
-                    .timeLimitMinutes(15)
-                    .createdAt(LocalDateTime.now())
-                    .updatedAt(LocalDateTime.now())
-                    .build();
+                Quiz sampleQuiz = Quiz.builder()
+                        .course(hsf)
+                        .title("Đề Ôn Tập: Kiến Trúc Spring Boot 3 & JPA Nền Tảng")
+                        .chapterTopic("Chương 1: IoC Container & Dependency Injection")
+                        .difficulty("MEDIUM")
+                        .totalQuestions(5)
+                        .timeLimitMinutes(15)
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build();
 
-            Quiz saved = quizRepository.save(sampleQuiz);
+                Quiz saved = quizRepository.save(sampleQuiz);
 
-            List<QuizQuestion> questions = List.of(
-                    QuizQuestion.builder()
-                            .quiz(saved)
-                            .sortOrder(1)
-                            .questionText("Trong Spring Framework, Annotation nào được sử dụng để đánh dấu một Class là Spring Bean thuộc tầng xử lý nghiệp vụ (Business Logic)?")
-                            .optionA("@Repository")
-                            .optionB("@Service")
-                            .optionC("@Controller")
-                            .optionD("@Configuration")
-                            .correctAnswer("B")
-                            .explanation("@Service là annotation chuyên biệt trong Spring stereotyping để chỉ định lớp đảm nhận nghiệp vụ (Business Service).")
-                            .build(),
-                    QuizQuestion.builder()
-                            .quiz(saved)
-                            .sortOrder(2)
-                            .questionText("Annotation nào của Jakarta Persistence được dùng để chỉ định khóa chính (Primary Key) của một Entity?")
-                            .optionA("@Id")
-                            .optionB("@Key")
-                            .optionC("@GeneratedValue")
-                            .optionD("@Column")
-                            .correctAnswer("A")
-                            .explanation("@Id đánh dấu trường dữ liệu làm khóa chính cho thực thể trong chuẩn JPA.")
-                            .build(),
-                    QuizQuestion.builder()
-                            .quiz(saved)
-                            .sortOrder(3)
-                            .questionText("Lợi ích chính của việc sử dụng Dependency Injection (DI) trong Spring Boot là gì?")
-                            .optionA("Giúp ứng dụng chạy nhanh hơn 100 lần")
-                            .optionB("Giảm sự phụ thuộc chặt chẽ (Loose Coupling) giữa các thành phần và dễ dàng viết Unit Test")
-                            .optionC("Tự động tạo cơ sở dữ liệu trên đám mây")
-                            .optionD("Bắt buộc mọi phương thức phải là static")
-                            .correctAnswer("B")
-                            .explanation("DI đảo ngược quyền điều khiển việc khởi tạo đối tượng, giúp các class lỏng lẻo (loose coupling) và dễ mock khi test.")
-                            .build(),
-                    QuizQuestion.builder()
-                            .quiz(saved)
-                            .sortOrder(4)
-                            .questionText("Trong Spring Data JPA, interface nào cung cấp sẵn các phương thức CRUD cơ bản và phân trang (Paging/Sorting)?")
-                            .optionA("CrudRepository")
-                            .optionB("JpaRepository")
-                            .optionC("PagingAndSortingRepository")
-                            .optionD("Tất cả các đáp án trên đều đúng")
-                            .correctAnswer("D")
-                            .explanation("JpaRepository kế thừa từ PagingAndSortingRepository, và PagingAndSortingRepository kế thừa từ CrudRepository, do đó cả 3 đều cung cấp các năng lực này.")
-                            .build(),
-                    QuizQuestion.builder()
-                            .quiz(saved)
-                            .sortOrder(5)
-                            .questionText("Trong kiến trúc RESTful Web Service, HTTP Method nào thường được sử dụng để gửi dữ liệu bài thi lên server để chấm điểm?")
-                            .optionA("GET")
-                            .optionB("POST")
-                            .optionC("PUT")
-                            .optionD("DELETE")
-                            .correctAnswer("B")
-                            .explanation("POST được thiết kế để gửi payload dữ liệu lên server xử lý và tạo mới tài nguyên (ở đây là QuizAttempt).")
-                            .build()
-            );
+                List<QuizQuestion> questions = List.of(
+                        QuizQuestion.builder()
+                                .quiz(saved)
+                                .sortOrder(1)
+                                .questionText("Trong Spring Framework, Annotation nào được sử dụng để đánh dấu một Class là Spring Bean thuộc tầng xử lý nghiệp vụ (Business Logic)?")
+                                .optionA("@Repository")
+                                .optionB("@Service")
+                                .optionC("@Controller")
+                                .optionD("@Configuration")
+                                .correctAnswer("B")
+                                .explanation("@Service là annotation chuyên biệt trong Spring stereotyping để chỉ định lớp đảm nhận nghiệp vụ (Business Service).")
+                                .build(),
+                        QuizQuestion.builder()
+                                .quiz(saved)
+                                .sortOrder(2)
+                                .questionText("Annotation nào của Jakarta Persistence được dùng để chỉ định khóa chính (Primary Key) của một Entity?")
+                                .optionA("@Id")
+                                .optionB("@Key")
+                                .optionC("@GeneratedValue")
+                                .optionD("@Column")
+                                .correctAnswer("A")
+                                .explanation("@Id đánh dấu trường dữ liệu làm khóa chính cho thực thể trong chuẩn JPA.")
+                                .build(),
+                        QuizQuestion.builder()
+                                .quiz(saved)
+                                .sortOrder(3)
+                                .questionText("Lợi ích chính của việc sử dụng Dependency Injection (DI) trong Spring Boot là gì?")
+                                .optionA("Giúp ứng dụng chạy nhanh hơn 100 lần")
+                                .optionB("Giảm sự phụ thuộc chặt chẽ (Loose Coupling) giữa các thành phần và dễ dàng viết Unit Test")
+                                .optionC("Tự động tạo cơ sở dữ liệu trên đám mây")
+                                .optionD("Bắt buộc mọi phương thức phải là static")
+                                .correctAnswer("B")
+                                .explanation("DI đảo ngược quyền điều khiển việc khởi tạo đối tượng, giúp các class lỏng lẻo (loose coupling) và dễ mock khi test.")
+                                .build(),
+                        QuizQuestion.builder()
+                                .quiz(saved)
+                                .sortOrder(4)
+                                .questionText("Trong Spring Data JPA, interface nào cung cấp sẵn các phương thức CRUD cơ bản và phân trang (Paging/Sorting)?")
+                                .optionA("CrudRepository")
+                                .optionB("JpaRepository")
+                                .optionC("PagingAndSortingRepository")
+                                .optionD("Tất cả các đáp án trên đều đúng")
+                                .correctAnswer("D")
+                                .explanation("JpaRepository kế thừa từ PagingAndSortingRepository, và PagingAndSortingRepository kế thừa từ CrudRepository, do đó cả 3 đều cung cấp các năng lực này.")
+                                .build(),
+                        QuizQuestion.builder()
+                                .quiz(saved)
+                                .sortOrder(5)
+                                .questionText("Trong kiến trúc RESTful Web Service, HTTP Method nào thường được sử dụng để gửi dữ liệu bài thi lên server để chấm điểm?")
+                                .optionA("GET")
+                                .optionB("POST")
+                                .optionC("PUT")
+                                .optionD("DELETE")
+                                .correctAnswer("B")
+                                .explanation("POST được thiết kế để gửi payload dữ liệu lên server xử lý và tạo mới tài nguyên (ở đây là QuizAttempt).")
+                                .build()
+                );
 
-            quizQuestionRepository.saveAll(questions);
-        }
+                quizQuestionRepository.saveAll(questions);
+            }
         } catch (Exception e) {
             log.warn("Không thể khởi tạo dữ liệu mẫu bài thi: {}", e.getMessage());
         }
@@ -166,12 +165,12 @@ public class QuizService {
     }
 
     @Transactional
-    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, String apiKey) throws IOException {
+    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
         String text = pdfTextExtractor.extractText(file, fromPage, toPage);
-        List<QuizQuestion> questions = quizGeneratorService.generateQuestions(text, totalQuestions, difficulty, apiKey);
+        List<QuizQuestion> questions = quizGeneratorService.generateQuestions(text, totalQuestions, difficulty);
 
         String defaultTitle = (title != null && !title.isBlank()) ? title.trim() : "Đề trắc nghiệm: " + file.getOriginalFilename();
         if (fromPage != null && toPage != null) {
@@ -200,7 +199,7 @@ public class QuizService {
     }
 
     @Transactional
-    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, String apiKey) throws IOException {
+    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
@@ -217,7 +216,7 @@ public class QuizService {
         }
 
         String text = pdfTextExtractor.extractText(physicalFile, fromPage, toPage);
-        List<QuizQuestion> questions = quizGeneratorService.generateQuestions(text, totalQuestions, difficulty, apiKey);
+        List<QuizQuestion> questions = quizGeneratorService.generateQuestions(text, totalQuestions, difficulty);
 
         String defaultTitle = (title != null && !title.isBlank()) ? title.trim() : "Đề thi từ tài liệu: " + doc.getFileName();
         if (fromPage != null && toPage != null) {

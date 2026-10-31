@@ -65,7 +65,29 @@
                 </span>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- Nút Xuất PDF -->
+                <button th:if="${isPro}" type="button" onclick="window.print()" class="btn btn-sm btn-outline text-white hover:bg-white hover:text-indigo-900 rounded-xl text-xs font-bold gap-1.5">
+                    <i class="fa-solid fa-file-pdf"></i> Xuất kết quả PDF
+                </button>
+                <div th:unless="${isPro}" class="indicator">
+                    <span class="indicator-item badge badge-secondary badge-xs">PRO</span>
+                    <button type="button" disabled class="btn btn-sm btn-disabled opacity-60 rounded-xl text-xs font-bold gap-1.5 cursor-not-allowed text-white">
+                        <i class="fa-solid fa-file-pdf"></i> Xuất kết quả PDF
+                    </button>
+                </div>
+
+                <!-- Nút Flashcards -->
+                <button th:if="${isPro}" type="button" onclick="showToast('⚡ Tính năng Flashcards Spaced Repetition đang được hoàn thiện!')" class="btn btn-sm bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-xl text-xs border-none gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-layer-group"></i> Flashcards
+                </button>
+                <div th:unless="${isPro}" class="indicator">
+                    <span class="indicator-item badge badge-secondary badge-xs">PRO</span>
+                    <button type="button" disabled class="btn btn-sm btn-disabled opacity-60 rounded-xl text-xs font-bold gap-1.5 cursor-not-allowed text-white">
+                        <i class="fa-solid fa-layer-group"></i> Flashcards
+                    </button>
+                </div>
+
                 <a th:href="@{'/quiz/' + ${result.quizId}}" class="btn btn-sm btn-outline text-white hover:bg-white hover:text-indigo-900 rounded-xl text-xs font-bold gap-1.5">
                     <i class="fa-solid fa-rotate-right"></i> Làm lại đề này
                 </a>
@@ -179,8 +201,26 @@
         </div>
     </div>
 
+    <!-- Toast Thông Báo Hệ Thống -->
+    <div id="app-toast" class="toast toast-end toast-bottom z-50 hidden transition-all duration-300">
+        <div class="alert alert-info shadow-xl text-white font-bold text-xs py-3 px-4 rounded-2xl flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-base"></i>
+            <span id="app-toast-msg">Thông báo</span>
+        </div>
+    </div>
+
     <!-- Script Bộ Lọc Tương Tác Câu Hỏi -->
     <script>
+        function showToast(msg) {
+            const toast = document.getElementById('app-toast');
+            const toastMsg = document.getElementById('app-toast-msg');
+            if (toast && toastMsg) {
+                toastMsg.innerText = msg;
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3500);
+            }
+        }
+
         function filterQuestions(type) {
             const items = document.querySelectorAll('.question-item');
             const emptyState = document.getElementById('empty-filter-state');
