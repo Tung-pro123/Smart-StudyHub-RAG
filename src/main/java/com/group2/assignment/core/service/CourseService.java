@@ -41,7 +41,7 @@ public class CourseService {
         if (currentUser != null && currentUser.isAdmin()) {
             courses = courseRepository.searchAll(kw, sem);
         } else if (currentUser != null && currentUser.getId() != null) {
-            courses = courseRepository.searchCoursesByUser(currentUser.getId(), kw, sem, true);
+            courses = courseRepository.searchCoursesByUser(currentUser.getId(), kw, sem, false);
         } else {
             courses = courseRepository.searchAll(kw, sem);
         }
