@@ -163,12 +163,39 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex items-center justify-between">
-                    <span class="text-[11px] font-semibold text-slate-400">Trắc nghiệm 4 lựa chọn</span>
-                    <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm">
-                        <span>Làm bài thi</span>
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </a>
+                <div class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-semibold text-slate-400">Trắc nghiệm 4 lựa chọn</span>
+                        <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm">
+                            <span>Làm bài thi</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+
+                    <!-- Các nút tính năng PRO (Xuất PDF & Flashcards) -->
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-200/60 justify-end">
+                        <!-- Nút Xuất PDF -->
+                        <button th:if="${isPro}" type="button" onclick="window.print()" class="btn btn-xs btn-outline btn-primary rounded-lg font-bold gap-1">
+                            <i class="fa-solid fa-file-pdf"></i> Xuất PDF
+                        </button>
+                        <div th:unless="${isPro}" class="indicator">
+                            <span class="indicator-item badge badge-secondary text-[10px] scale-90">PRO</span>
+                            <button type="button" disabled class="btn btn-xs btn-disabled opacity-50 rounded-lg gap-1 cursor-not-allowed">
+                                <i class="fa-solid fa-file-pdf"></i> Xuất PDF
+                            </button>
+                        </div>
+
+                        <!-- Nút Flashcards -->
+                        <button th:if="${isPro}" type="button" onclick="showToast('⚡ Tính năng Flashcards Spaced Repetition đang được hoàn thiện!')" class="btn btn-xs btn-outline btn-warning rounded-lg font-bold gap-1">
+                            <i class="fa-solid fa-layer-group"></i> Flashcards
+                        </button>
+                        <div th:unless="${isPro}" class="indicator">
+                            <span class="indicator-item badge badge-secondary text-[10px] scale-90">PRO</span>
+                            <button type="button" disabled class="btn btn-xs btn-disabled opacity-50 rounded-lg gap-1 cursor-not-allowed">
+                                <i class="fa-solid fa-layer-group"></i> Flashcards
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Modal Xác Nhận Xóa Đề Thi -->
@@ -340,9 +367,12 @@
                         <select name="totalQuestions" class="select select-sm select-bordered rounded-xl text-xs font-semibold">
                             <option value="5" selected>5 câu</option>
                             <option value="10">10 câu</option>
-                            <option value="15">15 câu</option>
-                            <option value="20">20 câu</option>
+                            <option value="15" th:disabled="${isFreeTier}">15 câu (PRO)</option>
+                            <option value="20" th:disabled="${isFreeTier}">20 câu (PRO)</option>
                         </select>
+                        <p th:if="${isFreeTier}" class="text-[11px] text-amber-600 mt-1 font-medium">
+                            <i class="fa-solid fa-crown text-amber-500 mr-1"></i> Gói Free giới hạn tối đa 10 câu hỏi/đề thi.
+                        </p>
                     </div>
 
                     <div class="form-control">
@@ -360,6 +390,25 @@
             </form>
         </div>
     </dialog>
+
+    <!-- Toast Thông Báo Hệ Thống -->
+    <div id="app-toast" class="toast toast-end toast-bottom z-50 hidden transition-all duration-300">
+        <div class="alert alert-info shadow-xl text-white font-bold text-xs py-3 px-4 rounded-2xl flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-base"></i>
+            <span id="app-toast-msg">Thông báo</span>
+        </div>
+    </div>
+    <script>
+    function showToast(msg) {
+        const toast = document.getElementById('app-toast');
+        const toastMsg = document.getElementById('app-toast-msg');
+        if (toast && toastMsg) {
+            toastMsg.innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+    }
+    </script>
 
 </section>
 </body>
