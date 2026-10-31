@@ -47,7 +47,6 @@
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h2 class="text-2xl font-black text-base-content tracking-tight">Đăng Nhập StudyHub</h2>
-            <p class="text-xs text-base-content/60">Cá nhân hóa lộ trình học tập và kết nối JWT bảo mật</p>
         </div>
 
         <form th:action="@{/login}" th:object="${loginDto}" method="post" class="space-y-4">
@@ -55,7 +54,7 @@
                 <label class="label py-1"><span class="label-text font-bold text-xs">Tên Đăng Nhập</span></label>
                 <div class="relative">
                     <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
-                    <input type="text" th:field="*{username}" required placeholder="student hoặc truong" 
+                    <input type="text" th:field="*{username}" required placeholder="Nhập tên đăng nhập của bạn" 
                            class="input input-bordered pl-9 w-full rounded-xl text-xs" />
                 </div>
             </div>
