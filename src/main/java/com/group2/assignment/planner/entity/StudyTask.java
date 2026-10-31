@@ -49,6 +49,9 @@ public class StudyTask {
 
     private LocalDateTime completedAt;
 
+    @Column(length = 100)
+    private String assignee;
+
     @Builder.Default
     private Integer sortOrder = 0;
 

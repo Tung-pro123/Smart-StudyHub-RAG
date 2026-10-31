@@ -30,17 +30,15 @@ public class PlannerController {
             Model model,
             HttpSession session,
             @RequestParam(value = "courseId", required = false) Long courseId) {
-        // Lấy danh sách tất cả môn học
-        List<Course> courses = courseRepository.findAll();
+        User currentUser = getCurrentUser(session);
+        List<Course> courses = getCoursesFor(currentUser);
         model.addAttribute("courses", courses);
 
-        // Danh sách kế hoạch gần đây để hiển thị ở cột phải
-        model.addAttribute("plans", studyPlannerService.getRecentPlans());
+        model.addAttribute("plans", studyPlannerService.getRecentPlans(currentUser));
 
-        // Giữ lựa chọn môn học nếu điều hướng từ trang chủ (?courseId=...)
         model.addAttribute("selectedCourseId", courseId);
 
-        addSubscriptionAttributes(model, getCurrentUser(session));
+        addSubscriptionAttributes(model, currentUser);
 
         return "planner/index";
     }
@@ -74,8 +72,14 @@ public class PlannerController {
             dto.setHoursPerWeek(6); // Default
         }
 
+        if (getOwnedCourse(dto.getCourseId(), currentUser) == null) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Môn học không tồn tại hoặc không thuộc tài khoản của bạn!");
+            return "redirect:/planner";
+        }
+
         try {
-            StudyPlan plan = studyPlannerService.generateStudyPlan(dto);
+            StudyPlan plan = studyPlannerService.generateStudyPlan(dto, currentUser);
             redirectAttributes.addFlashAttribute("success", "Tạo kế hoạch học tập thành công!");
             return "redirect:/planner/" + plan.getId();
         } catch (Exception e) {
@@ -88,9 +92,11 @@ public class PlannerController {
     public String viewPlan(
             @PathVariable Long planId,
             Model model,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
 
-        var planOpt = studyPlannerService.getPlanById(planId);
+        User currentUser = getCurrentUser(session);
+        var planOpt = studyPlannerService.getPlanById(planId, currentUser);
         if (planOpt.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Không tìm thấy kế hoạch!");
             return "redirect:/planner";
@@ -107,8 +113,8 @@ public class PlannerController {
 
     @PostMapping("/tasks/{taskId}/toggle")
     @ResponseBody
-    public String toggleTask(@PathVariable Long taskId) {
-        StudyTask task = studyPlannerService.toggleTaskCompletion(taskId);
+    public String toggleTask(@PathVariable Long taskId, HttpSession session) {
+        StudyTask task = studyPlannerService.toggleTaskCompletion(taskId, getCurrentUser(session));
         if (task != null) {
             return "success";
         }
@@ -122,12 +128,18 @@ public class PlannerController {
             RedirectAttributes redirectAttributes,
             HttpSession session) {
 
-        List<StudyPlan> plans = studyPlannerService.getPlansByCourseId(courseId);
+        User currentUser = getCurrentUser(session);
+        if (getOwnedCourse(courseId, currentUser) == null) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Môn học không tồn tại hoặc không thuộc tài khoản của bạn!");
+            return "redirect:/planner";
+        }
+
+        List<StudyPlan> plans = studyPlannerService.getPlansByCourseId(courseId, currentUser);
         model.addAttribute("plans", plans);
-        model.addAttribute("courses", courseRepository.findAll());
+        model.addAttribute("courses", getCoursesFor(currentUser));
         model.addAttribute("selectedCourseId", courseId);
 
-        User currentUser = getCurrentUser(session);
         addSubscriptionAttributes(model, currentUser);
 
         return "planner/index";
@@ -142,6 +154,36 @@ public class PlannerController {
 
     private boolean isPlannerUnlocked(User user) {
         return user != null && user.isPro();
+    }
+
+    private List<Course> getCoursesFor(User user) {
+        if (user == null) {
+            return List.of();
+        }
+        if (user.isAdmin()) {
+            return courseRepository.findAll();
+        }
+        if (user.getId() == null) {
+            return List.of();
+        }
+        return courseRepository.findAllByUserId(user.getId());
+    }
+
+    private Course getOwnedCourse(Long courseId, User user) {
+        if (courseId == null || user == null) {
+            return null;
+        }
+        Course course = courseRepository.findById(courseId).orElse(null);
+        if (course == null) {
+            return null;
+        }
+        if (user.isAdmin()) {
+            return course;
+        }
+        if (user.getId() == null || course.getUser() == null) {
+            return null;
+        }
+        return user.getId().equals(course.getUser().getId()) ? course : null;
     }
 
     private void addSubscriptionAttributes(Model model, User user) {

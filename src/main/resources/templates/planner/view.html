@@ -117,6 +117,11 @@
                         Tìm hiểu @Component, @Autowired
                     </div>
                     <div class="text-xs text-base-content/50 mt-2">
+                        <div th:if="${task.assignee}" class="mb-1">
+                            <i class="fa-solid fa-user-check mr-1 text-indigo-500"></i>
+                            <span>Phụ trách: </span>
+                            <span class="font-semibold text-indigo-600" th:text="${task.assignee}">Minh</span>
+                        </div>
                         <i class="fa-regular fa-clock mr-1"></i>
                         <span th:text="${task.durationMinutes}">120</span> phút
                     </div>
@@ -160,6 +165,10 @@
                             </span>
                         </td>
                         <td>
+                            <div th:if="${task.assignee}" class="text-xs text-indigo-600 mb-1 whitespace-nowrap">
+                                <i class="fa-solid fa-user-check mr-1"></i>
+                                <span th:text="${task.assignee}">Minh</span>
+                            </div>
                             <button type="button" class="btn btn-xs toggle-task w-28 justify-center gap-1.5 whitespace-nowrap"
                                     th:data-task-id="${task.id}"
                                     th:classappend="${task.isCompleted} ? 'btn-success' : 'btn-outline'">

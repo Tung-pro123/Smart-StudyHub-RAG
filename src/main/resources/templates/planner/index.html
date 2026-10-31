@@ -122,6 +122,17 @@
                               placeholder="Ví dụ: Nắm chắc lý thuyết và làm được bài tập CRUD..."></textarea>
                 </div>
 
+                <div class="form-control" th:if="${subscriptionTier == 'SQUAD'}">
+                    <label class="label">
+                        <span class="label-text font-semibold">Thành viên nhóm (SQUAD)</span>
+                    </label>
+                    <input type="text" name="squadMembers" class="input input-bordered w-full"
+                           placeholder="Ví dụ: an, binh, chi" />
+                    <label class="label">
+                        <span class="label-text-alt">Nhập tên các thành viên, cách nhau bởi dấu phẩy. AI sẽ phân công nhiệm vụ.</span>
+                    </label>
+                </div>
+
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary w-full" th:disabled="${plannerLocked}">
                     <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
