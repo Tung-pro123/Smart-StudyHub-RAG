@@ -36,9 +36,15 @@
                 <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <h2 class="text-2xl font-black text-base-content" th:text="${user.fullName}">Nguyễn Văn Sinh Viên</h2>
                     <span class="badge badge-primary font-bold text-xs" th:text="${user.role}">ROLE_STUDENT</span>
-                    <span th:if="${user.isPro()}" class="badge badge-secondary gap-1 font-black text-xs bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none shadow-sm">
+                    <!-- Squad Badge -->
+                    <span th:if="${user.isSquad()}" class="badge badge-info gap-1 font-black text-xs bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-none shadow-sm">
+                        <i class="fa-solid fa-users text-sky-200"></i> SQUAD (5 TV)
+                    </span>
+                    <!-- Pro Badge -->
+                    <span th:if="${user.isPro() and !user.isSquad()}" class="badge badge-secondary gap-1 font-black text-xs bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none shadow-sm">
                         <i class="fa-solid fa-bolt text-amber-300"></i> PRO VIP
                     </span>
+                    <!-- Free Badge -->
                     <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1 font-bold text-xs border border-base-300">
                         <i class="fa-solid fa-leaf text-emerald-500"></i> FREE
                     </span>
@@ -66,18 +72,25 @@
             <div class="space-y-2 text-center md:text-left flex-1">
                 <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
                     <span class="text-xs font-bold uppercase tracking-wider text-base-content/60">Gói Dịch Vụ:</span>
-                    <span th:if="${user.isPro()}" class="badge badge-secondary gap-1.5 font-black text-xs px-3 py-3 shadow-md bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none">
-                        <i class="fa-solid fa-bolt text-amber-300"></i> PRO VIP (Ôn Thi Cấp Tốc)
+                    <span th:if="${user.isSquad()}" class="badge badge-info gap-1.5 font-black text-xs px-3 py-3 shadow-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-none">
+                        <i class="fa-solid fa-users text-sky-200"></i> SQUAD (Nhóm Học Tập 5 Bạn - $5/tháng)
+                    </span>
+                    <span th:if="${user.isPro() and !user.isSquad()}" class="badge badge-secondary gap-1.5 font-black text-xs px-3 py-3 shadow-md bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> PRO VIP (Ôn Thi Cấp Tốc - $2/tháng)
                     </span>
                     <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1.5 font-bold text-xs px-3 py-3 border border-base-300">
-                        <i class="fa-solid fa-leaf text-emerald-500"></i> FREE (Sinh Viên Tự Học)
+                        <i class="fa-solid fa-leaf text-emerald-500"></i> FREE (Sinh Viên Tự Học - $0)
                     </span>
                 </div>
-                <p th:if="${user.isPro()}" class="text-xs text-base-content/80">
-                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Không giới hạn môn học, RAG AI Chatbot không giới hạn câu hỏi &amp; mở khóa trọn bộ AI Study Planner.
+                <!-- Description based on Tier -->
+                <p th:if="${user.isSquad()}" class="text-xs text-base-content/80">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Không giới hạn môn học &amp; tài liệu, RAG AI vô hạn cho cả 5 bạn, mở khóa phân công đồ án nhóm và Leaderboard luyện đề.
+                </p>
+                <p th:if="${user.isPro() and !user.isSquad()}" class="text-xs text-base-content/80">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Không giới hạn môn học &amp; tài liệu, RAG AI Chatbot không giới hạn câu hỏi &amp; mở khóa trọn bộ AI Study Planner.
                 </p>
                 <p th:unless="${user.isPro()}" class="text-xs text-base-content/80">
-                    <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Tối đa 3 môn học, 50 câu hỏi RAG/ngày. Cần nâng cấp gói để mở khóa AI Study Planner.
+                    <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i> Tối đa 3 môn học, 3 file PDF/môn, 50 câu hỏi RAG/ngày. Cần nâng cấp gói để mở khóa AI Study Planner &amp; Nhóm.
                 </p>
             </div>
 
@@ -100,17 +113,131 @@
                     <div class="h-2.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 w-full animate-pulse"></div>
                 </div>
                 <p th:unless="${user.isPro()}" class="text-[10px] text-base-content/60 text-right">Reset hạn ngạch lúc 00:00 hàng ngày</p>
-                <p th:if="${user.isPro()}" class="text-[10px] text-purple-600 font-semibold text-right">Đặc quyền tài khoản PRO</p>
+                <p th:if="${user.isSquad()}" class="text-[10px] text-blue-600 font-semibold text-right">Đặc quyền Gói Nhóm SQUAD</p>
+                <p th:if="${user.isPro() and !user.isSquad()}" class="text-[10px] text-purple-600 font-semibold text-right">Đặc quyền Gói PRO</p>
             </div>
 
-            <!-- Right: Action Upgrade Button -->
-            <div th:unless="${user.isPro()}" class="flex-none">
-                <form th:action="@{/auth/upgrade-pro}" method="post">
-                    <button type="submit" class="btn btn-primary rounded-2xl text-xs font-black bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none shadow-lg shadow-purple-500/30 px-5 gap-2">
+            <!-- Right: Action Upgrade Buttons -->
+            <div th:if="${!user.isSquad() and !user.isAdmin()}" class="flex-none flex flex-col gap-2">
+                <form th:if="${!user.isPro()}" th:action="@{/auth/upgrade-pro}" method="post">
+                    <button type="submit" class="btn btn-sm btn-primary w-full rounded-xl text-xs font-black bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none shadow-md shadow-purple-500/30 gap-1.5">
                         <i class="fa-solid fa-bolt text-amber-300"></i> Nâng Cấp Gói PRO ($2)
                     </button>
                 </form>
+                <form th:action="@{/auth/upgrade-squad}" method="post">
+                    <button type="submit" class="btn btn-sm btn-info w-full rounded-xl text-xs font-black bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-none shadow-md shadow-blue-500/30 gap-1.5">
+                        <i class="fa-solid fa-users text-sky-200"></i> Kích Hoạt Gói Nhóm ($5)
+                    </button>
+                </form>
             </div>
+        </div>
+    </div>
+
+    <!-- SQUAD MANAGEMENT CARD (Hiển thị khi user là SQUAD, ADMIN hoặc có trong nhóm) -->
+    <div th:if="${user.isSquad() or user.isAdmin() or (squadMembers != null and !squadMembers.isEmpty())}"
+         class="glass-card rounded-3xl p-6 shadow-xl border border-blue-500/30 relative overflow-hidden bg-gradient-to-br from-blue-500/5 to-indigo-500/5 space-y-4">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-base-200/80 pb-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-users-rectangle text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-base text-base-content flex items-center gap-2">
+                        Không Gian Nhóm Học Tập (Study Squad)
+                    </h3>
+                    <p class="text-xs text-base-content/60">Chia sẻ quyền lợi gói PRO, phân công nhiệm vụ và đua top luyện đề cùng 5 bạn</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="badge badge-info font-black text-xs gap-1 py-3 px-3 shadow-sm text-white">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span th:text="${squadMembers != null ? squadMembers.size() : 1}">1</span> / <span th:text="${maxSquadMembers}">5</span> Thành Viên
+                </span>
+            </div>
+        </div>
+
+        <!-- Add Member Form (Dành cho Nhóm Trưởng) -->
+        <div th:if="${isSquadLeader}" class="bg-base-100/60 p-4 rounded-2xl border border-base-200 space-y-2">
+            <label class="label-text font-bold text-xs text-base-content/80 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-plus text-indigo-500"></i> Mời Bạn Vào Nhóm (Tối đa 5 người):
+            </label>
+            <form th:action="@{/auth/squad/add-member}" method="post" class="flex flex-col sm:flex-row gap-2">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-at absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                    <input type="text" name="targetUsername" required placeholder="Nhập username bạn bè (ví dụ: student, binh, an...)" 
+                           class="input input-bordered input-sm pl-8 w-full rounded-xl text-xs font-mono"
+                           th:disabled="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" />
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white border-none shadow-md shadow-indigo-500/20 gap-1.5"
+                        th:disabled="${squadMembers != null and squadMembers.size() >= maxSquadMembers}">
+                    <i class="fa-solid fa-paper-plane"></i> Thêm Vào Nhóm
+                </button>
+            </form>
+            <p th:if="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" class="text-[11px] text-amber-600 font-semibold">
+                <i class="fa-solid fa-circle-exclamation mr-1"></i> Nhóm đã đủ tối đa 5 thành viên! Để thêm bạn mới, hãy xóa bớt thành viên cũ.
+            </p>
+            <p th:unless="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" class="text-[11px] text-base-content/60">
+                Khi thêm vào nhóm, bạn bè sẽ được nâng cấp lên hạng <strong>SQUAD</strong> và hưởng toàn bộ quyền lợi PRO ngay lập tức.
+            </p>
+        </div>
+
+        <!-- Notice for non-leader members -->
+        <div th:unless="${isSquadLeader}" class="bg-base-100/60 p-3.5 rounded-2xl border border-base-200 text-xs text-base-content/80 flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
+            <span>Bạn đang là thành viên trong Nhóm của <strong class="font-mono text-indigo-600" th:text="'@' + ${user.squadLeaderUsername}">@leader</strong>. Mọi đặc quyền của gói SQUAD đều được mở khóa cho bạn!</span>
+        </div>
+
+        <!-- Squad Members List Table -->
+        <div class="overflow-x-auto">
+            <table class="table table-sm w-full">
+                <thead>
+                    <tr class="text-xs text-base-content/60 border-b border-base-200">
+                        <th>Thành Viên</th>
+                        <th>Username</th>
+                        <th>Vai Trò</th>
+                        <th th:if="${isSquadLeader}" class="text-right">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="m : ${squadMembers}" class="hover:bg-base-200/40 transition-colors">
+                        <td>
+                            <div class="flex items-center gap-3">
+                                <div class="avatar">
+                                    <div class="w-8 h-8 rounded-xl ring-1 ring-base-200 overflow-hidden bg-base-100">
+                                        <img th:src="${m.avatar}" alt="Avatar" referrerpolicy="no-referrer" />
+                                    </div>
+                                </div>
+                                <span class="font-bold text-xs text-base-content" th:text="${m.fullName}">Họ và Tên</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="font-mono text-xs text-base-content/70" th:text="'@' + ${m.username}">@user</span>
+                        </td>
+                        <td>
+                            <span th:if="${m.username == user.squadLeaderUsername or (user.squadLeaderUsername == null and m.username == user.username)}"
+                                  class="badge badge-primary badge-xs text-[10px] font-bold gap-1 py-2 px-2.5 bg-indigo-600 text-white border-none">
+                                <i class="fa-solid fa-crown text-amber-300"></i> Nhóm Trưởng
+                            </span>
+                            <span th:unless="${m.username == user.squadLeaderUsername or (user.squadLeaderUsername == null and m.username == user.username)}"
+                                  class="badge badge-ghost badge-xs text-[10px] font-medium py-2 px-2.5">
+                                Thành Viên
+                            </span>
+                        </td>
+                        <td th:if="${isSquadLeader}" class="text-right">
+                            <form th:if="${!m.username.equalsIgnoreCase(user.username)}"
+                                  th:action="@{/auth/squad/remove-member}" method="post" class="inline"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn xóa thành viên này khỏi nhóm? Tài khoản bạn đó sẽ về lại gói FREE.')">
+                                <input type="hidden" name="targetUsername" th:value="${m.username}" />
+                                <button type="submit" class="btn btn-ghost btn-xs text-rose-500 hover:bg-rose-500/10 rounded-lg font-bold" title="Xóa khỏi nhóm">
+                                    <i class="fa-solid fa-user-minus mr-1"></i> Xóa
+                                </button>
+                            </form>
+                            <span th:if="${m.username.equalsIgnoreCase(user.username)}" class="text-[10px] text-base-content/40 italic">Chủ nhóm</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
