@@ -19,20 +19,30 @@
 
 ## 👥 2. PHÂN CHIA NHIỆM VỤ CHI TIẾT CHO 6 THÀNH VIÊN
 
-### 👑 1. TÙNG (LEAD) - CORE & QUẢN LÝ MÔN HỌC (COURSES)
+### 👑 1. TÙNG (LEAD) - CORE & CÁ NHÂN HÓA MÔN HỌC (DATA ISOLATION & QUOTA)
 * **Nhánh Git**: `feature/pricing-core-tung`
 * **Package Backend**: `com.group2.assignment.core`
 * **Thư mục View**: `templates/index.html`, `templates/courses/`
 * **Nhiệm vụ cụ thể**:
-  1. Kiểm tra hạn mức 3 môn học trong `CourseService.java` (`countCourses() < MAX_COURSES_FREE`). Khi đã có 3 môn, disable nút "Tạo môn học" trên giao diện `index.html` và hiển thị tooltip: *"Đã đạt tối đa 3 môn của Gói Free"*.
-  2. Bổ sung hiển thị Badge gói cước của người dùng trên thanh Navbar:
+  1. 🚨 **CẤP BÁCH: Tách biệt môn học theo từng tài khoản (Data Isolation)**:
+     - **Nguyên nhân lỗi**: `Course.java` hiện chưa có liên kết `User` (`user_id`), và `CourseService` đang gọi `courseRepository.findAll()` lấy toàn bộ môn học trong database, khiến ai đăng nhập vào cũng thấy hết môn của người khác; đồng thời `code` bị unique toàn cục khiến 2 người không thể cùng tạo môn `HSF302`.
+     - **Giải pháp xử lý**:
+       + Trong `Course.java`: Thêm `@ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "user_id") private User user;` (hoặc `Long userId`). Bỏ unique toàn cục trên `code`, đổi thành unique theo cặp `(user_id, code)` để mỗi bạn đều có thể tự tạo môn `HSF302` cho riêng mình.
+       + Trong `CourseRepository.java`: Thêm `List<Course> findAllByUserId(Long userId);`, `long countByUserId(Long userId);`, `boolean existsByCodeIgnoreCaseAndUserId(String code, Long userId);`.
+       + Trong `CourseService.java`: Sửa `getAllCoursesWithStats(keyword, semester, currentUser)` chỉ lấy danh sách môn thuộc sở hữu của `currentUser` (Admin xem được tất cả).
+       + Trong `CourseController.java`: Kiểm tra quyền sở hữu khi Sửa / Xóa (Sinh viên A không được phép sửa/xóa môn của Sinh viên B).
+  2. **Kiểm tra hạn mức 3 môn học theo từng User**:
+     - Sửa logic đếm: Đổi từ `countCourses() < 3` thành `countByUserId(currentUser.getId()) < MAX_COURSES_FREE (3 môn)`. Đảm bảo mỗi bạn Free được tạo đúng 3 môn của riêng mình!
+     - Khi đã có 3 môn, disable nút "Tạo môn học" trên giao diện `index.html` và hiển thị tooltip: *"Đã đạt tối đa 3 môn của Gói Free"*. Xóa 1 môn cũ thì tạo lại được ngay.
+  3. **Bổ sung hiển thị Badge gói cước trên Navbar**:
      - Gói Free: `<span class="badge badge-ghost text-xs">FREE</span>`
      - Gói Pro: `<span class="badge badge-secondary text-xs">PRO</span>`
      - Gói Squad: `<span class="badge badge-info text-xs">SQUAD (5 TV)</span>`
-  3. Đảm bảo Modal Bảng giá (`id="modal-pricing-upgrade"`) mở mượt mà từ Navbar, hiển thị đúng 3 thẻ giá chuẩn và câu từ không chứa model cụ thể ("Truy vấn RAG AI giáo trình không giới hạn").
+  4. **Kiểm tra Modal Bảng giá**: Đảm bảo mở mượt mà từ Navbar, hiển thị đúng 3 thẻ giá và câu từ chuẩn hóa không chứa model cụ thể ("Truy vấn RAG AI giáo trình không giới hạn").
 * **Định nghĩa hoàn thành (DoD)**:
-  - Tài khoản Free tạo đến môn thứ 4 bị chặn báo lỗi thân thiện. Xóa 1 môn cũ đi thì tạo được ngay.
-  - Tài khoản Pro / Squad tạo môn thứ 4, 5, 6 bình thường.
+  - Đăng nhập `student` chỉ thấy các môn của `student`. Đăng nhập `truong` chỉ thấy các môn của `truong`. Không còn tình trạng tài khoản này thấy môn của tài khoản khác!
+  - Cả 2 sinh viên đều có thể tự tạo môn `HSF302` của riêng mình mà không bị lỗi trùng mã môn.
+  - Tài khoản Free tạo đến môn thứ 4 của mình bị chặn báo lỗi. Xóa 1 môn cũ thì tạo được ngay.
 
 ---
 
@@ -144,3 +154,4 @@
 3. **Bước 3 (Demo Gói Nhóm Study Squad)**:
    - Nhóm trưởng kích hoạt Gói Nhóm $\rightarrow$ Nhập username bạn bè (ví dụ add `tung`, `binh`).
    - Đăng nhập tài khoản của bạn được mời $\rightarrow$ Thấy tài khoản tự động được mở khóa full Pro.
+
