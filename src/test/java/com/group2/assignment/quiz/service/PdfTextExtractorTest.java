@@ -4,7 +4,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -25,7 +24,7 @@ public class PdfTextExtractorTest {
             doc.addPage(page1);
             try (PDPageContentStream cs = new PDPageContentStream(doc, page1)) {
                 cs.beginText();
-                cs.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                cs.setFont(PDType1Font.HELVETICA, 12);
                 cs.showText("Page 1: Introduction to Spring Framework IoC Container");
                 cs.endText();
             }
@@ -34,7 +33,7 @@ public class PdfTextExtractorTest {
             doc.addPage(page2);
             try (PDPageContentStream cs = new PDPageContentStream(doc, page2)) {
                 cs.beginText();
-                cs.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                cs.setFont(PDType1Font.HELVETICA, 12);
                 cs.showText("Page 2: Dependency Injection is the core pattern of Spring");
                 cs.endText();
             }

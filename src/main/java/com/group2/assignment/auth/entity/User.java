@@ -42,6 +42,9 @@ public class User {
     @Builder.Default
     private String subscriptionTier = "FREE"; // "FREE", "PRO", "CAMPUS"
 
+    @Column(name = "squad_leader_username", length = 50)
+    private String squadLeaderUsername; // Username nhóm trưởng sở hữu gói Study Squad
+
     @Builder.Default
     private Integer dailyRagCount = 0; // Đếm số câu chat RAG trong ngày
 
@@ -100,5 +103,20 @@ public class User {
 
     public boolean isAdmin() {
         return "ROLE_ADMIN".equalsIgnoreCase(this.role);
+    }
+
+    public boolean isSquad() {
+        return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
+                || (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank());
+    }
+
+    public String getEffectiveSquadLeader() {
+        if (!isSquad()) {
+            return null;
+        }
+        if (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank()) {
+            return this.squadLeaderUsername.trim();
+        }
+        return this.username;
     }
 }

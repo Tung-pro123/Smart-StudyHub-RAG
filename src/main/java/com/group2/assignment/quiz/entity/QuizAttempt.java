@@ -1,5 +1,6 @@
 package com.group2.assignment.quiz.entity;
 
+import com.group2.assignment.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -28,6 +29,11 @@ public class QuizAttempt {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Quiz quiz;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
+    @ToString.Exclude
+    private User user;
 
     @Column(length = 100)
     @Builder.Default

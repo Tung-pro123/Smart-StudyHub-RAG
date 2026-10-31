@@ -2,6 +2,7 @@ package com.group2.assignment.quiz.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.CourseRepository;
 import com.group2.assignment.quiz.dto.QuestionResultDto;
@@ -244,8 +245,64 @@ public class QuizService {
         return savedQuiz;
     }
 
+    public record SquadLeaderboardDto(
+            Long userId,
+            String username,
+            String fullName,
+            String avatar,
+            Double maxScore,
+            Long attemptCount
+    ) {
+        public SquadLeaderboardDto(Long userId, String username, String avatar, Double maxScore, Long attemptCount) {
+            this(userId, username, username, avatar, maxScore, attemptCount);
+        }
+
+        public Long getUserId() { return userId; }
+        public String getUsername() { return username; }
+        public String getFullName() { return fullName != null && !fullName.isBlank() ? fullName : username; }
+        public String getAvatar() { return avatar; }
+        public Double getMaxScore() { return maxScore; }
+        public Long getAttemptCount() { return attemptCount; }
+    }
+
+    public List<SquadLeaderboardDto> getSquadLeaderboard(String leaderUsername, Long courseId) {
+        return getSquadLeaderboard(leaderUsername, leaderUsername, courseId);
+    }
+
+    public List<SquadLeaderboardDto> getSquadLeaderboard(String leaderUsername, String memberUsername, Long courseId) {
+        if (leaderUsername == null || leaderUsername.isBlank()) {
+            return List.of();
+        }
+        String member = (memberUsername != null && !memberUsername.isBlank()) ? memberUsername.trim() : leaderUsername.trim();
+        List<Object[]> rawList = quizAttemptRepository.findSquadLeaderboardRaw(leaderUsername.trim(), member, courseId);
+        if (rawList == null || rawList.isEmpty()) {
+            return List.of();
+        }
+
+        List<SquadLeaderboardDto> dtoList = new ArrayList<>();
+        for (Object[] row : rawList) {
+            Long userId = row[0] != null ? ((Number) row[0]).longValue() : null;
+            String username = row[1] != null ? row[1].toString() : "";
+            String fullName = row[2] != null ? row[2].toString() : username;
+            String avatar = row[3] != null ? row[3].toString() : null;
+            if (avatar == null || avatar.isBlank()) {
+                avatar = "https://api.dicebear.com/7.x/bottts/svg?seed=" + (username.isBlank() ? "student" : username);
+            }
+            Double maxScore = row[4] != null ? Math.round(((Number) row[4]).doubleValue() * 10.0) / 10.0 : 0.0;
+            Long attemptCount = row[5] != null ? ((Number) row[5]).longValue() : 0L;
+
+            dtoList.add(new SquadLeaderboardDto(userId, username, fullName, avatar, maxScore, attemptCount));
+        }
+        return dtoList;
+    }
+
     @Transactional
     public QuizResultDto submitAndGrade(Long quizId, QuizSubmissionDto submission) {
+        return submitAndGrade(quizId, submission, null);
+    }
+
+    @Transactional
+    public QuizResultDto submitAndGrade(Long quizId, QuizSubmissionDto submission, User currentUser) {
         Quiz quiz = getQuizById(quizId);
         List<QuizQuestion> questions = getQuestionsByQuizId(quizId);
 
@@ -287,6 +344,7 @@ public class QuizService {
 
         QuizAttempt attempt = QuizAttempt.builder()
                 .quiz(quiz)
+                .user(currentUser)
                 .studentName(submission.getStudentName() != null && !submission.getStudentName().isBlank() ? submission.getStudentName().trim() : "Sinh viên")
                 .totalScore(score)
                 .correctCount(correctCount)
@@ -312,6 +370,7 @@ public class QuizService {
                 .details(details)
                 .build();
     }
+
 
     public QuizResultDto getAttemptResult(Long attemptId) {
         QuizAttempt attempt = quizAttemptRepository.findById(attemptId)
