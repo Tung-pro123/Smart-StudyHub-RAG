@@ -5,6 +5,7 @@ import com.group2.assignment.auth.dto.LoginRequestDto;
 import com.group2.assignment.auth.dto.RegisterRequestDto;
 import com.group2.assignment.auth.dto.UpdateProfileDto;
 import com.group2.assignment.auth.entity.User;
+import com.group2.assignment.auth.repository.UserRepository;
 import com.group2.assignment.auth.service.AuthService;
 import com.group2.assignment.auth.service.JwtService;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +27,9 @@ class AuthServiceTest {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("Đăng ký tài khoản sinh viên mới thành công")
@@ -137,5 +143,55 @@ class AuthServiceTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> authService.changePassword("student", dto));
+    }
+
+    @Test
+    @DisplayName("Nâng cấp gói cước hội viên thành công từ FREE lên PRO")
+    void testUpgradeSubscriptionTier_Success() {
+        Optional<User> optionalUser = userRepository.findByUsernameIgnoreCase("student");
+        assertTrue(optionalUser.isPresent());
+        User user = optionalUser.get();
+        assertEquals("FREE", user.getSubscriptionTier());
+        assertFalse(user.isPro());
+
+        User upgradedUser = authService.upgradeSubscriptionTier("student", "PRO");
+        assertEquals("PRO", upgradedUser.getSubscriptionTier());
+        assertTrue(upgradedUser.isPro());
+    }
+
+    @Test
+    @DisplayName("Nâng cấp gói cước cho username không tồn tại ném ngoại lệ")
+    void testUpgradeSubscriptionTier_UserNotFoundThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+                authService.upgradeSubscriptionTier("non_existent_student_2026", "PRO")
+        );
+    }
+
+    @Test
+    @DisplayName("Kiểm tra khởi tạo các tài khoản Demo chuẩn với đúng phân cấp gói cước và vai trò")
+    void testDemoUsers_InitializedWithCorrectTiers() {
+        // 1. Student Demo
+        Optional<User> studentOpt = userRepository.findByUsernameIgnoreCase("student");
+        assertTrue(studentOpt.isPresent());
+        User student = studentOpt.get();
+        assertEquals("ROLE_STUDENT", student.getRole());
+        assertEquals("FREE", student.getSubscriptionTier());
+        assertFalse(student.isPro());
+
+        // 2. Pro Student Demo
+        Optional<User> proStudentOpt = userRepository.findByUsernameIgnoreCase("pro_student");
+        assertTrue(proStudentOpt.isPresent());
+        User proStudent = proStudentOpt.get();
+        assertEquals("ROLE_STUDENT", proStudent.getRole());
+        assertEquals("PRO", proStudent.getSubscriptionTier());
+        assertTrue(proStudent.isPro());
+
+        // 3. Admin Demo
+        Optional<User> adminOpt = userRepository.findByUsernameIgnoreCase("admin");
+        assertTrue(adminOpt.isPresent());
+        User admin = adminOpt.get();
+        assertEquals("ROLE_ADMIN", admin.getRole());
+        assertTrue(admin.isAdmin());
+        assertTrue(admin.isPro());
     }
 }
