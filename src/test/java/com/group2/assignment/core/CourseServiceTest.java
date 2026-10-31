@@ -1,6 +1,7 @@
 package com.group2.assignment.core;
 
 import com.group2.assignment.auth.entity.User;
+import com.group2.assignment.auth.repository.UserRepository;
 import com.group2.assignment.core.dto.CourseCardDto;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
@@ -28,6 +29,9 @@ class CourseServiceTest {
 
     @Autowired
     private ChunkRepository chunkRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("Khởi tạo dữ liệu mẫu và đếm số lượng môn học")
@@ -58,10 +62,26 @@ class CourseServiceTest {
         Course duplicate = Course.builder()
                 .code("hsf302") // lowercase trùng với HSF302
                 .name("Duplicate Test")
+                .semester("Fall 2026")
+                .credits(3)
                 .build();
 
-        assertThrows(IllegalArgumentException.class, () -> courseService.saveCourse(duplicate),
-                "Phải ném ngoại lệ khi trùng mã môn học");
+        assertThrows(IllegalArgumentException.class, () -> courseService.saveCourse(duplicate));
+    }
+
+    @Test
+    @DisplayName("Tìm kiếm môn học theo từ khóa")
+    void testSearchCoursesByKeyword() {
+        List<CourseCardDto> results = courseService.getAllCoursesWithStats("Spring", null);
+        assertFalse(results.isEmpty());
+        assertTrue(results.stream().anyMatch(c -> c.getCode().equalsIgnoreCase("HSF302")));
+    }
+
+    @Test
+    @DisplayName("Lọc môn học theo học kỳ")
+    void testFilterCoursesBySemester() {
+        List<CourseCardDto> results = courseService.getAllCoursesWithStats(null, "Fall 2026");
+        assertFalse(results.isEmpty());
     }
 
     @Test
@@ -70,29 +90,37 @@ class CourseServiceTest {
         Course course = courseRepository.findByCodeIgnoreCase("HSF302").orElseThrow();
         Course updateData = Course.builder()
                 .code("HSF302")
-                .name("JPA and Spring Framework Advanced 2026")
-                .description("Nội dung cập nhật nâng cao")
-                .semester("Fall 2026")
+                .name("Updated JPA and Spring Boot")
+                .description("Updated description")
+                .semester("Spring 2027")
                 .credits(4)
-                .color("from-blue-600 to-indigo-600")
-                .icon("fa-laptop-code")
                 .build();
 
         Course updated = courseService.updateCourse(course.getId(), updateData);
-        assertEquals("JPA and Spring Framework Advanced 2026", updated.getName());
+        assertEquals("Updated JPA and Spring Boot", updated.getName());
+        assertEquals("Spring 2027", updated.getSemester());
         assertEquals(4, updated.getCredits());
     }
 
     @Test
-    @DisplayName("Tìm kiếm môn học theo từ khóa")
-    void testSearchCoursesByKeyword() {
-        List<CourseCardDto> results = courseService.getAllCoursesWithStats("Spring", "ALL");
-        assertFalse(results.isEmpty(), "Phải tìm thấy môn HSF302 chứa từ khóa Spring");
-        assertEquals("HSF302", results.get(0).getCode());
+    @DisplayName("Xóa môn học và cascade chunks liên quan")
+    void testDeleteCourse() {
+        Course tempCourse = Course.builder()
+                .code("TEMP101")
+                .name("Temporary Course to Delete")
+                .semester("Fall 2026")
+                .credits(2)
+                .build();
+        Course saved = courseRepository.save(tempCourse);
+        Long id = saved.getId();
+
+        courseService.deleteCourse(id);
+        assertTrue(courseRepository.findById(id).isEmpty());
+        assertEquals(0, chunkRepository.countByCourseId(id));
     }
 
     @Test
-    @DisplayName("Lấy chi tiết môn học kèm thống kê Chunks")
+    @DisplayName("Lấy chi tiết môn học kèm thống kê chunks")
     void testGetCourseWithStats() {
         Course course = courseRepository.findByCodeIgnoreCase("HSF302").orElseThrow();
         CourseCardDto dto = courseService.getCourseWithStats(course.getId());
@@ -144,14 +172,111 @@ class CourseServiceTest {
         assertTrue(courseService.canCreateCourse(proUser), "Người dùng Pro phải được tạo môn học");
 
         Course extraCourse = Course.builder()
-                .code("PRJ301")
-                .name("Java Web Application Development")
+                .code("PRJ301_PRO")
+                .name("Java Web Application Development Pro")
                 .semester("Fall 2026")
                 .credits(3)
                 .build();
 
         Course saved = courseService.saveCourse(extraCourse, proUser);
         assertNotNull(saved.getId());
-        assertEquals("PRJ301", saved.getCode());
+        assertEquals("PRJ301_PRO", saved.getCode());
+    }
+
+    @Test
+    @DisplayName("Cách ly dữ liệu: Hai sinh viên khác nhau đều có thể tạo môn học cùng mã code SWP490")
+    void testCourseDataIsolationBetweenUsers() {
+        User userA = userRepository.save(User.builder()
+                .username("student_iso_a")
+                .email("student_a@fpt.edu.vn")
+                .fullName("Sinh Vien A")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .build());
+
+        User userB = userRepository.save(User.builder()
+                .username("student_iso_b")
+                .email("student_b@fpt.edu.vn")
+                .fullName("Sinh Vien B")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .build());
+
+        Course courseA = Course.builder()
+                .code("SWP490")
+                .name("Graduation Capstone Project A")
+                .semester("Fall 2026")
+                .credits(3)
+                .build();
+        Course savedA = courseService.saveCourse(courseA, userA);
+        assertNotNull(savedA.getId());
+        assertEquals("SWP490", savedA.getCode());
+        assertEquals(userA.getId(), savedA.getUser().getId());
+
+        // Sinh viên B cũng tạo môn cùng mã SWP490 -> Phải thành công!
+        Course courseB = Course.builder()
+                .code("SWP490")
+                .name("Graduation Capstone Project B")
+                .semester("Fall 2026")
+                .credits(3)
+                .build();
+        Course savedB = courseService.saveCourse(courseB, userB);
+        assertNotNull(savedB.getId());
+        assertEquals("SWP490", savedB.getCode());
+        assertEquals(userB.getId(), savedB.getUser().getId());
+
+        // Kiểm tra danh sách hiển thị của User A
+        List<CourseCardDto> listA = courseService.getAllCoursesWithStats(null, null, userA);
+        assertTrue(listA.stream().anyMatch(c -> c.getName().equals("Graduation Capstone Project A")));
+        assertFalse(listA.stream().anyMatch(c -> c.getName().equals("Graduation Capstone Project B")));
+
+        // Kiểm tra danh sách hiển thị của User B
+        List<CourseCardDto> listB = courseService.getAllCoursesWithStats(null, null, userB);
+        assertTrue(listB.stream().anyMatch(c -> c.getName().equals("Graduation Capstone Project B")));
+        assertFalse(listB.stream().anyMatch(c -> c.getName().equals("Graduation Capstone Project A")));
+    }
+
+    @Test
+    @DisplayName("Bảo mật quyền sở hữu: Sinh viên không được phép sửa hoặc xóa môn học của người khác")
+    void testOwnershipSecurityEnforced() {
+        User owner = userRepository.save(User.builder()
+                .username("student_owner")
+                .email("owner@fpt.edu.vn")
+                .fullName("Owner Student")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .build());
+
+        User intruder = userRepository.save(User.builder()
+                .username("student_intruder")
+                .email("intruder@fpt.edu.vn")
+                .fullName("Intruder Student")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .build());
+
+        Course course = Course.builder()
+                .code("PRM392")
+                .name("Mobile Programming")
+                .semester("Fall 2026")
+                .credits(3)
+                .build();
+        Course saved = courseService.saveCourse(course, owner);
+
+        // Kẻ xâm nhập cố tình sửa môn của owner -> Ném SecurityException
+        Course hackedCourse = Course.builder().code("PRM392").name("Hacked Name").build();
+        assertThrows(SecurityException.class, () ->
+                courseService.updateCourse(saved.getId(), hackedCourse, intruder));
+
+        // Kẻ xâm nhập cố tình xóa môn của owner -> Ném SecurityException
+        assertThrows(SecurityException.class, () ->
+                courseService.deleteCourse(saved.getId(), intruder));
+
+        // Chủ sở hữu xóa môn của chính mình -> Thành công
+        assertDoesNotThrow(() -> courseService.deleteCourse(saved.getId(), owner));
     }
 }

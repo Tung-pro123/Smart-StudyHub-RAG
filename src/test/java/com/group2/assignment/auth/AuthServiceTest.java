@@ -160,6 +160,18 @@ class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("Nâng cấp gói cước thành công lên SQUAD (Study Squad) và kích hoạt quyền isPro")
+    void testUpgradeSubscriptionTier_SquadSuccess() {
+        Optional<User> optionalUser = userRepository.findByUsernameIgnoreCase("student");
+        assertTrue(optionalUser.isPresent());
+
+        User upgradedUser = authService.upgradeSubscriptionTier("student", "SQUAD");
+        assertEquals("SQUAD", upgradedUser.getSubscriptionTier());
+        assertTrue(upgradedUser.isPro());
+    }
+
+
+    @Test
     @DisplayName("Nâng cấp gói cước cho username không tồn tại ném ngoại lệ")
     void testUpgradeSubscriptionTier_UserNotFoundThrows() {
         assertThrows(IllegalArgumentException.class, () ->

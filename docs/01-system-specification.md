@@ -111,7 +111,7 @@ flowchart TD
   - Hỗ trợ đăng nhập 1-click qua tài khoản Google `@fpt.edu.vn` hoặc `@gmail.com`.
   - Tự động đồng bộ / tạo tài khoản mới nếu lần đầu đăng nhập bằng Google.
 * **Phân định Khách vãng lai (Guest) vs Khách đăng nhập (Authenticated Student)**:
-  - **Khách vãng lai**: Được xem Landing Page (`/`), duyệt môn học chung (`/courses`), xem chi tiết môn học (`/courses/{id}`). Bị chặn hoàn toàn các hành vi ghi dữ liệu (Upload PDF, Chat RAG, Sinh Planner, Làm Quiz, Lưu API Key).
+  - **Khách vãng lai**: Chỉ được xem Landing Page (`/`), tham khảo bảng giá gói cước và thực hiện Đăng nhập / Đăng ký. Toàn bộ danh sách môn học (`/courses`), chi tiết môn học và các tính năng AI đều yêu cầu bắt buộc đăng nhập (bảo vệ quyền riêng tư dữ liệu học tập của từng người dùng).
   - **Khách đăng nhập**: Toàn quyền sử dụng các tính năng học tập AI, upload tài liệu, làm bài thi và lưu lịch sử học tập.
   - **Cơ chế Interceptor & Callback**: `JwtAuthInterceptor` tự động chặn khách vãng lai truy cập tính năng riêng tư, lưu `authRedirectUrl` vào Session và chuyển hướng về `/login?error=unauthorized`. Sau khi đăng nhập thành công, tự động đưa người dùng quay lại đúng URL đang dở dang.
   - **Khôi phục phiên tự động**: Khi mở lại trình duyệt bị mất session, hệ thống tự động bóc tách Cookie JWT để phục hồi phiên đăng nhập mà không bắt nhập lại mật khẩu.

@@ -35,7 +35,7 @@ class HomeControllerTest {
         User fakeUser = User.builder()
                 .username("student1")
                 .fullName("Nguyen Van A")
-                .role("STUDENT")
+                .role("ROLE_STUDENT")
                 .build();
         session.setAttribute(AuthController.SESSION_USER, fakeUser);
 
@@ -53,9 +53,33 @@ class HomeControllerTest {
     }
 
     @Test
-    @DisplayName("Truy cập GET /courses hiển thị giao diện danh sách môn học index")
-    void testCoursesCatalogReturnsIndexView() throws Exception {
+    @DisplayName("Khách vãng lai truy cập GET /courses phải bị chặn và chuyển hướng về /login")
+    void testGuestAccessCoursesRedirectsToLogin() throws Exception {
         mockMvc.perform(get("/courses"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error=unauthorized"));
+    }
+
+    @Test
+    @DisplayName("Khách vãng lai truy cập GET /courses/{id} phải bị chặn và chuyển hướng về /login")
+    void testGuestAccessCourseDetailRedirectsToLogin() throws Exception {
+        mockMvc.perform(get("/courses/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error=unauthorized"));
+    }
+
+    @Test
+    @DisplayName("Sinh viên đã đăng nhập truy cập GET /courses hiển thị giao diện danh sách môn học index")
+    void testAuthenticatedStudentAccessCoursesReturnsIndexView() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        User fakeUser = User.builder()
+                .username("student")
+                .fullName("Nguyen Van Sinh Vien")
+                .role("ROLE_STUDENT")
+                .build();
+        session.setAttribute(AuthController.SESSION_USER, fakeUser);
+
+        mockMvc.perform(get("/courses").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
                 .andExpect(model().attributeExists("courses"))

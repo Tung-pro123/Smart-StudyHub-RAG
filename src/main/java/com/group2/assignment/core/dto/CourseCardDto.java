@@ -24,6 +24,19 @@ public class CourseCardDto {
     private LocalDateTime createdAt;
     private long chunkCount;
 
+    // Thông tin người sở hữu
+    private Long ownerId;
+    private String ownerUsername;
+    private String ownerFullName;
+
+    public boolean isOwnedBy(Long userId) {
+        return ownerId != null && ownerId.equals(userId);
+    }
+
+    public boolean isSystemSample() {
+        return ownerId == null;
+    }
+
     public static CourseCardDto fromEntity(Course course, long chunkCount) {
         return CourseCardDto.builder()
                 .id(course.getId())
@@ -36,6 +49,9 @@ public class CourseCardDto {
                 .credits(course.getCredits())
                 .createdAt(course.getCreatedAt())
                 .chunkCount(chunkCount)
+                .ownerId(course.getUser() != null ? course.getUser().getId() : null)
+                .ownerUsername(course.getUser() != null ? course.getUser().getUsername() : null)
+                .ownerFullName(course.getUser() != null ? course.getUser().getFullName() : null)
                 .build();
     }
 }

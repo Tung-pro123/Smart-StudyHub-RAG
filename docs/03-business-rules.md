@@ -103,10 +103,15 @@ $$\mathbf{BR\text{-}[MODULE]\text{-}[NUMBER]}$$
 ### 📌 BR-AUTH-004: Quy tắc Phân quyền Tuyến đường (Route Protection Policy)
 * **Mức độ**: `CRITICAL`
 * **Mô tả**: Bảo vệ các Endpoint nhạy cảm trước người dùng chưa đăng nhập.
-* **Danh sách Public (Cho phép truy cập tự do)**:
-  - `/`, `/landing`, `/courses`, `/courses/{id}`, `/login`, `/register`, `/css/**`, `/js/**`, `/images/**`.
+* **Danh sách Public (Cho phép truy cập tự do duy nhất cho Khách vãng lai)**:
+  - `/`, `/landing` (Trang giới thiệu tiếp thị & bảng giá).
+  - `/login`, `/register`, `/logout` (Xác thực tài khoản).
+  - `/css/**`, `/js/**`, `/images/**`, `/webjars/**`, `/favicon.ico` (Tài nguyên tĩnh).
 * **Danh sách Sinh viên & Đã đăng nhập (`ROLE_STUDENT`, `ROLE_ADMIN`)**:
-  - `/profile`, `/courses/new`, `/courses/*/edit`, `/courses/*/delete`, `/courses/*/documents/**`, `/courses/*/chat/**`, `/planner/**`, `/quiz/**`.
+  - `/courses`, `/courses/**` (Toàn bộ danh sách môn học cá nhân, chi tiết môn, tạo mới, chỉnh sửa, xóa, nạp tài liệu PDF, Chunks và đàm thoại RAG).
+  - `/profile`, `/profile/**` (Hồ sơ cá nhân).
+  - `/planner`, `/planner/**` (Kế hoạch học tập AI).
+  - `/quiz`, `/quiz/**` (Luyện đề trắc nghiệm AI).
 * **Danh sách Độc quyền Quản trị viên (`ROLE_ADMIN`)**:
   - `/admin/**`, `/admin/dashboard`, `/admin/users/**`, `/admin/settings/**`, `/h2-console/**`.
 * **Xử lý vi phạm**: `JwtAuthInterceptor` chặn đứng request và chuyển hướng về `/login?error=unauthorized` kèm lưu URL đích để sau khi đăng nhập sẽ tự động quay lại.
@@ -120,6 +125,7 @@ $$\mathbf{BR\text{-}[MODULE]\text{-}[NUMBER]}$$
   - Người dùng chưa đăng nhập hoặc phiên làm việc đã hết hạn.
   - `session.getAttribute(AuthController.SESSION_USER) == null` và không có Cookie `STUDYHUB_JWT` hợp lệ.
   - **Không có bản ghi** trong bảng `users` của CSDL. Trạng thái hoàn toàn là Stateless đối với cơ sở dữ liệu.
+  - **Phạm vi được phép**: Chỉ xem Landing Page giới thiệu, tham khảo Bảng giá gói cước và Đăng nhập / Đăng ký. **Tuyệt đối bị chặn xem danh sách môn học, chi tiết môn hoặc dữ liệu học tập cá nhân**.
 * **Sinh viên đã đăng nhập (Authenticated Student - `ROLE_STUDENT`)**:
   - Đã xác thực danh tính thành công qua tài khoản cục bộ hoặc Google OAuth2.
   - Có bản ghi tài khoản `User` trong CSDL gắn với `subscriptionTier` (`FREE` hoặc `PRO`).
@@ -166,18 +172,18 @@ flowchart TD
     ProTier --> P4["AI Quiz: Tự do theo chương"]
     ProTier --> P5["Xuất đề thi PDF & Flashcards Spaced Repetition"]
 
-    CheckTier -->|Gói Khoa/Lớp: Campus| CampusTier[CAMPUS TIER]
-    CampusTier --> C1["Dùng chung cho cả lớp / Bộ môn"]
-    CampusTier --> C2["Dashboard theo dõi tiến độ cả lớp"]
-    CampusTier --> C3["Ngân hàng đề thi bảo mật nội bộ"]
+    CheckTier -->|Gói Nhóm: Study Squad| SquadTier["SQUAD / CAMPUS TIER"]
+    SquadTier --> C1["Mở khóa đặc quyền PRO cho 5 thành viên"]
+    SquadTier --> C2["Kho Slide & Giáo trình dùng chung cả nhóm"]
+    SquadTier --> C3["Team Study Planner & Đấu trường Quiz nhóm"]
 ```
 
 ### 📌 BR-TIER-001: Định danh 3 Hạng Gói Cước Hệ thống
 * **Mức độ**: `CRITICAL`
 * **Mô tả**: Mỗi tài khoản sinh viên sở hữu một thuộc tính `subscriptionTier`:
-  1. `FREE` (*Sinh Viên Tự Học* - $0/vĩnh viễn): Gói khởi đầu mặc định khi đăng ký tài khoản.
-  2. `PRO` (*Ôn Thi Cấp Tốc* - $2/tháng hoặc giá ưu đãi theo học kỳ): Mở khóa toàn bộ tính năng AI nâng cao.
-  3. `CAMPUS` (*Giảng Viên & Lớp Học* - $Campus/kỳ): Không gian kho tài liệu và đề thi chung cho toàn bộ sinh viên trong lớp.
+  1. `FREE` (*Sinh Viên Tự Học* - $0/vĩnh viễn): Gói khởi đầu mặc định khi đăng ký tài khoản. Giới hạn 3 môn, 50 lượt RAG/ngày, khóa AI Planner.
+  2. `PRO` (*Ôn Thi Cấp Tốc* - $2/tháng hoặc ưu đãi học kỳ): Dành cho cá nhân cày điểm A+, mở khóa toàn bộ tính năng RAG AI giáo trình không giới hạn, AI Study Planner & Quiz theo chương.
+  3. `SQUAD` (*Nhóm Học Tập / Study Squad* - $5/tháng cho nhóm 5 sinh viên): Dành cho nhóm bạn cùng lớp hoặc làm đồ án (HSF, SWP, PRJ...). Mở khóa trọn bộ đặc quyền PRO cho cả 5 bạn (~24k VNĐ/bạn), kho tài liệu & slide giáo trình dùng chung, chia sẻ timeline đồ án nhóm và bảng xếp hạng điểm số Quiz. (Hệ thống hỗ trợ cả mã `CAMPUS` để tương thích ngược hoàn hảo).
 
 ### 📌 BR-TIER-002: Hạn ngạch Số lượng Môn học (Max Courses Quota)
 * **Mức độ**: `HIGH`
@@ -185,7 +191,7 @@ flowchart TD
   - **Gói FREE**: Được phép tạo và sở hữu tối đa **3 môn học** (`MAX_COURSES_FREE = 3`).
     * Khi đã có 3 môn học, nếu bấm "Tạo môn học mới" (`POST /courses`), hệ thống chặn lại và ném ngoại lệ:
       > ⚠️ *"Bạn đã đạt giới hạn 3 môn học của Gói Tự Học. Vui lòng nâng cấp Gói Pro để tạo không giới hạn môn học!"*
-  - **Gói PRO & CAMPUS**: **Không giới hạn** số lượng môn học.
+  - **Gói PRO & SQUAD/CAMPUS**: **Không giới hạn** số lượng môn học.
 
 ### 📌 BR-TIER-003: Hạn ngạch Truy vấn RAG Chatbot Hàng ngày (Daily RAG Rate Limit)
 * **Mức độ**: `CRITICAL`
@@ -194,7 +200,7 @@ flowchart TD
   - Mỗi khi sinh viên gửi 1 câu hỏi thành công trong `/courses/{id}/chat/send`, biến đếm `dailyRagCount` tăng thêm 1.
   - Khi `dailyRagCount >= 50`, hệ thống từ chối trả lời câu hỏi tiếp theo và trả về phản hồi:
     > 🛑 *"Bạn đã sử dụng hết 50 câu hỏi RAG miễn phí hôm nay. Hãy nâng cấp lên Gói Pro ($2/tháng) để trò chuyện không giới hạn với AI!"*
-  - **Gói PRO & CAMPUS**: **Không giới hạn** số lượt truy vấn RAG trong ngày.
+  - **Gói PRO & SQUAD/CAMPUS**: **Không giới hạn** số lượt truy vấn RAG trong ngày.
 
 ### 📌 BR-TIER-004: Cơ chế Tự động Reset Hạn ngạch Hàng ngày (Daily Quota Reset)
 * **Mức độ**: `HIGH`
@@ -211,13 +217,13 @@ flowchart TD
   - **Gói FREE**: Tính năng AI Study Planner bị **KHÓA HOÀN TOÀN**.
     * Tại giao diện `/planner`, sinh viên Free nhìn thấy một lớp kính mờ (Locked Glass Overlay) với thông báo mời nâng cấp Pro.
     * Nếu sinh viên cố ý gửi request `POST /planner/generate`: Hệ thống chặn lại và điều hướng về trang nâng cấp.
-  - **Gói PRO & CAMPUS**: Mở khóa toàn quyền sinh lộ trình ôn thi Timeline theo Chunks, tick chọn hoàn thành task và theo dõi tiến độ %.
+  - **Gói PRO & SQUAD/CAMPUS**: Mở khóa toàn quyền sinh lộ trình ôn thi Timeline theo Chunks, tick chọn hoàn thành task và theo dõi tiến độ %.
 
 ### 📌 BR-TIER-006: Hạn ngạch AI Quiz Generator & Xuất Đề PDF / Flashcards
 * **Mức độ**: `HIGH`
 * **Quy tắc**:
   - **Gói FREE**: Chỉ được sinh đề thi cơ bản tối đa 10 câu hỏi; các nút *"Xuất đề thi ra PDF"* và *"Flashcards Spaced Repetition"* bị vô hiệu hóa kèm nhãn `PRO`.
-  - **Gói PRO & CAMPUS**: Được tạo đề thi nâng cao không giới hạn theo từng chương và hỗ trợ xuất đề PDF phục vụ in ấn ôn thi.
+  - **Gói PRO & SQUAD/CAMPUS**: Được tạo đề thi nâng cao không giới hạn theo từng chương và hỗ trợ xuất đề PDF phục vụ in ấn ôn thi.
 
 ---
 
