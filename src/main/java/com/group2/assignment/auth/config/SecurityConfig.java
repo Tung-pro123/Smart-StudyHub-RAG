@@ -1,5 +1,7 @@
 package com.group2.assignment.auth.config;
 
+import com.group2.assignment.auth.controller.AuthController;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +45,8 @@ public class SecurityConfig {
                 .failureUrl("/login?error=oauth2_failed")
             );
         }
+
+        http.logout(logout -> logout.deleteCookies(AuthController.AUTH_COOKIE_NAME));
 
         // Tắt HTTP Basic và Form Login (dùng custom controller)
         http.httpBasic(basic -> basic.disable())

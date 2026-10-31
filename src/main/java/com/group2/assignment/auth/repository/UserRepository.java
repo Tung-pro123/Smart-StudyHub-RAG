@@ -13,7 +13,16 @@ import org.springframework.data.jpa.repository.Query;
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByRoleOrderByUsernameAsc(String role);
 
-    @Query("select count(u) from User u where coalesce(u.subscriptionTier, 'FREE') = :tier")
+    List<User> findTop5ByOrderByCreatedAtDescIdDesc();
+
+    @Query("select u from User u where u.role = 'ROLE_STUDENT' " +
+            "and (:tier = '' or coalesce(u.subscriptionTier, 'FREE') = :tier) " +
+            "and (lower(u.username) like lower(concat('%', :keyword, '%')) " +
+            "or lower(u.fullName) like lower(concat('%', :keyword, '%')) " +
+            "or lower(u.email) like lower(concat('%', :keyword, '%'))) order by u.username")
+    List<User> searchStudents(String keyword, String tier);
+
+    @Query("select count(u) from User u where u.role = 'ROLE_STUDENT' and coalesce(u.subscriptionTier, 'FREE') = :tier")
     long countByTier(String tier);
 
     @Query("select coalesce(sum(u.dailyRagCount), 0) from User u where u.lastRagResetDate = :today")
@@ -22,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailIgnoreCase(String email);
     boolean existsByUsernameIgnoreCase(String username);
     boolean existsByEmailIgnoreCase(String email);
+    List<User> findAllBySquadLeaderUsernameIgnoreCase(String squadLeaderUsername);
+    long countBySquadLeaderUsernameIgnoreCase(String squadLeaderUsername);
 }

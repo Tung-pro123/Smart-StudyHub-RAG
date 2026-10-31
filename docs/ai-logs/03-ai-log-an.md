@@ -41,3 +41,27 @@ Bỏ form key cá nhân, chuyển các caller hiện tại sang nguồn key chun
 Kiểm thử bao gồm quyền Admin lấy từ DB, CSRF, khôi phục phiên từ cookie JWT, đổi gói có hiệu lực ở request tiếp theo, bảo mật key, KPI, reset ngày và giới hạn 50. Test quota đồng thời nạp cùng dữ liệu User cũ trong nhiều transaction để kiểm tra cập nhật counter dưới khóa hàng DB. Fixture RAG dùng tài khoản thật từ repository thay cho user ID giả để tương thích cơ chế làm mới phiên.
 
 Kết quả: `mvn clean test` trên Java 21 thành công với 75 tests, 0 failures/errors/skipped; `git diff --check` đạt. Ping dùng mock, chưa chạy với key thật và chưa kiểm tra giao diện bằng trình duyệt.
+
+
+## Sprint 31/10/2026 — Đồng bộ ba gói và mở rộng Admin Command Center
+
+Yêu cầu: kiểm tra task của tài khoản AnNT206, hoàn thiện theo Ponytail, push và tạo PR; chờ chủ tài khoản yêu cầu kiểm thử trước khi merge.
+
+Đã fetch main và đọc `docs/tasks/task-2026-10-31-pricing-tiers.md`. Nhánh `feature/pricing-admin-an` bổ sung thống kê sinh viên FREE/PRO/SQUAD, tỷ lệ trả phí không tính admin, hoạt động mới nhất, tìm/lọc sinh viên, kích hoạt SQUAD, reset RAG, che key và trạng thái ping. Tái sử dụng quyền xem/xóa môn trong Core và thêm nhãn chủ sở hữu; không thêm dependency hoặc cơ chế quản lý nhóm thuộc Auth.
+
+Kiểm thử bổ sung cho endpoint mới, quyền/CSRF, tài khoản không tồn tại, bảo toàn role và counter khi đổi gói, tìm theo ba trường kết hợp gói, thống kê SQUAD, danh sách gần đây và che key ngắn. Lần chạy đầu phát hiện thư viện mock chưa hỗ trợ Java 25 mặc định; chạy với `-DargLine=-Dnet.bytebuddy.experimental=true` thay vì sửa dependency của nhóm. Bộ kiểm thử Settings đạt 46 ca, không lỗi hoặc bỏ qua. Không thực hiện ping thật hoặc tạo ảnh minh chứng giả.
+
+Kết quả cuối: toàn bộ 126 kiểm thử đạt, 0 lỗi, 0 bỏ qua; git diff --check đạt. Chưa kiểm tra giao diện bằng trình duyệt hoặc ping Gemini thật. PR để nháp để bot không tự merge trước yêu cầu kiểm thử của chủ tài khoản.
+
+## Kiểm thử trực tiếp PR #31 — 31/10/2026
+
+Chạy localhost:8081 bằng H2 in-memory admin-ui-qa, không dùng database học tập hoặc key thật. Kiểm tra trình duyệt: đăng nhập Admin, dashboard 4 tài khoản/2 sinh viên/tỷ lệ trả phí 50%; các trang dashboard/users/settings; chuyển student FREE sang SQUAD, PRO và về FREE; tìm email kết hợp lọc FREE; reset bộ đếm 50/50 về 0/50; lưu key giả và che key, từ chối key có khoảng trắng, ping Gemini với key giả trả lỗi và dashboard hiện Offline.
+
+Sinh viên bị chặn 403 trên cả ba trang Admin. Tạo môn QA31 thuộc student, Admin thấy nhãn Bởi: student và hoạt động mới nhất; xóa môn demo thành công, số môn trở lại 3. Kiểm tra khung hẹp khoảng 628px và rộng khoảng 1280px. Chưa xác nhận điện thoại 390px vì công cụ không áp dụng kích thước đó.
+
+Phát hiện và sửa:
+1. Spring Security xử lý logout nhưng chưa xóa STUDYHUB_JWT, khiến truy cập lại tự khôi phục quyền Admin. Bổ sung xóa cookie ở cấu hình logout. Xác minh sau sửa: mở dashboard chuyển về login?error=unauthorized. Thêm test cookie hết hạn, phiên bị hủy và không khôi phục quyền.
+2. Lỗi Admin 403 hiện stack trace mặc định. Thêm xử lý lỗi riêng Admin và trang thông báo thân thiện, giữ HTTP 400/403/404. Xác minh trực tiếp và test không phản chiếu tên ngoại lệ.
+3. Admin xem môn sinh viên bị gắn nhãn Môn của bạn. Sửa nhãn theo chủ sở hữu thực tế; test cả Admin và sinh viên.
+
+Kết quả: mvn test -DargLine=-Dnet.bytebuddy.experimental=true đạt 128 tests, 0 failures/errors/skipped; git diff --check đạt. Chưa thử Gemini thành công bằng key thật, tải lớn hoặc xóa môn đã có PDF/quiz/planner. Ảnh cục bộ: target/admin-dashboard-ui.png, target/admin-users-desktop.png, target/admin-forbidden-ui.png. Giữ PR nháp chờ chủ tài khoản đánh giá trước merge.

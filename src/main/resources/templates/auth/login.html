@@ -98,13 +98,45 @@
             </a>
         </div>
 
-        <!-- Demo Credentials Box -->
-        <div class="bg-base-200/50 rounded-2xl p-4 border border-base-300/40 text-xs space-y-1">
-            <p class="font-bold text-base-content flex items-center gap-1.5 text-indigo-600">
-                <i class="fa-solid fa-circle-info"></i> Tài Khoản Demo Sẵn Có:
-            </p>
-            <p class="text-base-content/70">Tài khoản: <code class="font-bold text-primary">student</code> | Mật khẩu: <code class="font-bold text-primary">123456</code></p>
-            <p class="text-base-content/70">Tài khoản: <code class="font-bold text-purple-600">truong</code> | Mật khẩu: <code class="font-bold text-purple-600">123456</code> (Admin)</p>
+        <!-- Demo Credentials Box (1-Click Fill) -->
+        <div class="bg-base-200/60 rounded-2xl p-4 border border-base-300/60 text-xs space-y-2.5">
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-base-content flex items-center gap-1.5 text-indigo-500">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Tài Khoản Demo (Bấm để điền nhanh):
+                </span>
+                <span class="text-[10px] text-base-content/50 font-mono">Pass: 123456</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="fillDemo('student', '123456')" 
+                        class="btn btn-xs btn-outline border-base-300 hover:border-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400 justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
+                    <span class="badge badge-xs badge-ghost mr-1 font-mono text-[9px]">FREE</span>
+                    <span class="font-bold">student</span>
+                </button>
+                <button type="button" onclick="fillDemo('pro_student', '123456')" 
+                        class="btn btn-xs btn-outline border-base-300 hover:border-secondary hover:bg-secondary/10 hover:text-secondary justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
+                    <span class="badge badge-xs badge-secondary mr-1 font-mono text-[9px]">PRO</span>
+                    <span class="font-bold">pro_student</span>
+                </button>
+                <button type="button" onclick="fillDemo('squad_leader', '123456')" 
+                        class="btn btn-xs btn-outline border-base-300 hover:border-info hover:bg-info/10 hover:text-info justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
+                    <span class="badge badge-xs badge-info mr-1 font-mono text-[9px]">SQUAD</span>
+                    <span class="font-bold">squad_leader</span>
+                </button>
+                <button type="button" onclick="fillDemo('admin', '123456')" 
+                        class="btn btn-xs btn-outline border-base-300 hover:border-warning hover:bg-warning/10 hover:text-warning justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
+                    <span class="badge badge-xs badge-warning mr-1 font-mono text-[9px]">ADMIN</span>
+                    <span class="font-bold">admin</span>
+                </button>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between text-[10px] text-base-content/60 pt-1.5 border-t border-base-300/40 gap-1">
+                <span>Khác: 
+                    <button type="button" onclick="fillDemo('student2', '123456')" class="text-primary hover:underline font-semibold">student2</button>, 
+                    <button type="button" onclick="fillDemo('squad_member1', '123456')" class="text-primary hover:underline font-semibold">member1</button>, 
+                    <button type="button" onclick="fillDemo('truong', '123456')" class="text-purple-500 hover:underline font-semibold">truong (Admin)</button>
+                </span>
+            </div>
         </div>
 
         <div class="text-center text-xs text-base-content/60">
@@ -116,6 +148,13 @@
 </section>
 
 <script>
+    function fillDemo(username, password) {
+        const uInput = document.querySelector('input[name="username"]');
+        const pInput = document.getElementById('login-password');
+        if (uInput) uInput.value = username;
+        if (pInput) pInput.value = password;
+    }
+
     function togglePasswordVisibility(inputId, btn) {
         const input = document.getElementById(inputId);
         const icon = btn.querySelector('i');

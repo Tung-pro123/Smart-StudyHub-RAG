@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: main-layout('Admin Command Center', ~{::section})}">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: main-layout('Trung tâm quản trị', ~{::section})}">
 <body><section class="max-w-6xl mx-auto space-y-6">
-    <nav class="flex flex-wrap gap-3" aria-label="Quản trị"><a th:href="@{/admin/dashboard}" class="btn btn-primary">Tổng quan</a><a th:href="@{/admin/users}" class="btn btn-outline">Sinh viên</a><a th:href="@{/admin/settings}" class="btn btn-outline">Cấu hình AI</a></nav>
-    <h1 class="text-3xl font-extrabold">Admin Command Center</h1>
-    <p class="text-base-content/60">Thống kê tại thời điểm tải trang · Lượt RAG tính theo ngày Việt Nam.</p>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card rounded-2xl p-6"><p>Tổng tài khoản</p><p class="text-4xl font-bold" th:text="${stats.totalUsers}"></p><p class="text-sm" th:text="|FREE: ${stats.freeUsersCount} · PRO: ${stats.proUsersCount}|"></p></div>
-        <div class="glass-card rounded-2xl p-6"><p>Môn học</p><p class="text-4xl font-bold" th:text="${stats.totalCourses}"></p></div>
-        <div class="glass-card rounded-2xl p-6"><p>Chunks tài liệu</p><p class="text-4xl font-bold" th:text="${stats.totalChunks}"></p></div>
-        <div class="glass-card rounded-2xl p-6"><p>Câu RAG hôm nay</p><p class="text-4xl font-bold" th:text="${stats.todayRagQueries}"></p></div>
-    </div>
-    <div class="glass-card rounded-2xl p-6 flex flex-wrap items-center gap-8">
-        <div class="radial-progress text-primary" th:style="|--value:${stats.proConversionRate}|" role="progressbar" aria-label="Tỷ lệ tài khoản PRO" aria-valuemin="0" aria-valuemax="100" th:attr="aria-valuenow=${stats.proConversionRate}" th:text="|${stats.proConversionRate}%|"></div>
-        <div><h2 class="text-xl font-bold">Tỷ lệ tài khoản PRO</h2><p>CAMPUS được giữ riêng, không tính vào số tài khoản PRO.</p></div>
-        <div><p class="font-bold">Lần ping Gemini thành công gần nhất</p><p th:text="${stats.geminiPingLatencyMs != null} ? |${stats.geminiPingLatencyMs} ms| : 'Chưa có kết quả thành công'"></p><a th:href="@{/admin/settings}" class="link link-primary">Kiểm tra kết nối</a></div>
-    </div>
-</section></body></html>
+<nav class="flex flex-wrap gap-3" aria-label="Quản trị"><a th:href="@{/admin/dashboard}" class="btn btn-primary">Tổng quan</a><a th:href="@{/admin/users}" class="btn btn-outline">Sinh viên</a><a th:href="@{/admin/settings}" class="btn btn-outline">Cấu hình AI</a><a th:href="@{/courses}" class="btn btn-outline">Giám sát môn học</a></nav>
+<div class="flex flex-wrap justify-between gap-3"><div><h1 class="text-3xl font-extrabold">Trung tâm chỉ huy quản trị</h1><p class="text-base-content/60">Số liệu tại thời điểm tải trang · Ngày Việt Nam (GMT+7).</p></div><a th:href="@{/admin/dashboard}" class="btn btn-ghost">Làm mới số liệu</a></div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="glass-card rounded-2xl p-6 space-y-3"><h2>👥 Tổng tài khoản</h2><p class="text-4xl font-bold" th:text="${stats.totalUsers}"></p><p th:text="|${stats.totalStudents} sinh viên|"></p>
+<div class="flex h-3 overflow-hidden rounded-full bg-base-300" aria-hidden="true" th:if="${stats.totalStudents > 0}"><span class="bg-slate-400" th:style="|width:${100.0 * stats.freeUsersCount / stats.totalStudents}%|"></span><span class="bg-purple-500" th:style="|width:${100.0 * stats.proUsersCount / stats.totalStudents}%|"></span><span class="bg-blue-500" th:style="|width:${100.0 * stats.squadUsersCount / stats.totalStudents}%|"></span></div>
+<p class="text-sm" th:text="|FREE: ${stats.freeUsersCount} · PRO: ${stats.proUsersCount} · SQUAD: ${stats.squadUsersCount}|"></p></div>
+<div class="glass-card rounded-2xl p-6 space-y-3"><h2>📚 Kho tri thức hệ thống</h2><p class="text-4xl font-bold" th:text="${stats.totalCourses}"></p><p>Môn học toàn hệ thống</p><p th:text="|${stats.totalChunks} khối kiến thức đã lưu|"></p></div>
+<div class="glass-card rounded-2xl p-6 space-y-3"><h2>⚡ Tải lượng RAG hôm nay</h2><p class="text-4xl font-bold" th:text="${stats.todayRagQueries}"></p><p>Lượt sử dụng được ghi nhận trong ngày</p></div>
+<div class="glass-card rounded-2xl p-6 space-y-3"><h2>🟢 Tình trạng AI Gemini</h2><span class="badge" th:classappend="${ping == null} ? 'badge-ghost' : (${ping.success()} ? 'badge-success' : 'badge-error')" th:text="${ping == null} ? 'Chưa kiểm tra' : (${ping.success()} ? 'Online' : 'Offline')"></span><p class="font-mono break-all" th:text="${geminiModel}"></p><p th:text="${stats.geminiPingLatencyMs != null} ? |${stats.geminiPingLatencyMs} ms| : 'Chưa có kết quả thành công'"></p><p class="text-xs">Theo lần ping gần nhất, không tự gọi AI.</p><a th:href="@{/admin/settings}" class="link link-primary">Kiểm tra kết nối</a></div>
+</div>
+<div class="glass-card rounded-2xl p-6 flex flex-wrap items-center gap-8"><div class="radial-progress text-primary" th:style="|--value:${stats.paidConversionRate}|" role="progressbar" aria-label="Tỷ lệ sinh viên trả phí" aria-valuemin="0" aria-valuemax="100" th:attr="aria-valuenow=${stats.paidConversionRate}" th:text="|${stats.paidConversionRate}%|"></div><div><h2 class="text-xl font-bold">Tỷ lệ sinh viên trả phí</h2><p>PRO + SQUAD trên tổng sinh viên FREE, PRO và SQUAD; không tính quản trị viên.</p></div></div>
+<h2 class="text-xl font-bold">Hoạt động hệ thống gần đây</h2><div class="grid md:grid-cols-2 gap-4">
+<div class="glass-card rounded-2xl p-6 space-y-3"><h3 class="font-bold">5 tài khoản đăng ký mới nhất</h3><ul class="space-y-3"><li th:each="user : ${recentUsers}" class="flex justify-between gap-3"><span th:text="${user.username}"></span><time class="text-sm text-base-content/60" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm') : '—'}"></time></li></ul><p th:if="${#lists.isEmpty(recentUsers)}">Chưa có tài khoản.</p></div>
+<div class="glass-card rounded-2xl p-6 space-y-3"><h3 class="font-bold">5 môn học tạo mới nhất</h3><ul class="space-y-3"><li th:each="course : ${recentCourses}"><a class="link link-primary" th:href="@{/courses/{id}(id=${course.id})}" th:text="|${course.code} · ${course.name}|"></a><time class="block text-sm text-base-content/60" th:text="${course.createdAt != null ? #temporals.format(course.createdAt, 'dd/MM/yyyy HH:mm') : '—'}"></time></li></ul><p th:if="${#lists.isEmpty(recentCourses)}">Chưa có môn học.</p></div>
+</div></section></body></html>

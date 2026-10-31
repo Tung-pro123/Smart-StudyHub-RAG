@@ -40,7 +40,10 @@ public class User {
 
     @Column(length = 20)
     @Builder.Default
-    private String subscriptionTier = "FREE"; // "FREE", "PRO", "CAMPUS"
+    private String subscriptionTier = "FREE"; // "FREE", "PRO", "CAMPUS", "SQUAD"
+
+    @Column(length = 50)
+    private String squadLeaderUsername; // Username của nhóm trưởng sở hữu gói SQUAD
 
     @Column(name = "squad_leader_username", length = 50)
     private String squadLeaderUsername; // Username nhóm trưởng sở hữu gói Study Squad
@@ -99,6 +102,15 @@ public class User {
                 || "PRO".equalsIgnoreCase(this.subscriptionTier)
                 || "CAMPUS".equalsIgnoreCase(this.subscriptionTier)
                 || "SQUAD".equalsIgnoreCase(this.subscriptionTier);
+    }
+
+    public boolean isSquad() {
+        return "SQUAD".equalsIgnoreCase(this.subscriptionTier);
+    }
+
+    public boolean isSquadLeader() {
+        return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
+                && (this.squadLeaderUsername == null || this.username.equalsIgnoreCase(this.squadLeaderUsername));
     }
 
     public boolean isAdmin() {

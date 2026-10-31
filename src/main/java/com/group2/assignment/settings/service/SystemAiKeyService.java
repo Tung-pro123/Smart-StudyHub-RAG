@@ -20,6 +20,11 @@ public class SystemAiKeyService {
         return isConfigured() ? apiKey : "";
     }
 
+    public String getMaskedKey() {
+        String key = getApiKey();
+        return key.length() > 10 ? key.substring(0, 6) + "...****" : (key.isEmpty() ? "Chưa cấu hình" : "********");
+    }
+
     public boolean isConfigured() {
         return apiKey != null && !apiKey.isBlank() && !apiKey.startsWith("YOUR_");
     }

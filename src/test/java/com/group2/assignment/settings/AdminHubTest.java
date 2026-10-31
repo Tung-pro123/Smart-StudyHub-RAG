@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AdminHubTest {
     @Autowired MockMvc mvc;
     @Autowired UserRepository users;
+    @Autowired com.group2.assignment.core.repository.CourseRepository courses;
     @Autowired JwtService jwt;
     @Autowired SubscriptionQuotaService quota;
     @Autowired AdminAnalyticsService analytics;
@@ -70,13 +71,17 @@ class AdminHubTest {
                 .andExpect(header().string("Cache-Control", "no-store"))
                 .andExpect(content().string(not(containsString("test-system-key"))))
                 .andExpect(content().string(not(containsString(student.getPassword()))));
-        mvc.perform(get(path).session(sessionFor(student))).andExpect(status().isForbidden());
+        mvc.perform(get(path).session(sessionFor(student))).andExpect(status().isForbidden())
+                .andExpect(view().name("admin/error"))
+                .andExpect(content().string(containsString("Chỉ quản trị viên được truy cập.")))
+                .andExpect(content().string(not(containsString("ResponseStatusException"))));
         mvc.perform(get(path)).andExpect(redirectedUrl("/login?error=unauthorized"));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"/admin/settings/save", "/admin/settings/test-ping",
-            "/admin/users/1/upgrade-pro", "/admin/users/1/downgrade-free"})
+            "/admin/users/1/upgrade-pro", "/admin/users/1/downgrade-free",
+            "/admin/users/1/upgrade-squad", "/admin/users/1/reset-rag"})
     void mutationsRequireAdminAndCsrf(String path) throws Exception {
         String token = csrf();
         mvc.perform(post(path).session(session).param("apiKey", "test-key"))
@@ -178,7 +183,7 @@ class AdminHubTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"PRO", "CAMPUS"})
+    @ValueSource(strings = {"PRO", "CAMPUS", "SQUAD"})
     void paidQuotaIsUnlimitedAndDowngradeDoesNotResetUsage(String tier) {
         student.setSubscriptionTier(tier);
         student.setLastRagResetDate(today);
@@ -205,7 +210,114 @@ class AdminHubTest {
         users.flush();
         assertThat(analytics.getStats().todayRagQueries()).isEqualTo(before.todayRagQueries());
         assertThat(analytics.getStats().freeUsersCount()).isEqualTo(before.freeUsersCount());
-        assertThat(new com.group2.assignment.settings.dto.AdminStatsDto(0, 0, 0, 0, 0, 0, null).getProConversionRate()).isZero();
+        assertThat(new com.group2.assignment.settings.dto.AdminStatsDto(0, 0, 0, 0, 0, 0, 0, null).getPaidConversionRate()).isZero();
+    }
+
+    @Test
+    void squadUpgradeAndQuotaResetKeepRoleAndData() throws Exception {
+        student.setDailyRagCount(50);
+        student.setLastRagResetDate(today);
+        String token = csrf();
+        mvc.perform(post("/admin/users/{id}/upgrade-squad", student.getId()).session(session).param("csrfToken", token))
+                .andExpect(redirectedUrl("/admin/users"));
+        assertThat(student.getSubscriptionTier()).isEqualTo("SQUAD");
+        assertThat(student.getDailyRagCount()).isEqualTo(50);
+        assertThat(quota.canQueryRag(student.getId())).isTrue();
+        mvc.perform(post("/admin/users/{id}/downgrade-free", student.getId()).session(session).param("csrfToken", token))
+                .andExpect(redirectedUrl("/admin/users"));
+        assertThat(quota.canQueryRag(student.getId())).isFalse();
+        mvc.perform(post("/admin/users/{id}/reset-rag", student.getId()).session(session).param("csrfToken", token))
+                .andExpect(redirectedUrl("/admin/users"));
+        assertThat(student.getDailyRagCount()).isZero();
+        assertThat(student.getLastRagResetDate()).isEqualTo(today);
+        assertThat(student.getRole()).isEqualTo("ROLE_STUDENT");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"upgrade-squad", "reset-rag"})
+    void newActionsRejectMissingUsersAndAdminTargets(String action) throws Exception {
+        String token = csrf();
+        mvc.perform(post("/admin/users/99999999/" + action).session(session).param("csrfToken", token))
+                .andExpect(status().isNotFound());
+        mvc.perform(post("/admin/users/" + admin.getId() + "/" + action).session(session).param("csrfToken", token))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void searchesAllStudentIdentityFieldsAndCombinesTierFilter() throws Exception {
+        student.setSubscriptionTier("SQUAD");
+        for (String keyword : java.util.List.of("ADMIN-HUB-TEST", "Hub Student", "test@example.com")) {
+            mvc.perform(get("/admin/users").session(session).param("keyword", keyword).param("tier", "SQUAD"))
+                    .andExpect(status().isOk()).andExpect(model().attribute("students", hasSize(1)))
+                    .andExpect(content().string(containsString("Reset RAG")));
+        }
+        mvc.perform(get("/admin/users").session(session).param("keyword", student.getUsername()).param("tier", "PRO"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", empty()));
+        mvc.perform(get("/admin/users").session(session).param("keyword", admin.getUsername()))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", empty()));
+        mvc.perform(get("/admin/users").session(session).param("tier", "INVALID"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void statisticsCountOnlyStudentsAndIncludeSquadInPaidRate() {
+        var before = analytics.getStats();
+        student.setSubscriptionTier("SQUAD");
+        users.flush();
+        var after = analytics.getStats();
+        assertThat(after.squadUsersCount()).isEqualTo(before.squadUsersCount() + 1);
+        assertThat(after.freeUsersCount()).isEqualTo(before.freeUsersCount() - 1);
+        long proCount = after.proUsersCount();
+        admin.setSubscriptionTier("PRO");
+        users.flush();
+        assertThat(analytics.getStats().proUsersCount()).isEqualTo(proCount);
+        assertThat(new com.group2.assignment.settings.dto.AdminStatsDto(5, 1, 1, 2, 0, 0, 0, null)
+                .getPaidConversionRate()).isEqualTo(75);
+    }
+
+    @Test
+    void recentActivityIsBoundedAndKeyIsMaskedEvenForShortSecrets() {
+        for (int i = 0; i < 6; i++) {
+            users.saveAndFlush(User.builder().username("recent-" + i).email("recent-" + i + "@example.com")
+                    .password("hash").fullName("Recent").createdAt(java.time.LocalDateTime.now().plusDays(i + 1)).build());
+        }
+        assertThat(analytics.getRecentUsers()).hasSize(5);
+        assertThat(analytics.getRecentUsers().get(0).getUsername()).isEqualTo("recent-5");
+        assertThat(analytics.getRecentCourses()).hasSizeLessThanOrEqualTo(5);
+        systemKey.update("AIzaSy-test-secret");
+        assertThat(systemKey.getMaskedKey()).isEqualTo("AIzaSy...****");
+        systemKey.update("short");
+        assertThat(systemKey.getMaskedKey()).isEqualTo("********");
+    }
+
+    @Test
+    void adminCourseMonitoringShowsActualOwnerInsteadOfClaimingOwnership() throws Exception {
+        courses.saveAndFlush(com.group2.assignment.core.entity.Course.builder()
+                .code("QA31").name("Admin UI course").user(student).build());
+        mvc.perform(get("/courses").session(session)).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Bởi: " + student.getUsername())))
+                .andExpect(content().string(containsString("Môn sinh viên")));
+        mvc.perform(get("/courses").session(sessionFor(student))).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Môn của bạn")))
+                .andExpect(content().string(not(containsString("Bởi: " + student.getUsername()))));
+    }
+
+    @Test
+    void logoutClearsJwtCookieAndPreventsRestoringAdminSession() throws Exception {
+        String token = jwt.generateToken(admin.getUsername(), "ROLE_ADMIN", admin.getFullName());
+        mvc.perform(get("/admin/dashboard").session(session)
+                .cookie(new Cookie(AuthController.AUTH_COOKIE_NAME, token))).andExpect(status().isOk());
+        var response = mvc.perform(get("/logout").session(session)
+                        .cookie(new Cookie(AuthController.AUTH_COOKIE_NAME, token)))
+                .andExpect(redirectedUrl("/login?logout"))
+                .andExpect(cookie().maxAge(AuthController.AUTH_COOKIE_NAME, 0))
+                .andExpect(cookie().path(AuthController.AUTH_COOKIE_NAME, "/"))
+                .andReturn().getResponse();
+        assertThat(session.isInvalid()).isTrue();
+        Cookie expired = response.getCookie(AuthController.AUTH_COOKIE_NAME);
+        assertThat(expired).isNotNull();
+        mvc.perform(get("/admin/dashboard").cookie(expired))
+                .andExpect(redirectedUrl("/login?error=unauthorized"));
     }
 
     @Test

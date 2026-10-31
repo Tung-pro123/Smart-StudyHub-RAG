@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -202,27 +203,149 @@ public class AuthService {
     }
 
     /**
-     * Nâng cấp hoặc chuyển đổi gói hội viên (FREE / PRO / CAMPUS)
+     * Nâng cấp hoặc chuyển đổi gói hội viên (FREE / PRO / CAMPUS / SQUAD)
      */
     public User upgradeSubscriptionTier(String username, String tier) {
         User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng: " + username));
-        user.setSubscriptionTier(tier != null ? tier.toUpperCase() : "FREE");
+        String newTier = tier != null ? tier.toUpperCase() : "FREE";
+        user.setSubscriptionTier(newTier);
+        if ("SQUAD".equalsIgnoreCase(newTier)) {
+            user.setSquadLeaderUsername(user.getUsername());
+        }
         user.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 
+    public static final int MAX_SQUAD_MEMBERS = 5; // 1 nhóm trưởng + tối đa 4 bạn
+
     /**
-     * Khởi tạo tài khoản sinh viên mẫu mặc định để demo
+     * Lấy danh sách thành viên trong nhóm học tập (gồm cả nhóm trưởng)
+     */
+    public List<User> getSquadMembers(String leaderUsername) {
+        if (leaderUsername == null || leaderUsername.isBlank()) {
+            return List.of();
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername).orElse(null);
+        if (leader == null) {
+            return List.of();
+        }
+
+        String actualLeader = (leader.getSquadLeaderUsername() != null && !leader.getSquadLeaderUsername().isBlank())
+                ? leader.getSquadLeaderUsername()
+                : leader.getUsername();
+
+        List<User> members = new java.util.ArrayList<>();
+        userRepository.findByUsernameIgnoreCase(actualLeader).ifPresent(members::add);
+        List<User> subMembers = userRepository.findAllBySquadLeaderUsernameIgnoreCase(actualLeader);
+        for (User m : subMembers) {
+            if (!m.getUsername().equalsIgnoreCase(actualLeader)) {
+                members.add(m);
+            }
+        }
+        return members;
+    }
+
+    /**
+     * Thêm thành viên vào nhóm học tập (Study Squad: tối đa 5 người)
+     */
+    public User addMemberToSquad(String leaderUsername, String memberUsername) {
+        if (memberUsername == null || memberUsername.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập username của thành viên cần thêm!");
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin nhóm trưởng: " + leaderUsername));
+
+        if (!"SQUAD".equalsIgnoreCase(leader.getSubscriptionTier())
+                && !"CAMPUS".equalsIgnoreCase(leader.getSubscriptionTier())
+                && !"ROLE_ADMIN".equalsIgnoreCase(leader.getRole())) {
+            throw new IllegalStateException("Bạn cần nâng cấp Gói Nhóm Học Tập (SQUAD) để quản lý nhóm!");
+        }
+
+        String actualLeaderUsername = leader.getUsername();
+        if (leader.getSquadLeaderUsername() != null && !leader.getSquadLeaderUsername().equalsIgnoreCase(leader.getUsername())) {
+            throw new IllegalStateException("Chỉ Nhóm trưởng mới có quyền thêm thành viên vào nhóm!");
+        }
+
+        if (actualLeaderUsername.equalsIgnoreCase(memberUsername.trim())) {
+            throw new IllegalArgumentException("Bạn đã là Nhóm trưởng của nhóm này!");
+        }
+
+        User member = userRepository.findByUsernameIgnoreCase(memberUsername.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng có username: " + memberUsername));
+
+        if ("SQUAD".equalsIgnoreCase(member.getSubscriptionTier())) {
+            if (actualLeaderUsername.equalsIgnoreCase(member.getSquadLeaderUsername())) {
+                throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " đã có trong nhóm của bạn!");
+            } else {
+                throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " hiện đã tham gia một nhóm học tập khác!");
+            }
+        }
+
+        List<User> currentSquad = getSquadMembers(actualLeaderUsername);
+        if (currentSquad.size() >= MAX_SQUAD_MEMBERS) {
+            throw new IllegalStateException("Nhóm đã đủ tối đa 5 thành viên!");
+        }
+
+        member.setSubscriptionTier("SQUAD");
+        member.setSquadLeaderUsername(actualLeaderUsername);
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Xóa thành viên ra khỏi nhóm (chuyển về lại gói FREE)
+     */
+    public User removeMemberFromSquad(String leaderUsername, String memberUsername) {
+        if (memberUsername == null || memberUsername.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập username của thành viên cần xóa!");
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhóm trưởng: " + leaderUsername));
+
+        if (leader.getUsername().equalsIgnoreCase(memberUsername.trim())) {
+            throw new IllegalArgumentException("Nhóm trưởng không thể tự xóa chính mình khỏi nhóm!");
+        }
+
+        User member = userRepository.findByUsernameIgnoreCase(memberUsername.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thành viên: " + memberUsername));
+
+        if (!leader.getUsername().equalsIgnoreCase(member.getSquadLeaderUsername())) {
+            throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " không thuộc nhóm học tập của bạn!");
+        }
+
+        member.setSubscriptionTier("FREE");
+        member.setSquadLeaderUsername(null);
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Khởi tạo tài khoản sinh viên mẫu mặc định để demo các gói cước và vai trò
      */
     @PostConstruct
     public void initDefaultUser() {
-        // 1. Tài khoản Student Free
+        // 1. Tài khoản Student Free (Có sẵn môn học, quota RAG 50 câu/ngày)
         if (!userRepository.existsByUsernameIgnoreCase("student")) {
             userRepository.save(User.builder()
                     .username("student")
                     .email("student@fpt.edu.vn")
                     .fullName("Nguyễn Văn Sinh Viên")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("FREE")
+                    .dailyRagCount(5)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 2. Tài khoản Student 2 Free (Tự do, chưa có nhóm - dùng để demo mời vào Squad)
+        if (!userRepository.existsByUsernameIgnoreCase("student2")) {
+            userRepository.save(User.builder()
+                    .username("student2")
+                    .email("student2@fpt.edu.vn")
+                    .fullName("Lê Tự Do (Free)")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
                     .subscriptionTier("FREE")
@@ -232,22 +355,74 @@ public class AuthService {
                     .build());
         }
 
-        // 2. Tài khoản Pro Student
+        // 3. Tài khoản Pro Student (Không giới hạn môn học, không giới hạn RAG)
         if (!userRepository.existsByUsernameIgnoreCase("pro_student")) {
             userRepository.save(User.builder()
                     .username("pro_student")
                     .email("pro_student@fpt.edu.vn")
-                    .fullName("Trần Pro Sinh Viên")
+                    .fullName("Trần Nâng Cấp (Pro User)")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
                     .subscriptionTier("PRO")
-                    .dailyRagCount(0)
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(85)
                     .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
         }
 
-        // 3. Tài khoản Quản trị viên Admin
+        // 4. Tài khoản Trưởng Nhóm Squad (Gói Study Squad - tối đa 5 bạn)
+        if (!userRepository.existsByUsernameIgnoreCase("squad_leader")) {
+            userRepository.save(User.builder()
+                    .username("squad_leader")
+                    .email("squad_leader@fpt.edu.vn")
+                    .fullName("Phạm Trưởng Nhóm (Leader Squad)")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("SQUAD")
+                    .squadLeaderUsername("squad_leader")
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(20)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 5. Thành viên nhóm Squad 1 (Hưởng đặc quyền Pro từ trưởng nhóm)
+        if (!userRepository.existsByUsernameIgnoreCase("squad_member1")) {
+            userRepository.save(User.builder()
+                    .username("squad_member1")
+                    .email("squad_member1@fpt.edu.vn")
+                    .fullName("Hoàng Thành Viên (Squad Member 1)")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("SQUAD")
+                    .squadLeaderUsername("squad_leader")
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(12)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 6. Thành viên nhóm Squad 2 (Hưởng đặc quyền Pro từ trưởng nhóm)
+        if (!userRepository.existsByUsernameIgnoreCase("squad_member2")) {
+            userRepository.save(User.builder()
+                    .username("squad_member2")
+                    .email("squad_member2@fpt.edu.vn")
+                    .fullName("Vũ Bạn Học (Squad Member 2)")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("SQUAD")
+                    .squadLeaderUsername("squad_leader")
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(8)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 7. Tài khoản Quản trị viên Admin
         if (!userRepository.existsByUsernameIgnoreCase("admin")) {
             userRepository.save(User.builder()
                     .username("admin")
@@ -262,7 +437,7 @@ public class AuthService {
                     .build());
         }
 
-        // 4. Tài khoản Demo Trường (Admin)
+        // 8. Tài khoản Demo Trường (Admin / Dev)
         if (!userRepository.existsByUsernameIgnoreCase("truong")) {
             userRepository.save(User.builder()
                     .username("truong")

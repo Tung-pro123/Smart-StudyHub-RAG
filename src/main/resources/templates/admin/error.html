@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: main-layout('Không thể thực hiện yêu cầu', ~{::section})}">
+<body><section class="max-w-xl mx-auto glass-card rounded-2xl p-8 space-y-4 text-center">
+    <p class="text-5xl font-bold text-warning" th:text="${statusCode}"></p>
+    <h1 class="text-2xl font-bold">Không thể thực hiện yêu cầu</h1>
+    <p role="alert" th:text="${errorMessage}"></p>
+    <a th:href="@{/}" class="btn btn-primary">Về trang chủ</a>
+</section></body></html>

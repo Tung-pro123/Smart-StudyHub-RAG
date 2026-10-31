@@ -571,12 +571,12 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <div class="hidden md:flex items-center gap-7 lg:gap-8 text-sm font-medium text-gray-300">
 <a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#about">RAG Pipeline</a>
 <a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#features">Tính Năng</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#how-it-works">Quy Trình</a>
 <a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#pricing">Gói Học Tập</a>
-<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#testimonials">Đánh Giá</a>
-<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#blog">Kiến Thức</a>
+<a class="relative py-1 hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300" href="#faq">Hỏi Đáp</a>
 <a th:href="@{/courses}" class="relative py-1 text-violet-400 hover:text-violet-300 transition-colors flex items-center gap-1.5 font-semibold after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-indigo-500 after:via-violet-500 after:to-pink-500 hover:after:w-full after:transition-all after:duration-300">
-<i class="fa-solid fa-book-open text-xs"></i>
-<span>Môn Học</span>
+<i class="fa-solid fa-folder-plus text-xs"></i>
+<span>Tự Tạo Môn</span>
 </a>
 </div>
 <!-- Actions & CTA -->
@@ -608,10 +608,10 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <ul class="dropdown-content menu p-3 shadow-2xl glass-card rounded-2xl w-52 mt-3 space-y-1 text-sm border border-white/10" tabindex="0">
 <li><a class="hover:text-violet-400" href="#about">RAG Pipeline</a></li>
 <li><a class="hover:text-violet-400" href="#features">Tính Năng</a></li>
+<li><a class="hover:text-violet-400" href="#how-it-works">Quy Trình Tự Học</a></li>
 <li><a class="hover:text-violet-400" href="#pricing">Gói Học Tập</a></li>
-<li><a class="hover:text-violet-400" href="#testimonials">Đánh Giá</a></li>
-<li><a class="hover:text-violet-400" href="#blog">Kiến Thức</a></li>
-<li><a th:href="@{/courses}" class="hover:text-violet-400 font-semibold"><i class="fa-solid fa-book-open text-xs mr-1"></i>Môn Học</a></li>
+<li><a class="hover:text-violet-400" href="#faq">Hỏi Đáp (FAQ)</a></li>
+<li><a th:href="@{/courses}" class="hover:text-violet-400 font-semibold"><i class="fa-solid fa-folder-plus text-xs mr-1"></i>Tự Tạo Môn</a></li>
 <div class="divider my-1 border-white/10"></div>
 <th:block th:if="${session.currentUser != null}">
 <li><a th:href="@{/courses}" class="text-violet-400 font-semibold"><i class="fa-solid fa-gauge-high mr-1"></i>Dashboard</a></li>
@@ -634,7 +634,7 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <!-- Tag / Badge -->
 <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-xs sm:text-sm font-medium text-violet-300 border border-violet-500/30 mb-8 animate-float">
 <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
-<span class="text-white font-semibold">Smart Multi-Course Hub:</span> RAG AI Engine v2.0 Live
+<span class="text-white font-semibold">Smart Multi-Course Hub:</span> Tự Tạo Môn • Nạp Slide PDF • RAG AI Không Ảo Giác
 <i class="fa-solid fa-graduation-cap text-violet-400 text-xs ml-1"></i>
 </div>
 <!-- Heading -->
@@ -643,7 +643,7 @@ Unlock the Hidden Knowledge in Your <span class="text-gradient">Courseware.</spa
 </h1>
 <!-- Description -->
 <p class="reveal reveal-delay-200 text-base sm:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-Hệ thống trợ lý học tập đa môn học dành cho sinh viên đại học. Tự động trích xuất slide &amp; giáo trình PDF, giải đáp thắc mắc 100% bám sát tài liệu kèm trích dẫn số trang (Citations) — triệt tiêu hoàn toàn ảo giác (zero hallucinations).
+Nền tảng hỗ trợ sinh viên đại học tự quản lý môn học và ôn thi thông minh. Tự do tạo môn học theo kỳ, tải lên slide &amp; giáo trình PDF của giảng viên, RAG AI tự động phân tích và giải đáp thắc mắc 100% bám sát tài liệu kèm trích dẫn số trang đối chứng — triệt tiêu hoàn toàn ảo giác.
 </p>
 <!-- CTA Buttons -->
 <div class="reveal reveal-delay-300 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
@@ -654,8 +654,8 @@ Hệ thống trợ lý học tập đa môn học dành cho sinh viên đại h�
 <a th:href="@{/courses}" id="hero-specular-btn" class="specular-button w-full sm:w-auto px-8 py-3.5 font-semibold text-base text-gray-200 hover:text-white flex items-center justify-center gap-2">
 <canvas class="specular-button__light" aria-hidden="true"></canvas>
 <span class="specular-button__label flex items-center gap-2">
-<i class="fa-solid fa-book-open text-violet-400"></i>
-<span>Khám Phá Môn Học</span>
+<i class="fa-solid fa-folder-plus text-violet-400"></i>
+<span>Tạo Môn Học Của Bạn</span>
 </span>
 </a>
 </div>
@@ -1226,58 +1226,58 @@ Tìm kiếm theo ngữ nghĩa sâu sắc thay vì chỉ khớp từ khóa thô s
 <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
 </div>
 
-<!-- Bento 2: 1 Col Card - Multi-Course Hub -->
+<!-- Bento 2: 1 Col Card - Multi-Course Hub & Data Isolation -->
 <div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl relative overflow-hidden flex flex-col justify-between">
 <div>
 <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-xl mb-6">
-<i class="fa-solid fa-layer-group"></i>
+<i class="fa-solid fa-folder-tree"></i>
 </div>
-<h3 class="text-xl font-bold text-white mb-2">Quản Lý Đa Môn Học</h3>
+<h3 class="text-xl font-bold text-white mb-2">Tự Tạo Môn &amp; Phân Lập Dữ Liệu</h3>
 <p class="text-gray-300 text-sm leading-relaxed mb-6">
-Không gian học tập riêng biệt cho từng môn: HSF302, MAS291, PRJ301, SWE201. Mỗi môn sở hữu kho giáo trình, vector index và lịch sử chat tách biệt.
+Không gian tự học hoàn toàn độc lập cho từng bạn sinh viên. Bạn tự do đặt mã môn, tên môn theo kỳ thi (HSF302, PRJ301, SWP391...), tự tải lên giáo trình của lớp mình. Cơ chế Data Isolation bảo vệ dữ liệu độc quyền, không lo lẫn lộn hay lộ bài giảng.
 </p>
 
-<!-- Mini Course Pills Grid -->
+<!-- Mini Course Pills Grid (Demo môn do sinh viên tự khởi tạo) -->
 <div class="grid grid-cols-2 gap-2 mb-6">
 <div class="flex items-center gap-2 p-2 rounded-xl bg-violet-500/10 border border-violet-500/20 text-xs font-semibold text-violet-200">
-<i class="fa-solid fa-comments text-violet-400"></i>
-<span class="truncate">HSF302 • Kỹ Năng</span>
+<i class="fa-solid fa-book text-violet-400"></i>
+<span class="truncate">Tự tạo: HSF302</span>
 </div>
 <div class="flex items-center gap-2 p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-200">
 <i class="fa-brands fa-java text-amber-400"></i>
-<span class="truncate">PRJ301 • Java Web</span>
+<span class="truncate">Tự tạo: PRJ301</span>
 </div>
 <div class="flex items-center gap-2 p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs font-semibold text-cyan-200">
 <i class="fa-solid fa-calculator text-cyan-400"></i>
-<span class="truncate">MAS291 • Thống Kê</span>
+<span class="truncate">Tự tạo: MAS291</span>
 </div>
 <div class="flex items-center gap-2 p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-semibold text-emerald-200">
 <i class="fa-solid fa-code text-emerald-400"></i>
-<span class="truncate">SWE201 • CN Phần Mềm</span>
+<span class="truncate">Tự tạo: SWP391</span>
 </div>
 </div>
 
 <!-- 3 Architecture Checklist Points -->
 <div class="space-y-2.5 text-xs text-gray-300">
 <div class="flex items-center gap-2">
-<i class="fa-solid fa-database text-violet-400 w-3.5 text-center"></i>
-<span><strong>Multi-Tenant:</strong> Phân vùng tài liệu theo Course ID</span>
+<i class="fa-solid fa-user-shield text-violet-400 w-3.5 text-center"></i>
+<span><strong>Data Isolation:</strong> Phân lập dữ liệu tuyệt đối theo User ID</span>
 </div>
 <div class="flex items-center gap-2">
-<i class="fa-solid fa-brain text-pink-400 w-3.5 text-center"></i>
-<span><strong>Vector Partition:</strong> Index riêng biệt, không lẫn ngữ cảnh</span>
+<i class="fa-solid fa-cloud-arrow-up text-pink-400 w-3.5 text-center"></i>
+<span><strong>BYO Syllabus:</strong> Tự nạp slide &amp; PDF của giảng viên bạn</span>
 </div>
 <div class="flex items-center gap-2">
 <i class="fa-solid fa-shield-halved text-emerald-400 w-3.5 text-center"></i>
-<span><strong>Zero Context Leak:</strong> Phòng vệ ảo giác chéo môn 100%</span>
+<span><strong>Zero Context Leak:</strong> Vector Index riêng, không lẫn ngữ cảnh</span>
 </div>
 </div>
 </div>
 <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
 <span class="text-xs text-violet-300 font-semibold flex items-center gap-1.5">
-<i class="fa-solid fa-graduation-cap"></i> Không gian độc lập
+<i class="fa-solid fa-graduation-cap"></i> Cá nhân hóa 100%
 </span>
-<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none">4+ Môn Học</span>
+<span class="badge badge-xs bg-violet-500/20 text-violet-300 border-none">Tự Do Khởi Tạo</span>
 </div>
 </div>
 
@@ -1461,11 +1461,15 @@ Miễn phí vĩnh viễn
 <ul class="space-y-3.5 text-sm text-gray-300 mb-8">
 <li class="flex items-center gap-3">
 <i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
-<span>Tối đa <strong>3 Môn học</strong> (HSF302, PRJ301...)</span>
+<span>Tự tạo tối đa <strong>3 Môn học</strong> cá nhân</span>
 </li>
 <li class="flex items-center gap-3">
 <i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
-<span>Truy vấn RAG 50 câu hỏi / ngày</span>
+<span>Tối đa <strong>3 tài liệu PDF / môn</strong></span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
+<span>Truy vấn RAG AI 50 câu hỏi / ngày</span>
 </li>
 <li class="flex items-center gap-3">
 <i class="fa-solid fa-circle-check text-indigo-400 text-sm"></i>
@@ -1518,7 +1522,11 @@ Thanh toán theo tháng
 <ul class="space-y-3.5 text-sm text-gray-200 mb-8">
 <li class="flex items-center gap-3">
 <i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
-<span><strong>Không giới hạn</strong> Môn học</span>
+<span><strong>Không giới hạn</strong> số môn học tự tạo</span>
+</li>
+<li class="flex items-center gap-3">
+<i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
+<span><strong>Không giới hạn</strong> tài liệu PDF tải lên</span>
 </li>
 <li class="flex items-center gap-3">
 <i class="fa-solid fa-circle-check text-pink-400 text-sm"></i>
@@ -1603,255 +1611,214 @@ Thanh toán theo tháng
 </div>
 </section>
 
-<!-- h. TESTIMONIALS -->
-<section class="py-24 md:py-32 bg-slate-950/40 border-y border-white/5" id="testimonials">
+<!-- h. HOW IT WORKS: 4-STEP SELF-STUDY WORKFLOW -->
+<section class="py-24 md:py-32 bg-slate-950/40 border-y border-white/5" id="how-it-works">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="reveal text-center max-w-3xl mx-auto mb-16">
 <span class="badge badge-outline border-cyan-500/40 text-cyan-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
-Trải Nghiệm Thực Tế
+PHƯƠNG PHÁP TỰ HỌC THÔNG MINH
 </span>
 <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
-Hear from Our <span class="text-gradient">Student Community</span>
+Quy Trình 4 Bước <span class="text-gradient">Tự Học Khép Kín</span>
 </h2>
 <p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
-Xem cách sinh viên đại học chinh phục các môn học lý thuyết và lập trình với sự đồng hành của StudyHub RAG AI.
+Không phụ thuộc vào môn học có sẵn. Bạn hoàn toàn chủ động khởi tạo môn học theo kỳ, tải lên slide bài giảng của thầy cô và biến tài liệu thành trợ lý AI ôn thi đắc lực.
 </p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-<!-- Review 1 -->
-<div class="reveal reveal-delay-100 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between">
+
+<!-- 4 Steps Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Step 1 -->
+<div class="reveal reveal-delay-100 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-white/10 relative overflow-hidden group">
 <div>
-<div class="flex text-amber-400 text-sm gap-1 mb-4">
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
+<div class="flex items-center justify-between mb-5">
+<div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-folder-plus"></i>
 </div>
-<p class="text-gray-200 text-base sm:text-lg leading-relaxed font-medium italic mb-6">
-“Tài liệu PRJ301 và SWE201 có quá nhiều khái niệm phân tán. Nhờ StudyHub trích dẫn đúng số trang giáo trình mà mình hoàn thành bài ôn tập trong 1 tiếng thay vì mất cả đêm lật từng slide.”
+<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono font-bold">BƯỚC 01</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-2">1. Tự Tạo Môn Học</h3>
+<p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+Chủ động tạo môn học theo thời khóa biểu học kỳ của bạn (HSF302, PRJ301, SWP391...). Dữ liệu môn học được phân lập độc quyền theo tài khoản (Data Isolation).
 </p>
 </div>
-<div class="flex items-center gap-4 pt-4 border-t border-white/10">
-<div class="avatar placeholder">
-<div class="bg-indigo-600/30 text-indigo-300 rounded-full w-12 border border-indigo-400/30 font-bold">
-HN
+<div class="mt-5 pt-3 border-t border-white/5 flex items-center gap-1.5 text-xs text-indigo-400 font-medium">
+<i class="fa-solid fa-lock text-[10px]"></i>
+<span>Phân lập riêng tư</span>
 </div>
 </div>
+
+<!-- Step 2 -->
+<div class="reveal reveal-delay-200 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-violet-500/30 bg-gradient-to-b from-slate-900/80 to-slate-950 relative overflow-hidden group">
 <div>
-<h4 class="font-bold text-white text-sm">Nguyễn Hoàng Nam</h4>
-<p class="text-xs text-gray-400">Kỹ thuật Phần mềm (SE) • Điểm A PRJ301</p>
+<div class="flex items-center justify-between mb-5">
+<div class="w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-violet-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-file-arrow-up"></i>
 </div>
+<span class="badge badge-xs bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono font-bold">BƯỚC 02</span>
 </div>
-</div>
-<!-- Review 2 -->
-<div class="reveal reveal-delay-200 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between border-violet-500/20 bg-gradient-to-b from-slate-900/80 to-slate-950">
-<div>
-<div class="flex text-amber-400 text-sm gap-1 mb-4">
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-</div>
-<p class="text-gray-200 text-base sm:text-lg leading-relaxed font-medium italic mb-6">
-“Môn HSF302 có rất nhiều tình huống giao tiếp và case study dài. Tính năng Quiz Generator sinh đề trắc nghiệm sát sạt đề thi thật kèm giải thích cặn kẽ giúp mình tự tin đi thi.”
+<h3 class="text-lg font-bold text-white mb-2">2. Nạp Slide &amp; Giáo Trình</h3>
+<p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+Kéo-thả slide bài giảng hoặc file PDF của giảng viên. Thư viện Apache PDFBox tự động bóc tách text thô và cắt thành các Chunks ngữ cảnh thông minh.
 </p>
 </div>
-<div class="flex items-center gap-4 pt-4 border-t border-white/10">
-<div class="avatar placeholder">
-<div class="bg-pink-600/30 text-pink-300 rounded-full w-12 border border-pink-400/30 font-bold">
-MA
+<div class="mt-5 pt-3 border-t border-white/5 flex items-center gap-1.5 text-xs text-violet-400 font-medium">
+<i class="fa-solid fa-microchip text-[10px]"></i>
+<span>Apache PDFBox 3.0</span>
 </div>
 </div>
+
+<!-- Step 3 -->
+<div class="reveal reveal-delay-300 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-pink-500/20 relative overflow-hidden group">
 <div>
-<h4 class="font-bold text-white text-sm">Trần Thị Mai Anh</h4>
-<p class="text-xs text-gray-400">Quản trị Kinh doanh (BA) • Khóa K18</p>
+<div class="flex items-center justify-between mb-5">
+<div class="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-comments"></i>
 </div>
+<span class="badge badge-xs bg-pink-500/20 text-pink-300 border border-pink-500/30 font-mono font-bold">BƯỚC 03</span>
 </div>
-</div>
-<!-- Review 3 -->
-<div class="reveal reveal-delay-300 glass-card glass-card-hover p-8 rounded-3xl flex flex-col justify-between">
-<div>
-<div class="flex text-amber-400 text-sm gap-1 mb-4">
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-<i class="fa-solid fa-star"></i>
-</div>
-<p class="text-gray-200 text-base sm:text-lg leading-relaxed font-medium italic mb-6">
-“Kiến trúc kết hợp H2 Database và Gemini nhúng cực kỳ thông minh. Hệ thống chạy êm ru trên máy cá nhân mà không tốn một đồng chi phí hosting hay máy chủ đám mây.”
+<h3 class="text-lg font-bold text-white mb-2">3. Chat RAG Có Trích Dẫn</h3>
+<p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+Hỏi đáp trực tiếp với giáo trình. Mô hình Gemini đối chiếu vector ngữ cảnh và trả lời kèm Citation Card (số trang cụ thể), cam kết 100% không ảo giác.
 </p>
 </div>
-<div class="flex items-center gap-4 pt-4 border-t border-white/10">
-<div class="avatar placeholder">
-<div class="bg-cyan-600/30 text-cyan-300 rounded-full w-12 border border-cyan-400/30 font-bold">
-QB
+<div class="mt-5 pt-3 border-t border-white/5 flex items-center gap-1.5 text-xs text-pink-400 font-medium">
+<i class="fa-solid fa-quote-left text-[10px]"></i>
+<span>Trích dẫn số trang</span>
 </div>
 </div>
+
+<!-- Step 4 -->
+<div class="reveal reveal-delay-400 glass-card glass-card-hover p-7 rounded-3xl flex flex-col justify-between border border-emerald-500/20 relative overflow-hidden group">
 <div>
-<h4 class="font-bold text-white text-sm">Lê Quốc Bảo</h4>
-<p class="text-xs text-gray-400">Trí tuệ Nhân tạo (AI) • Khoa học Dữ liệu</p>
+<div class="flex items-center justify-between mb-5">
+<div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+<i class="fa-solid fa-chart-pie"></i>
 </div>
+<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono font-bold">BƯỚC 04</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-2">4. Luyện Đề &amp; Lập Lộ Trình</h3>
+<p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
+AI tự động sinh đề thi trắc nghiệm A/B/C/D bám sát slide có chấm điểm tức thì, đồng thời xếp lịch ôn tập phân tán vừa sức với thời gian rảnh của bạn.
+</p>
+</div>
+<div class="mt-5 pt-3 border-t border-white/5 flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+<i class="fa-solid fa-graduation-cap text-[10px]"></i>
+<span>Điểm A kỳ thi</span>
 </div>
 </div>
 </div>
 </div>
 </section>
 
-<!-- i. BLOG / RECENT NEWS -->
-<section class="py-24 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="blog">
-<div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16">
-<div>
+<!-- i. FREQUENTLY ASKED QUESTIONS (FAQ) -->
+<section class="py-24 md:py-32 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" id="faq">
+<div class="reveal text-center max-w-3xl mx-auto mb-10">
 <span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
-Hướng Dẫn &amp; Kiến Thức
+GIẢI ĐÁP THẮC MẮC
 </span>
 <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mt-3 mb-4">
-Study Guides &amp; <span class="text-gradient">Tech Insights</span>
+Câu Hỏi <span class="text-gradient">Thường Gặp (FAQ)</span>
 </h2>
-</div>
-<a class="text-sm font-semibold text-violet-400 hover:text-violet-300 flex items-center gap-2 group" href="#blog">
-<span>Xem Tất Cả Bài Viết</span>
-<i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-</a>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-<!-- Post 1: RAG Hallucination Tech Preview -->
-<article class="reveal reveal-delay-100 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-violet-500/30 transition-all duration-300">
-<div>
-<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 font-mono text-xs flex flex-col justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
-<div class="flex items-center gap-1.5 mb-3 opacity-70">
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-<span class="ml-2 text-[10px] text-gray-500">rag_pipeline.java</span>
-</div>
-<div class="space-y-1.5 text-[11px]">
-<div class="text-indigo-400"><span class="text-pink-400">&gt;</span> pdfBox.extractChunks(<span class="text-emerald-300">"HSF302_Syllabus.pdf"</span>)</div>
-<div class="text-gray-400 flex items-center gap-2">
-<span>✓ Extracted 142 Chunks</span>
-<span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">768-D</span>
-</div>
-<div class="text-violet-300/80 text-[10px] truncate">&gt;&gt; Zero Hallucination Grounded: 100%</div>
-</div>
-<span class="absolute top-4 right-4 badge badge-sm bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">RAG Engine</span>
-</div>
-<div class="p-6">
-<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
-<span>Đồ Án AI</span>
-<span>•</span>
-<span>5 phút đọc</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 group-hover:text-violet-300 transition-colors">
-Cách RAG Triệt Tiêu Hoàn Toàn Ảo Giác Khi Ôn Thi Slide 300 Trang
-</h3>
-<p class="text-gray-300 text-sm leading-relaxed">
-Phân tích cơ chế Grounded Generation kết hợp trích dẫn số trang (Citations) giúp sinh viên tra cứu tài liệu với độ chính xác tuyệt đối.
+<p class="text-gray-300 mt-4 text-base sm:text-lg leading-relaxed">
+Mọi điều bạn cần biết về cách thức vận hành, bảo mật dữ liệu môn học và quyền lợi các gói học tập trên StudyHub AI.
 </p>
 </div>
-</div>
-<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
-<div class="w-8 h-8 rounded-full bg-violet-600/30 flex items-center justify-center text-xs font-bold text-violet-300">
-G2
-</div>
-<span class="text-xs font-medium text-gray-300">Group 2 • RAG Core Team</span>
-</div>
-</article>
 
-<!-- Post 2: Embedded H2 DB Tech Preview -->
-<article class="reveal reveal-delay-200 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-pink-500/10 hover:border-pink-500/30 transition-all duration-300">
-<div>
-<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 flex items-center justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
-<div class="grid grid-cols-3 gap-2 w-full max-w-[240px]">
-<div class="col-span-2 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 p-2 flex flex-col justify-between">
-<div class="w-12 h-2 rounded-full bg-purple-400/50"></div>
-<div class="w-20 h-1.5 rounded-full bg-pink-400/30"></div>
+<!-- Accordion Toolbar Controls -->
+<div class="reveal flex flex-wrap items-center justify-between gap-3 mb-6 px-2">
+<div class="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
+<i class="fa-regular fa-lightbulb text-amber-400"></i>
+<span>Nhấp vào tiêu đề câu hỏi bất kỳ để đóng hoặc mở câu trả lời:</span>
 </div>
-<div class="h-14 rounded-xl bg-slate-800/60 border border-white/10 flex flex-col items-center justify-center p-1">
-<i class="fa-solid fa-database text-pink-400/80 text-sm"></i>
-<span class="text-[9px] text-gray-400 mt-1 font-mono">H2 DB</span>
-</div>
-<div class="h-12 rounded-xl bg-slate-800/60 border border-white/10 flex items-center justify-center">
-<i class="fa-solid fa-bolt text-purple-400/80 text-xs"></i>
-</div>
-<div class="col-span-2 h-12 rounded-xl bg-gradient-to-r from-pink-500/20 to-violet-500/20 border border-pink-500/30 flex items-center justify-between px-3">
-<span class="text-[10px] text-pink-200 font-mono">Cosine Sim</span>
-<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<div class="flex items-center gap-2">
+<button type="button" onclick="toggleAllFaq(true)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-violet-600/20 text-violet-300 border border-violet-500/30 hover:bg-violet-600 hover:text-white transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm">
+<i class="fa-solid fa-angles-down text-[10px]"></i>
+<span>Mở tất cả (5 câu)</span>
+</button>
+<button type="button" onclick="toggleAllFaq(false)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200 flex items-center gap-1.5 cursor-pointer">
+<i class="fa-solid fa-angles-up text-[10px]"></i>
+<span>Thu gọn</span>
+</button>
 </div>
 </div>
-<span class="absolute top-4 right-4 badge badge-sm bg-pink-500/20 text-pink-300 border border-pink-400/30">Database</span>
-</div>
-<div class="p-6">
-<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
-<span>Kiến Trúc $0</span>
-<span>•</span>
-<span>7 phút đọc</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 group-hover:text-pink-300 transition-colors">
-Tối Ưu Hóa Vector Search 768 Chiều Trên H2 Database Nhúng Chi Phí $0
-</h3>
-<p class="text-gray-300 text-sm leading-relaxed">
-Cách lưu trữ bền vững vector nhúng xuống đĩa cứng bằng Java thuần và tính toán Cosine Similarity không phụ thuộc hạ tầng đám mây.
-</p>
-</div>
-</div>
-<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
-<div class="w-8 h-8 rounded-full bg-pink-600/30 flex items-center justify-center text-xs font-bold text-pink-300">
-BE
-</div>
-<span class="text-xs font-medium text-gray-300">Backend Lead • Spring Boot</span>
-</div>
-</article>
 
-<!-- Post 3: Study Planner & Spaced Repetition -->
-<article class="reveal reveal-delay-300 glass-card rounded-3xl overflow-hidden group border border-white/10 flex flex-col justify-between hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-cyan-500/30 transition-all duration-300">
-<div>
-<div class="relative h-48 bg-slate-950/90 border-b border-white/10 p-5 flex items-center justify-center overflow-hidden group-hover:bg-slate-900/90 transition-colors">
-<div class="flex items-center justify-between w-full max-w-[240px] px-2">
-<div class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-emerald-500/30">
-<i class="fa-solid fa-calendar-check text-emerald-400 text-sm"></i>
-<span class="text-[9px] text-gray-300 font-bold">Lịch Rảnh</span>
-<span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border-none text-[8px]">Auto</span>
-</div>
-<div class="flex-1 flex flex-col items-center">
-<span class="text-[8px] text-cyan-400 font-mono mb-1">Spaced Rep</span>
-<div class="w-full h-0.5 bg-gradient-to-r from-emerald-500 via-cyan-400 to-indigo-500 relative">
-<span class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-300 animate-pulse"></span>
-</div>
-<span class="text-[8px] text-gray-400 mt-1">Vừa Sức</span>
-</div>
-<div class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-900 border border-indigo-500/30">
-<i class="fa-solid fa-brain text-indigo-400 text-sm"></i>
-<span class="text-[9px] text-gray-300 font-bold">Quiz A/B/C/D</span>
-<span class="badge badge-xs bg-indigo-500/20 text-indigo-300 border-none text-[8px]">100%</span>
-</div>
-</div>
-<span class="absolute top-4 right-4 badge badge-sm bg-cyan-500/20 text-cyan-300 border border-cyan-400/30">Phương Pháp Học</span>
-</div>
-<div class="p-6">
-<div class="text-xs text-gray-400 mb-2 flex items-center gap-3">
-<span>Khoa Học Học Tập</span>
-<span>•</span>
-<span>4 phút đọc</span>
-</div>
-<h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
-Ứng Dụng Thuật Toán Spaced Repetition Và AI Lập Kế Hoạch Học Tập
-</h3>
-<p class="text-gray-300 text-sm leading-relaxed">
-Tối ưu hóa đường cong lãng quên thông qua thời khóa biểu học tập phân tán và sinh đề trắc nghiệm ngẫu nhiên theo từng chương giáo trình.
+<div class="space-y-4">
+<!-- FAQ 1: BYO Courseware -->
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-violet-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
+<i class="fa-solid fa-circle-question text-violet-400 text-base"></i>
+<span>Nền tảng có sẵn giáo trình các môn không, hay tôi phải tự tải lên?</span>
+</summary>
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+StudyHub là nền tảng tự học cá nhân hóa (Bring Your Own Courseware): Bạn hoàn toàn chủ động tạo môn học theo kỳ học thực tế của mình (ví dụ: HSF302, PRJ301, MAS291...) và tải lên file PDF slide bài giảng của chính giảng viên bạn học. Hệ thống không bán sẵn hay đóng gói cố định giáo trình.
 </p>
 </div>
+</details>
+
+<!-- FAQ 2: Data Isolation -->
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-emerald-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
+<i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
+<span>Slide bài giảng và lịch sử chat của tôi có bị sinh viên khác nhìn thấy không?</span>
+</summary>
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Hoàn toàn không. Hệ thống áp dụng cơ chế <strong>Phân lập dữ liệu tuyệt đối (Data Isolation)</strong>: Mỗi môn học, file tài liệu và phiên hỏi đáp đều được liên kết duy nhất với tài khoản của bạn theo mã định danh người dùng. Sinh viên khác không thể xem, sửa hay truy cập tài liệu trong không gian học tập của bạn.
+</p>
 </div>
-<div class="px-6 pb-6 pt-2 flex items-center gap-3 border-t border-white/5">
-<div class="w-8 h-8 rounded-full bg-cyan-600/30 flex items-center justify-center text-xs font-bold text-cyan-300">
-AI
+</details>
+
+<!-- FAQ 3: RAG Citations & Zero Hallucination -->
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-pink-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
+<i class="fa-solid fa-quote-left text-pink-400 text-base"></i>
+<span>RAG AI có bị ảo giác (bịa thông tin) khi giải đáp kiến thức không?</span>
+</summary>
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Không. Nhờ kiến trúc RAG (Retrieval-Augmented Generation), mô hình Gemini chỉ trả lời dựa trên các đoạn văn bản (chunks) được trích xuất trực tiếp từ file PDF bạn tải lên. Mọi câu trả lời đều đính kèm <strong>Citation Card ghi rõ số trang đối chứng</strong> trong giáo trình để bạn kiểm tra nguồn gốc.
+</p>
 </div>
-<span class="text-xs font-medium text-gray-300">AI Tutor Mentor</span>
+</details>
+
+<!-- FAQ 4: Study Squad -->
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-cyan-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
+<i class="fa-solid fa-users text-cyan-400 text-base"></i>
+<span>Gói Nhóm Học Tập (Study Squad) hoạt động như thế nào?</span>
+</summary>
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Gói Study Squad ($5/tháng) cho phép 1 bạn nhóm trưởng mời thêm tối đa 4 thành viên khác vào nhóm thông qua username tại trang Hồ Sơ. Toàn bộ 5 bạn trong nhóm đều được hưởng trọn vẹn đặc quyền PRO (không giới hạn môn, không giới hạn RAG) và mở khóa tính năng phân công nhiệm vụ đồ án nhóm (Team Tasks).
+</p>
 </div>
-</article>
+</details>
+
+<!-- FAQ 5: Pricing & Cost -->
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-amber-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
+<i class="fa-solid fa-wallet text-amber-400 text-base"></i>
+<span>Tôi có cần nhập thẻ ngân hàng hay thanh toán khi đăng ký tài khoản không?</span>
+</summary>
+<div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
+<p class="pt-2 border-t border-white/5">
+Không cần bất kỳ thông tin thanh toán nào. Gói <strong>Sinh Viên Tự Học (FREE)</strong> hoàn toàn miễn phí vĩnh viễn, bạn chỉ cần tạo tài khoản với tên đăng nhập và mật khẩu là có thể tự tạo môn học và hỏi đáp với AI ngay tức thì.
+</p>
 </div>
+</details>
+</div>
+
+<script>
+function toggleAllFaq(shouldOpen) {
+  document.querySelectorAll('#faq details').forEach(function(el) {
+    el.open = shouldOpen;
+  });
+}
+</script>
 </section>
+
 
 <!-- j. CALL TO ACTION (CTA) SECTION -->
 <section class="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1867,7 +1834,7 @@ STUDY SMARTER, NOT HARDER
 Ready to Turn Your Heavy Slides into an AI Tutor?
 </h2>
 <p class="text-gray-200 text-base sm:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-Tham gia cùng hàng trăm sinh viên học tập thông minh hơn với StudyHub RAG AI ngay hôm nay. Bắt đầu miễn phí chỉ trong 30 giây.
+Giải pháp tự học thông minh được thiết kế tối ưu cho sinh viên đại học trong mọi kỳ thi. Bắt đầu miễn phí chỉ trong 30 giây.
 </p>
 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
 <a th:href="@{/register}" class="w-full sm:w-auto px-9 py-4 rounded-xl font-bold text-base bg-white text-gray-950 hover:bg-gray-100 hover:shadow-2xl hover:shadow-white/20 transition-all flex items-center justify-center gap-2">
@@ -1875,8 +1842,8 @@ Tham gia cùng hàng trăm sinh viên học tập thông minh hơn với StudyHu
 <i class="fa-solid fa-arrow-right text-xs"></i>
 </a>
 <a th:href="@{/courses}" class="w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-base text-white border border-white/25 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-<i class="fa-solid fa-book-open text-violet-400"></i>
-<span>Xem Danh Sách Môn Học</span>
+<i class="fa-solid fa-folder-plus text-violet-400"></i>
+<span>Tạo Môn Học Của Bạn</span>
 </a>
 </div>
 </div>
@@ -1914,13 +1881,14 @@ Nền tảng quản lý và hỗ trợ học tập thông minh đa môn học ch
 </div>
 <!-- Col 2: Navigation -->
 <div>
-<h4 class="text-white font-bold text-sm mb-4">Môn Học &amp; Tính Năng</h4>
+<h4 class="text-white font-bold text-sm mb-4">Chức Năng Nền Tảng</h4>
 <ul class="space-y-2.5 text-sm text-gray-400">
-<li><a th:href="@{/courses}" class="hover:text-violet-400 transition font-semibold">Danh Sách Môn Học</a></li>
+<li><a th:href="@{/courses}" class="hover:text-violet-400 transition font-semibold">Không Gian Tự Học</a></li>
 <li><a class="hover:text-white transition" href="#about">Kiến Trúc RAG 3 Bước</a></li>
 <li><a class="hover:text-white transition" href="#features">Tính Năng Cốt Lõi</a></li>
+<li><a class="hover:text-white transition" href="#how-it-works">Quy Trình Tự Học</a></li>
 <li><a class="hover:text-white transition" href="#pricing">Gói Học Tập</a></li>
-<li><a class="hover:text-white transition" href="#testimonials">Đánh Giá Sinh Viên</a></li>
+<li><a class="hover:text-white transition" href="#faq">Câu Hỏi Thường Gặp</a></li>
 </ul>
 </div>
 <!-- Col 3: Tech Stack -->
