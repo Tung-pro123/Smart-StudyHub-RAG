@@ -217,8 +217,8 @@ public class AuthService {
      */
     @PostConstruct
     public void initDefaultUser() {
-        if (userRepository.count() == 0) {
-            // 1. Tài khoản Student Free
+        // 1. Tài khoản Student Free
+        if (!userRepository.existsByUsernameIgnoreCase("student")) {
             userRepository.save(User.builder()
                     .username("student")
                     .email("student@fpt.edu.vn")
@@ -230,8 +230,10 @@ public class AuthService {
                     .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
+        }
 
-            // 2. Tài khoản Pro Student
+        // 2. Tài khoản Pro Student
+        if (!userRepository.existsByUsernameIgnoreCase("pro_student")) {
             userRepository.save(User.builder()
                     .username("pro_student")
                     .email("pro_student@fpt.edu.vn")
@@ -243,8 +245,10 @@ public class AuthService {
                     .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
+        }
 
-            // 3. Tài khoản Quản trị viên Admin
+        // 3. Tài khoản Quản trị viên Admin
+        if (!userRepository.existsByUsernameIgnoreCase("admin")) {
             userRepository.save(User.builder()
                     .username("admin")
                     .email("admin@fpt.edu.vn")
@@ -256,8 +260,10 @@ public class AuthService {
                     .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
+        }
 
-            // 4. Tài khoản Demo Trường (Admin)
+        // 4. Tài khoản Demo Trường (Admin)
+        if (!userRepository.existsByUsernameIgnoreCase("truong")) {
             userRepository.save(User.builder()
                     .username("truong")
                     .email("truong@fpt.edu.vn")
