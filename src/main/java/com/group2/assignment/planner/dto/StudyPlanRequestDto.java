@@ -24,4 +24,6 @@ public class StudyPlanRequestDto {
     private LocalDate examDate;
 
     private String goal;
+
+    private List<String> squadMembers;
 }
