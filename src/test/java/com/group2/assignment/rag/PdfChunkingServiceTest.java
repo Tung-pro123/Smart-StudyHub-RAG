@@ -10,7 +10,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -132,7 +131,7 @@ class PdfChunkingServiceTest {
             doc.addPage(page1);
             try (PDPageContentStream cs = new PDPageContentStream(doc, page1)) {
                 cs.beginText();
-                cs.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                cs.setFont(PDType1Font.HELVETICA, 12);
                 cs.showText("Page 1: Spring Boot Auto Configuration reduces boilerplate setup.");
                 cs.endText();
             }
@@ -141,7 +140,7 @@ class PdfChunkingServiceTest {
             doc.addPage(page2);
             try (PDPageContentStream cs = new PDPageContentStream(doc, page2)) {
                 cs.beginText();
-                cs.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                cs.setFont(PDType1Font.HELVETICA, 12);
                 cs.showText("Page 2: Spring Data JPA simplifies database access layer.");
                 cs.endText();
             }

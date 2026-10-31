@@ -1,6 +1,5 @@
 package com.group2.assignment.quiz.service;
 
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
@@ -27,13 +26,13 @@ public class PdfTextExtractor {
         if (file == null || !file.exists() || file.length() == 0) {
             throw new IllegalArgumentException("File tài liệu trên hệ thống không tồn tại hoặc rỗng!");
         }
-        try (PDDocument document = Loader.loadPDF(file)) {
+        try (PDDocument document = PDDocument.load(file)) {
             return extractFromDocument(document, fromPage, toPage);
         }
     }
 
     private String extractFromBytes(byte[] bytes, Integer fromPage, Integer toPage) throws IOException {
-        try (PDDocument document = Loader.loadPDF(bytes)) {
+        try (PDDocument document = PDDocument.load(bytes)) {
             return extractFromDocument(document, fromPage, toPage);
         }
     }

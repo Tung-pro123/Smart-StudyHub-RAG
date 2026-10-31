@@ -51,7 +51,9 @@
                         </div>
                         <div>
                             <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Họ và tên thí sinh</label>
-                            <input type="text" name="studentName" value="Sinh viên" required class="input input-sm input-bordered rounded-xl text-xs font-semibold w-56 mt-0.5" />
+                            <input type="text" name="studentName"
+                                   th:value="${session.currentUser != null ? session.currentUser.fullName : 'Sinh viên'}"
+                                   value="Sinh viên" required class="input input-sm input-bordered rounded-xl text-xs font-semibold w-56 mt-0.5" />
                         </div>
                     </div>
                     <div class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">

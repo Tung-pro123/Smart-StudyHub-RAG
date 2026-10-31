@@ -8,10 +8,15 @@ import com.group2.assignment.quiz.dto.QuizResultDto;
 import com.group2.assignment.quiz.dto.QuizSubmissionDto;
 import com.group2.assignment.quiz.entity.Quiz;
 import com.group2.assignment.quiz.entity.QuizQuestion;
+import com.group2.assignment.quiz.service.QuizPdfExportService;
 import com.group2.assignment.quiz.service.QuizService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,21 +28,24 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/quiz")
+@RequestMapping({"/quiz", "/api/quiz"})
 @Slf4j
 public class QuizController {
 
     private final QuizService quizService;
     private final CourseRepository courseRepository;
     private final com.group2.assignment.rag.repository.DocumentRepository documentRepository;
+    private final QuizPdfExportService quizPdfExportService;
 
     public QuizController(
             QuizService quizService,
             CourseRepository courseRepository,
-            com.group2.assignment.rag.repository.DocumentRepository documentRepository) {
+            com.group2.assignment.rag.repository.DocumentRepository documentRepository,
+            QuizPdfExportService quizPdfExportService) {
         this.quizService = quizService;
         this.courseRepository = courseRepository;
         this.documentRepository = documentRepository;
+        this.quizPdfExportService = quizPdfExportService;
     }
 
     @GetMapping
@@ -70,8 +78,16 @@ public class QuizController {
                 ? quizService.getRecentAttemptsByCourse(selectedCourse.getId())
                 : List.of();
 
-        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
         boolean isPro = currentUser != null && currentUser.isPro();
+        boolean isSquad = currentUser != null && currentUser.isSquad();
+
+        List<QuizService.SquadLeaderboardDto> squadLeaderboard = List.of();
+        if (isSquad) {
+            String leaderUsername = currentUser.getEffectiveSquadLeader();
+            Long activeCourseId = selectedCourse != null ? selectedCourse.getId() : null;
+            squadLeaderboard = quizService.getSquadLeaderboard(leaderUsername, activeCourseId);
+        }
 
         model.addAttribute("courses", courses);
         model.addAttribute("selectedCourse", selectedCourse);
@@ -81,6 +97,8 @@ public class QuizController {
         model.addAttribute("selectedDifficulty", difficulty != null ? difficulty.toUpperCase() : "ALL");
         model.addAttribute("isPro", isPro);
         model.addAttribute("isFreeTier", !isPro);
+        model.addAttribute("isSquad", isSquad);
+        model.addAttribute("squadLeaderboard", squadLeaderboard);
 
         return "quiz/index";
     }
@@ -185,6 +203,7 @@ public class QuizController {
             @RequestParam(value = "studentName", defaultValue = "Sinh viên") String studentName,
             @RequestParam(value = "timeSpentSeconds", defaultValue = "0") Integer timeSpentSeconds,
             HttpServletRequest request,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
 
         Map<Long, String> answers = new HashMap<>();
@@ -203,7 +222,8 @@ public class QuizController {
                 .answers(answers)
                 .build();
 
-        QuizResultDto result = quizService.submitAndGrade(id, submission);
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
+        QuizResultDto result = quizService.submitAndGrade(id, submission, currentUser);
         return "redirect:/quiz/attempt/" + result.getAttemptId();
     }
 
@@ -218,5 +238,49 @@ public class QuizController {
         model.addAttribute("isPro", isPro);
         model.addAttribute("isFreeTier", !isPro);
         return "quiz/result";
+    }
+
+    @GetMapping({"/api/quiz/{id}/export-pdf", "/{id}/export-pdf", "/quiz/{id}/export-pdf"})
+    public ResponseEntity<byte[]> exportQuizPdf(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "showAnswers", defaultValue = "false") boolean showAnswers,
+            HttpSession session) {
+
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (!currentUser.isPro()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Quiz quiz;
+        try {
+            quiz = quizService.getQuizById(id);
+        } catch (IllegalArgumentException | java.util.NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+        if (quiz == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<QuizQuestion> questions = quizService.getQuestionsByQuizId(id);
+        byte[] pdfBytes = (questions != null && !questions.isEmpty())
+                ? quizPdfExportService.exportQuizToPdf(quiz, questions, showAnswers)
+                : quizPdfExportService.generateQuizPdf(quiz, showAnswers);
+
+        String rawTitle = quiz.getTitle() != null ? quiz.getTitle() : "de-thi";
+        String normalized = rawTitle.replace('đ', 'd').replace('Đ', 'D');
+        normalized = java.text.Normalizer.normalize(normalized, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        String cleanTitle = normalized.replaceAll("[^a-zA-Z0-9.-]", "_").replaceAll("_+", "_").replaceAll("^_|_$", "");
+        if (cleanTitle.isBlank()) {
+            cleanTitle = "de-thi";
+        }
+        String filename = cleanTitle + (showAnswers ? "_kem_dap_an" : "") + ".pdf";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .body(pdfBytes);
     }
 }

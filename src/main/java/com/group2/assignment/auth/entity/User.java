@@ -102,7 +102,8 @@ public class User {
     }
 
     public boolean isSquad() {
-        return "SQUAD".equalsIgnoreCase(this.subscriptionTier);
+        return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
+                || (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank());
     }
 
     public boolean isSquadLeader() {
@@ -112,5 +113,15 @@ public class User {
 
     public boolean isAdmin() {
         return "ROLE_ADMIN".equalsIgnoreCase(this.role);
+    }
+
+    public String getEffectiveSquadLeader() {
+        if (!isSquad()) {
+            return null;
+        }
+        if (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank()) {
+            return this.squadLeaderUsername.trim();
+        }
+        return this.username;
     }
 }

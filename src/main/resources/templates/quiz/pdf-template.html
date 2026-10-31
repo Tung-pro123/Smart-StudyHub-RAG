@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${quiz.title}">Đề Thi Trắc Nghiệm</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            @bottom-center {
+                content: "Trang " counter(page) " / " counter(pages);
+                font-family: "Arial", "DejaVu Sans", sans-serif;
+                font-size: 9pt;
+                color: #666666;
+            }
+        }
+        body {
+            font-family: "Arial", "DejaVu Sans", sans-serif;
+            color: #1a1a1a;
+            line-height: 1.5;
+            font-size: 11pt;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0 0 6px 0;
+            font-size: 18pt;
+            color: #1e3a8a;
+        }
+        .meta-info {
+            font-size: 10pt;
+            color: #4b5563;
+        }
+        .student-box {
+            border: 1px dashed #9ca3af;
+            padding: 10px 15px;
+            margin-bottom: 25px;
+            font-size: 10.5pt;
+        }
+        .question-item {
+            margin-bottom: 16px;
+            page-break-inside: avoid;
+        }
+        .question-title {
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+        .options-grid {
+            margin-left: 15px;
+        }
+        .option-item {
+            margin-bottom: 4px;
+        }
+        .answers-page {
+            page-break-before: always;
+        }
+        .answer-badge {
+            font-weight: bold;
+            color: #16a34a;
+        }
+        .explanation {
+            font-size: 9.5pt;
+            color: #4b5563;
+            font-style: italic;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 th:text="${quiz.title}">ĐỀ THI TRẮC NGHIỆM AI</h1>
+        <div class="meta-info">
+            <strong>Môn học:</strong> <span th:text="${quiz.course != null ? quiz.course.name : 'Chung'}">Chung</span> |
+            <strong>Độ khó:</strong> <span th:text="${quiz.difficulty != null ? quiz.difficulty : 'MEDIUM'}">MEDIUM</span> |
+            <strong>Số câu:</strong> <span th:text="${questions != null ? #lists.size(questions) : (quiz.totalQuestions != null ? quiz.totalQuestions : 0)}">10</span> câu |
+            <strong>Thời gian:</strong> <span th:text="${quiz.timeLimitMinutes != null ? quiz.timeLimitMinutes : 15}">15</span> phút
+        </div>
+    </div>
+
+    <div class="student-box">
+        Họ và tên thí sinh: ................................................................ Lớp: ............................ Ngày thi: ......................
+    </div>
+
+    <div class="questions">
+        <div th:each="q, stat : ${questions}" class="question-item">
+            <div class="question-title">
+                Câu <span th:text="${stat.count}"></span>: <span th:text="${q.questionText}">Nội dung câu hỏi</span>
+            </div>
+            <div class="options-grid">
+                <div class="option-item">A. <span th:text="${q.optionA}">Lựa chọn A</span></div>
+                <div class="option-item">B. <span th:text="${q.optionB}">Lựa chọn B</span></div>
+                <div class="option-item">C. <span th:text="${q.optionC}">Lựa chọn C</span></div>
+                <div class="option-item">D. <span th:text="${q.optionD}">Lựa chọn D</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trang Đáp Án (Chỉ hiển thị khi showAnswers = true) -->
+    <div th:if="${showAnswers}" class="answers-page">
+        <div class="header">
+            <h1 style="color: #16a34a;">ĐÁP ÁN VÀ LỜI GIẢI CHI TIẾT</h1>
+            <div class="meta-info" th:text="${quiz.title}">Đề thi trắc nghiệm</div>
+        </div>
+
+        <div th:each="q, stat : ${questions}" class="question-item" style="border-bottom: 1px dotted #e5e7eb; padding-bottom: 8px;">
+            <div>
+                <strong>Câu <span th:text="${stat.count}"></span>:</strong>
+                Đáp án: <span class="answer-badge" th:text="${q.correctAnswer}">A</span>
+            </div>
+            <div th:if="${q.explanation != null and !q.explanation.isBlank()}" class="explanation">
+                Giải thích: <span th:text="${q.explanation}">Giải thích chi tiết vì sao chọn đáp án này.</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

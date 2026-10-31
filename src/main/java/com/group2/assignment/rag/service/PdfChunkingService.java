@@ -10,7 +10,6 @@ import com.group2.assignment.rag.entity.Document;
 import com.group2.assignment.rag.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Service;
@@ -98,7 +97,7 @@ public class PdfChunkingService {
             List<Chunk> chunksToSave = new ArrayList<>();
             int totalPages;
 
-            try (PDDocument pdDocument = Loader.loadPDF(fileBytes)) {
+            try (PDDocument pdDocument = PDDocument.load(fileBytes)) {
                 totalPages = pdDocument.getNumberOfPages();
                 if (totalPages == 0) {
                     throw new IllegalArgumentException("File PDF không chứa trang nào!");

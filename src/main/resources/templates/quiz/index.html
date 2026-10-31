@@ -174,19 +174,37 @@
 
                     <!-- Các nút tính năng PRO (Xuất PDF & Flashcards) -->
                     <div class="flex items-center gap-2 pt-2 border-t border-slate-200/60 justify-end">
-                        <!-- Nút Xuất PDF -->
-                        <button th:if="${isPro}" type="button" onclick="window.print()" class="btn btn-xs btn-outline btn-primary rounded-lg font-bold gap-1">
-                            <i class="fa-solid fa-file-pdf"></i> Xuất PDF
-                        </button>
+                        <!-- Dropdown Xuất PDF cho PRO & SQUAD -->
+                        <div th:if="${isPro}" class="dropdown dropdown-bottom dropdown-end">
+                            <label tabindex="0" class="btn btn-xs btn-outline btn-primary rounded-lg font-bold gap-1 cursor-pointer">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Tải PDF</span>
+                                <i class="fa-solid fa-chevron-down text-[9px]"></i>
+                            </label>
+                            <ul tabindex="0" class="dropdown-content z-20 menu p-1.5 shadow-xl bg-slate-900 border border-slate-700 text-white rounded-xl w-52 mt-1 text-[11px]">
+                                <li>
+                                    <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=false'}" class="py-2 hover:bg-slate-800 rounded-lg flex items-center gap-2">
+                                        <i class="fa-solid fa-file-lines text-indigo-400"></i>
+                                        <span>Đề thi (Không đáp án)</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=true'}" class="py-2 hover:bg-slate-800 rounded-lg flex items-center gap-2">
+                                        <i class="fa-solid fa-file-circle-check text-emerald-400"></i>
+                                        <span>Đề kèm đáp án &amp; lời giải</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         <div th:unless="${isPro}" class="indicator">
                             <span class="indicator-item badge badge-secondary text-[10px] scale-90">PRO</span>
                             <button type="button" disabled class="btn btn-xs btn-disabled opacity-50 rounded-lg gap-1 cursor-not-allowed">
-                                <i class="fa-solid fa-file-pdf"></i> Xuất PDF
+                                <i class="fa-solid fa-file-pdf"></i> Tải PDF
                             </button>
                         </div>
 
                         <!-- Nút Flashcards -->
-                        <button th:if="${isPro}" type="button" onclick="showToast('⚡ Tính năng Flashcards Spaced Repetition đang được hoàn thiện!')" class="btn btn-xs btn-outline btn-warning rounded-lg font-bold gap-1">
+                        <button th:if="${isPro}" type="button" onclick="showFlashcardToast()" class="btn btn-xs btn-outline btn-warning rounded-lg font-bold gap-1">
                             <i class="fa-solid fa-layer-group"></i> Flashcards
                         </button>
                         <div th:unless="${isPro}" class="indicator">
@@ -219,6 +237,68 @@
                         </div>
                     </div>
                 </dialog>
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget BẢNG XẾP HẠNG SQUAD (Chỉ hiển thị cho Gói SQUAD) -->
+    <div th:if="${isSquad}" class="space-y-4 pt-6 border-t border-purple-200/60">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-yellow-600 flex items-center justify-center text-white text-sm shadow-md">
+                    <i class="fa-solid fa-trophy"></i>
+                </span>
+                <div>
+                    <h2 class="text-lg font-black text-slate-800">Bảng Xếp Hạng Thi Đua Nhóm (Study Squad)</h2>
+                    <p class="text-xs text-slate-500">Thi đua điểm số cao nhất giữa 5 thành viên trong nhóm học tập</p>
+                </div>
+            </div>
+            <span class="badge badge-primary font-bold text-xs gap-1.5 py-3 px-3">
+                <i class="fa-solid fa-users"></i> SQUAD LEADERBOARD
+            </span>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden">
+            <div th:if="${#lists.isEmpty(squadLeaderboard)}" class="p-8 text-center text-slate-400 text-xs">
+                Chưa có thành viên nào trong nhóm làm bài thi môn này. Hãy là người đầu tiên bứt phá điểm số!
+            </div>
+            <div th:unless="${#lists.isEmpty(squadLeaderboard)}" class="overflow-x-auto">
+                <table class="table text-xs w-full">
+                    <thead class="bg-purple-50/70 text-purple-900 uppercase font-black tracking-wider">
+                        <tr>
+                            <th class="w-16 text-center">Hạng</th>
+                            <th>Thành viên</th>
+                            <th class="text-center">Số lần làm bài</th>
+                            <th class="text-right">Điểm cao nhất</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="m, stat : ${squadLeaderboard}" class="hover:bg-purple-50/30 transition-colors"
+                            th:classappend="${stat.count == 1 ? 'bg-amber-50/40' : (stat.count == 2 ? 'bg-slate-50/60' : (stat.count == 3 ? 'bg-orange-50/30' : ''))}">
+                            <td class="text-center font-black text-base">
+                                <span th:if="${stat.count == 1}">🥇</span>
+                                <span th:if="${stat.count == 2}">🥈</span>
+                                <span th:if="${stat.count == 3}">🥉</span>
+                                <span th:if="${stat.count > 3}" class="text-slate-400 font-bold text-xs" th:text="${stat.count}">4</span>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <img th:src="${m.avatar != null && !m.avatar.isBlank() ? m.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=' + m.username}" class="w-8 h-8 rounded-full border border-purple-200" alt="avatar" />
+                                    <div>
+                                        <div class="font-bold text-slate-800 text-sm" th:text="${m.fullName != null && !m.fullName.isBlank() ? m.fullName : m.username}">Họ tên</div>
+                                        <div class="text-[11px] text-slate-400 font-mono" th:text="'@' + ${m.username}">@username</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center font-bold text-slate-600" th:text="${m.attemptCount} + ' lượt'">3 lượt</td>
+                            <td class="text-right">
+                                <span class="badge font-black text-sm px-3 py-3"
+                                      th:classappend="${m.maxScore >= 8.0 ? 'badge-success text-white' : (m.maxScore >= 5.0 ? 'badge-warning text-white' : 'badge-error text-white')}"
+                                      th:text="${m.maxScore} + ' / 10'">10.0 / 10</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -399,6 +479,14 @@
         </div>
     </div>
     <script>
+    function showFlashcardToast() {
+        const toast = document.createElement('div');
+        toast.className = "toast toast-end z-50 fixed bottom-5 right-5";
+        toast.innerHTML = `<div class="alert alert-info shadow-lg text-white font-semibold"><span><i class="fa-solid fa-circle-info mr-2"></i>Tính năng Flashcards Spaced Repetition đang được hoàn thiện. Vui lòng quay lại sau!</span></div>`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+
     function showToast(msg) {
         const toast = document.getElementById('app-toast');
         const toastMsg = document.getElementById('app-toast-msg');
