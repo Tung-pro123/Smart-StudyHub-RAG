@@ -206,4 +206,69 @@ class AuthServiceTest {
         assertTrue(admin.isAdmin());
         assertTrue(admin.isPro());
     }
+
+    @Test
+    @DisplayName("Nhóm trưởng thêm thành viên vào nhóm học tập SQUAD thành công")
+    void testAddMemberToSquad_Success() {
+        // Tạo nhóm trưởng
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        assertEquals("SQUAD", leader.getSubscriptionTier());
+
+        // Thêm student vào nhóm
+        User member = authService.addMemberToSquad("truong", "student");
+        assertEquals("SQUAD", member.getSubscriptionTier());
+        assertEquals("truong", member.getSquadLeaderUsername());
+        assertTrue(member.isPro());
+
+        // Kiểm tra danh sách thành viên nhóm
+        var squad = authService.getSquadMembers("truong");
+        assertEquals(2, squad.size(), "Nhóm gồm nhóm trưởng và 1 thành viên");
+    }
+
+    @Test
+    @DisplayName("Thêm thành viên vượt quá 5 người ném IllegalStateException")
+    void testAddMemberToSquad_MaxFiveMembers_Throws() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+
+        // Tạo sẵn 4 bạn
+        for (int i = 1; i <= 4; i++) {
+            String u = "member_" + i;
+            if (!userRepository.existsByUsernameIgnoreCase(u)) {
+                userRepository.save(User.builder()
+                        .username(u)
+                        .email(u + "@fpt.edu.vn")
+                        .fullName("Thành viên " + i)
+                        .password("123456")
+                        .build());
+            }
+            authService.addMemberToSquad("truong", u);
+        }
+
+        // Tạo người thứ 6 (tính cả leader là 5 rồi, add thêm là người thứ 6)
+        String u6 = "member_extra";
+        if (!userRepository.existsByUsernameIgnoreCase(u6)) {
+            userRepository.save(User.builder()
+                    .username(u6)
+                    .email(u6 + "@fpt.edu.vn")
+                    .fullName("Thành viên Extra")
+                    .password("123456")
+                    .build());
+        }
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () ->
+                authService.addMemberToSquad("truong", u6)
+        );
+        assertTrue(ex.getMessage().contains("tối đa 5"));
+    }
+
+    @Test
+    @DisplayName("Nhóm trưởng xóa thành viên khỏi nhóm đưa về lại gói FREE thành công")
+    void testRemoveMemberFromSquad_Success() {
+        authService.upgradeSubscriptionTier("truong", "SQUAD");
+        authService.addMemberToSquad("truong", "student");
+
+        User removed = authService.removeMemberFromSquad("truong", "student");
+        assertEquals("FREE", removed.getSubscriptionTier());
+        assertNull(removed.getSquadLeaderUsername());
+    }
 }

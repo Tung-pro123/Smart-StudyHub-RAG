@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -202,14 +203,121 @@ public class AuthService {
     }
 
     /**
-     * Nâng cấp hoặc chuyển đổi gói hội viên (FREE / PRO / CAMPUS)
+     * Nâng cấp hoặc chuyển đổi gói hội viên (FREE / PRO / CAMPUS / SQUAD)
      */
     public User upgradeSubscriptionTier(String username, String tier) {
         User user = userRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng: " + username));
-        user.setSubscriptionTier(tier != null ? tier.toUpperCase() : "FREE");
+        String newTier = tier != null ? tier.toUpperCase() : "FREE";
+        user.setSubscriptionTier(newTier);
+        if ("SQUAD".equalsIgnoreCase(newTier)) {
+            user.setSquadLeaderUsername(user.getUsername());
+        }
         user.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(user);
+    }
+
+    public static final int MAX_SQUAD_MEMBERS = 5; // 1 nhóm trưởng + tối đa 4 bạn
+
+    /**
+     * Lấy danh sách thành viên trong nhóm học tập (gồm cả nhóm trưởng)
+     */
+    public List<User> getSquadMembers(String leaderUsername) {
+        if (leaderUsername == null || leaderUsername.isBlank()) {
+            return List.of();
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername).orElse(null);
+        if (leader == null) {
+            return List.of();
+        }
+
+        String actualLeader = (leader.getSquadLeaderUsername() != null && !leader.getSquadLeaderUsername().isBlank())
+                ? leader.getSquadLeaderUsername()
+                : leader.getUsername();
+
+        List<User> members = new java.util.ArrayList<>();
+        userRepository.findByUsernameIgnoreCase(actualLeader).ifPresent(members::add);
+        List<User> subMembers = userRepository.findAllBySquadLeaderUsernameIgnoreCase(actualLeader);
+        for (User m : subMembers) {
+            if (!m.getUsername().equalsIgnoreCase(actualLeader)) {
+                members.add(m);
+            }
+        }
+        return members;
+    }
+
+    /**
+     * Thêm thành viên vào nhóm học tập (Study Squad: tối đa 5 người)
+     */
+    public User addMemberToSquad(String leaderUsername, String memberUsername) {
+        if (memberUsername == null || memberUsername.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập username của thành viên cần thêm!");
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin nhóm trưởng: " + leaderUsername));
+
+        if (!"SQUAD".equalsIgnoreCase(leader.getSubscriptionTier())
+                && !"CAMPUS".equalsIgnoreCase(leader.getSubscriptionTier())
+                && !"ROLE_ADMIN".equalsIgnoreCase(leader.getRole())) {
+            throw new IllegalStateException("Bạn cần nâng cấp Gói Nhóm Học Tập (SQUAD) để quản lý nhóm!");
+        }
+
+        String actualLeaderUsername = leader.getUsername();
+        if (leader.getSquadLeaderUsername() != null && !leader.getSquadLeaderUsername().equalsIgnoreCase(leader.getUsername())) {
+            throw new IllegalStateException("Chỉ Nhóm trưởng mới có quyền thêm thành viên vào nhóm!");
+        }
+
+        if (actualLeaderUsername.equalsIgnoreCase(memberUsername.trim())) {
+            throw new IllegalArgumentException("Bạn đã là Nhóm trưởng của nhóm này!");
+        }
+
+        User member = userRepository.findByUsernameIgnoreCase(memberUsername.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng có username: " + memberUsername));
+
+        if ("SQUAD".equalsIgnoreCase(member.getSubscriptionTier())) {
+            if (actualLeaderUsername.equalsIgnoreCase(member.getSquadLeaderUsername())) {
+                throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " đã có trong nhóm của bạn!");
+            } else {
+                throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " hiện đã tham gia một nhóm học tập khác!");
+            }
+        }
+
+        List<User> currentSquad = getSquadMembers(actualLeaderUsername);
+        if (currentSquad.size() >= MAX_SQUAD_MEMBERS) {
+            throw new IllegalStateException("Nhóm đã đủ tối đa 5 thành viên!");
+        }
+
+        member.setSubscriptionTier("SQUAD");
+        member.setSquadLeaderUsername(actualLeaderUsername);
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Xóa thành viên ra khỏi nhóm (chuyển về lại gói FREE)
+     */
+    public User removeMemberFromSquad(String leaderUsername, String memberUsername) {
+        if (memberUsername == null || memberUsername.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập username của thành viên cần xóa!");
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhóm trưởng: " + leaderUsername));
+
+        if (leader.getUsername().equalsIgnoreCase(memberUsername.trim())) {
+            throw new IllegalArgumentException("Nhóm trưởng không thể tự xóa chính mình khỏi nhóm!");
+        }
+
+        User member = userRepository.findByUsernameIgnoreCase(memberUsername.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thành viên: " + memberUsername));
+
+        if (!leader.getUsername().equalsIgnoreCase(member.getSquadLeaderUsername())) {
+            throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " không thuộc nhóm học tập của bạn!");
+        }
+
+        member.setSubscriptionTier("FREE");
+        member.setSquadLeaderUsername(null);
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
     }
 
     /**

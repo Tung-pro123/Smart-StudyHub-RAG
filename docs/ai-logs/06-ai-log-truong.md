@@ -93,6 +93,25 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 6: HIỆN THỰC HÓA GÓI SQUAD - QUẢN LÝ NHÓM HỌC TẬP 5 BẠN VÀ KIỂM SOÁT THÀNH VIÊN
+* **Mục tiêu**: Bổ sung trường `squadLeaderUsername` vào `User.java`, xây dựng các phương thức `addMemberToSquad`, `removeMemberFromSquad`, `getSquadMembers` trong `AuthService.java` và các endpoint `POST /auth/squad/add-member`, `POST /auth/squad/remove-member` trong `AuthController.java`. Cập nhật widget Không gian Nhóm Học Tập (Study Squad) trên `profile.html` và viết bộ test kiểm tra giới hạn 5 thành viên (15/15 tests passed).
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi đang triển khai tính năng gói Nhóm Học Tập (Study Squad: $5/tháng) cho dự án StudyHub:
+  1. Nhóm gồm 1 nhóm trưởng và tối đa 4 bạn bè (tổng cộng 5 người).
+  2. Viết logic addMemberToSquad và removeMemberFromSquad trong AuthService: kiểm tra quyền nhóm trưởng, kiểm tra số lượng thành viên không vượt quá 5 (ném IllegalStateException nếu đã đủ 5), tự động chuyển subscriptionTier của bạn được mời sang SQUAD và lưu squadLeaderUsername.
+  3. Viết 2 endpoint POST /auth/squad/add-member và remove-member trong AuthController.
+  4. Thiết kế widget Quản lý Nhóm Study Squad trên profile.html (Tailwind CSS + DaisyUI): hiển thị danh sách thành viên kèm avatar/vai trò, form thêm bạn bằng username, nút xóa thành viên ra khỏi nhóm (chỉ nhóm trưởng thấy) và nút kích hoạt gói Nhóm $5 cho sinh viên Free.
+  5. Viết unit test cho các kịch bản: thêm bạn thành công, chặn người thứ 6, và xóa bạn đưa về lại FREE.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - Xử lý nghiệp vụ phân quyền chặt chẽ: chỉ nhóm trưởng thực sự (`squadLeaderUsername == null || username == squadLeaderUsername`) mới có quyền thêm/xóa bạn bè, các thành viên khác chỉ được xem danh sách.
+  - Tối ưu hóa UI trực quan: hiển thị huy hiệu `👑 Nhóm Trưởng` hoặc `Thành Viên`, tự động vô hiệu hóa ô input khi nhóm đã đủ 5/5 bạn kèm cảnh báo rõ ràng.
+  - Nâng tổng số bài kiểm thử của Module Auth lên 15/15 tests PASSED (100% BUILD SUCCESS).
+* **Ảnh chụp màn hình**: `![Trường thiết kế Study Squad 5 thành viên](images/truong-step6-squad-management.png)`
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM
 * **Bài học rút ra**:
   1. Sử dụng kết hợp **Cookie HttpOnly lưu JWT Token** cùng với **HttpSession** giúp ứng dụng vừa có tốc độ xử lý nhanh của Session, vừa có tính năng ghi nhớ đăng nhập dài hạn của JWT.
@@ -100,3 +119,4 @@
   3. Khi gặp lỗi IDE báo đỏ, cần kiểm tra sự tương thích giữa phiên bản JDK của dự án (Java 17/21) và Java Runtime của máy tính thay vì chỉ sửa code Java.
   4. Khi tích hợp dịch vụ OAuth2 từ bên thứ ba (Google/Facebook/GitHub), luôn áp dụng mô hình **Conditional Configuration (Graceful Degradation)** để môi trường kiểm thử tự động CI/CD và máy local của đồng đội không bị gián đoạn khi chưa có credentials thực tế.
   5. Khi thiết kế mô hình SaaS Freemium (Free vs Pro), việc phân tách ranh giới rõ ràng giữa Auth (quản lý trạng thái và gói cước của User) và Quota Engine (chặn lượt truy vấn RAG và kiểm tra số môn học) giúp kiến trúc micro-modular bền vững, không gây coupling chéo giữa các module.
+  6. Khi xây dựng tính năng nhóm (Squad / Team Workspaces), mô hình Single-table Hierarchical Relationship (thông qua trường squadLeaderUsername chỉ về tài khoản chủ nhóm) giúp đơn giản hóa cấu trúc cơ sở dữ liệu mà vẫn đảm bảo tính phân lập dữ liệu và kiểm soát hạn mức nhóm (5 thành viên) cực kỳ chuẩn xác và hiệu quả.
