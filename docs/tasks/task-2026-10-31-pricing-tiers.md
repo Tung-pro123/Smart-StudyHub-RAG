@@ -119,21 +119,43 @@
 
 ---
 
-### 📊 6. ÂN - ADMIN HUB & SYSTEM ANALYTICS
+### 📊 6. ÂN - ADMIN COMMAND CENTER & HỆ THỐNG QUẢN TRỊ TOÀN DIỆN
 * **Nhánh Git**: `feature/pricing-admin-an`
-* **Package Backend**: `com.group2.assignment.settings` (hoặc `admin`)
-* **Thư mục View**: `templates/admin/dashboard.html`, `templates/admin/users.html`
-* **Nhiệm vụ cụ thể**:
-  1. Cập nhật Dashboard thống kê (`AdminAnalyticsService.java` & `dashboard.html`):
-     - Thống kê tỷ lệ phân bổ người dùng theo cả 3 gói: Số sinh viên Free, Số sinh viên Pro, Số sinh viên Squad.
-     - Thanh Radial Progress hiển thị tỷ lệ % tài khoản trả phí trên tổng số sinh viên.
-  2. Nâng cấp Bảng quản lý người dùng (`admin/users.html`):
-     - Hiển thị rõ cột Gói cước: Huy hiệu xanh lá `FREE`, huy hiệu tím `PRO`, huy hiệu xanh dương `SQUAD`.
-     - Cung cấp nút 1-Click: Nâng cấp PRO (`POST /admin/users/{id}/upgrade-pro`), Kích hoạt SQUAD, hoặc Hạ về FREE (`downgrade-free`).
-  3. Đảm bảo cơ chế Reset Quota ngày mới chạy chính xác theo múi giờ `Asia/Ho_Chi_Minh` trong `SubscriptionQuotaService.java`.
+* **Package Backend**: `com.group2.assignment.settings`
+* **Thư mục View**: `templates/admin/dashboard.html`, `templates/admin/users.html`, `templates/admin/settings.html`
+* **Mục tiêu**: Nâng cấp toàn diện giao diện và tính năng trang Admin từ mức cơ bản thành **Trung tâm Chỉ huy Quản trị (Admin Command Center)** hiện đại, trực quan và bảo mật cao, phục vụ giám sát toàn bộ hoạt động hệ sinh thái StudyHub AI.
+* **Nhiệm vụ cụ thể (5 Hạng Mục Cải Tiến)**:
+  1. **Nâng cấp Dashboard Thống kê KPI Thời gian thực (`AdminAnalyticsService.java`, `AdminStatsDto.java` & `admin/dashboard.html`)**:
+     - Bổ sung thống kê phân rã chi tiết cả 3 gói cước: Số sinh viên FREE (`freeUsersCount`), Số sinh viên PRO (`proUsersCount`), Số sinh viên SQUAD (`squadUsersCount`).
+     - Đo lường Tỷ lệ Người dùng Trả phí (Paying Conversion Rate): $\text{paidConversionRate} = \frac{PRO + SQUAD}{\text{TotalStudents}} \times 100\%$.
+     - Thiết kế lại giao diện Dashboard chuẩn DaisyUI Glassmorphism sang trọng:
+       * **Thẻ 1 - 👥 Tổng Người Dùng**: Hiển thị tổng số tài khoản kèm thanh chia tỷ lệ 3 gói FREE (xám) / PRO (tím) / SQUAD (xanh dương).
+       * **Thẻ 2 - 📚 Kho Tri Thức Hệ Thống**: Tổng số môn học toàn trường và tổng số Chunks tài liệu đã vector hóa / index.
+       * **Thẻ 3 - ⚡ Tải Lượng RAG Hôm Nay**: Tổng số câu hỏi AI mà sinh viên truy vấn trong ngày (theo múi giờ Việt Nam GMT+7).
+       * **Thẻ 4 - 🟢 Tình Trạng AI Gemini**: Badge online/offline, độ trễ ping mili-giây (ms), và model AI đang phục vụ.
+     - Bổ sung Bảng *"Hoạt Động Hệ Thống Gần Đây"*: Danh sách 5 tài khoản đăng ký mới nhất và môn học vừa được tạo.
+  2. **Nâng cấp Quản Lý Sinh Viên & Can Thiệp Gói Cước 1-Click (`admin/users.html` & `AdminController.java`)**:
+     - **Thanh Tìm kiếm & Lọc Sinh Viên**: Cho phép gõ tìm theo Tên, Username hoặc Email; có bộ nút bấm lọc nhanh (Tất cả | FREE | PRO | SQUAD).
+     - **Bộ Tác vụ 1-Click Action linh hoạt**:
+       * Nút ⚡ **Nâng cấp PRO** (`POST /admin/users/{id}/upgrade-pro`): Kích hoạt tức thì gói cá nhân Pro.
+       * Nút 👥 **Kích hoạt SQUAD** (`POST /admin/users/{id}/upgrade-squad`): Kích hoạt gói Nhóm Học Tập (Study Squad).
+       * Nút ↩️ **Hạ về FREE** (`POST /admin/users/{id}/downgrade-free`): Chuyển tài khoản về hạng miễn phí.
+       * Nút 🔄 **Reset Quota RAG** (`POST /admin/users/{id}/reset-rag`): Khôi phục ngay 50 câu hỏi RAG cho sinh viên trong ngày để hỗ trợ kịp thời khi demo.
+     - **Hiển thị Badge Trực quan**: Cột RAG hiển thị kèm thanh mini progress bar cảnh báo đổi màu (xanh < 30 câu, vàng < 45 câu, đỏ = 50 câu).
+  3. **Tối ưu Quản Trị Cấu Hình System AI Key (`admin/settings.html` & `SystemAiKeyService.java`)**:
+     - Che giấu khóa (API Key Masking) dạng `AIzaSy...****` trên giao diện nhằm chống quay lén hoặc lộ key nhạy cảm khi thuyết trình demo.
+     - Nút *"Kiểm Tra Kết Nối Tức Thì"* (Live Ping Test) hiển thị spinner tải và thông báo trực quan: Màu xanh (Kết nối tốt, latency X ms) hoặc Màu đỏ (Lỗi 429 Quota Exceeded / 401 Invalid Key).
+  4. **Giám sát Môn Học Toàn Hệ Thống (`/courses`)**:
+     - Khi Admin truy cập `/courses`: Hiển thị chế độ Quản trị viên toàn quyền, gắn nhãn rõ ràng chủ sở hữu từng môn (*"Bởi: student"*, *"Bởi: truong"*).
+     - Cho phép Admin xóa bỏ các môn học rác hoặc môn thử nghiệm để giữ CSDL luôn gọn gàng.
+  5. **Bảo mật CSRF & Kiểm thử Tự động (Testing)**:
+     - Rà soát toàn bộ các form POST trong phân hệ Admin đảm bảo đều có Token CSRF bảo mật.
+     - Bổ sung Unit Tests trong `AdminHubTest.java` kiểm thử đầy đủ các endpoint mới (`upgrade-squad`, `reset-rag`, `search-users`).
 * **Định nghĩa hoàn thành (DoD)**:
-  - Admin vào `/admin/dashboard` thấy số liệu chia thành 3 gói rõ ràng.
-  - Thử bấm nút nâng cấp tài khoản bất kỳ từ Free lên Squad hoặc Pro thì tài khoản đó được mở khóa ngay lập tức.
+  - Admin vào `/admin/dashboard` thấy giao diện hiện đại, chuyên nghiệp, hiển thị đầy đủ KPI 3 gói cước.
+  - Bấm nút 1-Click can thiệp gói (Pro / Squad / Free) trên danh sách sinh viên hoạt động ngay lập tức không cần tải lại trang phức tạp.
+  - Nút Test Ping Gemini phản hồi chính xác tình trạng sức khỏe AI.
+  - Toàn bộ Unit Tests phân hệ Admin vượt qua 100% (`BUILD SUCCESS`).
 
 ---
 
