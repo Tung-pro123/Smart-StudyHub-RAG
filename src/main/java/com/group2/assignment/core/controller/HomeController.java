@@ -1,6 +1,7 @@
 package com.group2.assignment.core.controller;
 
 import com.group2.assignment.auth.controller.AuthController;
+import com.group2.assignment.auth.entity.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,11 @@ public class HomeController {
      */
     @GetMapping("/")
     public String index(HttpSession session) {
-        if (session.getAttribute(AuthController.SESSION_USER) != null) {
+        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        if (currentUser != null) {
+            if ("ROLE_ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+                return "redirect:/admin/dashboard";
+            }
             return "redirect:/courses";
         }
         return "landing";

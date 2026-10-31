@@ -31,8 +31,9 @@ public class AuthController {
 
     @GetMapping("/login")
     public String showLoginPage(Model model, HttpSession session) {
-        if (session.getAttribute(SESSION_USER) != null) {
-            return "redirect:/courses";
+        User loggedUser = (User) session.getAttribute(SESSION_USER);
+        if (loggedUser != null) {
+            return "ROLE_ADMIN".equalsIgnoreCase(loggedUser.getRole()) ? "redirect:/admin/dashboard" : "redirect:/courses";
         }
         model.addAttribute("loginDto", new LoginRequestDto());
         return "auth/login";
@@ -66,6 +67,9 @@ public class AuthController {
                 session.removeAttribute("authRedirectUrl");
                 return "redirect:" + redirectUrl;
             }
+            if (user != null && "ROLE_ADMIN".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/admin/dashboard";
+            }
             return "redirect:/courses";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -75,8 +79,9 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegisterPage(Model model, HttpSession session) {
-        if (session.getAttribute(SESSION_USER) != null) {
-            return "redirect:/courses";
+        User loggedUser = (User) session.getAttribute(SESSION_USER);
+        if (loggedUser != null) {
+            return "ROLE_ADMIN".equalsIgnoreCase(loggedUser.getRole()) ? "redirect:/admin/dashboard" : "redirect:/courses";
         }
         model.addAttribute("registerDto", new RegisterRequestDto());
         return "auth/register";
