@@ -195,6 +195,31 @@ public class AuthController {
     }
 
     /**
+     * Nâng cấp gói Nhóm Học Tập (Study Squad - 5 thành viên)
+     */
+    @PostMapping("/auth/upgrade-squad")
+    public String upgradeSquad(HttpSession session, RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để nâng cấp gói tài khoản!");
+            return "redirect:/login";
+        }
+
+        // CHỐNG CLICK SPAM (IDEMPOTENCY): Nếu đã là SQUAD hoặc CAMPUS, không cập nhật lặp lại
+        if ("SQUAD".equalsIgnoreCase(currentUser.getSubscriptionTier()) || "CAMPUS".equalsIgnoreCase(currentUser.getSubscriptionTier())) {
+            redirectAttributes.addFlashAttribute("successMessage", "Tài khoản của bạn hiện đã kích hoạt Gói Nhóm Học Tập (Study Squad)!");
+            return "redirect:/courses";
+        }
+
+        User updated = authService.upgradeSubscriptionTier(currentUser.getUsername(), "SQUAD");
+        session.setAttribute(SESSION_USER, updated);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "🎉 Chúc mừng! Bạn đã kích hoạt thành công Gói Nhóm Học Tập (Study Squad) cho 5 thành viên!");
+        return "redirect:/courses";
+    }
+
+
+    /**
      * OAuth2 Login Success Handler
      * Xử lý khi đăng nhập Google thành công
      */

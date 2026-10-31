@@ -94,7 +94,8 @@ public class User {
     public boolean isPro() {
         return "ROLE_ADMIN".equalsIgnoreCase(this.role)
                 || "PRO".equalsIgnoreCase(this.subscriptionTier)
-                || "CAMPUS".equalsIgnoreCase(this.subscriptionTier);
+                || "CAMPUS".equalsIgnoreCase(this.subscriptionTier)
+                || "SQUAD".equalsIgnoreCase(this.subscriptionTier);
     }
 
     public boolean isAdmin() {

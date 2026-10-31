@@ -37,7 +37,7 @@ public class SubscriptionQuotaService {
 
     public boolean hasUnlimitedRag(User user) {
         return "ROLE_ADMIN".equals(user.getRole()) || "PRO".equals(user.getSubscriptionTier())
-                || "CAMPUS".equals(user.getSubscriptionTier());
+                || "CAMPUS".equals(user.getSubscriptionTier()) || "SQUAD".equals(user.getSubscriptionTier());
     }
 
     // shortcut: preflight and recording are separate; add reservations to cap in-flight AI calls in RAG.
