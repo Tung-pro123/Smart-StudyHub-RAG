@@ -1713,7 +1713,7 @@ AI tự động sinh đề thi trắc nghiệm A/B/C/D bám sát slide có chấ
 
 <!-- i. FREQUENTLY ASKED QUESTIONS (FAQ) -->
 <section class="py-24 md:py-32 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" id="faq">
-<div class="reveal text-center max-w-3xl mx-auto mb-16">
+<div class="reveal text-center max-w-3xl mx-auto mb-10">
 <span class="badge badge-outline border-violet-500/40 text-violet-400 font-semibold text-xs tracking-wider uppercase mb-3 px-3 py-2">
 GIẢI ĐÁP THẮC MẮC
 </span>
@@ -1725,78 +1725,100 @@ Mọi điều bạn cần biết về cách thức vận hành, bảo mật dữ
 </p>
 </div>
 
+<!-- Accordion Toolbar Controls -->
+<div class="reveal flex flex-wrap items-center justify-between gap-3 mb-6 px-2">
+<div class="flex items-center gap-2 text-xs sm:text-sm text-gray-400">
+<i class="fa-regular fa-lightbulb text-amber-400"></i>
+<span>Nhấp vào tiêu đề câu hỏi bất kỳ để đóng hoặc mở câu trả lời:</span>
+</div>
+<div class="flex items-center gap-2">
+<button type="button" onclick="toggleAllFaq(true)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-violet-600/20 text-violet-300 border border-violet-500/30 hover:bg-violet-600 hover:text-white transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm">
+<i class="fa-solid fa-angles-down text-[10px]"></i>
+<span>Mở tất cả (5 câu)</span>
+</button>
+<button type="button" onclick="toggleAllFaq(false)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200 flex items-center gap-1.5 cursor-pointer">
+<i class="fa-solid fa-angles-up text-[10px]"></i>
+<span>Thu gọn</span>
+</button>
+</div>
+</div>
+
 <div class="space-y-4">
 <!-- FAQ 1: BYO Courseware -->
-<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
-<input type="radio" name="faq-accordion" checked="checked" />
-<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-violet-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
 <i class="fa-solid fa-circle-question text-violet-400 text-base"></i>
 <span>Nền tảng có sẵn giáo trình các môn không, hay tôi phải tự tải lên?</span>
-</div>
+</summary>
 <div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
 <p class="pt-2 border-t border-white/5">
 StudyHub là nền tảng tự học cá nhân hóa (Bring Your Own Courseware): Bạn hoàn toàn chủ động tạo môn học theo kỳ học thực tế của mình (ví dụ: HSF302, PRJ301, MAS291...) và tải lên file PDF slide bài giảng của chính giảng viên bạn học. Hệ thống không bán sẵn hay đóng gói cố định giáo trình.
 </p>
 </div>
-</div>
+</details>
 
 <!-- FAQ 2: Data Isolation -->
-<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
-<input type="radio" name="faq-accordion" />
-<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-emerald-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
 <i class="fa-solid fa-user-shield text-emerald-400 text-base"></i>
 <span>Slide bài giảng và lịch sử chat của tôi có bị sinh viên khác nhìn thấy không?</span>
-</div>
+</summary>
 <div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
 <p class="pt-2 border-t border-white/5">
-Hoàn toàn không. Hệ thống áp dụng cơ chế <strong>Phân lập dữ liệu tuyệt đối (Data Isolation)</strong>: Mỗi môn học, file tài liệu và phiên hỏi đáp đều được liên kết duy nhất với tài khoản của bạn. Sinh viên khác không thể xem, sửa hay truy cập tài liệu trong không gian học tập của bạn.
+Hoàn toàn không. Hệ thống áp dụng cơ chế <strong>Phân lập dữ liệu tuyệt đối (Data Isolation)</strong>: Mỗi môn học, file tài liệu và phiên hỏi đáp đều được liên kết duy nhất với tài khoản của bạn theo mã định danh người dùng. Sinh viên khác không thể xem, sửa hay truy cập tài liệu trong không gian học tập của bạn.
 </p>
 </div>
-</div>
+</details>
 
 <!-- FAQ 3: RAG Citations & Zero Hallucination -->
-<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
-<input type="radio" name="faq-accordion" />
-<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-pink-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
 <i class="fa-solid fa-quote-left text-pink-400 text-base"></i>
 <span>RAG AI có bị ảo giác (bịa thông tin) khi giải đáp kiến thức không?</span>
-</div>
+</summary>
 <div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
 <p class="pt-2 border-t border-white/5">
-Không. Nhờ kiến trúc RAG (Retrieval-Augmented Generation), mô hình Gemini 1.5 Flash chỉ trả lời dựa trên các đoạn văn bản (chunks) được trích xuất trực tiếp từ file PDF bạn tải lên. Mọi câu trả lời đều đính kèm <strong>Citation Card ghi rõ số trang đối chứng</strong> trong giáo trình để bạn kiểm tra nguồn gốc.
+Không. Nhờ kiến trúc RAG (Retrieval-Augmented Generation), mô hình Gemini chỉ trả lời dựa trên các đoạn văn bản (chunks) được trích xuất trực tiếp từ file PDF bạn tải lên. Mọi câu trả lời đều đính kèm <strong>Citation Card ghi rõ số trang đối chứng</strong> trong giáo trình để bạn kiểm tra nguồn gốc.
 </p>
 </div>
-</div>
+</details>
 
 <!-- FAQ 4: Study Squad -->
-<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
-<input type="radio" name="faq-accordion" />
-<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-cyan-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
 <i class="fa-solid fa-users text-cyan-400 text-base"></i>
 <span>Gói Nhóm Học Tập (Study Squad) hoạt động như thế nào?</span>
-</div>
+</summary>
 <div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
 <p class="pt-2 border-t border-white/5">
 Gói Study Squad ($5/tháng) cho phép 1 bạn nhóm trưởng mời thêm tối đa 4 thành viên khác vào nhóm thông qua username tại trang Hồ Sơ. Toàn bộ 5 bạn trong nhóm đều được hưởng trọn vẹn đặc quyền PRO (không giới hạn môn, không giới hạn RAG) và mở khóa tính năng phân công nhiệm vụ đồ án nhóm (Team Tasks).
 </p>
 </div>
-</div>
+</details>
 
 <!-- FAQ 5: Pricing & Cost -->
-<div class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300">
-<input type="radio" name="faq-accordion" />
-<div class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8">
+<details class="collapse collapse-plus glass-card border border-white/10 rounded-2xl group transition-all duration-300 hover:border-amber-500/40 hover:bg-slate-900/60" open>
+<summary class="collapse-title text-base sm:text-lg font-bold text-white flex items-center gap-3 pr-8 cursor-pointer select-none">
 <i class="fa-solid fa-wallet text-amber-400 text-base"></i>
 <span>Tôi có cần nhập thẻ ngân hàng hay thanh toán khi đăng ký tài khoản không?</span>
-</div>
+</summary>
 <div class="collapse-content text-gray-300 text-sm sm:text-base leading-relaxed pl-10">
 <p class="pt-2 border-t border-white/5">
 Không cần bất kỳ thông tin thanh toán nào. Gói <strong>Sinh Viên Tự Học (FREE)</strong> hoàn toàn miễn phí vĩnh viễn, bạn chỉ cần tạo tài khoản với tên đăng nhập và mật khẩu là có thể tự tạo môn học và hỏi đáp với AI ngay tức thì.
 </p>
 </div>
+</details>
 </div>
-</div>
+
+<script>
+function toggleAllFaq(shouldOpen) {
+  document.querySelectorAll('#faq details').forEach(function(el) {
+    el.open = shouldOpen;
+  });
+}
+</script>
 </section>
+
 
 <!-- j. CALL TO ACTION (CTA) SECTION -->
 <section class="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
