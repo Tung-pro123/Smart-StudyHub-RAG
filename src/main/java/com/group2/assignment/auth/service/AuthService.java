@@ -321,16 +321,31 @@ public class AuthService {
     }
 
     /**
-     * Khởi tạo tài khoản sinh viên mẫu mặc định để demo
+     * Khởi tạo tài khoản sinh viên mẫu mặc định để demo các gói cước và vai trò
      */
     @PostConstruct
     public void initDefaultUser() {
-        // 1. Tài khoản Student Free
+        // 1. Tài khoản Student Free (Có sẵn môn học, quota RAG 50 câu/ngày)
         if (!userRepository.existsByUsernameIgnoreCase("student")) {
             userRepository.save(User.builder()
                     .username("student")
                     .email("student@fpt.edu.vn")
                     .fullName("Nguyễn Văn Sinh Viên")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("FREE")
+                    .dailyRagCount(5)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 2. Tài khoản Student 2 Free (Tự do, chưa có nhóm - dùng để demo mời vào Squad)
+        if (!userRepository.existsByUsernameIgnoreCase("student2")) {
+            userRepository.save(User.builder()
+                    .username("student2")
+                    .email("student2@fpt.edu.vn")
+                    .fullName("Lê Tự Do (Free)")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
                     .subscriptionTier("FREE")
@@ -340,22 +355,74 @@ public class AuthService {
                     .build());
         }
 
-        // 2. Tài khoản Pro Student
+        // 3. Tài khoản Pro Student (Không giới hạn môn học, không giới hạn RAG)
         if (!userRepository.existsByUsernameIgnoreCase("pro_student")) {
             userRepository.save(User.builder()
                     .username("pro_student")
                     .email("pro_student@fpt.edu.vn")
-                    .fullName("Trần Pro Sinh Viên")
+                    .fullName("Trần Nâng Cấp (Pro User)")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
                     .subscriptionTier("PRO")
-                    .dailyRagCount(0)
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(85)
                     .lastRagResetDate(LocalDate.now())
                     .createdAt(LocalDateTime.now())
                     .build());
         }
 
-        // 3. Tài khoản Quản trị viên Admin
+        // 4. Tài khoản Trưởng Nhóm Squad (Gói Study Squad - tối đa 5 bạn)
+        if (!userRepository.existsByUsernameIgnoreCase("squad_leader")) {
+            userRepository.save(User.builder()
+                    .username("squad_leader")
+                    .email("squad_leader@fpt.edu.vn")
+                    .fullName("Phạm Trưởng Nhóm (Leader Squad)")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("SQUAD")
+                    .squadLeaderUsername("squad_leader")
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(20)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 5. Thành viên nhóm Squad 1 (Hưởng đặc quyền Pro từ trưởng nhóm)
+        if (!userRepository.existsByUsernameIgnoreCase("squad_member1")) {
+            userRepository.save(User.builder()
+                    .username("squad_member1")
+                    .email("squad_member1@fpt.edu.vn")
+                    .fullName("Hoàng Thành Viên (Squad Member 1)")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("SQUAD")
+                    .squadLeaderUsername("squad_leader")
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(12)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 6. Thành viên nhóm Squad 2 (Hưởng đặc quyền Pro từ trưởng nhóm)
+        if (!userRepository.existsByUsernameIgnoreCase("squad_member2")) {
+            userRepository.save(User.builder()
+                    .username("squad_member2")
+                    .email("squad_member2@fpt.edu.vn")
+                    .fullName("Vũ Bạn Học (Squad Member 2)")
+                    .password(passwordEncoder.encode("123456"))
+                    .role("ROLE_STUDENT")
+                    .subscriptionTier("SQUAD")
+                    .squadLeaderUsername("squad_leader")
+                    .tierExpiresAt(LocalDateTime.now().plusMonths(6))
+                    .dailyRagCount(8)
+                    .lastRagResetDate(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
+                    .build());
+        }
+
+        // 7. Tài khoản Quản trị viên Admin
         if (!userRepository.existsByUsernameIgnoreCase("admin")) {
             userRepository.save(User.builder()
                     .username("admin")
@@ -370,7 +437,7 @@ public class AuthService {
                     .build());
         }
 
-        // 4. Tài khoản Demo Trường (Admin)
+        // 8. Tài khoản Demo Trường (Admin / Dev)
         if (!userRepository.existsByUsernameIgnoreCase("truong")) {
             userRepository.save(User.builder()
                     .username("truong")
