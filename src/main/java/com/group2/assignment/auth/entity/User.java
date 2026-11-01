@@ -107,8 +107,9 @@ public class User {
     }
 
     public boolean isSquadLeader() {
-        return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
-                && (this.squadLeaderUsername == null || this.username.equalsIgnoreCase(this.squadLeaderUsername));
+        return "ROLE_ADMIN".equalsIgnoreCase(this.role)
+                || ("SQUAD".equalsIgnoreCase(this.subscriptionTier)
+                    && (this.squadLeaderUsername == null || this.username.equalsIgnoreCase(this.squadLeaderUsername)));
     }
 
     public boolean isAdmin() {
