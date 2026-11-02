@@ -41,4 +41,15 @@ CLAUDE.md
 .superpowers/
 
 
+### Node.js & Temporary Test Fixtures ###
+node_modules/
+test-fixtures/*.class
+
 .originkit/
+
+# E2E Scripts & Test Fixtures
+e2e/
+test-fixtures/
+package.json
+package-lock.json
+node_modules/

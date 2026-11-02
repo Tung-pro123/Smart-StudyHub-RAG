@@ -161,26 +161,34 @@
 ### 📄 3. BÌNH - QUẢN LÝ TÀI LIỆU PDF, CẮT CHUNKS, RAG CHATBOT & QUOTA RAG
 * **Tài khoản sử dụng**: `student` (Free) và `pro_student` (Pro)
 * **URL kiểm thử**: `http://localhost:8080/courses/{id}/documents`, `http://localhost:8080/courses/{id}/chat`
+* **Tiến độ**: **7/7 Test Cases ĐÃ HOÀN THÀNH (100% PASS)**
 * **Danh sách Test Cases**:
   1. `E2E-RAG-01`: **Tải lên tài liệu PDF môn học**:
      - Vào môn học `HSF302`, tải file slide PDF lên -> Hệ thống xử lý trích xuất văn bản và hiển thị tài liệu trong danh sách.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-01_binh.png`](../evidence/binh/E2E-RAG-01_binh.png)
   2. `E2E-RAG-02`: **Cắt nhỏ Chunks & Trực quan hóa đoạn trích**:
      - Kiểm tra danh sách Chunks được cắt nhỏ: hiển thị rõ số trang, đoạn văn bản trích dẫn.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-02_binh.png`](../evidence/binh/E2E-RAG-02_binh.png)
   3. `E2E-RAG-03`: **Xóa tài liệu PDF & Dọn sạch Chunks liên quan**:
      - Bấm nút Xóa tài liệu -> Tài liệu và toàn bộ các chunks liên quan được xóa sạch khỏi Database.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-03_binh.png`](../evidence/binh/E2E-RAG-03_binh.png)
   4. `E2E-RAG-04`: **Chatbot RAG Giáo trình có Citation số trang đối chứng**:
      - Hỏi AI một câu hỏi có trong slide -> AI trả lời chi tiết và đính kèm **Citation Card: Nguồn file PDF + Trang đối chứng cụ thể (0% ảo giác)**.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-04_binh.png`](../evidence/binh/E2E-RAG-04_binh.png)
   5. `E2E-RAG-05`: **Kiểm soát hạn mức 3 tài liệu PDF ở Gói Free**:
      - Tài khoản `student` tải đủ 3 tài liệu PDF vào môn học.
      - Cố tình tải tài liệu thứ 4 -> Hệ thống chặn lại báo lỗi hạn ngạch 3 tài liệu/môn của Gói Free.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-05_binh.png`](../evidence/binh/E2E-RAG-05_binh.png)
   6. `E2E-RAG-06`: **Gói Pro tải tài liệu PDF không giới hạn**:
      - Đăng nhập `pro_student`, tải liên tiếp 4-5 tài liệu PDF vào môn học -> Tải lên thành công mượt mà.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-06_binh.png`](../evidence/binh/E2E-RAG-06_binh.png)
   7. `E2E-RAG-07`: **Kiểm tra Hạn ngạch RAG 50 câu/ngày của Gói Free**:
-     - Áp dụng Mẹo 1 (sửa limit về 3 hoặc update SQL `daily_rag_count = 49`).
+     - Áp dụng Mẹo 1 (sửa limit về 3 hoặc update SQL `daily_rag_count = 50`).
      - Chat vượt hạn ngạch -> Hệ thống chặn lại báo lỗi đạt giới hạn 50 câu/ngày và gợi ý nâng cấp Pro.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-07_binh.png`](../evidence/binh/E2E-RAG-07_binh.png)
   8. `E2E-RAG-08`: **Tạo phiên chat mới & Xóa lịch sử trò chuyện**:
      - Bấm nút "Cuộc trò chuyện mới" (`/chat/new`) -> Mở phiên mới. Bấm "Xóa lịch sử" (`/chat/clear`) -> Dọn dẹp sạch sẽ phiên chat.
-* **Bằng chứng cần nộp**: 8 ảnh chụp màn hình (`E2E-RAG-01_binh.png` đến `E2E-RAG-08_binh.png`).
+* **Bằng chứng đã nộp**: Đầy đủ 7 ảnh chụp màn hình minh chứng chất lượng cao trong thư mục [`docs/evidence/`](../evidence/).
 
 ---
 
