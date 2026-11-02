@@ -98,7 +98,8 @@ public class PlannerController {
         User currentUser = getCurrentUser(session);
         var planOpt = studyPlannerService.getPlanById(planId, currentUser);
         if (planOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Không tìm thấy kế hoạch!");
+            redirectAttributes.addFlashAttribute("error",
+                    "Không tìm thấy kế hoạch hoặc không thuộc tài khoản của bạn");
             return "redirect:/planner";
         }
 
