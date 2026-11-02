@@ -32,7 +32,7 @@
 | Mã Issue | Ngày tạo | Người báo | Phân hệ | Mô tả lỗi vắn tắt | Mức độ | Người sửa (Assignee) | Trạng thái | Commit Fix / Ghi chú |
 | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
 | **`#ISSUE-01`** | 02/11 | Tùng | `Auth / Profile` | Gói PRO hiển thị nhầm thẻ Quản lý nhóm và dòng chữ `"Bạn là thành viên nhóm @null"`, card Hạn ngạch RAG bị vỡ cột mô tả. | **🚨 HIGH** | **Trường / Tùng** | **✅ CLOSED** | Đã sửa trong commit [`9998765`](https://github.com/Tung-pro123/Smart-StudyHub-RAG/commit/9998765). Đã test 290/290 test passed. |
-| **`#ISSUE-02`** | 02/11 | Tùng | `UI / Navigation` | Tái cấu trúc Dashboard sang Sidebar dọc cố định bên trái, chuyển sang White-card Palette, gỡ dropdown học kỳ cứng nhắc để tự do mọi trường (BYOC). | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Hoàn tất trên nhánh `feature/tung-e2e-testing`. UI chuẩn hiện đại, responsive drawer. |
+| **`#ISSUE-02`** | 02/11 | Tùng | `UI / Navigation` | Tái cấu trúc Dashboard sang Sidebar dọc cố định bên trái, chuyển sang White-card Palette, đồng bộ màu sắc với Landing Page (Obsidian `#030712` + Gradient tím hồng), gỡ dropdown học kỳ cứng nhắc để tự do mọi trường (BYOC). | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Hoàn tất trên nhánh `feature/tung-e2e-testing`. UI chuẩn hiện đại, responsive drawer, đồng bộ tông Landing Page. |
 | **`#ISSUE-03`** | 02/11 | Tùng | `Auth / Login UI` | Nút con mắt xem mật khẩu ở trang `/login` không hoạt động do thẻ `<script>` nằm ngoài thẻ `<section>` bị Thymeleaf loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển `<script>` vào trong `<section>` ở `login.html`, toggle type password/text và đổi icon fa-eye/fa-eye-slash mượt mà. |
 | **`#ISSUE-04`** | 02/11 | Tùng | `Core / Database` | Tài khoản test `student` trong DB bị set nhầm `PRO` và chứa 5 môn học, gây sai lệch khi test Data Isolation và Hạn mức 3 môn Free. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã reset `subscription_tier = 'FREE'` và chuyển các môn test sang tài khoản Pro/Admin, chuẩn hóa student về đúng 2 môn ban đầu (`HSF302`, `MAS291`). |
 
@@ -78,8 +78,9 @@
 * **Trạng thái**: 🟢 RESOLVED
 * **Mô tả & Khắc phục**:
   1. Chuyển đổi Navbar ngang sang Vertical Navigation Sidebar (`layout/main.html` + `sidebar.html`) cố định bên trái màn hình (`lg:drawer-open`).
-  2. Áp dụng bảng màu White-card Palette tinh tế, tối giản, tương thích màu sắc landing page.
-  3. Gỡ bỏ dropdown `<select name="semester">` cứng nhắc, thay bằng tìm kiếm từ khóa tự do cho sinh viên mọi trường đại học (BYOC).
+  2. Áp dụng bảng màu White-card Palette tinh tế, tối giản, tương thích màu sắc landing page: Hero banner Obsidian `#030712`, hiệu ứng Ambient Cyber Glow cyan/violet, các nút CTA đồng bộ gradient Landing Page (`from-purple-600 via-violet-600 to-pink-600`).
+  3. Thay thế thông báo flash thành công/lỗi màu xanh thô bằng Toast Cards bo tròn thanh thoát `bg-emerald-50/95` và `bg-rose-50/95`.
+  4. Gỡ bỏ dropdown `<select name="semester">` cứng nhắc, thay bằng tìm kiếm từ khóa tự do cho sinh viên mọi trường đại học (BYOC).
 
 ---
 
