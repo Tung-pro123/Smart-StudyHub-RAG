@@ -137,3 +137,36 @@
 
 #### 4. Ảnh chụp màn hình lỗi (Screenshot Evidence):
 * `![Screenshot](../evidence/truong/E2E-AUTH-03_truong.png)`
+
+---
+
+## 6. Trở ngại môi trường QA Admin — Ân — 02/11/2026
+
+Các mục QA dưới đây được tách khỏi lỗi chức năng `ISSUE-01..03`. Không phát hiện lỗi chức năng Admin mới trong phạm vi đã chạy. Báo cáo: [Admin E2E](../evidence/an/README.md).
+
+### QA-ADM-01 — BLOCKED: Thiếu Gemini key hợp lệ để nghiệm thu E2E-ADM-06
+
+* **Người ghi nhận**: Ân; **phân hệ**: Admin / cấu hình môi trường QA.
+* **Mức ảnh hưởng**: Chặn luồng nghiệm thu kết nối Gemini thành công; không phải lỗi chức năng đã xác nhận.
+* **Người xử lý**: Chủ tài khoản Gemini phối hợp Ân.
+* **Môi trường**: `main@e4a9790`, `http://localhost:8081`, database QA riêng, không có `GEMINI_API_KEY`.
+* **Các bước tái hiện**: Đăng nhập `admin`, mở `/admin/settings`, bấm “Kiểm tra kết nối tức thì”.
+* **Thực tế**: Trang báo chưa cấu hình; ping báo cần API key hợp lệ. Thử thêm khóa giả QA để kiểm tra masking: hiển thị `AIzaSy...****`; ping trả thông báo đỏ “Yêu cầu không hợp lệ. Kiểm tra API key và cấu hình model.”, 827 ms.
+* **Kỳ vọng nghiệm thu còn thiếu**: Với key hợp lệ, ping thực tế Google Gemini thành công, hiển thị thông báo xanh và latency. Không đánh dấu PASS bằng key giả hay mock.
+* **Hướng gỡ chặn**: Cấu hình `GEMINI_API_KEY` hợp lệ cho môi trường QA, khởi động app và chạy lại ADM-06. Người dùng đã chọn ghi nhận BLOCKED và bàn giao kết quả hiện có.
+* **Bằng chứng**: [Ảnh Test Ping](../evidence/an/E2E-ADM-06_an.png), [Ảnh masking](../evidence/an/E2E-ADM-06_masked_an.png).
+
+### QA-ADM-02 — WORKAROUND VERIFIED: Test runner mặc định lỗi trên JDK 25
+
+* **Người ghi nhận / phụ trách**: Ân; **phân hệ**: môi trường kiểm thử tự động.
+* **Ảnh hưởng**: Lệnh test Admin mặc định không khởi tạo được Mockito; chưa chứng minh lỗi nghiệp vụ.
+* **Các bước tái hiện**: Dùng JDK 25.0.4, chạy `mvn -B -Dtest=AdminHubTest test` trên `main@e4a9790`.
+* **Thực tế**: 29 errors ở bước khởi tạo context/mock. Nguyên nhân gốc trong log: `Java 25 (69) is not supported by the current version of Byte Buddy which officially supports Java 23 (67)`.
+* **Kỳ vọng**: Test runner khởi tạo được và chạy assertions trên JDK được hỗ trợ.
+* **Workaround đã xác minh**: `mvn -B -Dtest=AdminHubTest -Dnet.bytebuddy.experimental=true test` cho **29 tests, 0 failures, 0 errors, 0 skipped, BUILD SUCCESS**. Không sửa dependency hay mã nguồn trong đợt QA này.
+* **Xử lý lâu dài**: Dùng JDK tương thích với dự án (Java 17) hoặc cập nhật Byte Buddy/Mockito theo quy trình riêng; chưa nghiệm thu biện pháp lâu dài.
+* **Bằng chứng**: [Surefire summary](../evidence/an/AdminHubTest-summary.txt); log local `target/admin-e2e-regression.log` và `target/admin-e2e-regression-compatible.log`.
+
+### Đối chiếu lỗi Auth đã có
+
+Lần chạy QA Admin tái hiện nút “FREE student” trên `/login` không tự điền form. Đây là **ISSUE-02 hiện có**, không tạo issue trùng; đã nhập thông tin demo thủ công để tiếp tục 6 case Admin.

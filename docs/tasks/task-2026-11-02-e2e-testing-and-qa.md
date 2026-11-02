@@ -246,6 +246,10 @@
 ---
 
 ### 🛡️ 6. AN - ADMIN COMMAND CENTER, QUẢN TRỊ NGƯỜI DÙNG & SYSTEM API KEY
+* **Kết quả kiểm thử 02/11/2026**: **5 PASS, 1 BLOCKED** trên `main@e4a9790`, URL QA `http://localhost:8081`, database QA riêng.
+  - `E2E-ADM-01` đến `E2E-ADM-05`: **PASS**; `E2E-ADM-06`: **BLOCKED** vì chưa có Gemini API key hợp lệ để kiểm tra ping thành công. Masking và phản hồi khi thiếu/sai key đã kiểm tra.
+  - **Báo cáo và ảnh minh chứng**: [docs/evidence/an/README.md](../evidence/an/README.md). Đã lưu đủ 6 ảnh chính đúng tên; ảnh ADM-06 thể hiện kết quả lỗi với khóa giả, không chứng minh kết nối thành công.
+  - **Kiểm thử bổ sung**: `AdminHubTest` **29/29 PASS** với tùy chọn tương thích Byte Buddy trên JDK 25; không thay thế test Gemini thật.
 * **Tài khoản sử dụng**: `admin` (Admin), `student` (Kiểm tra bảo mật)
 * **URL kiểm thử**: `http://localhost:8080/admin/dashboard`, `http://localhost:8080/admin/users`, `http://localhost:8080/admin/settings`
 * **Danh sách Test Cases**:
