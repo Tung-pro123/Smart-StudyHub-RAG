@@ -264,4 +264,16 @@
 * **Địa điểm nộp ảnh**: Thư mục thành viên tương ứng tại `docs/evidence/[tên_thành_viên]/` trên repo theo cú pháp `[Mã_Test]_[Tên_Thành_Viên].png`.
 * **Tổng kết & Khắc phục lỗi**: 20:30 - Thứ Hai, 02/11/2026: Leader Tùng cùng cả nhóm rà soát file `docs/issues/ISSUES-TRACKING.md` để đóng tất cả các bug còn tồn đọng.
 
+
+---
+
+## 🎨 6. NHIỆM VỤ CẢI THIỆN & ĐỒNG BỘ GIAO DIỆN (UI POLISH TASKS)
+> Phân công bổ sung theo chỉ đạo của Team Lead Tùng nhằm chuẩn hóa giao diện toàn hệ thống theo Design System Obsidian & White-Card Palette của StudyHub AI.
+
+| Mã Nhiệm Vụ | Phân hệ / Màn hình | Mô tả công việc | Thành viên phụ trách | Hạn hoàn thành | Trạng thái |
+| :---: | :--- | :--- | :---: | :---: | :---: |
+| **`TASK-UI-01`** | **Course Detail Hub (`courses/detail.html`)** | Chuyển đổi 4 thẻ phân hệ (RAG, Slide, Planner, Quiz) và khối Cơ sở tri thức từ nền đen thô (`bg-slate-900`) sang **White-Card Palette** (`bg-white/95 border-slate-200 shadow-sm`), đồng bộ nút bấm sang gradient tím hồng Landing Page (`from-purple-600 via-violet-600 to-pink-600`) và typography hiện đại. | **Bình & Trường** | 22:00 - 02/11/2026 | 🟡 IN PROGRESS |
+
+---
+
 Chúc toàn đội Nhóm 2 test mượt mà, bắt trọn bug và bảo vệ đồ án xuất sắc đạt điểm A+! 🚀

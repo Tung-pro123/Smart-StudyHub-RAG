@@ -37,6 +37,7 @@
 | **`#ISSUE-04`** | 02/11 | Tùng | `Core / Database` | Tài khoản test `student` trong DB bị set nhầm `PRO` và chứa 5 môn học, gây sai lệch khi test Data Isolation và Hạn mức 3 môn Free. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã reset `subscription_tier = 'FREE'` và chuyển các môn test sang tài khoản Pro/Admin, chuẩn hóa student về đúng 2 môn ban đầu (`HSF302`, `MAS291`). |
 | **`#ISSUE-05`** | 02/11 | Tùng | `Core / Database` | Lỗi vi phạm Unique Index `IDX_COURSES_CODE_INDEX_1` khi tạo môn học có mã đã tồn tại ở người dùng khác do ràng buộc UNIQUE cũ trong H2 DB chưa được drop. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã drop constraint UNIQUE toàn cục `IDX_COURSES_CODE`, chuyển thành index thông thường để đảm bảo phân lập dữ liệu đa người dùng (Data Isolation). |
 | **`#ISSUE-06`** | 02/11 | Tùng | `UI / Pricing Modal` | Nút chuyển đổi kỳ thanh toán 'Theo Học Kỳ' trong modal Bảng giá không bấm được do khối script nằm ngoài thẻ `<section>` bị Thymeleaf layout decorator loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển khối `<script>` vào bên trong `<section>` ở `index.html`, bổ sung ID cập nhật giá và đồng bộ dải gradient Landing Page cho tab kích hoạt. |
+| **`#ISSUE-07`** | 02/11 | Tùng | `UI / Course Hub` | Giao diện Chi Tiết Môn Học (`courses/detail.html`) đang dùng tông nền thẻ tối cũ (`bg-slate-900`), chưa đồng bộ với White-Card Palette và gradient tím hồng Landing Page. | **⚠️ MEDIUM** | **Bình / Trường** | **🟡 IN PROGRESS** | Đã đưa vào danh sách task bổ sung ngày 02/11 (`TASK-UI-01`) phân công cho Bình & Trường thực hiện chuẩn hóa theo `docs/DESIGN-SYSTEM.md`. |
 
 ---
 
@@ -175,3 +176,17 @@
   - Đưa toàn bộ khối `<script>` vào bên trong thẻ `<section>`.
   - Bổ sung `id="card-squad-price"` và `id="card-squad-period"` vào thẻ Gói Nhóm để cập nhật giá đồng bộ.
   - Đồng bộ dải màu gradient Landing Page (`from-purple-600 via-violet-600 to-pink-600`) cho tab đang chọn.
+
+---
+
+### 🐛 [#ISSUE-07]: Đồng Bộ Giao Diện Course Detail Hub (`courses/detail.html`) Sang White-Card Palette
+* **Người báo lỗi / đề xuất**: Tùng (Team Lead)
+* **Phân hệ**: UI / Course Detail Hub (`courses/detail.html`)
+* **Tài khoản test**: Mọi sinh viên truy cập màn hình chi tiết môn học (`student`, `pro_student`)
+* **Mức độ**: ⚠️ MEDIUM (Chuẩn hóa Design System toàn ứng dụng)
+* **Người sửa (Assignee)**: Bình & Trường (Phối hợp thực hiện theo chỉ đạo của Lead Tùng)
+* **Trạng thái**: 🟡 IN PROGRESS
+* **Mô tả & Yêu cầu khắc phục**:
+  1. Chuyển đổi 4 thẻ phân hệ cấp độ 2 (Trợ Lý RAG, Tài Liệu Slide, Lịch Học Vừa Sức, Luyện Đề Trắc Nghiệm) từ thẻ tối `bg-slate-900/85` sang **White-Card Palette** (`bg-white/95 border-slate-200/80 text-slate-800 shadow-sm hover:shadow-lg`).
+  2. Đồng bộ nút bấm CTA sang dải gradient chuẩn của Landing Page: `bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600`.
+  3. Cải tiến khối "Cơ Sở Tri Thức Của Môn Học" và trạng thái rỗng (empty state) sang phong cách sáng, sạch sẽ, tinh tế.
