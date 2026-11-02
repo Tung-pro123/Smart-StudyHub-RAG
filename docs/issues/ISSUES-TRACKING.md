@@ -35,6 +35,7 @@
 | **`#ISSUE-02`** | 02/11 | Tùng | `UI / Navigation` | Tái cấu trúc Dashboard sang Sidebar dọc cố định bên trái, chuyển sang White-card Palette, đồng bộ màu sắc với Landing Page (Obsidian `#030712` + Gradient tím hồng), gỡ dropdown học kỳ cứng nhắc để tự do mọi trường (BYOC). | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Hoàn tất trên nhánh `feature/tung-e2e-testing`. UI chuẩn hiện đại, responsive drawer, đồng bộ tông Landing Page. |
 | **`#ISSUE-03`** | 02/11 | Tùng | `Auth / Login UI` | Nút con mắt xem mật khẩu ở trang `/login` không hoạt động do thẻ `<script>` nằm ngoài thẻ `<section>` bị Thymeleaf loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển `<script>` vào trong `<section>` ở `login.html`, toggle type password/text và đổi icon fa-eye/fa-eye-slash mượt mà. |
 | **`#ISSUE-04`** | 02/11 | Tùng | `Core / Database` | Tài khoản test `student` trong DB bị set nhầm `PRO` và chứa 5 môn học, gây sai lệch khi test Data Isolation và Hạn mức 3 môn Free. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã reset `subscription_tier = 'FREE'` và chuyển các môn test sang tài khoản Pro/Admin, chuẩn hóa student về đúng 2 môn ban đầu (`HSF302`, `MAS291`). |
+| **`#ISSUE-05`** | 02/11 | Tùng | `Core / Database` | Lỗi vi phạm Unique Index `IDX_COURSES_CODE_INDEX_1` khi tạo môn học có mã đã tồn tại ở người dùng khác do ràng buộc UNIQUE cũ trong H2 DB chưa được drop. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã drop constraint UNIQUE toàn cục `IDX_COURSES_CODE`, chuyển thành index thông thường để đảm bảo phân lập dữ liệu đa người dùng (Data Isolation). |
 
 ---
 
@@ -134,3 +135,24 @@
    - Vào bảng ở Mục 3, cập nhật trạng thái thành `🟢 RESOLVED` kèm mã commit.
    - Báo cho người phát hiện lỗi kiểm tra lại lần cuối để đóng issue sang `✅ CLOSED`.
 
+
+---
+
+### 🐛 [#ISSUE-05]: Lỗi Vi Phạm Unique Index `IDX_COURSES_CODE_INDEX_1` Khi Tạo Môn Trùng Mã Với Người Khác
+* **Người báo lỗi**: Tùng (Team Lead)
+* **Phân hệ**: Core / Data Isolation & Course Management
+* **Tài khoản test**: `student`
+* **Mức độ**: 🚨 HIGH (Chặn đứng thao tác tạo môn học của người dùng)
+* **Người sửa (Assignee)**: Tùng
+* **Trạng thái**: 🟢 RESOLVED
+* **Nguyên nhân**:
+  - Trong bảng `COURSES` của H2 Database cục bộ (`./data/studyhubdb.mv.db`), có tồn tại một ràng buộc UNIQUE cũ tên `IDX_COURSES_CODE` trên cột `code`.
+  - Nghiệp vụ của StudyHub AI đã nâng cấp sang cơ chế Data Isolation (phân lập dữ liệu đa người dùng), cho phép các sinh viên khác nhau đều có thể tự do tạo môn học cùng mã (như `DBI201`, `HSF302`, `PRJ301`). Validation ở `CourseService` kiểm tra trùng theo cặp `(code, user_id)`.
+  - Do cấu hình Hibernate `ddl-auto=update` không tự drop các ràng buộc UNIQUE cũ trong database thực tế, khi `admin` đang giữ môn `DBI201` thì `student` tạo môn `DBI201` bị database chặn lại và báo lỗi `Unique index or primary key violation: IDX_COURSES_CODE_INDEX_1`.
+* **Khắc phục**:
+  - Chạy script SQL trực tiếp trên H2 Database:
+    ```sql
+    ALTER TABLE COURSES DROP CONSTRAINT IF EXISTS IDX_COURSES_CODE;
+    CREATE INDEX IF NOT EXISTS IDX_COURSES_CODE ON COURSES(CODE);
+    ```
+  - Kiểm tra lại: Sinh viên có thể tạo môn học độc lập mà không bị xung đột với môn của tài khoản khác; đồng thời trong cùng một tài khoản vẫn được chặn trùng lặp mã qua `CourseService`.
