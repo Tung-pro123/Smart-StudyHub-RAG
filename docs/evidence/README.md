@@ -1,28 +1,36 @@
-# 📁 Cấu Trúc Lưu Trữ Minh Chứng Kiểm Thử E2E (Evidence Repository)
+# 📁 Kho Lưu Trữ Minh Chứng Đồ Án (Evidence Repository)
 
-Thư mục `docs/evidence/` được phân cấp theo **từng thành viên phụ trách** để đảm bảo quản lý gọn gàng, tránh phình to và dễ dàng tra cứu minh chứng của từng module.
-
----
-
-## 👥 Danh Sách Thư Mục Thành Viên
-
-| Thư mục | Thành viên | Vai trò & Phân hệ kiểm thử | Quy chuẩn đặt tên file |
-| :--- | :--- | :--- | :--- |
-| [`tung/`](./tung/) | **Lê Thanh Tùng (Lead)** | **Module 1**: Quản lý môn học, Data Isolation, Landing Page, Level 2 Hub | `E2E-CORE-0X_tung.png` |
-| [`truong/`](./truong/) | **Trường** | **Module 2**: Authentication, JWT Session, 1-Click Login, Rate Limit | `E2E-AUTH-0X_truong.png` |
-| [`binh/`](./binh/) | **Bình** | **Module 3**: RAG AI Pipeline, Ingestion Slide PDF, Trích dẫn số trang | `E2E-RAG-0X_binh.png` |
-| [`thang/`](./thang/) | **Thắng** | **Module 4**: AI Study Planner, Lịch học vừa sức theo tuần, Spaced Repetition | `E2E-PLAN-0X_thang.png` |
-| [`nhat/`](./nhat/) | **Huỳnh Nhật** | **Module 5**: AI Quiz Generator, Đấu trường nhóm, Xuất đề PDF | `E2E-QUIZ-0X_nhat.png`, `de-thi-pro.pdf` |
-| [`an/`](./an/) | **An** | **Module 6**: Admin Command Center, User & Tier Quota, Cấu hình API Key | `E2E-ADMIN-0X_an.png` |
+Hệ thống thư mục `docs/evidence/` được phân cấp khoa học theo **từng mốc thời gian nhiệm vụ (Date-based Tasks)** và bên trong chia theo **từng thành viên phụ trách** để đảm bảo quản lý gọn gàng, tránh phình to và dễ dàng kiểm toán nghiệm thu:
 
 ---
 
-## 📌 Quy Định Đặt Tên & Nộp Minh Chứng
-1. **Minh chứng kiểm thử E2E**:
-   - `docs/evidence/[thành_viên]/[Mã_Test]_[thành_viên].png`
-   - Ví dụ: `docs/evidence/tung/E2E-CORE-01_tung.png`, `docs/evidence/nhat/E2E-QUIZ-01_nhat.png`
-2. **Minh chứng Issue/Bug**:
-   - `docs/evidence/[thành_viên]/[Mã_Issue]_[thành_viên].png`
-   - Ví dụ: `docs/evidence/thang/ISSUE-02_thang.png`
-3. **Tài liệu/File xuất ra (nếu có)**:
-   - Đặt trực tiếp vào thư mục của thành viên sở hữu (Ví dụ: `docs/evidence/nhat/de-thi-pro.pdf`).
+## 📅 Danh Sách Các Đợt Nhiệm Vụ
+
+### 1. [`2026-11-02-e2e-testing/`](./2026-11-02-e2e-testing/) — Kiểm Thử Chức Năng E2E 6 Phân Hệ
+* **Thời gian**: 02/11/2026
+* **Mục tiêu**: Nghiệm thu phân quyền 3 gói cước (FREE, PRO, SQUAD), phân lập dữ liệu (Data Isolation), phòng chống lỗ hổng IDOR và trích dẫn RAG không ảo giác.
+* **Thành viên nộp**:
+  - `tung/`: 7 ảnh minh chứng Module Core
+  - `truong/`: 9 ảnh minh chứng Module Auth & Squad
+  - `binh/`: 7 ảnh minh chứng Module RAG & Slide
+  - `thang/`: 6 ảnh minh chứng Module AI Planner
+  - `nhat/`: 6 ảnh minh chứng + 1 file `de-thi-pro.pdf` Module AI Quiz
+  - `an/`: 8 ảnh minh chứng + file summary Module Admin
+
+---
+
+### 2. [`2026-11-03-ui-redesign/`](./2026-11-03-ui-redesign/) — Nâng Cấp Giao Diện Diện Rộng & Regression Testing
+* **Thời gian**: 03/11/2026
+* **Mục tiêu**: Đồng bộ toàn bộ các trang sang **White-Card Palette & Progressive Disclosure**, phân trang dữ liệu 10-15 mục, triệt tiêu text rác và chạy Regression Checklist trước khi nộp.
+* **Thành viên nộp**:
+  - `tung/`: Chi tiết môn học (`courses/detail.html`)
+  - `truong/`: Hồ sơ cá nhân & Study Squad (`auth/profile.html`)
+  - `binh/`: Quản lý slide chunks & Khung chat RAG (`rag/documents.html`, `rag/chat.html`)
+  - `thang/`: Lộ trình học tập Tabs tuần & Checklist (`planner/index.html`, `planner/view.html`)
+  - `nhat/`: Sinh đề thi, BXH Squad Leaderboard & Phòng thi Split-view (`quiz/index.html`, `quiz/take.html`, `quiz/result.html`)
+  - `an/`: Admin Dashboard, Quản lý sinh viên có Phân trang, Cấu hình Gemini Key (`admin/dashboard.html`, `admin/users.html`, `admin/settings.html`)
+
+---
+
+## 📌 Quy Định Đặt Tên File Minh Chứng
+* **Cú pháp chuẩn**: `[Mã_Test]_[Tên_Thành_Viên].png` (Ví dụ: `UI-PROF-01_truong.png`, `REG-RAG-01_binh.png`, `E2E-ADM-06_an.png`).

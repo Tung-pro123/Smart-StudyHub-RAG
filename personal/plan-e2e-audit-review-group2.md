@@ -31,9 +31,9 @@
 
 ---
 
-### 👑 THÀNH VIÊN 1: LÊ NGUYỄN MINH TÙNG (TEAM LEAD)
+### 👑 THÀNH VIÊN 1: LÊ THANH TÙNG (TEAM LEAD)
 * **Phân hệ**: Core Dashboard, Tìm kiếm tự do, Phân lập dữ liệu, Hạn mức 3 môn & Landing Page
-* **Thư mục ảnh**: [`docs/evidence/tung/`](../evidence/tung/) (Đã nộp đủ 7 ảnh)
+* **Thư mục ảnh**: [`docs/evidence/2026-11-02-e2e-testing/tung/`](../evidence/2026-11-02-e2e-testing/tung/) (Đã nộp đủ 7 ảnh)
 
 | Mã Test | Nội dung kiểm tra | Tiêu chuẩn nghiệm thu | Minh chứng | Đánh giá Team Lead |
 | :--- | :--- | :--- | :---: | :---: |
@@ -51,7 +51,7 @@
 
 ### 👤 THÀNH VIÊN 2: NGÔ NHẬT TRƯỜNG
 * **Phân hệ**: Authentication, Đăng ký, 1-Click Login, Đổi mật khẩu BCrypt, Hồ sơ cá nhân & Study Squad
-* **Thư mục ảnh**: [`docs/evidence/truong/`](../evidence/truong/) (Đã nộp đủ 9 ảnh)
+* **Thư mục ảnh**: [`docs/evidence/2026-11-02-e2e-testing/truong/`](../evidence/2026-11-02-e2e-testing/truong/) (Đã nộp đủ 9 ảnh)
 
 | Mã Test | Nội dung kiểm tra | Tiêu chuẩn nghiệm thu | Minh chứng | Đánh giá Team Lead |
 | :--- | :--- | :--- | :---: | :---: |
@@ -70,7 +70,7 @@
 
 ### 📄 THÀNH VIÊN 3: BÌNH
 * **Phân hệ**: Quản lý tài liệu Slide PDF, Cắt nhỏ Chunks, Chatbot RAG Giáo trình có Citation đối chứng
-* **Thư mục ảnh**: [`docs/evidence/binh/`](../evidence/binh/) (Đã nộp đủ 7 ảnh)
+* **Thư mục ảnh**: [`docs/evidence/2026-11-02-e2e-testing/binh/`](../evidence/2026-11-02-e2e-testing/binh/) (Đã nộp đủ 7 ảnh)
 
 | Mã Test | Nội dung kiểm tra | Tiêu chuẩn nghiệm thu | Minh chứng | Đánh giá Team Lead |
 | :--- | :--- | :--- | :---: | :---: |
@@ -88,7 +88,7 @@
 
 ### 🗓️ THÀNH VIÊN 4: THẮNG
 * **Phân hệ**: AI Study Planner, Lộ trình học tập cá nhân hóa, Checklist nhiệm vụ tuần & Quyền riêng tư
-* **Thư mục ảnh**: [`docs/evidence/thang/`](../evidence/thang/) (Đã đồng bộ đủ 6 ảnh)
+* **Thư mục ảnh**: [`docs/evidence/2026-11-02-e2e-testing/thang/`](../evidence/2026-11-02-e2e-testing/thang/) (Đã đồng bộ đủ 6 ảnh)
 
 | Mã Test | Nội dung kiểm tra | Tiêu chuẩn nghiệm thu | Minh chứng | Đánh giá Team Lead |
 | :--- | :--- | :--- | :---: | :---: |
@@ -105,7 +105,7 @@
 
 ### 🧠 THÀNH VIÊN 5: HUỲNH NHẬT
 * **Phân hệ**: AI Quiz Trắc Nghiệm, Phòng Thi Split-view, Squad Leaderboard & Xuất PDF Tiếng Việt
-* **Thư mục ảnh & file**: [`docs/evidence/nhat/`](../evidence/nhat/) (Đã nộp đủ 6 ảnh + file `de-thi-pro.pdf`)
+* **Thư mục ảnh & file**: [`docs/evidence/2026-11-02-e2e-testing/nhat/`](../evidence/2026-11-02-e2e-testing/nhat/) (Đã nộp đủ 6 ảnh + file `de-thi-pro.pdf`)
 
 | Mã Test | Nội dung kiểm tra | Tiêu chuẩn nghiệm thu | Minh chứng | Đánh giá Team Lead |
 | :--- | :--- | :--- | :---: | :---: |
@@ -122,7 +122,7 @@
 
 ### 🛡️ THÀNH VIÊN 6: ÂN
 * **Phân hệ**: Admin Command Center, Thống kê 3 gói cước, Quản lý sinh viên, Nâng/Hạ gói, System Gemini API Key
-* **Thư mục ảnh**: [`docs/evidence/an/`](../evidence/an/) (Đã nộp đủ 8 ảnh + file summary + README)
+* **Thư mục ảnh**: [`docs/evidence/2026-11-02-e2e-testing/an/`](../evidence/2026-11-02-e2e-testing/an/) (Đã nộp đủ 8 ảnh + file summary + README)
 
 | Mã Test | Nội dung kiểm tra | Tiêu chuẩn nghiệm thu | Minh chứng | Đánh giá Team Lead |
 | :--- | :--- | :--- | :---: | :---: |
