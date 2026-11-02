@@ -12,10 +12,10 @@
     <!-- Mobile Brand Logo (Chỉ hiển thị trên mobile khi sidebar ẩn) -->
     <div class="flex-1 lg:hidden items-center gap-2">
         <a th:href="@{/}" class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
                 <i class="fa-solid fa-graduation-cap"></i>
             </div>
-            <span class="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">StudyHub</span>
+            <span class="font-extrabold text-base tracking-tight bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 bg-clip-text text-transparent">StudyHub</span>
         </a>
     </div>
 
@@ -31,7 +31,7 @@
         <!-- Nút Tạo Môn Học Nhanh -->
         <button th:if="${canCreateCourse == null or canCreateCourse}" 
                 onclick="const m = document.getElementById('modal-create-course'); if(m) m.showModal(); else window.location.href='/courses';" 
-                class="btn btn-sm bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white border-none rounded-xl text-xs font-bold shadow-sm shadow-indigo-500/20 hidden sm:inline-flex gap-1.5">
+                class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-none rounded-xl text-xs font-bold shadow-sm shadow-purple-500/20 hidden sm:inline-flex gap-1.5">
             <i class="fa-solid fa-plus text-[11px]"></i> Tạo Môn Mới
         </button>
 
