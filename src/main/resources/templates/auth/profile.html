@@ -488,38 +488,38 @@
             </form>
         </div>
 
+        <!-- Profile Interaction Scripts inside section for Thymeleaf Layout -->
+        <script>
+            function selectAvatar(url) {
+                document.getElementById('avatar-input').value = url;
+                document.getElementById('current-avatar-img').src = url;
+                // Highlight selected avatar border
+                document.querySelectorAll('.avatar-option').forEach(el => {
+                    el.classList.remove('border-indigo-600', 'ring-2', 'ring-indigo-500');
+                    el.classList.add('border-indigo-200');
+                });
+                if (window.event && window.event.currentTarget) {
+                    window.event.currentTarget.classList.remove('border-indigo-200');
+                    window.event.currentTarget.classList.add('border-indigo-600', 'ring-2', 'ring-indigo-500');
+                }
+            }
+
+            function togglePass(inputId, btn) {
+                const input = document.getElementById(inputId);
+                const icon = btn.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+        </script>
     </div>
 
 </section>
-
-<script>
-    function selectAvatar(url) {
-        document.getElementById('avatar-input').value = url;
-        document.getElementById('current-avatar-img').src = url;
-        // Highlight selected avatar border
-        document.querySelectorAll('.avatar-option').forEach(el => {
-            el.classList.remove('border-indigo-600', 'ring-2', 'ring-indigo-500');
-            el.classList.add('border-indigo-200');
-        });
-        if (event && event.currentTarget) {
-            event.currentTarget.classList.remove('border-indigo-200');
-            event.currentTarget.classList.add('border-indigo-600', 'ring-2', 'ring-indigo-500');
-        }
-    }
-
-    function togglePass(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const icon = btn.querySelector('i');
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-</script>
 </body>
 </html>

@@ -31,13 +31,16 @@
 
 | Mã Issue | Ngày tạo | Người báo | Phân hệ | Mô tả lỗi vắn tắt | Mức độ | Người sửa (Assignee) | Trạng thái | Commit Fix / Ghi chú |
 | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
+| Mã Issue | Ngày tạo | Người báo | Phân hệ | Mô tả lỗi vắn tắt | Mức độ | Người sửa (Assignee) | Trạng thái | Commit Fix / Ghi chú |
+| :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
 | **`#ISSUE-01`** | 02/11 | Tùng | `Auth / Profile` | Gói PRO hiển thị nhầm thẻ Quản lý nhóm và dòng chữ `"Bạn là thành viên nhóm @null"`, card Hạn ngạch RAG bị vỡ cột mô tả. | **🚨 HIGH** | **Trường / Tùng** | **✅ CLOSED** | Đã sửa trong commit [`9998765`](https://github.com/Tung-pro123/Smart-StudyHub-RAG/commit/9998765). Đã test 290/290 test passed. |
 | **`#ISSUE-02`** | 02/11 | Tùng | `UI / Navigation` | Tái cấu trúc Dashboard sang Sidebar dọc cố định bên trái, chuyển sang White-card Palette, đồng bộ màu sắc với Landing Page (Obsidian `#030712` + Gradient tím hồng), gỡ dropdown học kỳ cứng nhắc để tự do mọi trường (BYOC). | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Hoàn tất trên nhánh `feature/tung-e2e-testing`. UI chuẩn hiện đại, responsive drawer, đồng bộ tông Landing Page. |
-| **`#ISSUE-03`** | 02/11 | Tùng | `Auth / Login UI` | Nút con mắt xem mật khẩu ở trang `/login` không hoạt động do thẻ `<script>` nằm ngoài thẻ `<section>` bị Thymeleaf loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển `<script>` vào trong `<section>` ở `login.html`, toggle type password/text và đổi icon fa-eye/fa-eye-slash mượt mà. |
+| **`#ISSUE-03`** | 02/11 | Tùng / Trường | `Auth / Login UI` | Nút con mắt xem mật khẩu và nút đăng nhập 1-Click tài khoản demo ở `/login` không hoạt động do thẻ `<script>` nằm ngoài thẻ `<section>` bị Thymeleaf loại bỏ. | **⚠️ MEDIUM** | **Tùng / Trường** | **🟢 RESOLVED** | Đã di chuyển `<script>` vào trong `<section>` ở `login.html`, toggle password và fillDemo chạy mượt mà. |
 | **`#ISSUE-04`** | 02/11 | Tùng | `Core / Database` | Tài khoản test `student` trong DB bị set nhầm `PRO` và chứa 5 môn học, gây sai lệch khi test Data Isolation và Hạn mức 3 môn Free. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã reset `subscription_tier = 'FREE'` và chuyển các môn test sang tài khoản Pro/Admin, chuẩn hóa student về đúng 2 môn ban đầu (`HSF302`, `MAS291`). |
 | **`#ISSUE-05`** | 02/11 | Tùng | `Core / Database` | Lỗi vi phạm Unique Index `IDX_COURSES_CODE_INDEX_1` khi tạo môn học có mã đã tồn tại ở người dùng khác do ràng buộc UNIQUE cũ trong H2 DB chưa được drop. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã drop constraint UNIQUE toàn cục `IDX_COURSES_CODE`, chuyển thành index thông thường để đảm bảo phân lập dữ liệu đa người dùng (Data Isolation). |
-| **`#ISSUE-06`** | 02/11 | Tùng | `UI / Pricing Modal` | Nút chuyển đổi kỳ thanh toán 'Theo Học Kỳ' trong modal Bảng giá không bấm được do khối script nằm ngoài thẻ `<section>` bị Thymeleaf layout decorator loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển khối `<script>` vào bên trong `<section>` ở `index.html`, bổ sung ID cập nhật giá và đồng bộ dải gradient Landing Page cho tab kích hoạt. |
+| **`#ISSUE-06`** | 02/11 | Tùng | `UI / Pricing Modal` | Nút chuyển đổi kỳ thanh toán 'Theo Học Kỳ' trong modal Bảng giá không bấm được do khối script nằm ngoài thẻ `<section>` bị Thymeleaf layout decorator loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển khối `<script>` vào bên trong thẻ `<section>` ở `index.html`, bổ sung ID cập nhật giá và đồng bộ dải gradient Landing Page cho tab kích hoạt. |
 | **`#ISSUE-07`** | 02/11 | Tùng | `UI / Course Hub` | Giao diện Chi Tiết Môn Học (`courses/detail.html`) đang dùng tông nền thẻ tối cũ (`bg-slate-900`), chưa đồng bộ với White-Card Palette và gradient tím hồng Landing Page. | **⚠️ MEDIUM** | **Bình / Trường** | **🟡 IN PROGRESS** | Đã đưa vào danh sách task bổ sung ngày 02/11 (`TASK-UI-01`) phân công cho Bình & Trường thực hiện chuẩn hóa theo `docs/DESIGN-SYSTEM.md`. |
+| **`#ISSUE-08`** | 02/11 | Trường | `Auth / Profile` | Cập nhật hồ sơ đổi được họ tên nhưng không đổi được avatar khi chọn preset (do script `selectAvatar` nằm ngoài `<section>` trong `profile.html`). | **⚠️ MEDIUM** | **Trường** | **🟢 RESOLVED** | Chuyển thẻ `<script>` vào bên trong thẻ `<section>` của `profile.html`. |
 
 ---
 
@@ -138,8 +141,6 @@
    - Báo cho người phát hiện lỗi kiểm tra lại lần cuối để đóng issue sang `✅ CLOSED`.
 
 
----
-
 ### 🐛 [#ISSUE-05]: Lỗi Vi Phạm Unique Index `IDX_COURSES_CODE_INDEX_1` Khi Tạo Môn Trùng Mã Với Người Khác
 * **Người báo lỗi**: Tùng (Team Lead)
 * **Phân hệ**: Core / Data Isolation & Course Management
@@ -190,3 +191,52 @@
   1. Chuyển đổi 4 thẻ phân hệ cấp độ 2 (Trợ Lý RAG, Tài Liệu Slide, Lịch Học Vừa Sức, Luyện Đề Trắc Nghiệm) từ thẻ tối `bg-slate-900/85` sang **White-Card Palette** (`bg-white/95 border-slate-200/80 text-slate-800 shadow-sm hover:shadow-lg`).
   2. Đồng bộ nút bấm CTA sang dải gradient chuẩn của Landing Page: `bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600`.
   3. Cải tiến khối "Cơ Sở Tri Thức Của Môn Học" và trạng thái rỗng (empty state) sang phong cách sáng, sạch sẽ, tinh tế.
+
+---
+
+### 🐛 [#ISSUE-08]: Chọn Avatar Presets tại profile.html đổi được họ tên nhưng avatar không cập nhật
+* **Người báo lỗi**: Ngô Nhật Trường
+* **Phân hệ**: Auth / Profile
+* **Tài khoản dùng để test**: `squad_leader`
+* **Mức độ nghiêm trọng**: ⚠️ MEDIUM
+* **Người chịu trách nhiệm sửa (Assignee)**: Trường / Tùng
+* **Trạng thái**: 🟢 RESOLVED
+* **Nguyên nhân**:
+  - Thẻ `<script>` chứa hàm `selectAvatar()` đặt sau thẻ `</section>`, khiến hàm không được gọi khi click, giá trị trong input hidden `avatar` không thay đổi.
+* **Khắc phục**:
+  - Di chuyển toàn bộ thẻ `<script>` vào bên trong thẻ `<section>` ở `profile.html`.
+* **Ảnh chụp màn hình lỗi**:
+  - `![Screenshot](../evidence/truong/E2E-AUTH-03_truong.png)`
+
+---
+
+## 6. Trở ngại môi trường QA Admin — Ân — 02/11/2026
+
+Các mục QA dưới đây được tách khỏi lỗi chức năng `ISSUE-01..03`. Không phát hiện lỗi chức năng Admin mới trong phạm vi đã chạy. Báo cáo: [Admin E2E](../evidence/an/README.md).
+
+### QA-ADM-01 — BLOCKED: Thiếu Gemini key hợp lệ để nghiệm thu E2E-ADM-06
+
+* **Người ghi nhận**: Ân; **phân hệ**: Admin / cấu hình môi trường QA.
+* **Mức ảnh hưởng**: Chặn luồng nghiệm thu kết nối Gemini thành công; không phải lỗi chức năng đã xác nhận.
+* **Người xử lý**: Chủ tài khoản Gemini phối hợp Ân.
+* **Môi trường**: `main@e4a9790`, `http://localhost:8081`, database QA riêng, không có `GEMINI_API_KEY`.
+* **Các bước tái hiện**: Đăng nhập `admin`, mở `/admin/settings`, bấm “Kiểm tra kết nối tức thì”.
+* **Thực tế**: Trang báo chưa cấu hình; ping báo cần API key hợp lệ. Thử thêm khóa giả QA để kiểm tra masking: hiển thị `AIzaSy...****`; ping trả thông báo đỏ “Yêu cầu không hợp lệ. Kiểm tra API key và cấu hình model.”, 827 ms.
+* **Kỳ vọng nghiệm thu còn thiếu**: Với key hợp lệ, ping thực tế Google Gemini thành công, hiển thị thông báo xanh và latency. Không đánh dấu PASS bằng key giả hay mock.
+* **Hướng gỡ chặn**: Cấu hình `GEMINI_API_KEY` hợp lệ cho môi trường QA, khởi động app và chạy lại ADM-06. Người dùng đã chọn ghi nhận BLOCKED và bàn giao kết quả hiện có.
+* **Bằng chứng**: [Ảnh Test Ping](../evidence/an/E2E-ADM-06_an.png), [Ảnh masking](../evidence/an/E2E-ADM-06_masked_an.png).
+
+### QA-ADM-02 — WORKAROUND VERIFIED: Test runner mặc định lỗi trên JDK 25
+
+* **Người ghi nhận / phụ trách**: Ân; **phân hệ**: môi trường kiểm thử tự động.
+* **Ảnh hưởng**: Lệnh test Admin mặc định không khởi tạo được Mockito; chưa chứng minh lỗi nghiệp vụ.
+* **Các bước tái hiện**: Dùng JDK 25.0.4, chạy `mvn -B -Dtest=AdminHubTest test` trên `main@e4a9790`.
+* **Thực tế**: 29 errors ở bước khởi tạo context/mock. Nguyên nhân gốc trong log: `Java 25 (69) is not supported by the current version of Byte Buddy which officially supports Java 23 (67)`.
+* **Kỳ vọng**: Test runner khởi tạo được và chạy assertions trên JDK được hỗ trợ.
+* **Workaround đã xác minh**: `mvn -B -Dtest=AdminHubTest -Dnet.bytebuddy.experimental=true test` cho **29 tests, 0 failures, 0 errors, 0 skipped, BUILD SUCCESS**. Không sửa dependency hay mã nguồn trong đợt QA này.
+* **Xử lý lâu dài**: Dùng JDK tương thích với dự án (Java 17) hoặc cập nhật Byte Buddy/Mockito theo quy trình riêng; chưa nghiệm thu biện pháp lâu dài.
+* **Bằng chứng**: [Surefire summary](../evidence/an/AdminHubTest-summary.txt); log local `target/admin-e2e-regression.log` và `target/admin-e2e-regression-compatible.log`.
+
+### Đối chiếu lỗi Auth đã có
+
+Lần chạy QA Admin tái hiện nút “FREE student” trên `/login` không tự điền form. Đây là **ISSUE-03 đã được giải quyết** bằng việc chuyển script vào bên trong section trên `feature/tung-e2e-testing`.
