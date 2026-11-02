@@ -5,7 +5,7 @@
 > **Đội ngũ thực hiện**: Nhóm 2 (Group 2)  
 > **Nhánh Git chung**: `main`  
 > **Tài liệu theo dõi lỗi**: [`docs/issues/ISSUES-TRACKING.md`](../issues/ISSUES-TRACKING.md)  
-> **Thư mục lưu ảnh minh chứng**: `docs/evidence/[tên_thành_viên]/` (Phân chia theo từng thư mục thành viên: `tung/`, `truong/`, `binh/`, `thanh/`, `nhat/`, `an/`)
+> **Thư mục lưu ảnh minh chứng**: `docs/evidence/[tên_thành_viên]/` (Phân chia theo từng thư mục thành viên: `tung/`, `truong/`, `binh/`, `thang/`, `nhat/`, `an/`)
 
 ---
 
@@ -93,7 +93,7 @@
 │ 👑 TÙNG (Lead)  │ Core, Search, Isolation & Hub │ student (Free), pro_student (Pro)  │
 │ 👤 TRƯỜNG       │ Auth, Register, Squad & Prof  │ squad_leader, student2, pro_student│
 │ 📄 BÌNH         │ PDF Docs, Chunks & RAG AI Chat│ student (Free), pro_student (Pro)  │
-│ 🗓️ THÀNH        │ AI Study Planner & Task Check │ student (Free), pro_student (Pro)  │
+│ 🗓️ THẮNG        │ AI Study Planner & Task Check │ student (Free), pro_student (Pro)  │
 │ 🧠 NHẬT         │ AI Quiz, Board & PDF Export   │ squad_leader, member1, pro_student │
 │ 🛡️ AN           │ Admin Command Center & AI Key │ admin (Admin), student (Chặn 403)  │
 └─────────────────┴───────────────────────────────┴────────────────────────────────────┘
@@ -198,7 +198,7 @@
 
 ---
 
-### 🗓️ 4. THÀNH - AI STUDY PLANNER, LỘ TRÌNH ÔN THI & CHECKLIST NHIỆM VỤ TUẦN
+### 🗓️ 4. THẮNG - AI STUDY PLANNER, LỘ TRÌNH ÔN THI & CHECKLIST NHIỆM VỤ TUẦN
 * **Tài khoản sử dụng**: `student` (Free) và `pro_student` (Pro)
 * **URL kiểm thử**: `http://localhost:8080/planner`, `http://localhost:8080/planner/{planId}`
 * **Danh sách Test Cases**:
@@ -216,7 +216,7 @@
      - Lọc xem các kế hoạch cũ đã tạo theo từng môn học, dữ liệu hiển thị chính xác.
   6. `E2E-PLAN-06`: **Bảo vệ quyền riêng tư lộ trình học tập**:
      - Đăng nhập `student`, cố tình nhập URL xem kế hoạch của `pro_student` (ví dụ `/planner/1`) -> Hệ thống chặn lại báo lỗi *"Không tìm thấy kế hoạch hoặc không thuộc tài khoản của bạn"*.
-* **Bằng chứng cần nộp**: 6 ảnh chụp màn hình (`E2E-PLAN-01_thanh.png` đến `E2E-PLAN-06_thanh.png`).
+* **Bằng chứng cần nộp**: 6 ảnh chụp màn hình (`E2E-PLAN-01_thang.png` đến `E2E-PLAN-06_thang.png`).
 
 ---
 
