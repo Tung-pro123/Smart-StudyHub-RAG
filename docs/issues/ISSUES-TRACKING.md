@@ -36,6 +36,7 @@
 | **`#ISSUE-03`** | 02/11 | Tùng | `Auth / Login UI` | Nút con mắt xem mật khẩu ở trang `/login` không hoạt động do thẻ `<script>` nằm ngoài thẻ `<section>` bị Thymeleaf loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển `<script>` vào trong `<section>` ở `login.html`, toggle type password/text và đổi icon fa-eye/fa-eye-slash mượt mà. |
 | **`#ISSUE-04`** | 02/11 | Tùng | `Core / Database` | Tài khoản test `student` trong DB bị set nhầm `PRO` và chứa 5 môn học, gây sai lệch khi test Data Isolation và Hạn mức 3 môn Free. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã reset `subscription_tier = 'FREE'` và chuyển các môn test sang tài khoản Pro/Admin, chuẩn hóa student về đúng 2 môn ban đầu (`HSF302`, `MAS291`). |
 | **`#ISSUE-05`** | 02/11 | Tùng | `Core / Database` | Lỗi vi phạm Unique Index `IDX_COURSES_CODE_INDEX_1` khi tạo môn học có mã đã tồn tại ở người dùng khác do ràng buộc UNIQUE cũ trong H2 DB chưa được drop. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã drop constraint UNIQUE toàn cục `IDX_COURSES_CODE`, chuyển thành index thông thường để đảm bảo phân lập dữ liệu đa người dùng (Data Isolation). |
+| **`#ISSUE-06`** | 02/11 | Tùng | `UI / Pricing Modal` | Nút chuyển đổi kỳ thanh toán 'Theo Học Kỳ' trong modal Bảng giá không bấm được do khối script nằm ngoài thẻ `<section>` bị Thymeleaf layout decorator loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển khối `<script>` vào bên trong `<section>` ở `index.html`, bổ sung ID cập nhật giá và đồng bộ dải gradient Landing Page cho tab kích hoạt. |
 
 ---
 
@@ -156,3 +157,21 @@
     CREATE INDEX IF NOT EXISTS IDX_COURSES_CODE ON COURSES(CODE);
     ```
   - Kiểm tra lại: Sinh viên có thể tạo môn học độc lập mà không bị xung đột với môn của tài khoản khác; đồng thời trong cùng một tài khoản vẫn được chặn trùng lặp mã qua `CourseService`.
+
+---
+
+### 🐛 [#ISSUE-06]: Nút Chuyển Đổi Kỳ Thanh Toán 'Theo Học Kỳ' Không Bấm Được Trong Modal Bảng Giá
+* **Người báo lỗi**: Tùng (Team Lead)
+* **Phân hệ**: UI / Pricing Upgrade Modal (`index.html`)
+* **Tài khoản test**: Mọi tài khoản (`student`, `pro_student`)
+* **Mức độ**: ⚠️ MEDIUM (Ảnh hưởng trải nghiệm người dùng xem gói cước)
+* **Người sửa (Assignee)**: Tùng
+* **Trạng thái**: 🟢 RESOLVED
+* **Nguyên nhân**:
+  - `index.html` sử dụng layout decorator: `th:replace="~{layout/main :: main-layout(..., ~{::section})}"`.
+  - Khối `<script>` chứa hàm `switchBillingPeriod()` và `openEditModal()` bị đặt ở cuối file ngoài thẻ `<section>`, dẫn đến Thymeleaf loại bỏ toàn bộ script khi render giao diện trình duyệt.
+  - Khi người dùng nhấn vào nút "Theo Học Kỳ" (`tab-semester`), trình duyệt báo lỗi `Uncaught ReferenceError: switchBillingPeriod is not defined`.
+* **Khắc phục**:
+  - Đưa toàn bộ khối `<script>` vào bên trong thẻ `<section>`.
+  - Bổ sung `id="card-squad-price"` và `id="card-squad-period"` vào thẻ Gói Nhóm để cập nhật giá đồng bộ.
+  - Đồng bộ dải màu gradient Landing Page (`from-purple-600 via-violet-600 to-pink-600`) cho tab đang chọn.

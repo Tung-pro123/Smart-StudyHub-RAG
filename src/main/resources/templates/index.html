@@ -506,7 +506,7 @@
                 <div class="flex items-center justify-center pt-2">
                     <div class="bg-slate-100 p-1.5 rounded-full inline-flex items-center border border-slate-200 shadow-inner">
                         <button type="button" id="tab-monthly" onclick="switchBillingPeriod('monthly')"
-                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-indigo-600 text-white shadow-sm border-none">
+                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white shadow-sm border-none">
                             Theo Tháng
                         </button>
                         <button type="button" id="tab-semester" onclick="switchBillingPeriod('semester')"
@@ -650,8 +650,8 @@
                             Dành cho nhóm bạn cùng lớp hoặc làm đồ án môn học (HSF, SWP, PRJ...).
                         </p>
                         <div class="pt-2">
-                            <span class="text-3xl font-extrabold text-slate-900">$5</span>
-                            <span class="text-xs text-slate-500 font-semibold">/ tháng (~24k VNĐ/bạn)</span>
+                            <span id="card-squad-price" class="text-3xl font-extrabold text-slate-900">$5</span>
+                            <span id="card-squad-period" class="text-xs text-slate-500 font-semibold">/ tháng (~24k VNĐ/bạn)</span>
                         </div>
 
                         <div class="divider my-2 border-slate-200"></div>
@@ -709,49 +709,55 @@
         </form>
     </dialog>
 
-</section>
-
-<!-- Client-side Scripts -->
-<script>
-    function openEditModal(id, code, name, description, semester, credits, color, icon) {
-        const form = document.getElementById('form-edit-course');
-        form.action = '/courses/' + id + '/edit';
-        document.getElementById('edit-code').value = code || '';
-        document.getElementById('edit-name').value = name || '';
-        document.getElementById('edit-description').value = description || '';
-        document.getElementById('edit-semester').value = semester || 'Fall 2026';
-        document.getElementById('edit-credits').value = credits || 3;
-        if (color) document.getElementById('edit-color').value = color;
-        if (icon) document.getElementById('edit-icon').value = icon;
-        document.getElementById('modal-edit-course').showModal();
-    }
-
-    // Toggle Period: Monthly vs Semester
-    function switchBillingPeriod(period) {
-        const btnMonthly = document.getElementById('tab-monthly');
-        const btnSemester = document.getElementById('tab-semester');
-        const priceLabel = document.getElementById('card-pro-price');
-        const periodLabel = document.getElementById('card-pro-period');
-
-        if (period === 'monthly') {
-            btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-indigo-600 text-white shadow-sm border-none";
-            btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center gap-1.5 border-none";
-            if (priceLabel) priceLabel.innerText = "$2";
-            if (periodLabel) periodLabel.innerText = "/ tháng (~49k VNĐ)";
-        } else {
-            btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 border-none";
-            btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 border-none";
-            if (priceLabel) priceLabel.innerText = "$5";
-            if (periodLabel) periodLabel.innerText = "/ học kỳ (~120k VNĐ)";
+    <!-- Client-side Scripts (ĐẶT BÊN TRONG SECTION ĐỂ THYMELEAF KHÔNG LOẠI BỎ) -->
+    <script>
+        function openEditModal(id, code, name, description, semester, credits, color, icon) {
+            const form = document.getElementById('form-edit-course');
+            form.action = '/courses/' + id + '/edit';
+            document.getElementById('edit-code').value = code || '';
+            document.getElementById('edit-name').value = name || '';
+            document.getElementById('edit-description').value = description || '';
+            document.getElementById('edit-semester').value = semester || 'Fall 2026';
+            document.getElementById('edit-credits').value = credits || 3;
+            if (color) document.getElementById('edit-color').value = color;
+            if (icon) document.getElementById('edit-icon').value = icon;
+            document.getElementById('modal-edit-course').showModal();
         }
-    }
-</script>
 
-<script th:if="${showUpgradeModal}">
-    window.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('modal-pricing-upgrade');
-        if (modal) modal.showModal();
-    });
-</script>
+        // Toggle Period: Monthly vs Semester
+        function switchBillingPeriod(period) {
+            const btnMonthly = document.getElementById('tab-monthly');
+            const btnSemester = document.getElementById('tab-semester');
+            const priceLabel = document.getElementById('card-pro-price');
+            const periodLabel = document.getElementById('card-pro-period');
+            const squadPrice = document.getElementById('card-squad-price');
+            const squadPeriod = document.getElementById('card-squad-period');
+
+            if (period === 'monthly') {
+                btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white shadow-sm border-none";
+                btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center gap-1.5 border-none";
+                if (priceLabel) priceLabel.innerText = "$2";
+                if (periodLabel) periodLabel.innerText = "/ tháng (~49k VNĐ)";
+                if (squadPrice) squadPrice.innerText = "$5";
+                if (squadPeriod) squadPeriod.innerText = "/ tháng (~24k VNĐ/bạn)";
+            } else {
+                btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white shadow-sm flex items-center gap-1.5 border-none";
+                btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 border-none";
+                if (priceLabel) priceLabel.innerText = "$6";
+                if (periodLabel) periodLabel.innerText = "/ học kỳ 4 tháng (~149k VNĐ)";
+                if (squadPrice) squadPrice.innerText = "$15";
+                if (squadPeriod) squadPeriod.innerText = "/ học kỳ 4 tháng (~18k VNĐ/bạn/tháng)";
+            }
+        }
+    </script>
+
+    <script th:if="${showUpgradeModal}">
+        window.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modal-pricing-upgrade');
+            if (modal) modal.showModal();
+        });
+    </script>
+
+</section>
 </body>
 </html>
