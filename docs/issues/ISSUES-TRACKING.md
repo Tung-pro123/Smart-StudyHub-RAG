@@ -32,8 +32,9 @@
 | Mã Issue | Ngày tạo | Người báo | Phân hệ | Mô tả lỗi vắn tắt | Mức độ | Người sửa (Assignee) | Trạng thái | Commit Fix / Ghi chú |
 | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
 | **`#ISSUE-01`** | 02/11 | Tùng | `Auth / Profile` | Gói PRO hiển thị nhầm thẻ Quản lý nhóm và dòng chữ `"Bạn là thành viên nhóm @null"`, card Hạn ngạch RAG bị vỡ cột mô tả. | **🚨 HIGH** | **Trường / Tùng** | **✅ CLOSED** | Đã sửa trong commit [`9998765`](https://github.com/Tung-pro123/Smart-StudyHub-RAG/commit/9998765). Đã test 290/290 test passed. |
-| **`#ISSUE-02`** | 02/11 | ... | ... | *(Ghi lỗi mới phát hiện tại đây)* | ... | ... | `🔴 OPEN` | ... |
-| **`#ISSUE-03`** | 02/11 | ... | ... | *(Ghi lỗi mới phát hiện tại đây)* | ... | ... | `🔴 OPEN` | ... |
+| **`#ISSUE-02`** | 02/11 | Tùng | `UI / Navigation` | Tái cấu trúc Dashboard sang Sidebar dọc cố định bên trái, chuyển sang White-card Palette, gỡ dropdown học kỳ cứng nhắc để tự do mọi trường (BYOC). | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Hoàn tất trên nhánh `feature/tung-e2e-testing`. UI chuẩn hiện đại, responsive drawer. |
+| **`#ISSUE-03`** | 02/11 | Tùng | `Auth / Login UI` | Nút con mắt xem mật khẩu ở trang `/login` không hoạt động do thẻ `<script>` nằm ngoài thẻ `<section>` bị Thymeleaf loại bỏ. | **⚠️ MEDIUM** | **Tùng** | **🟢 RESOLVED** | Đã di chuyển `<script>` vào trong `<section>` ở `login.html`, toggle type password/text và đổi icon fa-eye/fa-eye-slash mượt mà. |
+| **`#ISSUE-04`** | 02/11 | Tùng | `Core / Database` | Tài khoản test `student` trong DB bị set nhầm `PRO` và chứa 5 môn học, gây sai lệch khi test Data Isolation và Hạn mức 3 môn Free. | **🚨 HIGH** | **Tùng** | **🟢 RESOLVED** | Đã reset `subscription_tier = 'FREE'` và dọn dẹp các môn test dư thừa, chuẩn hóa về đúng 2 môn ban đầu (`HSF302`, `MAS291`). |
 
 ---
 
@@ -65,6 +66,54 @@
 * Lưu file ảnh vào thư mục `docs/evidence/[Mã_Issue]_[Ten].png` và chèn link vào đây:
 * `![Screenshot](/docs/evidence/ISSUE-XX.png)`
 ```
+
+---
+
+### 🐛 [#ISSUE-02]: Cải Tiến Giao Diện Dashboard & Điều Hướng Dọc Trái (Vertical Sidebar)
+* **Người báo lỗi / đề xuất**: Tùng (Team Lead)
+* **Phân hệ**: Core Dashboard / Navigation Layout
+* **Tài khoản test**: Toàn bộ tài khoản (`student`, `pro_student`, `admin`)
+* **Mức độ**: ⚠️ MEDIUM (UI Transformation & Progressive Disclosure)
+* **Người sửa (Assignee)**: Tùng
+* **Trạng thái**: 🟢 RESOLVED
+* **Mô tả & Khắc phục**:
+  1. Chuyển đổi Navbar ngang sang Vertical Navigation Sidebar (`layout/main.html` + `sidebar.html`) cố định bên trái màn hình (`lg:drawer-open`).
+  2. Áp dụng bảng màu White-card Palette tinh tế, tối giản, tương thích màu sắc landing page.
+  3. Gỡ bỏ dropdown `<select name="semester">` cứng nhắc, thay bằng tìm kiếm từ khóa tự do cho sinh viên mọi trường đại học (BYOC).
+
+---
+
+### 🐛 [#ISSUE-03]: Nút Biểu Tượng Con Mắt Xem Mật Khẩu Không Bấm Được Tại `/login`
+* **Người báo lỗi**: Tùng (Team Lead)
+* **Phân hệ**: Auth / Login Page
+* **Tài khoản test**: Mọi người dùng truy cập `http://localhost:8080/login`
+* **Mức độ**: ⚠️ MEDIUM
+* **Người sửa (Assignee)**: Tùng
+* **Trạng thái**: 🟢 RESOLVED
+* **Nguyên nhân**:
+  - `login.html` sử dụng layout decorator: `th:replace="~{layout/main :: main-layout(..., ~{::section})}"`.
+  - Khối `<script>` chứa hàm `togglePasswordVisibility()` và `fillDemo()` bị đặt ở cuối file ngoài thẻ `<section>`, dẫn đến Thymeleaf loại bỏ toàn bộ script khi render.
+* **Khắc phục**:
+  - Đưa toàn bộ khối `<script>` vào bên trong thẻ `<section>`.
+  - Kiểm tra `togglePasswordVisibility('login-password', this)`: chuyển đổi `type="password"` <-> `type="text"` và đổi icon `fa-eye` <-> `fa-eye-slash` chính xác.
+
+---
+
+### 🐛 [#ISSUE-04]: Tài Khoản `student` Bị Nhầm Gói PRO & Dư Thừa 5 Môn Học Trong Database
+* **Người báo lỗi**: Tùng (Team Lead)
+* **Phân hệ**: Core / Data Isolation & Quota Gating
+* **Tài khoản test**: `student`
+* **Mức độ**: 🚨 HIGH (Sai lệch dữ liệu kiểm thử nghiệp vụ)
+* **Người sửa (Assignee)**: Tùng
+* **Trạng thái**: 🟢 RESOLVED
+* **Nguyên nhân**:
+  - Do các lượt test nâng cấp và tạo môn trước đó, tài khoản `student` trong file DB cục bộ (`./data/studyhubdb.mv.db`) bị chuyển thành gói `PRO` và sở hữu 5 môn học (`HSF302`, `MAS291`, `SWP391`, `DBI201`, `CSD201`).
+  - Khi Tùng đăng nhập để test `E2E-CORE-02` (Data Isolation) và `E2E-CORE-03` (Hạn mức Free 3 môn), tài khoản hiển thị 5 môn và không thể kiểm tra logic chặn môn thứ 4.
+* **Khắc phục**:
+  - Chạy script cập nhật H2 Database:
+    - Đặt lại `subscription_tier = 'FREE'` cho `student`.
+    - Dọn dẹp 3 môn test dư thừa (SWP391, DBI201, CSD201) và các dữ liệu liên quan.
+    - Tài khoản `student` hiện tại sở hữu đúng 2 môn ban đầu: `HSF302` và `MAS291`.
 
 ---
 

@@ -144,29 +144,34 @@
         </div>
     </div>
 
-</section>
-
-<script>
-    function fillDemo(username, password) {
-        const uInput = document.querySelector('input[name="username"]');
-        const pInput = document.getElementById('login-password');
-        if (uInput) uInput.value = username;
-        if (pInput) pInput.value = password;
-    }
-
-    function togglePasswordVisibility(inputId, btn) {
-        const input = document.getElementById(inputId);
-        const icon = btn.querySelector('i');
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+    <!-- Script dat ben trong the section de khong bi Thymeleaf th:replace loai bo -->
+    <script>
+        function fillDemo(username, password) {
+            const uInput = document.querySelector('input[name="username"]');
+            const pInput = document.getElementById('login-password');
+            if (uInput) uInput.value = username;
+            if (pInput) pInput.value = password;
         }
-    }
-</script>
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+        }
+    </script>
+</section>
 </body>
 </html>
