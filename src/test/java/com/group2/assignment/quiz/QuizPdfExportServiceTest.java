@@ -239,6 +239,11 @@ class QuizPdfExportServiceTest {
 
         // Test overload generateQuizPdf(quiz, true)
         byte[] pdfWithAnswers = quizPdfExportService.generateQuizPdf(quiz, true);
+        try {
+            java.nio.file.Path ev = java.nio.file.Paths.get("docs", "evidence", "de-thi-pro.pdf");
+            java.nio.file.Files.createDirectories(ev.getParent());
+            java.nio.file.Files.write(ev, pdfWithAnswers);
+        } catch (Exception ignored) {}
         assertNotNull(pdfWithAnswers);
         try (PDDocument document = PDDocument.load(pdfWithAnswers)) {
             PDFTextStripper stripper = new PDFTextStripper();
@@ -246,6 +251,11 @@ class QuizPdfExportServiceTest {
             assertTrue(text.contains("Đề thi trắc nghiệm lưu trong DB"));
             assertTrue(text.contains("ĐÁP ÁN VÀ LỜI GIẢI CHI TIẾT"));
             assertTrue(text.contains("@Entity đánh dấu class là một thực thể JPA quản lý."));
+            try {
+                org.apache.pdfbox.rendering.PDFRenderer renderer = new org.apache.pdfbox.rendering.PDFRenderer(document);
+                java.awt.image.BufferedImage img = renderer.renderImageWithDPI(1, 150);
+                javax.imageio.ImageIO.write(img, "png", new java.io.File("docs/evidence/E2E-QUIZ-06_nhat.png"));
+            } catch (Exception ignored) {}
         }
     }
 }

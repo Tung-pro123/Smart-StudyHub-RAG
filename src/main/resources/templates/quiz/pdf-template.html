@@ -22,6 +22,16 @@
             margin: 0;
             padding: 0;
         }
+        .watermark {
+            position: fixed;
+            top: 40%;
+            left: 15%;
+            transform: rotate(-30deg);
+            font-size: 55pt;
+            font-weight: bold;
+            color: #e5e7eb;
+            z-index: -1000;
+        }
         .header {
             text-align: center;
             border-bottom: 2px solid #2563eb;
@@ -61,6 +71,26 @@
         .answers-page {
             page-break-before: always;
         }
+        .answer-grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .answer-grid-table th, .answer-grid-table td {
+            border: 1px solid #d1d5db;
+            padding: 6px 4px;
+            font-size: 9.5pt;
+        }
+        .answer-grid-table th {
+            background-color: #f3f4f6;
+            color: #374151;
+            font-weight: bold;
+        }
+        .answer-grid-table td {
+            font-weight: bold;
+            color: #16a34a;
+        }
         .answer-badge {
             font-weight: bold;
             color: #16a34a;
@@ -74,6 +104,8 @@
     </style>
 </head>
 <body>
+    <div class="watermark">StudyHub AI</div>
+
     <div class="header">
         <h1 th:text="${quiz.title}">ĐỀ THI TRẮC NGHIỆM AI</h1>
         <div class="meta-info">
@@ -108,6 +140,20 @@
             <h1 style="color: #16a34a;">ĐÁP ÁN VÀ LỜI GIẢI CHI TIẾT</h1>
             <div class="meta-info" th:text="${quiz.title}">Đề thi trắc nghiệm</div>
         </div>
+
+        <!-- Bảng Đáp Án Nhanh (Answer Key Grid) -->
+        <table class="answer-grid-table">
+            <thead>
+                <tr>
+                    <th th:each="q, stat : ${questions}">Câu <span th:text="${stat.count}"></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td th:each="q : ${questions}" th:text="${q.correctAnswer}">A</td>
+                </tr>
+            </tbody>
+        </table>
 
         <div th:each="q, stat : ${questions}" class="question-item" style="border-bottom: 1px dotted #e5e7eb; padding-bottom: 8px;">
             <div>
