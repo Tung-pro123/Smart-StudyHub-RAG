@@ -136,22 +136,22 @@
             </div>
         </div>
 
-        <!-- Thẻ 4: Học Kỳ Trọng Tâm (White Card) -->
+        <!-- Thẻ 4: Phương Thức Học Tập BYOC (White Card) -->
         <div class="rounded-2xl p-5 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex items-center gap-3.5">
             <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">
                 <i class="fa-solid fa-graduation-cap"></i>
             </div>
             <div>
-                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Học Kỳ Trọng Tâm</p>
-                <h4 class="text-xl font-black text-slate-900 mt-0.5">Fall 2026</h4>
-                <p class="text-[11px] text-emerald-700 font-semibold">Tự nạp slide bài giảng (BYOC)</p>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Phương Thức Học Tập</p>
+                <h4 class="text-xl font-black text-slate-900 mt-0.5">Tự Nạp Slide (BYOC)</h4>
+                <p class="text-[11px] text-emerald-700 font-semibold">Tự do mọi trường đại học</p>
             </div>
         </div>
     </div>
 
     <!-- 3. KHU VỰC QUẢN LÝ MÔN HỌC (COURSES SECTION) -->
     <div class="space-y-6">
-        <!-- Header Thanh Điều Khiển: Tiêu Đề, Search & Bộ Lọc (White Card) -->
+        <!-- Header Thanh Điều Khiển: Tiêu Đề, Search Tự Do (White Card) -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-sm">
             <div>
                 <h2 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
@@ -160,28 +160,22 @@
                 <p class="text-xs text-slate-500 mt-0.5">Chọn một môn học để vào lớp, hỏi đáp AI bám sát giáo trình hoặc luyện đề thi</p>
             </div>
 
-            <!-- Form Tìm Kiếm & Lọc Học Kỳ -->
+            <!-- Form Tìm Kiếm Tự Do Tinh Gọn -->
             <form th:action="@{/courses}" method="get" class="flex flex-wrap items-center gap-2">
-                <!-- Dropdown Lọc Học Kỳ -->
-                <select name="semester" class="select select-sm bg-slate-50 border-slate-200 text-slate-800 rounded-xl text-xs font-semibold focus:border-indigo-500">
-                    <option value="ALL" th:selected="${currentSemester == null or currentSemester == 'ALL'}">Tất Cả Học Kỳ</option>
-                    <option th:each="sem : ${semesters}" th:value="${sem}" th:text="${sem}" th:selected="${currentSemester == sem}">Fall 2026</option>
-                </select>
-
-                <!-- Ô Nhập Tìm Kiếm -->
+                <!-- Ô Nhập Tìm Kiếm Tự Do (Mã môn, tên môn, học kỳ...) -->
                 <div class="relative">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                    <input type="text" name="keyword" th:value="${currentKeyword}" placeholder="Tìm mã môn, tên môn..." 
-                           class="input input-sm bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-8 w-44 md:w-56 rounded-xl text-xs focus:border-indigo-500 focus:bg-white" />
+                    <input type="text" name="keyword" th:value="${currentKeyword}" placeholder="Tìm mã môn, tên môn, học kỳ..." 
+                           class="input input-sm bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-8 w-52 md:w-64 rounded-xl text-xs focus:border-indigo-500 focus:bg-white" />
                 </div>
 
                 <!-- Nút Hành Động -->
                 <button type="submit" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 border-none text-white rounded-xl font-bold shadow-sm shadow-indigo-500/20 text-xs" title="Tìm kiếm môn học">
                     <i class="fa-solid fa-magnifying-glass mr-1"></i> Tìm Kiếm
                 </button>
-                <a th:if="${(currentKeyword != null and !currentKeyword.isEmpty()) or (currentSemester != null and currentSemester != 'ALL')}" 
+                <a th:if="${currentKeyword != null and !currentKeyword.isEmpty()}" 
                    th:href="@{/courses}" 
-                   class="btn btn-sm btn-ghost text-slate-500 hover:text-slate-800 rounded-xl text-xs" title="Đặt lại bộ lọc">
+                   class="btn btn-sm btn-ghost text-slate-500 hover:text-slate-800 rounded-xl text-xs" title="Đặt lại tìm kiếm">
                     <i class="fa-solid fa-rotate-left mr-1"></i> Đặt Lại
                 </a>
 

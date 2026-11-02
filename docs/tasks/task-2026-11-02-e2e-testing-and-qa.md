@@ -101,34 +101,31 @@
 
 ---
 
-### 👑 1. TÙNG (LEAD) - CORE, SEARCH/FILTER, DATA ISOLATION, HẠN MỨC 3 MÔN & ROUTING
+### 👑 1. TÙNG (LEAD) - CORE, TÌM KIẾM TỰ DO, DATA ISOLATION, HẠN MỨC 3 MÔN & ROUTING
 * **Tài khoản sử dụng**: `student` (Free), `pro_student` (Pro), Khách vãng lai
 * **URL kiểm thử**: `http://localhost:8080/`, `http://localhost:8080/courses`, `http://localhost:8080/courses/{id}`
 * **Danh sách Test Cases**:
-  1. `E2E-CORE-01`: **Tìm kiếm môn học theo từ khóa**:
+  1. `E2E-CORE-01`: **Tìm kiếm môn học theo từ khóa tự do**:
      - Nhập từ khóa `"Spring"` -> Kết quả lọc ra đúng môn `HSF302`.
      - Nhập từ khóa không tồn tại `"XYZ999"` -> Hiển thị thông báo *"Không tìm thấy môn học nào phù hợp"*.
-  2. `E2E-CORE-02`: **Lọc môn học theo học kỳ**:
-     - Chọn dropdown `"Fall 2026"` -> Lọc các môn thuộc kỳ Fall 2026.
-     - Chọn `"Tất cả học kỳ"` -> Hiển thị lại toàn bộ môn học.
-  3. `E2E-CORE-03`: **Data Isolation (Phân lập dữ liệu môn học cá nhân)**:
+  2. `E2E-CORE-02`: **Data Isolation (Phân lập dữ liệu môn học cá nhân)**:
      - Đăng nhập `student`: Chỉ thấy môn của `student` (`HSF302`, `MAS291`). Tuyệt đối không thấy môn của `pro_student`.
      - Đăng nhập `pro_student`: Chỉ thấy 4 môn của `pro_student`. Tuyệt đối không lẫn dữ liệu.
-  4. `E2E-CORE-04`: **Kiểm soát hạn mức 3 môn học gói Free**:
+  3. `E2E-CORE-03`: **Kiểm soát hạn mức 3 môn học gói Free**:
      - `student` đang có 2 môn, tạo thêm môn thứ 3 (`SWP391`) -> Thành công.
      - Tiếp tục tạo môn thứ 4 (`PRJ301`) -> Hệ thống chặn lại, hiển thị thông báo đạt giới hạn 3 môn và mở popup bảng giá.
      - Xóa 1 môn cũ -> Nút tạo môn mở lại bình thường.
-  5. `E2E-CORE-05`: **Gói Pro tạo môn học không giới hạn**:
+  4. `E2E-CORE-04`: **Gói Pro tạo môn học không giới hạn**:
      - Đăng nhập `pro_student` (đã có 4 môn), tạo môn thứ 5 (`CSD201`) -> Tạo thành công mượt mà, không bị chặn.
-  6. `E2E-CORE-06`: **Bảo vệ quyền sở hữu (Ownership Protection)**:
+  5. `E2E-CORE-05`: **Bảo vệ quyền sở hữu (Ownership Protection)**:
      - Đăng nhập `student`, cố tình nhập URL xóa môn của `pro_student` (`/courses/delete/3`) -> Hệ thống chặn lại báo lỗi quyền sở hữu: *"⛔ Bạn không có quyền xóa môn học của người khác!"*.
-  7. `E2E-CORE-07`: **Course Hub - Trang Chi Tiết Môn Học (`courses/detail.html`)**:
+  6. `E2E-CORE-06`: **Course Hub - Trang Chi Tiết Môn Học (`courses/detail.html`)**:
      - Bấm vào 1 môn học -> Hiển thị Course Hub với đầy đủ: Thống kê số chunks, số tài liệu, thông tin môn học, nút sửa môn, nút sang mục Tài liệu và nút sang Chat AI.
-  8. `E2E-CORE-08`: **Landing Page & Điều Hướng Session (Routing)**:
+  7. `E2E-CORE-07`: **Landing Page & Điều Hướng Session (Routing)**:
      - Chưa đăng nhập truy cập `http://localhost:8080/` -> Hiển thị Landing Page (Hero banner, Bảng giá 3 gói cước, FAQ Accordion mở/đóng).
      - Đã đăng nhập Sinh viên truy cập `/` -> Tự động chuyển hướng vào `/courses`.
      - Đã đăng nhập Admin truy cập `/` -> Tự động chuyển hướng vào `/admin/dashboard`.
-* **Bằng chứng cần nộp**: 8 ảnh chụp màn hình (`E2E-CORE-01_tung.png` đến `E2E-CORE-08_tung.png`).
+* **Bằng chứng cần nộp**: 7 ảnh chụp màn hình (`E2E-CORE-01_tung.png` đến `E2E-CORE-07_tung.png`) lưu tại `docs/evidence/tung/`.
 
 ---
 
