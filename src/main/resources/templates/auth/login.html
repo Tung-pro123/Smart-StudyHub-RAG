@@ -5,85 +5,87 @@
 
 <div class="min-h-screen w-full flex flex-col lg:flex-row">
 
-    <!-- 1. CỘT TRÁI (HERO BRAND PANEL - 50% DESKTOP): MÀU XANH RỪNG DEEP EMERALD MONOCHROMATIC THEO CHUẨN SWP -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#064e3b] via-[#043e30] to-[#022c22] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
-        <!-- Hiệu ứng ánh sáng ngọc bích mờ nhẹ (Ambient Glow) -->
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- 1. CỘT TRÁI (HERO BRAND PANEL - 50% DESKTOP): ĐỒNG BỘ 100% VỚI NỀN TỐI & MÀU SẮC LANDING PAGE -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#030712] via-[#090d16] to-[#0f172a] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
+        <!-- Hiệu ứng ánh sáng đa chiều Cyber Cyan & Violet (Đồng bộ Landing Page) -->
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- Header: Logo & Tên Hệ Thống -->
+        <!-- Header: Logo & Tên Hệ Thống (Đồng bộ Navbar Landing Page) -->
         <div class="relative z-10">
             <a th:href="@{/}" class="inline-flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-emerald-300 shadow-sm group-hover:scale-105 transition-transform">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-purple-500/30 group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-graduation-cap text-lg"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
                         <span class="font-extrabold text-xl text-white tracking-tight">StudyHub AI</span>
-                        <span class="badge badge-xs bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-mono">v2.4</span>
+                        <span class="badge badge-xs bg-purple-500/20 text-purple-300 border border-purple-400/30 text-[9px] font-mono">v2.4</span>
                     </div>
-                    <p class="text-[11px] text-emerald-200/70 font-semibold tracking-wide">Smart Multi-Course Hub &amp; RAG AI</p>
+                    <p class="text-[11px] text-gray-400 font-semibold tracking-wide">Smart Multi-Course Hub &amp; RAG AI</p>
                 </div>
             </a>
         </div>
 
-        <!-- Center: Nội Dung Trọng Tâm & Showcase Tính Năng -->
+        <!-- Center: Nội Dung Trọng Tâm & Mockup RAG (Đồng bộ Visual Landing Page) -->
         <div class="relative z-10 space-y-8 my-auto py-8">
             <div class="space-y-3 max-w-lg">
                 <h1 class="text-3xl xl:text-4xl font-black text-white leading-tight tracking-tight">
-                    An tâm học tập,<br />
-                    Linh hoạt bứt phá cùng AI
+                    Unlock the Hidden Knowledge<br />
+                    in Your <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Courseware.</span>
                 </h1>
-                <p class="text-sm text-emerald-100/80 leading-relaxed font-normal">
-                    Hệ thống quản lý môn học thông minh, tự nạp slide bài giảng PDF và trợ lý AI RAG đối chứng chính xác 0% ảo giác.
+                <p class="text-sm text-gray-300 leading-relaxed font-normal">
+                    Nền tảng hỗ trợ sinh viên tự quản lý môn học, nạp slide &amp; giáo trình PDF, RAG AI tự động phân tích và giải đáp thắc mắc 100% bám sát tài liệu kèm trích dẫn số trang đối chứng.
                 </p>
             </div>
 
-            <!-- Thẻ Mockup Showcase Preview (Phong cách SmartStorage SWP) -->
-            <div class="rounded-2xl p-5 bg-white/10 backdrop-blur-xl border border-white/15 shadow-2xl space-y-3.5 max-w-md">
+            <!-- Thẻ Mockup Showcase RAG (Đồng bộ thẻ Live RAG Assistant trên Landing Page) -->
+            <div class="rounded-2xl p-5 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl space-y-3.5 max-w-md">
                 <div class="flex items-center justify-between pb-3 border-b border-white/10">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300">
+                        <div class="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300">
                             <i class="fa-solid fa-book-bookmark text-sm"></i>
                         </div>
                         <div>
                             <h4 class="text-xs font-bold text-white">HSF302 - JPA and Spring Framework</h4>
-                            <p class="text-[10px] text-emerald-200/70">Slide bài giảng tuần 1 - 10 • 15 Chunks</p>
+                            <p class="text-[10px] text-gray-400">Slide bài giảng tuần 1 - 10 • 15 Chunks</p>
                         </div>
                     </div>
-                    <span class="badge badge-xs bg-emerald-400 text-emerald-950 font-black text-[9px] border-none px-2 py-1">BYOC ACTIVE</span>
+                    <span class="badge badge-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-2 py-1">
+                        <i class="fa-solid fa-circle text-[6px] mr-1 text-emerald-400"></i> Page 14 Citation
+                    </span>
                 </div>
                 
-                <div class="p-3 rounded-xl bg-black/25 text-[11px] text-emerald-100/90 leading-relaxed font-mono flex items-start gap-2 border border-white/5">
-                    <i class="fa-solid fa-quote-left text-emerald-400 text-xs mt-0.5 shrink-0"></i>
+                <div class="p-3 rounded-xl bg-black/40 text-[11px] text-gray-200 leading-relaxed font-mono flex items-start gap-2 border border-white/5">
+                    <i class="fa-solid fa-quote-left text-purple-400 text-xs mt-0.5 shrink-0"></i>
                     <span>"Theo Slide 03 trang 14, Spring Data JPA tự động sinh câu truy vấn từ tên phương thức repository..."</span>
                 </div>
 
-                <div class="flex items-center justify-between text-[10px] text-emerald-200/80 pt-1">
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Đối chứng nguồn trang slide 100%</span>
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-rose-300"></i> Tự nạp slide riêng</span>
+                <div class="flex items-center justify-between text-[10px] text-gray-300 pt-1">
+                    <span class="flex items-center gap-1.5 text-emerald-400 font-semibold"><i class="fa-solid fa-shield-halved"></i> 100% Grounded (Không ảo giác)</span>
+                    <span class="flex items-center gap-1.5 text-pink-400"><i class="fa-solid fa-file-pdf"></i> Tự nạp slide BYOC</span>
                 </div>
             </div>
 
-            <!-- 3 Badges Tiện Ích Chuẩn (Linh hoạt, Không ảo giác, An tâm) -->
+            <!-- 3 Badges Tiện Ích Chuẩn -->
             <div class="grid grid-cols-3 gap-3 max-w-md">
                 <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
                     <p class="text-xs font-bold text-white">Linh Hoạt</p>
-                    <p class="text-[10px] text-emerald-200/70">Tự do mọi trường</p>
+                    <p class="text-[10px] text-gray-400">Tự do mọi trường</p>
                 </div>
                 <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
-                    <p class="text-xs font-bold text-white">Không Ảo Giác</p>
-                    <p class="text-[10px] text-emerald-200/70">Dẫn nguồn chính xác</p>
+                    <p class="text-xs font-bold text-white">0% Ảo Giác</p>
+                    <p class="text-[10px] text-gray-400">Dẫn nguồn trang slide</p>
                 </div>
                 <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
                     <p class="text-xs font-bold text-white">An Tâm</p>
-                    <p class="text-[10px] text-emerald-200/70">Dữ liệu phân lập 100%</p>
+                    <p class="text-[10px] text-gray-400">Dữ liệu cô lập 100%</p>
                 </div>
             </div>
         </div>
 
         <!-- Footer Cột Trái -->
-        <div class="relative z-10 flex items-center justify-between text-[11px] text-emerald-200/60 pt-4 border-t border-white/10">
+        <div class="relative z-10 flex items-center justify-between text-[11px] text-gray-400 pt-4 border-t border-white/10">
             <span>Chính sách bảo mật • Điều khoản học tập</span>
             <span>HSF302 - Fall 2026</span>
         </div>
@@ -93,7 +95,7 @@
     <div class="w-full lg:w-1/2 bg-white flex flex-col justify-between p-6 sm:p-12 xl:p-16 overflow-y-auto">
         <!-- Nút Quay Lại Trang Chủ -->
         <div class="flex items-center justify-between">
-            <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-emerald-700 transition flex items-center gap-1.5">
+            <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-purple-600 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay lại Trang Chủ
             </a>
             <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Hỗ trợ sinh viên 24/7</span>
@@ -148,7 +150,7 @@
                     <div class="relative">
                         <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="text" id="login-username" th:field="*{username}" required placeholder="student, pro_student, squad_leader..." 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition" />
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-purple-600 focus:ring-1 focus:ring-purple-600 transition" />
                     </div>
                 </div>
 
@@ -156,12 +158,12 @@
                 <div class="form-control space-y-1">
                     <div class="flex items-center justify-between">
                         <label class="label p-0"><span class="label-text font-bold text-xs text-slate-700">Mật Khẩu</span></label>
-                        <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ Admin hoặc đăng nhập bằng tài khoản Demo bên dưới!')" class="text-[11px] font-semibold text-emerald-700 hover:underline">Quên mật khẩu?</a>
+                        <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ Admin hoặc đăng nhập bằng tài khoản Demo bên dưới!')" class="text-[11px] font-semibold text-purple-600 hover:underline">Quên mật khẩu?</a>
                     </div>
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="password" id="login-password" th:field="*{password}" required placeholder="••••••••" 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-10 w-full rounded-xl text-xs focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition" />
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-10 w-full rounded-xl text-xs focus:bg-white focus:border-purple-600 focus:ring-1 focus:ring-purple-600 transition" />
                         <button type="button" onclick="togglePasswordVisibility('login-password', this)" 
                                 class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs transition" title="Hiện/ẩn mật khẩu">
                             <i class="fa-solid fa-eye"></i>
@@ -172,13 +174,13 @@
                 <!-- Checkbox Ghi nhớ -->
                 <div class="flex items-center justify-between pt-1">
                     <label class="label cursor-pointer p-0 gap-2">
-                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs rounded checkbox-success border-slate-300" />
+                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs rounded checkbox-primary border-slate-300" />
                         <span class="label-text text-xs text-slate-600">Ghi nhớ đăng nhập trên thiết bị này</span>
                     </label>
                 </div>
 
-                <!-- Nút Đăng Nhập Chính (Một màu Xanh Chuẩn SmartStorage SWP) -->
-                <button type="submit" class="btn h-11 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl border-none shadow-sm shadow-emerald-600/20 text-xs transition-all w-full flex items-center justify-center gap-2 mt-2">
+                <!-- Nút Đăng Nhập Chính: Gradient Tím-Hồng ĐỒNG BỘ 100% VỚI NÚT LANDING PAGE -->
+                <button type="submit" class="btn h-11 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl border-none shadow-lg shadow-purple-500/25 text-xs transition-all w-full flex items-center justify-center gap-2 mt-2">
                     <span>Đăng Nhập Ngay</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
@@ -191,10 +193,10 @@
                 <div class="flex-1 h-px bg-slate-200"></div>
             </div>
 
-            <!-- Demo Credentials Box (1-Click Fill) Tinh Tế Chuẩn SWP -->
+            <!-- Demo Credentials Box (1-Click Fill) Tinh Tế -->
             <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 text-xs space-y-2.5">
                 <div class="flex items-center justify-between">
-                    <span class="font-bold text-slate-700 flex items-center gap-1.5 text-emerald-700">
+                    <span class="font-bold text-slate-700 flex items-center gap-1.5 text-purple-700">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Tài Khoản Demo (1-Click):
                     </span>
                     <span class="text-[10px] text-slate-400 font-mono bg-white px-2 py-0.5 rounded-md border border-slate-200">Mật khẩu: 123456</span>
@@ -202,23 +204,23 @@
 
                 <div class="grid grid-cols-2 gap-2">
                     <button type="button" onclick="fillDemo('student', '123456')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 hover:text-emerald-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-purple-400 hover:bg-purple-50/50 hover:text-purple-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
                         <span class="badge badge-xs bg-slate-100 text-slate-600 font-mono text-[9px] mr-1.5 border-none">FREE</span>
                         <span class="font-bold">student</span>
                     </button>
                     <button type="button" onclick="fillDemo('pro_student', '123456')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 hover:text-emerald-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
-                        <span class="badge badge-xs bg-emerald-100 text-emerald-800 font-mono text-[9px] mr-1.5 border-none">PRO</span>
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-purple-400 hover:bg-purple-50/50 hover:text-purple-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                        <span class="badge badge-xs bg-purple-100 text-purple-800 font-mono text-[9px] mr-1.5 border-none">PRO</span>
                         <span class="font-bold">pro_student</span>
                     </button>
                     <button type="button" onclick="fillDemo('squad_leader', '123456')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-cyan-500 hover:bg-cyan-50/50 hover:text-cyan-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-cyan-400 hover:bg-cyan-50/50 hover:text-cyan-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
                         <span class="badge badge-xs bg-cyan-100 text-cyan-800 font-mono text-[9px] mr-1.5 border-none">SQUAD</span>
                         <span class="font-bold">squad_leader</span>
                     </button>
                     <button type="button" onclick="fillDemo('admin', '123456')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-purple-500 hover:bg-purple-50/50 hover:text-purple-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
-                        <span class="badge badge-xs bg-purple-100 text-purple-800 font-mono text-[9px] mr-1.5 border-none">ADMIN</span>
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/50 hover:text-amber-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                        <span class="badge badge-xs bg-amber-100 text-amber-800 font-mono text-[9px] mr-1.5 border-none">ADMIN</span>
                         <span class="font-bold">admin</span>
                     </button>
                 </div>
@@ -241,7 +243,7 @@
             <!-- Chuyển Sang Đăng Ký -->
             <div class="text-center text-xs text-slate-500 pt-2">
                 Chưa có tài khoản? 
-                <a th:href="@{/register}" class="font-bold text-emerald-700 hover:underline ml-1">Đăng ký tài khoản mới &gt;</a>
+                <a th:href="@{/register}" class="font-bold text-purple-600 hover:text-pink-600 hover:underline ml-1">Đăng ký tài khoản mới &gt;</a>
             </div>
         </div>
 
