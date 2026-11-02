@@ -32,8 +32,8 @@
 | Mã Issue | Ngày tạo | Người báo | Phân hệ | Mô tả lỗi vắn tắt | Mức độ | Người sửa (Assignee) | Trạng thái | Commit Fix / Ghi chú |
 | :---: | :---: | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
 | **`#ISSUE-01`** | 02/11 | Tùng | `Auth / Profile` | Gói PRO hiển thị nhầm thẻ Quản lý nhóm và dòng chữ `"Bạn là thành viên nhóm @null"`, card Hạn ngạch RAG bị vỡ cột mô tả. | **🚨 HIGH** | **Trường / Tùng** | **✅ CLOSED** | Đã sửa trong commit [`9998765`](https://github.com/Tung-pro123/Smart-StudyHub-RAG/commit/9998765). Đã test 290/290 test passed. |
-| **`#ISSUE-02`** | 02/11 | ... | ... | *(Ghi lỗi mới phát hiện tại đây)* | ... | ... | `🔴 OPEN` | ... |
-| **`#ISSUE-03`** | 02/11 | ... | ... | *(Ghi lỗi mới phát hiện tại đây)* | ... | ... | `🔴 OPEN` | ... |
+| **`#ISSUE-02`** | 02/11 | Trường | `Auth / Login` | Nút đăng nhập 1-Click tài khoản demo không tự điền username/password (do thẻ script nằm ngoài thẻ section của layout). | **⚠️ MEDIUM** | **Trường** | `🔴 OPEN` | Cần chuyển thẻ `<script>` vào bên trong thẻ `<section>`. |
+| **`#ISSUE-03`** | 02/11 | Trường | `Auth / Profile` | Cập nhật hồ sơ đổi được họ tên nhưng không đổi được avatar khi chọn preset (do script selectAvatar nằm ngoài section). | **⚠️ MEDIUM** | **Trường** | `🔴 OPEN` | Cần chuyển thẻ `<script>` vào bên trong thẻ `<section>`. |
 
 ---
 
@@ -84,3 +84,56 @@
    - Vào bảng ở Mục 3, cập nhật trạng thái thành `🟢 RESOLVED` kèm mã commit.
    - Báo cho người phát hiện lỗi kiểm tra lại lần cuối để đóng issue sang `✅ CLOSED`.
 
+
+
+---
+
+### 🐛 [#ISSUE-02]: Nút đăng nhập 1-Click tại login.html không tự điền thông tin tài khoản demo
+* **Người báo lỗi**: Ngô Nhật Trường
+* **Phân hệ**: Auth / Login
+* **Tài khoản dùng để test**: `squad_leader`
+* **Mức độ nghiêm trọng**: ⚠️ MEDIUM
+* **Người chịu trách nhiệm sửa (Assignee)**: Trường
+* **Trạng thái**: 🔴 OPEN
+
+#### 1. Các bước tái hiện lỗi (Steps to Reproduce):
+1. Truy cập vào trang: `http://localhost:8080/login`
+2. Nhấp vào các huy hiệu tài khoản demo: `[FREE: student]`, `[PRO: pro_student]`, `[SQUAD: squad_leader]`, `[ADMIN: admin]`
+3. Quan sát 2 ô nhập liệu Tên Đăng Nhập và Mật Khẩu.
+
+#### 2. Kết quả thực tế bị lỗi (Actual Result):
+* Hai ô nhập liệu vẫn để trống, không tự điền username và password `123456`.
+* Mở Console trình duyệt báo lỗi `Uncaught ReferenceError: fillDemo is not defined`.
+* **Nguyên nhân**: Thẻ `<script>` chứa hàm `fillDemo()` đặt sau thẻ `</section>`, trong khi layout Thymeleaf chỉ trích xuất `~{::section}` nên thẻ script bị loại bỏ khi render.
+
+#### 3. Kết quả kỳ vọng đúng (Expected Result):
+* Khi nhấp vào huy hiệu demo, ô username và password phải tự động điền giá trị tương ứng để người dùng đăng nhập ngay lập tức.
+
+#### 4. Ảnh chụp màn hình lỗi (Screenshot Evidence):
+* `![Screenshot](../evidence/truong/E2E-AUTH-01_truong.png)`
+
+---
+
+### 🐛 [#ISSUE-03]: Chọn Avatar Presets tại profile.html đổi được họ tên nhưng avatar không cập nhật
+* **Người báo lỗi**: Ngô Nhật Trường
+* **Phân hệ**: Auth / Profile
+* **Tài khoản dùng để test**: `squad_leader`
+* **Mức độ nghiêm trọng**: ⚠️ MEDIUM
+* **Người chịu trách nhiệm sửa (Assignee)**: Trường
+* **Trạng thái**: 🔴 OPEN
+
+#### 1. Các bước tái hiện lỗi (Steps to Reproduce):
+1. Đăng nhập vào tài khoản `squad_leader`
+2. Truy cập vào trang: `http://localhost:8080/profile`
+3. Nhấp chọn 1 trong 6 hình avatar mẫu (presets) bên dưới
+4. Bấm nút "Lưu Cập Nhật Hồ Sơ".
+
+#### 2. Kết quả thực tế bị lỗi (Actual Result):
+* Họ tên hiển thị cập nhật thành công nhưng ảnh đại diện vẫn giữ nguyên ảnh cũ.
+* **Nguyên nhân**: Thẻ `<script>` chứa hàm `selectAvatar()` đặt sau thẻ `</section>`, khiến hàm không được gọi khi click, giá trị trong input hidden `avatar` không thay đổi.
+
+#### 3. Kết quả kỳ vọng đúng (Expected Result):
+* Khi click chọn avatar preset, viền avatar được highlight, ảnh đại diện xem trước đổi ngay và khi bấm Lưu thì database cập nhật avatar mới.
+
+#### 4. Ảnh chụp màn hình lỗi (Screenshot Evidence):
+* `![Screenshot](../evidence/truong/E2E-AUTH-03_truong.png)`

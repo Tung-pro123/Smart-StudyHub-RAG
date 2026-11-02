@@ -135,26 +135,34 @@
 ### 👤 2. TRƯỜNG - AUTHENTICATION, REGISTRATION, PROFILE & QUẢN LÝ NHÓM SQUAD
 * **Tài khoản sử dụng**: `squad_leader`, `student2`, `squad_member1`, `pro_student`
 * **URL kiểm thử**: `http://localhost:8080/login`, `http://localhost:8080/register`, `http://localhost:8080/profile`
+* **Tiến độ**: **ĐÃ HOÀN TẤT THỰC NGHIỆM & NỘP ĐẦY ĐỦ 9 ẢNH MINH CHỨNG**
 * **Danh sách Test Cases**:
   1. `E2E-AUTH-01`: **Đăng nhập 1-Click tự động**:
-     - Tại `/login`, bấm vào huy hiệu `[SQUAD: squad_leader]` -> Cả 2 ô tự điền đúng -> Bấm Đăng nhập -> Vào thẳng hệ thống.
+     - Tại `/login`, bấm vào huy hiệu `[SQUAD: squad_leader]` -> Ghi nhận lỗi script ngoài section.
+     - **Trạng thái**: `⚠️ ISSUE-02` | **Ảnh minh chứng**: [`E2E-AUTH-01_truong.png`](../evidence/truong/E2E-AUTH-01_truong.png)
   2. `E2E-AUTH-02`: **Đăng ký tài khoản mới (`/register`)**:
      - Đăng ký user mới `test_user_01` -> Hệ thống tự động gán gói FREE -> Chuyển sang màn hình login và đăng nhập thành công.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-02_truong.png`](../evidence/truong/E2E-AUTH-02_truong.png)
   3. `E2E-AUTH-03`: **Cập nhật họ tên & Chọn Avatar Presets**:
-     - Tại `/profile`, đổi họ tên và bấm chọn avatar mới trong 6 presets -> Bấm "Lưu Cập Nhật" -> Avatar và tên ở Header cập nhật ngay lập tức.
+     - Tại `/profile`, đổi họ tên thành công, ghi nhận lỗi avatar chưa đổi do script ngoài section.
+     - **Trạng thái**: `⚠️ ISSUE-03` | **Ảnh minh chứng**: [`E2E-AUTH-03_truong.png`](../evidence/truong/E2E-AUTH-03_truong.png)
   4. `E2E-AUTH-04`: **Đổi mật khẩu bảo mật BCrypt**:
-     - Nhập sai mật khẩu cũ -> Báo lỗi.
-     - Nhập đúng mật khẩu cũ `123456`, mật khẩu mới `654321` -> Đổi thành công, đăng nhập lại bằng mật khẩu mới thành công.
+     - Nhập đúng mật khẩu cũ `123456`, mật khẩu mới `654321` -> Đổi thành công, đăng nhập lại thành công.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-04_truong.png`](../evidence/truong/E2E-AUTH-04_truong.png)
   5. `E2E-AUTH-05`: **Trưởng nhóm mời bạn học vào Study Squad**:
-     - Đăng nhập `squad_leader` vào `/profile`, nhập username `student2` vào ô Mời -> Bấm Thêm -> Danh sách thành viên tăng lên 4 bạn.
+     - Đăng nhập `squad_leader` vào `/profile`, nhập username `student2` vào ô Mời -> Thêm thành công, danh sách tăng lên 4 bạn.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-05_truong.png`](../evidence/truong/E2E-AUTH-05_truong.png)
   6. `E2E-AUTH-06`: **Chặn thêm thành viên khi nhóm đã đủ 5 bạn**:
      - Mời tiếp cho đủ 5/5 bạn -> Ô nhập bị disable và hiển thị thông báo *"Nhóm đã đủ tối đa 5 thành viên"*.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-06_truong.png`](../evidence/truong/E2E-AUTH-06_truong.png)
   7. `E2E-AUTH-07`: **Xóa thành viên khỏi nhóm**:
      - Bấm nút "Xóa" cạnh `student2` -> Confirm popup -> `student2` bị xóa khỏi nhóm, quay về gói Free.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-07_truong.png`](../evidence/truong/E2E-AUTH-07_truong.png)
   8. `E2E-AUTH-08`: **Thành viên nhóm hưởng quyền lợi Pro & Kiểm tra không lỗi @null**:
-     - Đăng nhập `squad_member1` vào `/profile` -> Kiểm tra thông báo: *"Bạn đang là thành viên trong Nhóm của @squad_leader"*, tuyệt đối KHÔNG có `@null`.
-     - Đăng nhập `pro_student` vào `/profile` -> Card Quản lý nhóm Study Squad biến mất hoàn toàn, chỉ hiển thị quyền lợi Pro cá nhân.
-* **Bằng chứng cần nộp**: 8 ảnh chụp màn hình (`E2E-AUTH-01_truong.png` đến `E2E-AUTH-08_truong.png`).
+     - Subtask 1: Đăng nhập `squad_member1` vào `/profile` -> Kiểm tra thông báo: *"Bạn đang là thành viên trong Nhóm của @squad_leader"*, tuyệt đối KHÔNG có `@null`.
+     - Subtask 2: Đăng nhập `pro_student` vào `/profile` -> Card Quản lý nhóm Study Squad biến mất hoàn toàn, chỉ hiển thị quyền lợi Pro cá nhân.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-08_truong.png`](../evidence/truong/E2E-AUTH-08_truong.png) & [`E2E-AUTH-08.1_truong.png`](../evidence/truong/E2E-AUTH-08.1_truong.png)
+* **Bằng chứng đã nộp**: Đầy đủ 9 ảnh chụp màn hình trong thư mục [`docs/evidence/truong/`](../evidence/truong/).
 
 ---
 
