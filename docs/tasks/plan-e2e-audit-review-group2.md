@@ -1,5 +1,5 @@
 # 🕵️ KẾ HOẠCH RÀ SOÁT & NGHIỆM THU CHI TIẾT E2E - NHÓM 2
-> **Chủ trì**: Lê Nguyễn Minh Tùng (Team Lead)  
+> **Chủ trì**: Lê Thanh Tùng (Team Lead)  
 > **Dự án**: Smart StudyHub RAG - Smart Multi-Course Study Hub & AI Courseware Assistant  
 > **Học phần**: HSF302 - Java Web Application & Spring Boot 3  
 > **Thời gian rà soát**: Đợt tổng kết 02/11/2026  
@@ -144,3 +144,4 @@
 3. [x] **Xác nhận kết quả của Nhật**: Nhật đã nộp đủ 6 ảnh và 1 file PDF chuẩn.
 4. [ ] **Thực hiện `TASK-UI-01`**: Tút lại giao diện màu sắc cho `courses/detail.html` sang **White-Card Palette** theo đúng chỉ đạo của anh Tùng.
 5. [ ] **Đóng các Issue**: Cập nhật file [`docs/issues/ISSUES-TRACKING.md`](../issues/ISSUES-TRACKING.md) sau khi nghiệm thu hoàn tất.
+

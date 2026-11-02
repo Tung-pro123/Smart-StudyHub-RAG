@@ -8,7 +8,7 @@ Thư mục `docs/evidence/` được phân cấp theo **từng thành viên ph�
 
 | Thư mục | Thành viên | Vai trò & Phân hệ kiểm thử | Quy chuẩn đặt tên file |
 | :--- | :--- | :--- | :--- |
-| [`tung/`](./tung/) | **Lê Nguyễn Minh Tùng (Lead)** | **Module 1**: Quản lý môn học, Data Isolation, Landing Page, Level 2 Hub | `E2E-CORE-0X_tung.png` |
+| [`tung/`](./tung/) | **Lê Thanh Tùng (Lead)** | **Module 1**: Quản lý môn học, Data Isolation, Landing Page, Level 2 Hub | `E2E-CORE-0X_tung.png` |
 | [`truong/`](./truong/) | **Trường** | **Module 2**: Authentication, JWT Session, 1-Click Login, Rate Limit | `E2E-AUTH-0X_truong.png` |
 | [`binh/`](./binh/) | **Bình** | **Module 3**: RAG AI Pipeline, Ingestion Slide PDF, Trích dẫn số trang | `E2E-RAG-0X_binh.png` |
 | [`thang/`](./thang/) | **Thắng** | **Module 4**: AI Study Planner, Lịch học vừa sức theo tuần, Spaced Repetition | `E2E-PLAN-0X_thang.png` |
