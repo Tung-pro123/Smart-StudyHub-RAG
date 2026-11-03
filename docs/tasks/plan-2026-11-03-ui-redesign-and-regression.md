@@ -123,24 +123,24 @@ Tất cả các trang khi làm mới phải tuân theo đúng bảng mã màu v�
   - `src/main/resources/templates/rag/documents.html`
   - `src/main/resources/templates/rag/chat.html`
 * **Kế hoạch nhiệm vụ chi tiết (02/11 - 03/11)**:
-  - [ ] **TASK-BINH-01 (Documents & Chunks)**:
+  - [x] **TASK-BINH-01 (Documents & Chunks)**:
     + Áp dụng **Progressive Disclosure**:
       * **Cấp 1**: Khu vực Dropzone kéo thả tải file PDF tinh tế, kèm bảng danh sách các tài liệu đã nạp (tên file, số trang, kích thước, ngày tải).
       * **Cấp 2**: Các đoạn chunks trích xuất **KHÔNG được bung hết ra trang** làm tràn màn hình. Phải đưa vào Accordion đóng/mở hoặc Modal xem trước *"Xem chi tiết Chunks"*.
       * Ẩn các thông số kỹ thuật rác, chỉ hiển thị số thứ tự đoạn, số từ và nút xóa tài liệu.
-  - [ ] **TASK-BINH-02 (RAG Chatbot Frame)**:
+  - [x] **TASK-BINH-02 (RAG Chatbot Frame)**:
     + Khung chat thiết kế hiện đại, thoáng đãng:
       * Bong bóng tin nhắn người dùng: Nền gradient tím hồng `from-purple-600 via-violet-600 to-pink-600` chữ trắng.
       * Bong bóng trả lời AI: Thẻ trắng `bg-white/95 border-slate-200/80 text-slate-800`.
       * **Citation Cards đối chứng giáo trình**: Làm nổi bật số trang bằng badge màu chàm (indigo) và trích dẫn trực tiếp đoạn văn bản gốc (0% ảo giác).
       * Banner hiển thị Hạn ngạch RAG 50 câu/ngày: Thu nhỏ gọn gàng ở góc trên khung chat, có progress bar mỏng, không chiếm diện tích chat.
-  - [ ] **TASK-BINH-03 (Regression Checklist)**:
-    + [ ] Tải lên file PDF thành công, cắt chunks tự động.
-    + [ ] Kiểm tra hạn mức 3 PDF của tài khoản FREE (bị chặn khi nạp file thứ 4).
-    + [ ] Kiểm tra tài khoản PRO tải PDF không giới hạn.
-    + [ ] Xóa tài liệu PDF dọn sạch chunks trong database.
-    + [ ] Hỏi đáp RAG trả lời bám sát giáo trình, có thẻ Citation số trang.
-    + [ ] Vượt trần 50 câu RAG/ngày hiện banner chặn và nút nâng cấp.
+  - [x] **TASK-BINH-03 (Regression Checklist)**:
+    + [x] Tải lên file PDF thành công, cắt chunks tự động.
+    + [x] Kiểm tra hạn mức 3 PDF của tài khoản FREE (bị chặn khi nạp file thứ 4).
+    + [x] Kiểm tra tài khoản PRO tải PDF không giới hạn.
+    + [x] Xóa tài liệu PDF dọn sạch chunks trong database.
+    + [x] Hỏi đáp RAG trả lời bám sát giáo trình, có thẻ Citation số trang.
+    + [x] Vượt trần 50 câu RAG/ngày hiện banner chặn và nút nâng cấp.
 
 ---
 

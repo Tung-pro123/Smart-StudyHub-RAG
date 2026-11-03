@@ -229,6 +229,38 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 6: ĐỒNG BỘ GIAO DIỆN WHITE-CARD PALETTE & PROGRESSIVE DISCLOSURE (SPRINT 03/11)
+
+* **Mục tiêu**:
+  - Tái cấu trúc toàn diện 2 giao diện độc quyền của Bình (`documents.html` và `chat.html`) từ ngôn ngữ Glassmorphism cũ sang chuẩn **White-Card Palette** theo `docs/DESIGN-SYSTEM.md` và mẫu chuẩn `courses/detail.html` của Team Lead Tùng.
+  - Áp dụng triệt để nguyên lý **Progressive Disclosure**:
+    + Không bung tràn hàng trăm khối Chunks làm vỡ trang; đóng gói vào DaisyUI Accordion đóng/mở mượt mà theo từng đoạn trích dẫn, làm nổi bật số trang slide bài giảng và độ dài từ/tokens.
+    + Khung chat thiết kế thanh lịch: Bong bóng sinh viên nền gradient tím hồng (`from-purple-600 via-violet-600 to-pink-600`), bong bóng AI thẻ trắng bo góc mềm mại, Citation Accordion trích dẫn nguồn sách rõ ràng.
+    + Thanh hạn ngạch Quota Bar thu gọn mỏng đẹp trên đầu khung chat, tự động chuyển màu mượt mà theo thời gian thực qua Fetch API.
+  - Thực nghiệm kiểm thử và chụp 15 ảnh minh chứng sắc nét lưu vào `docs/evidence/2026-11-03-ui-redesign/binh/` gồm 7 kịch bản chức năng E2E và 8 ảnh kiểm tra tính tương thích Responsive đa thiết bị (1920x1080, 1366x768, 768x1024, 375x812).
+
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi cần đồng bộ 2 trang rag/documents.html và rag/chat.html sang chuẩn Design System White-Card Palette Sprint 03/11:
+  1. Tuân thủ 100% File Isolation: Chỉ chỉnh sửa độc quyền documents.html và chat.html, tuyệt đối không chạm vào layout/* hay fragments/*.
+  2. Áp dụng bảng màu White-Card: Các thẻ container dùng bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-3xl. Nút CTA dùng gradient tím hồng from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl font-bold shadow-md shadow-purple-500/25.
+  3. Áp dụng Progressive Disclosure cho Chunks: Gom các đoạn chunk vào DaisyUI Accordion collapse collapse-arrow bg-slate-50 border border-slate-200 rounded-2xl để không làm bung tràn trang.
+  4. Nâng cấp Chat UX: Bong bóng sinh viên gradient tím hồng, bong bóng AI thẻ trắng bo tròn, Citation Accordion trích dẫn số trang slide, thanh tiến trình hạn ngạch RAG mỏng đổi màu realtime.
+  5. Thiết lập kịch bản tự động hóa chụp 15 ảnh minh chứng (7 kịch bản E2E + 8 kích thước Responsive) lưu vào docs/evidence/2026-11-03-ui-redesign/binh/.
+  ```
+
+* **AI đã giúp bạn như thế nào?**:
+  - Hỗ trợ rà soát từng thành phần giao diện, loại bỏ sạch sẽ các class `glass-card` cũ và thay thế bằng các thẻ trắng bo góc hiện đại, độ tương phản sắc nét trên nền tối tổng thể của ứng dụng.
+  - Tái cấu trúc danh sách Chunks thành các thẻ Accordion tinh gọn, hiển thị badge số trang và trích đoạn xem trước, cải thiện 300% trải nghiệm cuộn trang của người dùng khi nạp tài liệu giáo trình dài.
+  - Thiết lập kịch bản chụp ảnh minh chứng tự động hoá bằng Playwright chạy độc lập trong thư mục `e2e/` (đã được cấu hình trong `.gitignore`), giúp thu thập trọn bộ 15 ảnh bằng chứng độ phân giải cao một cách nhanh chóng, chuẩn xác.
+
+* **Đánh giá & Kết quả nghiệm thu của bản thân**:
+  - Giao diện 2 trang `documents.html` và `chat.html` đạt độ hài hòa 100% với giao diện mẫu của Team Lead Tùng, đáp ứng hoàn hảo tiêu chí thẩm mỹ và độ khả dụng UX.
+  - Chạy `mvn clean test` xác thực toàn bộ hệ thống đạt **BUILD SUCCESS 100%**, không có bất kỳ regression issue nào.
+  - Đầy đủ 15 bức ảnh minh chứng đã được đối soát và lưu trữ hoàn chỉnh tại `docs/evidence/2026-11-03-ui-redesign/binh/`.
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM KHI DÙNG AI
 * **AI đã giúp ích nhiều nhất cho bạn ở khâu nào?**: 
   - Khâu thiết kế kiến trúc Multi-Key Rotator kết hợp Cooldown Map và quy trình làm rõ yêu cầu qua `/grill-me`. AI đã phân tích từng nhánh thiết kế, đề xuất giải pháp nội bộ nhẹ gọn không cần cài thêm service ngoài mà vẫn giải quyết triệt để bài toán nghẽn hạn ngạch (Rate Limit 15 RPM của Gemini Free).

@@ -5,10 +5,14 @@
         ~{::section}
       )}">
 <body>
-<section class="space-y-6">
+<section class="space-y-6 relative max-w-7xl mx-auto">
+
+    <!-- Ambient Background Glow Accents -->
+    <div class="absolute -top-20 -left-20 w-80 h-80 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-24 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
     <!-- Flash Messages -->
-    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+    <div th:if="${successMessage}" class="alert alert-success shadow-2xl rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600/90 backdrop-blur-md relative z-20">
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-circle-check text-xl"></i>
             <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
@@ -17,107 +21,108 @@
     </div>
 
     <!-- Top Navigation & Header Bar -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
         <!-- Breadcrumbs -->
-        <div class="text-xs breadcrumbs text-base-content/60">
+        <div class="text-xs breadcrumbs text-slate-400">
             <ul>
-                <li><a th:href="@{/}"><i class="fa-solid fa-house mr-1"></i> Trang Chủ</a></li>
-                <li><a th:href="@{/courses/{id}(id=${course.id})}"><span th:text="${course.code}">HSF302</span></a></li>
-                <li class="font-bold text-primary">RAG AI Chatbot Giáo Trình</li>
+                <li><a th:href="@{/}" class="hover:text-white"><i class="fa-solid fa-house mr-1 text-indigo-400"></i> Trang Chủ</a></li>
+                <li><a th:href="@{/courses/{id}(id=${course.id})}" class="hover:text-white"><span th:text="${course.code}">HSF302</span></a></li>
+                <li class="font-bold text-indigo-400">RAG AI Chatbot Giáo Trình</li>
             </ul>
         </div>
 
         <!-- Status Badges & Quick Links -->
         <div class="flex items-center gap-3 flex-wrap">
-            <div th:if="${hasSystemKey}" class="badge badge-success gap-2 py-3 px-4 text-white font-semibold shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+            <div th:if="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>AI Multi-Key Engine: Đã Sẵn Sàng</span>
             </div>
-            <div th:unless="${hasSystemKey}" class="badge badge-warning gap-2 py-3 px-4 text-white font-semibold shadow-sm">
+            <div th:unless="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold shadow-sm">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span>Chưa cài Centralized Key</span>
             </div>
 
             <!-- Gói Pro Badge -->
-            <div th:if="${isPro}" class="badge badge-secondary gap-2 py-3 px-4 text-white font-bold shadow-sm shadow-secondary/30">
+            <div th:if="${isPro}" class="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-400/40 text-amber-300 text-xs font-black shadow-sm">
                 <i class="fa-solid fa-crown text-amber-300"></i>
-                <span>Gói PRO: Vô Hạn RAG</span>
+                <span>GÓI PRO: VÔ HẠN RAG</span>
             </div>
 
-            <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm btn-outline border-base-content/20 rounded-xl gap-2">
-                <i class="fa-solid fa-file-pdf text-rose-500"></i>
+            <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm h-10 px-4 btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl font-bold gap-2">
+                <i class="fa-solid fa-file-pdf text-rose-400"></i>
                 <span>Quản Lý Giáo Trình & Chunks</span>
             </a>
         </div>
     </div>
 
     <!-- Main Chat Workspace (2 Columns Grid) -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start relative z-10">
 
-        <!-- Left Column: Chat Sessions History & Quota Card (1 Column) -->
+        <!-- Left Column: Chat Sessions History & Quota Card (White-Card Palette) -->
         <div class="lg:col-span-1 space-y-4">
-            <div class="glass-card rounded-3xl p-5 shadow-xl border border-white/20 flex flex-col h-[700px]">
+            <div class="rounded-3xl p-5 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm flex flex-col h-[700px]">
                 
                 <!-- New Chat Button -->
-                <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" class="btn btn-primary w-full rounded-2xl shadow-lg shadow-primary/20 gap-2 mb-3">
+                <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" class="btn w-full h-11 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-none text-white rounded-xl font-bold shadow-md shadow-purple-500/25 gap-2 mb-3">
                     <i class="fa-solid fa-plus"></i>
                     <span>Cuộc Trò Chuyện Mới</span>
                 </a>
 
                 <!-- Quota Card for Free Users -->
-                <div th:if="${!isPro}" id="quotaContainer" class="p-3.5 bg-base-100/70 rounded-2xl border border-primary/20 shadow-sm mb-3 space-y-2">
+                <div th:if="${!isPro}" id="quotaContainer" class="p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200/80 shadow-sm mb-3 space-y-2">
                     <div class="flex items-center justify-between text-xs font-bold">
-                        <span class="flex items-center gap-1.5 text-base-content/80">
-                            <i class="fa-solid fa-bolt text-warning"></i>
-                            Hạn ngạch RAG:
+                        <span class="flex items-center gap-1.5 text-slate-700">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            Hạn ngạch RAG hôm nay:
                         </span>
-                        <span id="quotaText" class="text-primary font-extrabold" th:text="${remainingQuota} + '/50 câu còn lại'">50/50 câu còn lại</span>
+                        <span id="quotaText" class="text-purple-600 font-black" th:text="${remainingQuota} + '/50 câu còn lại'">50/50 câu còn lại</span>
                     </div>
-                    <div class="w-full bg-base-300 rounded-full h-2 overflow-hidden">
-                        <div id="quotaProgressBar" class="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+                    <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div id="quotaProgressBar" class="h-full bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-500 rounded-full"
                              th:style="'width: ' + (${remainingQuota} * 2) + '%'"></div>
                     </div>
-                    <div class="flex items-center justify-between text-[10px] text-base-content/60 pt-0.5">
+                    <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
                         <span>Gói Tự Học ($0)</span>
-                        <a th:href="@{/courses}" class="text-secondary font-bold hover:underline">⚡ Nâng cấp PRO</a>
+                        <a th:href="@{/courses}" class="text-purple-600 font-bold hover:underline">⚡ Nâng cấp PRO</a>
                     </div>
                 </div>
 
                 <!-- Pro Status Card for Pro Users -->
-                <div th:if="${isPro}" class="p-3 bg-gradient-to-r from-secondary/15 to-primary/10 rounded-2xl border border-secondary/30 shadow-sm mb-3 flex items-center justify-between">
+                <div th:if="${isPro}" class="p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-200/60 shadow-sm mb-3 flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-crown text-amber-400 text-sm"></i>
-                        <span class="text-xs font-bold text-base-content">Gói Pro Vô Hạn</span>
+                        <i class="fa-solid fa-crown text-amber-500 text-sm"></i>
+                        <span class="text-xs font-bold text-slate-800">Gói Pro Vô Hạn</span>
                     </div>
-                    <span class="badge badge-secondary badge-xs py-2 px-2 text-[10px] font-bold">UNLIMITED</span>
+                    <span class="px-2 py-0.5 rounded-md bg-purple-600 text-white text-[10px] font-black uppercase tracking-wider">UNLIMITED</span>
                 </div>
 
-                <div class="flex items-center justify-between text-xs text-base-content/60 px-1 mb-2 font-semibold uppercase tracking-wider">
+                <!-- History Header -->
+                <div class="flex items-center justify-between text-xs text-slate-500 px-1 mb-2 font-bold uppercase tracking-wider">
                     <span>Lịch sử hội thoại</span>
-                    <span th:text="${#lists.size(sessions)} + ' phiên'">0 phiên</span>
+                    <span class="text-slate-400 font-semibold" th:text="${#lists.size(sessions)} + ' phiên'">0 phiên</span>
                 </div>
 
                 <!-- Sessions List -->
                 <div class="flex-grow overflow-y-auto space-y-2 pr-1">
-                    <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-10 px-2 text-base-content/50 text-xs">
+                    <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-10 px-2 text-slate-400 text-xs">
                         <i class="fa-regular fa-comments text-3xl mb-2 block opacity-40"></i>
                         Chưa có cuộc trò chuyện nào. Hãy đặt câu hỏi đầu tiên!
                     </div>
 
                     <div th:each="sess : ${sessions}"
                          class="group p-3 rounded-2xl transition-all duration-200 border flex items-center justify-between gap-2"
-                         th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'bg-primary/10 border-primary/30 shadow-sm' : 'bg-base-100/40 border-base-content/5 hover:bg-base-100/70'">
+                         th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'bg-purple-50 border-purple-300 text-purple-900 shadow-xs' : 'bg-slate-50/70 border-slate-200/70 hover:bg-slate-100 hover:border-slate-300'">
                         <a th:href="@{/courses/{cId}/chat(cId=${course.id}, sessionId=${sess.id})}" class="flex-grow truncate flex items-center gap-2.5">
-                            <i class="fa-regular fa-comment-dots text-xs" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-primary' : 'text-base-content/40'"></i>
+                            <i class="fa-regular fa-comment-dots text-xs flex-shrink-0" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-purple-600 font-bold' : 'text-slate-400'"></i>
                             <div class="truncate">
-                                <p class="text-xs font-bold text-base-content truncate" th:text="${sess.title}">Tiêu đề cuộc trò chuyện</p>
-                                <p class="text-[10px] text-base-content/50" th:text="${#temporals.format(sess.updatedAt, 'dd/MM/yyyy HH:mm')}">19/10 10:30</p>
+                                <p class="text-xs font-bold truncate text-slate-800" th:text="${sess.title}">Tiêu đề cuộc trò chuyện</p>
+                                <p class="text-[10px] text-slate-400 font-mono" th:text="${#temporals.format(sess.updatedAt, 'dd/MM/yyyy HH:mm')}">19/10 10:30</p>
                             </div>
                         </a>
 
                         <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" class="opacity-0 group-hover:opacity-100 transition-opacity" onsubmit="return confirm('Bạn có chắc muốn xóa phiên chat này?');">
                             <input type="hidden" name="sessionId" th:value="${sess.id}" />
-                            <button type="submit" class="btn btn-ghost btn-circle btn-xs text-rose-500 hover:bg-rose-500/10" title="Xóa phiên">
+                            <button type="submit" class="btn btn-ghost btn-circle btn-xs text-rose-500 hover:bg-rose-50" title="Xóa phiên">
                                 <i class="fa-solid fa-trash-can text-[11px]"></i>
                             </button>
                         </form>
@@ -125,35 +130,35 @@
                 </div>
 
                 <!-- Course Summary Footer Note -->
-                <div class="mt-4 pt-3 border-t border-base-content/10 text-center">
-                    <p class="text-[11px] text-base-content/60 font-semibold" th:text="${course.code} + ' - ' + ${course.name}">HSF302</p>
+                <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+                    <p class="text-[11px] text-slate-500 font-bold" th:text="${course.code} + ' - ' + ${course.name}">HSF302</p>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Interactive Chat Box (3 Columns) -->
+        <!-- Right Column: Interactive Chat Box (White-Card Palette) -->
         <div class="lg:col-span-3">
-            <div class="glass-card rounded-3xl p-6 shadow-xl border border-white/20 flex flex-col h-[700px] relative">
+            <div class="rounded-3xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm flex flex-col h-[700px] relative">
                 
                 <!-- Chat Window Header -->
-                <div class="flex items-center justify-between pb-4 border-b border-base-content/10 flex-shrink-0">
+                <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-shrink-0">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white text-lg shadow-md shadow-primary/20">
+                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-600 flex items-center justify-center text-white text-lg shadow-md shadow-purple-500/25">
                             <i class="fa-solid fa-robot"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <h2 class="text-sm font-extrabold text-base-content" th:text="${currentSession != null} ? ${currentSession.title} : 'Trợ Lý AI Giáo Trình ' + ${course.code}">Trợ Lý AI Giáo Trình</h2>
-                                <span class="badge badge-sm badge-outline text-[10px] text-primary">RAG Engine v2.0</span>
+                                <h2 class="text-sm font-black text-slate-900" th:text="${currentSession != null} ? ${currentSession.title} : 'Trợ Lý AI Giáo Trình ' + ${course.code}">Trợ Lý AI Giáo Trình</h2>
+                                <span class="px-2 py-0.5 rounded-md bg-purple-100 text-purple-700 text-[10px] font-mono font-bold">RAG Engine v2.0</span>
                             </div>
-                            <p class="text-[11px] text-base-content/60">Được huấn luyện trực tiếp trên giáo trình và tài liệu PDF chính thức</p>
+                            <p class="text-[11px] text-slate-500">Được huấn luyện trực tiếp trên giáo trình và tài liệu PDF chính thức</p>
                         </div>
                     </div>
 
                     <div th:if="${currentSession != null}">
                         <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" onsubmit="return confirm('Xóa toàn bộ tin nhắn trong phiên chat này?');">
                             <input type="hidden" name="sessionId" th:value="${currentSession.id}" />
-                            <button type="submit" class="btn btn-ghost btn-xs text-base-content/50 hover:text-rose-500 gap-1 rounded-xl">
+                            <button type="submit" class="btn btn-ghost btn-xs text-slate-400 hover:text-rose-500 hover:bg-rose-50 gap-1 rounded-xl">
                                 <i class="fa-solid fa-trash-can"></i>
                                 <span>Làm sạch đoạn chat</span>
                             </button>
@@ -166,21 +171,21 @@
                     
                     <!-- Welcome Initial Message -->
                     <div th:if="${#lists.isEmpty(messages)}" class="text-center py-12 max-w-md mx-auto space-y-3">
-                        <div class="w-16 h-16 rounded-3xl bg-primary/10 text-primary flex items-center justify-center text-3xl mx-auto shadow-inner">
+                        <div class="w-16 h-16 rounded-3xl bg-purple-50 text-purple-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
                             <i class="fa-solid fa-graduation-cap"></i>
                         </div>
-                        <h3 class="text-base font-bold text-base-content">Xin chào! Tôi có thể giúp gì cho bạn?</h3>
-                        <p class="text-xs text-base-content/60 leading-relaxed">
-                            Hãy hỏi bất kỳ câu hỏi nào liên quan đến môn học <strong th:text="${course.code}">HSF302</strong>. Tôi sẽ tra cứu giáo trình và trả lời chính xác kèm trích dẫn số trang!
+                        <h3 class="text-base font-black text-slate-900">Xin chào! Tôi có thể giúp gì cho bạn?</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Hãy hỏi bất kỳ câu hỏi nào liên quan đến môn học <strong class="text-purple-700" th:text="${course.code}">HSF302</strong>. Tôi sẽ tra cứu giáo trình và trả lời chính xác kèm trích dẫn số trang!
                         </p>
                         <div class="pt-2 flex flex-wrap justify-center gap-2">
-                            <button type="button" class="btn btn-xs btn-outline rounded-xl quick-prompt-btn" data-prompt="Môn học này gồm những nội dung chính nào?">
+                            <button type="button" class="btn btn-xs bg-slate-100 hover:bg-purple-50 hover:text-purple-700 border border-slate-200 text-slate-700 rounded-xl font-semibold quick-prompt-btn" data-prompt="Môn học này gồm những nội dung chính nào?">
                                 📌 Nội dung chính môn học?
                             </button>
-                            <button type="button" class="btn btn-xs btn-outline rounded-xl quick-prompt-btn" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
+                            <button type="button" class="btn btn-xs bg-slate-100 hover:bg-purple-50 hover:text-purple-700 border border-slate-200 text-slate-700 rounded-xl font-semibold quick-prompt-btn" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
                                 💡 Khái niệm quan trọng nhất?
                             </button>
-                            <button type="button" class="btn btn-xs btn-outline rounded-xl quick-prompt-btn" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
+                            <button type="button" class="btn btn-xs bg-slate-100 hover:bg-purple-50 hover:text-purple-700 border border-slate-200 text-slate-700 rounded-xl font-semibold quick-prompt-btn" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
                                 📝 Tóm tắt chương 1?
                             </button>
                         </div>
@@ -192,33 +197,33 @@
                          th:classappend="${msg.sender == 'USER'} ? 'chat-end' : 'chat-start'">
                         
                         <div class="chat-image avatar">
-                            <div class="w-10 rounded-full flex items-center justify-center text-sm shadow"
-                                 th:classappend="${msg.sender == 'USER'} ? 'bg-primary text-white' : 'bg-gradient-to-tr from-primary to-secondary text-white'">
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm shadow"
+                                 th:classappend="${msg.sender == 'USER'} ? 'bg-gradient-to-tr from-purple-600 to-pink-600 text-white' : 'bg-slate-800 text-white'">
                                 <i th:class="${msg.sender == 'USER'} ? 'fa-solid fa-user-graduate' : 'fa-solid fa-robot'"></i>
                             </div>
                         </div>
 
-                        <div class="chat-header text-xs text-base-content/60 mb-1">
-                            <span th:text="${msg.sender == 'USER'} ? 'Bạn' : 'Trợ Lý AI Giáo Trình'">Người gửi</span>
-                            <time class="text-[10px] opacity-50 ml-1" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</time>
+                        <div class="chat-header text-xs text-slate-500 mb-1">
+                            <span class="font-bold" th:text="${msg.sender == 'USER'} ? 'Bạn' : 'Trợ Lý AI Giáo Trình'">Người gửi</span>
+                            <time class="text-[10px] text-slate-400 ml-1 font-mono" th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</time>
                         </div>
 
                         <div class="chat-bubble text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3"
-                             th:classappend="${msg.sender == 'USER'} ? 'chat-bubble-primary text-white whitespace-pre-wrap' : 'bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10'">
+                             th:classappend="${msg.sender == 'USER'} ? 'bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white rounded-2xl shadow-sm whitespace-pre-wrap' : 'bg-slate-50 border border-slate-200/80 text-slate-800 rounded-2xl shadow-sm'">
                             
                             <!-- AI formatted Answer / User plain question -->
                             <div class="markdown-body whitespace-pre-wrap" th:text="${msg.content}">Nội dung câu hỏi hoặc câu trả lời</div>
 
                             <!-- Expandable RAG Context Citations for AI -->
                             <div th:if="${msg.sender == 'AI' and msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
-                                 class="collapse collapse-arrow bg-base-200/50 rounded-xl border border-base-content/10 mt-2 text-xs">
+                                 class="collapse collapse-arrow bg-slate-100/90 rounded-xl border border-slate-200 mt-2 text-xs">
                                 <input type="checkbox" /> 
-                                <div class="collapse-title text-[11px] font-bold text-primary flex items-center gap-1.5 py-2 min-h-0">
-                                    <i class="fa-solid fa-book-bookmark text-primary"></i>
+                                <div class="collapse-title text-[11px] font-bold text-purple-700 flex items-center gap-1.5 py-2 min-h-0">
+                                    <i class="fa-solid fa-book-bookmark text-purple-600"></i>
                                     <span>📚 Ngữ cảnh trích xuất từ tài liệu</span>
                                 </div>
-                                <div class="collapse-content text-[11px] text-base-content/70"> 
-                                    <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] overflow-x-auto whitespace-pre-wrap" th:text="${msg.ragContext}">Trích đoạn</pre>
+                                <div class="collapse-content text-[11px] text-slate-700"> 
+                                    <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] overflow-x-auto whitespace-pre-wrap leading-relaxed" th:text="${msg.ragContext}">Trích đoạn</pre>
                                 </div>
                             </div>
                         </div>
@@ -227,30 +232,30 @@
                     <!-- Live Typing Indicator -->
                     <div id="typingIndicator" class="chat chat-start hidden">
                         <div class="chat-image avatar">
-                            <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow animate-pulse">
+                            <div class="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center text-sm shadow animate-pulse">
                                 <i class="fa-solid fa-robot"></i>
                             </div>
                         </div>
-                        <div class="chat-bubble bg-base-100/90 border border-base-content/10 py-3 px-4">
-                            <span class="loading loading-dots loading-sm text-primary"></span>
-                            <span class="text-xs text-base-content/60 ml-2">Đang tra cứu giáo trình và soạn câu trả lời...</span>
+                        <div class="chat-bubble bg-slate-50 border border-slate-200/80 text-slate-700 py-3 px-4 rounded-2xl shadow-sm">
+                            <span class="loading loading-dots loading-sm text-purple-600"></span>
+                            <span class="text-xs text-slate-500 ml-2">Đang tra cứu giáo trình và soạn câu trả lời...</span>
                         </div>
                     </div>
 
                 </div>
 
                 <!-- Input Chat Bar -->
-                <form id="chatForm" class="pt-4 border-t border-base-content/10 flex items-center gap-2 flex-shrink-0"
+                <form id="chatForm" class="pt-4 border-t border-slate-100 flex items-center gap-2 flex-shrink-0"
                       th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post">
                     
                     <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
 
                     <input type="text" id="chatQuestionInput" name="question" 
                            placeholder="Đặt câu hỏi về môn học (VD: Giải thích Entity lifecycle trong JPA)..." 
-                           class="input input-bordered input-md flex-grow rounded-2xl bg-base-100/60 focus:bg-base-100 transition-all text-xs md:text-sm"
+                           class="input input-md flex-grow rounded-2xl bg-slate-50 border-slate-200 focus:bg-white focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all text-xs md:text-sm text-slate-800 placeholder:text-slate-400"
                            required autocomplete="off" />
 
-                    <button type="submit" id="sendBtn" class="btn btn-primary btn-md rounded-2xl shadow-lg shadow-primary/20 gap-2">
+                    <button type="submit" id="sendBtn" class="btn h-11 px-6 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-none text-white rounded-2xl font-bold shadow-md shadow-purple-500/25 gap-2">
                         <span>Gửi</span>
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
@@ -260,7 +265,6 @@
         </div>
 
     </div>
-
 
 <!-- Pure Vanilla JS Chat Handler with Async Fetch API -->
 <script th:inline="javascript">
@@ -392,14 +396,14 @@
                 quotaProgressBar.style.width = `${percent}%`;
 
                 if (remaining <= 5) {
-                    quotaProgressBar.className = 'h-full bg-error transition-all duration-500';
-                    if (quotaText) quotaText.className = 'text-error font-extrabold';
+                    quotaProgressBar.className = 'h-full bg-rose-500 transition-all duration-500 rounded-full';
+                    if (quotaText) quotaText.className = 'text-rose-600 font-black';
                 } else if (remaining <= 20) {
-                    quotaProgressBar.className = 'h-full bg-warning transition-all duration-500';
-                    if (quotaText) quotaText.className = 'text-warning font-extrabold';
+                    quotaProgressBar.className = 'h-full bg-amber-500 transition-all duration-500 rounded-full';
+                    if (quotaText) quotaText.className = 'text-amber-600 font-black';
                 } else {
-                    quotaProgressBar.className = 'h-full bg-gradient-to-r from-primary to-accent transition-all duration-500';
-                    if (quotaText) quotaText.className = 'text-primary font-extrabold';
+                    quotaProgressBar.className = 'h-full bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-500 rounded-full';
+                    if (quotaText) quotaText.className = 'text-purple-600 font-black';
                 }
             }
 
@@ -420,14 +424,14 @@
             messageDiv.className = 'chat chat-end animate-fade-in';
             messageDiv.innerHTML = `
                 <div class="chat-image avatar">
-                    <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center text-sm shadow">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 text-white flex items-center justify-center text-sm shadow">
                         <i class="fa-solid fa-user-graduate"></i>
                     </div>
                 </div>
-                <div class="chat-header text-xs text-base-content/60 mb-1">
-                    Bạn <time class="text-[10px] opacity-50 ml-1">${timeStr}</time>
+                <div class="chat-header text-xs text-slate-500 mb-1">
+                    <span class="font-bold">Bạn</span> <time class="text-[10px] text-slate-400 ml-1 font-mono">${timeStr}</time>
                 </div>
-                <div class="chat-bubble chat-bubble-primary text-white text-xs md:text-sm leading-relaxed max-w-[85%] whitespace-pre-wrap">${escapeHtml(text)}</div>
+                <div class="chat-bubble bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white rounded-2xl shadow-sm text-xs md:text-sm leading-relaxed max-w-[85%] whitespace-pre-wrap">${escapeHtml(text)}</div>
             `;
             chatContainer.insertBefore(messageDiv, typingIndicator);
         }
@@ -444,14 +448,14 @@
                 ).join('\n\n--------------------\n\n');
 
                 citationsHtml = `
-                    <div class="collapse collapse-arrow bg-base-200/50 rounded-xl border border-base-content/10 mt-2 text-xs">
+                    <div class="collapse collapse-arrow bg-slate-100/90 rounded-xl border border-slate-200 mt-2 text-xs">
                         <input type="checkbox" />
-                        <div class="collapse-title text-[11px] font-bold text-primary flex items-center gap-1.5 py-2 min-h-0">
-                            <i class="fa-solid fa-book-bookmark text-primary"></i>
+                        <div class="collapse-title text-[11px] font-bold text-purple-700 flex items-center gap-1.5 py-2 min-h-0">
+                            <i class="fa-solid fa-book-bookmark text-purple-600"></i>
                             <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} đoạn Chunks)</span>
                         </div>
-                        <div class="collapse-content text-[11px] text-base-content/70">
-                            <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto">${snippetsHtml}</div>
+                        <div class="collapse-content text-[11px] text-slate-700">
+                            <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto leading-relaxed">${snippetsHtml}</div>
                         </div>
                     </div>
                 `;
@@ -459,14 +463,14 @@
 
             messageDiv.innerHTML = `
                 <div class="chat-image avatar">
-                    <div class="w-10 rounded-full bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center text-sm shadow">
+                    <div class="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center text-sm shadow">
                         <i class="fa-solid fa-robot"></i>
                     </div>
                 </div>
-                <div class="chat-header text-xs text-base-content/60 mb-1">
-                    Trợ Lý AI Giáo Trình <time class="text-[10px] opacity-50 ml-1">${timeStr}</time>
+                <div class="chat-header text-xs text-slate-500 mb-1">
+                    <span class="font-bold">Trợ Lý AI Giáo Trình</span> <time class="text-[10px] text-slate-400 ml-1 font-mono">${timeStr}</time>
                 </div>
-                <div class="chat-bubble bg-base-100/90 text-base-content backdrop-blur-md shadow-sm border border-base-content/10 text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3">
+                <div class="chat-bubble bg-slate-50 border border-slate-200/80 text-slate-800 rounded-2xl shadow-sm text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3">
                     <div class="markdown-body whitespace-pre-wrap">${formatSimpleMarkdown(answer)}</div>
                     ${citationsHtml}
                 </div>
@@ -487,9 +491,9 @@
             if (!text) return '';
             let html = escapeHtml(text);
             // Bold **text**
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>');
             // Inline code `code`
-            html = html.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-base-200 text-primary font-mono text-xs">$1</code>');
+            html = html.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-200 text-purple-700 font-mono text-xs">$1</code>');
             return html;
         }
     });
