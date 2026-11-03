@@ -8,7 +8,9 @@ import com.group2.assignment.core.entity.Chunk;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
 import com.group2.assignment.core.repository.CourseRepository;
+import com.group2.assignment.planner.dto.PlannerPageDto;
 import com.group2.assignment.planner.dto.StudyPlanRequestDto;
+import com.group2.assignment.planner.dto.TaskToggleResultDto;
 import com.group2.assignment.planner.entity.StudyPlan;
 import com.group2.assignment.planner.entity.StudyTask;
 import com.group2.assignment.planner.repository.StudyPlanRepository;
@@ -17,6 +19,9 @@ import com.group2.assignment.settings.service.SystemAiKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +30,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +39,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class StudyPlannerService {
+
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MIN_PAGE_SIZE = 5;
+    private static final int MAX_PAGE_SIZE = 20;
+    private static final int LEGACY_PAGE_SIZE = 15;
+    private static final List<String> ALLOWED_DAYS =
+            List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
+    private static final List<String> ALLOWED_GRADES = List.of("A", "B", "C");
 
     private final ChunkRepository chunkRepository;
     private final CourseRepository courseRepository;
@@ -48,6 +63,12 @@ public class StudyPlannerService {
 
     @Transactional
     public StudyPlan generateStudyPlan(StudyPlanRequestDto dto, User currentUser) {
+        validateRequest(dto);
+        String targetGrade = normalizeTargetGrade(dto.getTargetGrade());
+        dto.setTargetGrade(targetGrade);
+        dto.setHoursPerWeek(clampHoursPerWeek(dto.getHoursPerWeek()));
+        dto.setSelectedDays(normalizeSelectedDays(dto.getSelectedDays()));
+
         boolean squadTier = currentUser != null && "SQUAD".equalsIgnoreCase(currentUser.getSubscriptionTier());
         List<String> assignees = squadTier ? sanitizeAssignees(dto.getSquadMembers()) : List.of();
         if (squadTier && assignees.isEmpty() && currentUser.getUsername() != null) {
@@ -101,6 +122,7 @@ public class StudyPlannerService {
                 .hoursPerWeek(dto.getHoursPerWeek() != null ? dto.getHoursPerWeek() : 6)
                 .selectedDays(daysString)
                 .examDate(dto.getExamDate())
+                .targetGrade(dto.getTargetGrade())
                 .goal(dto.getGoal())
                 .status("ACTIVE")
                 .progressPercent(0)
@@ -164,6 +186,7 @@ public class StudyPlannerService {
                 + "Ngày rảnh: " + daysList + "\n"
                 + "Số giờ/tuần: " + dto.getHoursPerWeek() + "\n"
                 + "Ngày thi: " + examDateStr + "\n"
+                + "Mục tiêu điểm: " + (dto.getTargetGrade() != null ? dto.getTargetGrade() : "Không đặt cụ thể") + "\n"
                 + "Mục tiêu: " + dto.getGoal() + "\n\n"
                 + "Nội dung giáo trình:\n" + truncatedContext + "\n\n"
                 + "Yêu cầu: Chia nhỏ nội dung giáo trình thành các nhiệm vụ học tập hợp lý, mỗi nhiệm vụ khoảng 60-120 phút. Không bao gồm markdown backticks (```json), chỉ trả về chuỗi JSON thô.";
@@ -285,84 +308,174 @@ public class StudyPlannerService {
     }
 
     @Transactional
-    public StudyTask toggleTaskCompletion(Long taskId, User currentUser) {
+    public TaskToggleResultDto toggleTaskCompletion(Long taskId, User currentUser) {
         Optional<StudyTask> taskOpt = studyTaskRepository.findById(taskId);
-        if (taskOpt.isPresent()) {
-            StudyTask task = taskOpt.get();
-            if (!canAccess(task.getPlan(), currentUser)) {
-                return null;
-            }
-            task.setIsCompleted(!task.getIsCompleted());
-            if (task.getIsCompleted()) {
-                task.setCompletedAt(java.time.LocalDateTime.now());
-            } else {
-                task.setCompletedAt(null);
-            }
-            task = studyTaskRepository.save(task);
-
-            // Cập nhật progress của plan
-            updatePlanProgress(task.getPlan().getId());
-
-            return task;
+        if (taskOpt.isEmpty()) {
+            return null;
         }
-        return null;
+
+        StudyTask task = taskOpt.get();
+        if (!canAccess(task.getPlan(), currentUser)) {
+            return null;
+        }
+
+        task.setIsCompleted(!Boolean.TRUE.equals(task.getIsCompleted()));
+        task.setCompletedAt(Boolean.TRUE.equals(task.getIsCompleted()) ? LocalDateTime.now() : null);
+        task = studyTaskRepository.save(task);
+
+        StudyPlan plan = updatePlanProgress(task.getPlan().getId());
+
+        return TaskToggleResultDto.builder()
+                .taskId(task.getId())
+                .completed(Boolean.TRUE.equals(task.getIsCompleted()))
+                .progressPercent(plan != null && plan.getProgressPercent() != null
+                        ? plan.getProgressPercent() : 0)
+                .planStatus(plan != null ? plan.getStatus() : "ACTIVE")
+                .build();
     }
 
-    private void updatePlanProgress(Long planId) {
+    private StudyPlan updatePlanProgress(Long planId) {
         Optional<StudyPlan> planOpt = studyPlanRepository.findById(planId);
-        if (planOpt.isPresent()) {
-            StudyPlan plan = planOpt.get();
-            long totalTasks = studyTaskRepository.countByPlanId(planId);
-            long completedTasks = studyTaskRepository.countByPlanIdAndIsCompletedTrue(planId);
-
-            if (totalTasks > 0) {
-                int progress = (int) ((completedTasks * 100) / totalTasks);
-                plan.setProgressPercent(progress);
-
-                if (progress == 100) {
-                    plan.setStatus("COMPLETED");
-                }
-
-                studyPlanRepository.save(plan);
-            }
+        if (planOpt.isEmpty()) {
+            return null;
         }
+
+        StudyPlan plan = planOpt.get();
+        long totalTasks = studyTaskRepository.countByPlanId(planId);
+        long completedTasks = studyTaskRepository.countByPlanIdAndIsCompletedTrue(planId);
+
+        if (totalTasks > 0) {
+            int progress = (int) ((completedTasks * 100) / totalTasks);
+            plan.setProgressPercent(progress);
+
+            if (progress == 100) {
+                plan.setStatus("COMPLETED");
+            } else if ("COMPLETED".equals(plan.getStatus())) {
+                plan.setStatus("ACTIVE");
+            }
+
+            return studyPlanRepository.save(plan);
+        }
+
+        return plan;
     }
 
+    @Transactional(readOnly = true)
     public List<StudyPlan> getPlansByCourseId(Long courseId, User currentUser) {
+        return getPlansByCourseId(courseId, currentUser, 0, LEGACY_PAGE_SIZE).getItems();
+    }
+
+    @Transactional(readOnly = true)
+    public PlannerPageDto<StudyPlan> getPlansByCourseId(Long courseId, User currentUser, int page, int size) {
+        int safePage = Math.max(0, page);
+        Pageable pageable = PageRequest.of(safePage, clampPageSize(size));
+
+        Page<StudyPlan> result;
         if (currentUser == null) {
-            return List.of();
+            result = Page.<StudyPlan>empty(pageable);
+        } else if (currentUser.isAdmin()) {
+            result = studyPlanRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId, pageable);
+        } else if (currentUser.getId() != null) {
+            result = studyPlanRepository.findAllByCourseIdAndCourseUserId(
+                    courseId, currentUser.getId(), pageable);
+        } else {
+            result = Page.<StudyPlan>empty(pageable);
         }
-        if (currentUser.isAdmin()) {
-            return studyPlanRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId);
-        }
-        if (currentUser.getId() == null) {
-            return List.of();
-        }
-        return studyPlanRepository.findAllByCourseIdAndCourseUserIdOrderByCreatedAtDesc(
-                courseId, currentUser.getId());
+
+        result.getContent().forEach(this::initializeCourse);
+        return toPageDto(result);
     }
 
     @Transactional(readOnly = true)
     public List<StudyPlan> getRecentPlans(User currentUser) {
+        return getRecentPlans(currentUser, 0, LEGACY_PAGE_SIZE).getItems();
+    }
+
+    @Transactional(readOnly = true)
+    public PlannerPageDto<StudyPlan> getRecentPlans(User currentUser, int page, int size) {
+        int safePage = Math.max(0, page);
+        Pageable pageable = PageRequest.of(safePage, clampPageSize(size));
+
+        Page<StudyPlan> result;
         if (currentUser == null) {
-            return List.of();
-        }
-
-        List<StudyPlan> plans;
-        if (currentUser.isAdmin()) {
-            plans = studyPlanRepository.findAllByOrderByCreatedAtDesc();
+            result = Page.<StudyPlan>empty(pageable);
+        } else if (currentUser.isAdmin()) {
+            result = studyPlanRepository.findAllByOrderByCreatedAtDesc(pageable);
         } else if (currentUser.getId() != null) {
-            plans = studyPlanRepository.findAllByCourseUserIdOrderByCreatedAtDesc(currentUser.getId());
+            result = studyPlanRepository.findAllByCourseUserId(currentUser.getId(), pageable);
         } else {
-            return List.of();
+            result = Page.<StudyPlan>empty(pageable);
         }
 
-        plans.forEach(plan -> {
-            if (plan.getCourse() != null) {
-                plan.getCourse().getName();
-            }
-        });
-        return plans;
+        result.getContent().forEach(this::initializeCourse);
+        return toPageDto(result);
+    }
+
+    private void initializeCourse(StudyPlan plan) {
+        if (plan != null && plan.getCourse() != null) {
+            plan.getCourse().getName();
+            plan.getCourse().getCode();
+        }
+    }
+
+    private <T> PlannerPageDto<T> toPageDto(Page<T> page) {
+        return PlannerPageDto.<T>builder()
+                .items(page.getContent())
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalItems(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .hasPrev(page.hasPrevious())
+                .hasNext(page.hasNext())
+                .build();
+    }
+
+    private int clampPageSize(int size) {
+        if (size <= 0) {
+            return DEFAULT_PAGE_SIZE;
+        }
+        return Math.max(MIN_PAGE_SIZE, Math.min(MAX_PAGE_SIZE, size));
+    }
+
+    private void validateRequest(StudyPlanRequestDto dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("Dữ liệu kế hoạch không hợp lệ!");
+        }
+        if (dto.getExamDate() != null && dto.getExamDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Ngày thi không được nhỏ hơn ngày hiện tại!");
+        }
+        if (dto.getGoal() != null && dto.getGoal().length() > 500) {
+            throw new IllegalArgumentException("Mục tiêu học tập tối đa 500 ký tự!");
+        }
+        normalizeTargetGrade(dto.getTargetGrade());
+    }
+
+    private String normalizeTargetGrade(String rawGrade) {
+        if (rawGrade == null || rawGrade.isBlank()) {
+            return null;
+        }
+        String grade = rawGrade.trim().toUpperCase(Locale.ROOT);
+        if (!ALLOWED_GRADES.contains(grade)) {
+            throw new IllegalArgumentException("Mục tiêu điểm chỉ nhận A, B hoặc C!");
+        }
+        return grade;
+    }
+
+    private int clampHoursPerWeek(Integer hoursPerWeek) {
+        int hours = hoursPerWeek != null ? hoursPerWeek : 6;
+        return Math.max(1, Math.min(20, hours));
+    }
+
+    private List<String> normalizeSelectedDays(List<String> rawDays) {
+        if (rawDays == null) {
+            return List.of();
+        }
+        return rawDays.stream()
+                .filter(Objects::nonNull)
+                .map(day -> day.trim().toUpperCase(Locale.ROOT))
+                .filter(ALLOWED_DAYS::contains)
+                .distinct()
+                .toList();
     }
 
     private List<String> candidateModels() {

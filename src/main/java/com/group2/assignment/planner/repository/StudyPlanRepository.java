@@ -1,6 +1,8 @@
 package com.group2.assignment.planner.repository;
 
 import com.group2.assignment.planner.entity.StudyPlan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +27,16 @@ public interface StudyPlanRepository extends JpaRepository<StudyPlan, Long> {
     Optional<StudyPlan> findByIdAndCourseUserId(@Param("id") Long id, @Param("userId") Long userId);
     Optional<StudyPlan> findFirstByCourseIdOrderByCreatedAtDesc(Long courseId);
     void deleteAllByCourseId(Long courseId);
+
+    Page<StudyPlan> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<StudyPlan> findAllByCourseIdOrderByCreatedAtDesc(Long courseId, Pageable pageable);
+
+    @Query("SELECT p FROM StudyPlan p WHERE p.course.user.id = :userId ORDER BY p.createdAt DESC")
+    Page<StudyPlan> findAllByCourseUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("SELECT p FROM StudyPlan p WHERE p.course.id = :courseId AND p.course.user.id = :userId ORDER BY p.createdAt DESC")
+    Page<StudyPlan> findAllByCourseIdAndCourseUserId(@Param("courseId") Long courseId,
+                                                     @Param("userId") Long userId,
+                                                     Pageable pageable);
 }

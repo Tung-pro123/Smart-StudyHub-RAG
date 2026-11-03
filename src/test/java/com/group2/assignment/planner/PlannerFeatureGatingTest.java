@@ -5,7 +5,9 @@ import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.auth.repository.UserRepository;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.CourseRepository;
+import com.group2.assignment.planner.dto.PlannerPageDto;
 import com.group2.assignment.planner.dto.StudyPlanRequestDto;
+import com.group2.assignment.planner.dto.TaskToggleResultDto;
 import com.group2.assignment.planner.entity.StudyPlan;
 import com.group2.assignment.planner.entity.StudyTask;
 import com.group2.assignment.planner.service.StudyPlannerService;
@@ -28,7 +30,9 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,6 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -66,8 +71,17 @@ class PlannerFeatureGatingTest {
                         .code("HSF302")
                         .name("JPA and Spring Framework")
                         .build()));
-        when(studyPlannerService.getRecentPlans(any())).thenReturn(List.of());
-        when(studyPlannerService.getPlansByCourseId(anyLong(), any())).thenReturn(List.of());
+        PlannerPageDto<StudyPlan> emptyPage = PlannerPageDto.<StudyPlan>builder()
+                .items(List.of())
+                .page(0)
+                .size(10)
+                .totalItems(0)
+                .totalPages(0)
+                .hasPrev(false)
+                .hasNext(false)
+                .build();
+        when(studyPlannerService.getRecentPlans(any(), anyInt(), anyInt())).thenReturn(emptyPage);
+        when(studyPlannerService.getPlansByCourseId(anyLong(), any(), anyInt(), anyInt())).thenReturn(emptyPage);
     }
 
     private MockHttpSession sessionFor(String username, String role, String tier) {
@@ -193,6 +207,92 @@ class PlannerFeatureGatingTest {
     }
 
     @Test
+    @DisplayName("Trang Planner trả thông tin phân trang")
+    void plannerPageExposesPagination() throws Exception {
+        PlannerPageDto<StudyPlan> page = PlannerPageDto.<StudyPlan>builder()
+                .items(List.of())
+                .page(1)
+                .size(10)
+                .totalItems(25)
+                .totalPages(3)
+                .hasPrev(true)
+                .hasNext(true)
+                .build();
+        when(studyPlannerService.getRecentPlans(any(), eq(1), eq(10))).thenReturn(page);
+
+        mvc.perform(get("/planner")
+                        .param("page", "1")
+                        .param("size", "10")
+                        .session(sessionFor("pro_page", "ROLE_STUDENT", "PRO")))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("currentPage", 1))
+                .andExpect(model().attribute("totalPages", 3))
+                .andExpect(model().attribute("hasPrev", true))
+                .andExpect(model().attribute("hasNext", true));
+    }
+
+    @Test
+    @DisplayName("Danh sách kế hoạch render card tóm tắt và phân trang")
+    void plannerRendersPlanCardsAndPagination() throws Exception {
+        StudyPlan plan = StudyPlan.builder()
+                .id(1L)
+                .title("Kế hoạch ôn thi HSF302")
+                .status("ACTIVE")
+                .progressPercent(40)
+                .hoursPerWeek(6)
+                .targetGrade("B")
+                .createdAt(java.time.LocalDateTime.now())
+                .course(Course.builder().code("HSF302").name("JPA and Spring Framework").build())
+                .build();
+        PlannerPageDto<StudyPlan> page = PlannerPageDto.<StudyPlan>builder()
+                .items(List.of(plan))
+                .page(0)
+                .size(10)
+                .totalItems(12)
+                .totalPages(2)
+                .hasPrev(false)
+                .hasNext(true)
+                .build();
+        when(studyPlannerService.getRecentPlans(any(), anyInt(), anyInt())).thenReturn(page);
+
+        mvc.perform(get("/planner").session(sessionFor("pro_cards", "ROLE_STUDENT", "PRO")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Kế hoạch ôn thi HSF302")))
+                .andExpect(content().string(containsString("40%")))
+                .andExpect(content().string(containsString("page=1")));
+    }
+
+    @Test
+    @DisplayName("Toggle nhiệm vụ trả JSON tiến độ realtime")
+    void toggleTaskReturnsProgressJson() throws Exception {
+        when(studyPlannerService.toggleTaskCompletion(anyLong(), any()))
+                .thenReturn(TaskToggleResultDto.builder()
+                        .taskId(5L)
+                        .completed(true)
+                        .progressPercent(50)
+                        .planStatus("ACTIVE")
+                        .build());
+
+        mvc.perform(post("/planner/tasks/5/toggle")
+                        .session(sessionFor("pro_toggle", "ROLE_STUDENT", "PRO")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.taskId").value(5))
+                .andExpect(jsonPath("$.completed").value(true))
+                .andExpect(jsonPath("$.progressPercent").value(50))
+                .andExpect(jsonPath("$.planStatus").value("ACTIVE"));
+    }
+
+    @Test
+    @DisplayName("Toggle nhiệm vụ không thuộc quyền trả 403")
+    void toggleTaskForbiddenWhenNotOwner() throws Exception {
+        when(studyPlannerService.toggleTaskCompletion(anyLong(), any())).thenReturn(null);
+
+        mvc.perform(post("/planner/tasks/99/toggle")
+                        .session(sessionFor("pro_toggle_forbidden", "ROLE_STUDENT", "PRO")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     @DisplayName("Trang chi tiết hiển thị người phụ trách nhiệm vụ")
     void viewShowsAssignee() throws Exception {
         StudyPlan plan = StudyPlan.builder()
@@ -200,6 +300,8 @@ class PlannerFeatureGatingTest {
                 .title("Kế hoạch nhóm")
                 .status("ACTIVE")
                 .progressPercent(0)
+                .targetGrade("A")
+                .goal("Mục tiêu điểm A")
                 .build();
         StudyTask task = StudyTask.builder()
                 .id(1L)

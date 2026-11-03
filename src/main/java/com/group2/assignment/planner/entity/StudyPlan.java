@@ -41,6 +41,9 @@ public class StudyPlan {
 
     private LocalDate examDate; // Ngày thi cuối kỳ
 
+    @Column(length = 2)
+    private String targetGrade; // Mục tiêu điểm: A, B, C
+
     @Column(length = 500)
     private String goal; // Mục tiêu
 
