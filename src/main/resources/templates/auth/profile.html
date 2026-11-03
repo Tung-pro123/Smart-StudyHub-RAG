@@ -7,10 +7,10 @@
 <body>
 <section class="max-w-6xl mx-auto space-y-8 relative">
 
-    <!-- Ambient Background Glow Accents (Khắc phục background trắng tinh tươm) -->
-    <div class="absolute -top-16 -left-16 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-1/3 -right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-20 left-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- Ambient Background Glow Accents (Đồng bộ Landing Page & Detail Hub) -->
+    <div class="absolute -top-16 -left-16 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/3 -right-20 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-20 left-1/4 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
     <!-- Flash Messages (Alerts) -->
     <div th:if="${successMessage}" class="alert alert-success shadow-xl rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600 relative z-20">
@@ -29,13 +29,22 @@
         <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
     </div>
 
-    <!-- 1. HERO HEADER PROFILE CARD (Dark Glassmorphism SaaS) -->
+    <!-- Breadcrumbs Navigation -->
+    <div class="text-xs breadcrumbs text-slate-400">
+        <ul>
+            <li><a th:href="@{/}" class="hover:text-purple-600"><i class="fa-solid fa-house mr-1 text-purple-500"></i> Trang Chủ</a></li>
+            <li><a th:href="@{/courses}" class="hover:text-purple-600"><i class="fa-solid fa-book mr-1 text-purple-500"></i> Không Gian Học Tập</a></li>
+            <li class="font-bold text-purple-600">Hồ Sơ Cá Nhân</li>
+        </ul>
+    </div>
+
+    <!-- 1. HERO HEADER PROFILE CARD (Dark Obsidian Glassmorphism - Đồng bộ Landing Page) -->
     <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-8 md:p-10 shadow-2xl border border-white/15">
         <div class="relative z-10 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8">
             <!-- Left: Avatar + Identity -->
             <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-                <div class="relative group">
-                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl ring-4 ring-indigo-500/40 ring-offset-4 ring-offset-slate-900 overflow-hidden shadow-2xl shadow-indigo-500/30 bg-slate-800 transition-transform duration-300 group-hover:scale-105">
+                <div class="relative group flex-shrink-0">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl ring-4 ring-purple-500/40 ring-offset-4 ring-offset-slate-900 overflow-hidden shadow-2xl shadow-purple-500/30 bg-slate-800 transition-transform duration-300 group-hover:scale-105">
                         <img id="current-avatar-img" th:src="${user.avatar}" alt="Avatar Sinh Viên" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
                     </div>
                     <div class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center text-white text-[11px]" title="Đang hoạt động">
@@ -45,20 +54,20 @@
 
                 <div class="space-y-1.5">
                     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight" th:text="${user.fullName}">Nguyễn Văn Sinh Viên</h1>
+                        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight" th:text="${user.fullName}">Nguyễn Văn Sinh Viên</h1>
                         <!-- Role Badge -->
                         <span th:if="${user.role == 'ROLE_ADMIN'}" class="badge badge-warning gap-1 font-bold text-xs py-2.5 px-3 bg-amber-500 text-slate-950 border-none shadow-sm">
                             <i class="fa-solid fa-shield-halved"></i> Quản Trị Viên
                         </span>
-                        <span th:unless="${user.role == 'ROLE_ADMIN'}" class="badge badge-primary gap-1 font-bold text-xs py-2.5 px-3 bg-indigo-600 text-white border-none shadow-sm">
-                            <i class="fa-solid fa-graduation-cap"></i> Sinh Viên
+                        <span th:unless="${user.role == 'ROLE_ADMIN'}" class="badge gap-1 font-bold text-xs py-2.5 px-3 bg-white/10 text-slate-200 border border-white/20 shadow-sm">
+                            <i class="fa-solid fa-graduation-cap text-purple-400"></i> Sinh Viên
                         </span>
                     </div>
 
-                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-gray-300">
-                        <span class="font-mono bg-white/10 px-2.5 py-1 rounded-lg text-indigo-200 border border-white/10" th:text="'@' + ${user.username}">@student</span>
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-slate-300">
+                        <span class="font-mono bg-white/10 px-2.5 py-1 rounded-lg text-purple-200 border border-white/10" th:text="'@' + ${user.username}">@student</span>
                         <span class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-envelope text-indigo-400"></i>
+                            <i class="fa-solid fa-envelope text-purple-400"></i>
                             <span th:text="${user.email}">student@fpt.edu.vn</span>
                         </span>
                     </div>
@@ -66,19 +75,19 @@
                     <!-- Subscription Tier Badge Row -->
                     <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
                         <!-- Squad Tier Badge -->
-                        <span th:if="${user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-none shadow-md shadow-blue-500/20">
-                            <i class="fa-solid fa-users text-cyan-200"></i> GÓI SQUAD (5 BẠN)
+                        <span th:if="${user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white border-none shadow-md shadow-purple-500/25">
+                            <i class="fa-solid fa-users text-purple-200"></i> GÓI SQUAD (5 BẠN)
                         </span>
                         <!-- Pro Tier Badge -->
-                        <span th:if="${user.isPro() and !user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none shadow-md shadow-purple-500/20">
+                        <span th:if="${user.isPro() and !user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none shadow-md shadow-purple-500/25">
                             <i class="fa-solid fa-bolt text-amber-300"></i> GÓI PRO CÁ NHÂN
                         </span>
                         <!-- Free Tier Badge -->
-                        <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1.5 font-bold text-xs py-3 px-3.5 border border-white/20 text-gray-300 bg-white/5">
+                        <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1.5 font-bold text-xs py-3 px-3.5 border border-white/20 text-slate-300 bg-white/5">
                             <i class="fa-solid fa-leaf text-emerald-400"></i> GÓI TỰ HỌC FREE
                         </span>
 
-                        <span class="badge badge-outline border-white/20 text-indigo-200 text-xs py-3 px-3">
+                        <span class="badge badge-outline border-white/20 text-purple-200 text-xs py-3 px-3">
                             <i class="fa-solid fa-lock text-[10px] mr-1 text-emerald-400"></i> JWT Security Active
                         </span>
                     </div>
@@ -94,11 +103,11 @@
                 <!-- 3 Quick Stats Counter -->
                 <div class="grid grid-cols-3 gap-3 w-full lg:w-auto text-center">
                     <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 min-w-[90px]">
-                        <p class="text-[10px] uppercase font-bold text-indigo-300">Môn Học</p>
+                        <p class="text-[10px] uppercase font-bold text-purple-300">Môn Học</p>
                         <p class="text-xl font-black text-white mt-0.5" th:text="${myCourseCount != null ? myCourseCount : 0}">2</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 min-w-[90px]">
-                        <p class="text-[10px] uppercase font-bold text-purple-300">RAG Hôm Nay</p>
+                        <p class="text-[10px] uppercase font-bold text-pink-300">RAG Hôm Nay</p>
                         <p class="text-xl font-black text-white mt-0.5" th:text="${user.dailyRagCount != null ? user.dailyRagCount : 0}">5</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 min-w-[90px]">
@@ -110,43 +119,43 @@
         </div>
 
         <!-- Decorative Ambient Light -->
-        <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
     </div>
 
-    <!-- 2. SUBSCRIPTION TIER & RAG QUOTA DASHBOARD CARD (Không còn bị vỡ) -->
-    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-100/30 bg-gradient-to-br from-indigo-900/10 via-purple-900/10 to-slate-900/10 backdrop-blur-xl relative overflow-hidden">
+    <!-- 2. SUBSCRIPTION TIER & RAG QUOTA DASHBOARD (White-Card Palette) -->
+    <div class="rounded-2xl p-6 sm:p-8 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             
             <!-- Col 1: Tier Description & Privileges (5 cols) -->
             <div class="lg:col-span-5 space-y-3 text-center lg:text-left">
                 <div class="flex items-center justify-center lg:justify-start gap-2">
-                    <span class="text-xs font-bold uppercase tracking-wider text-base-content/60">Trạng Thái Gói Cước:</span>
-                    <span th:if="${user.isSquad()}" class="badge badge-info gap-1 font-black text-xs px-3 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 text-white border-none">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Trạng Thái Gói Cước:</span>
+                    <span th:if="${user.isSquad()}" class="badge gap-1 font-black text-xs px-3 py-2 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white border-none shadow-sm">
                         <i class="fa-solid fa-users"></i> SQUAD ACTIVE
                     </span>
-                    <span th:if="${user.isPro() and !user.isSquad()}" class="badge badge-secondary gap-1 font-black text-xs px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none">
-                        <i class="fa-solid fa-bolt"></i> PRO ACTIVE
+                    <span th:if="${user.isPro() and !user.isSquad()}" class="badge gap-1 font-black text-xs px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none shadow-sm">
+                        <i class="fa-solid fa-bolt text-amber-300"></i> PRO ACTIVE
                     </span>
-                    <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1 font-bold text-xs px-3 py-2 border border-base-300">
+                    <span th:unless="${user.isPro()}" class="badge badge-ghost gap-1 font-bold text-xs px-3 py-2 border border-slate-200 text-slate-700 bg-slate-100">
                         <i class="fa-solid fa-leaf text-emerald-500"></i> FREE ACTIVE
                     </span>
                 </div>
 
                 <!-- Description for SQUAD -->
-                <div th:if="${user.isSquad()}" class="space-y-1.5 text-xs text-base-content/80">
-                    <p class="font-bold text-indigo-600 flex items-center gap-1.5 justify-center lg:justify-start">
+                <div th:if="${user.isSquad()}" class="space-y-1.5 text-xs text-slate-600">
+                    <p class="font-bold text-purple-700 flex items-center gap-1.5 justify-center lg:justify-start">
                         <i class="fa-solid fa-crown text-amber-500"></i> Đặc quyền Gói Nhóm Học Tập (Study Squad):
                     </p>
                     <ul class="space-y-1 text-left list-none pl-0">
                         <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Không giới hạn số môn học tự tạo cho cả 5 thành viên</li>
                         <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Không giới hạn tải slide bài giảng PDF &amp; RAG AI vô hạn</li>
-                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Phân công nhiệm vụ đồ án nhóm (Team Tasks) &amp; Squad Leaderboard</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Phân công nhiệm vụ đồ án nhóm &amp; Squad Leaderboard</li>
                     </ul>
                 </div>
 
-                <!-- Description for PRO (Cá Nhân) - Khắc phục tình trạng rỗng/vỡ khi là Pro -->
-                <div th:if="${user.isPro() and !user.isSquad()}" class="space-y-1.5 text-xs text-base-content/80">
-                    <p class="font-bold text-purple-600 flex items-center gap-1.5 justify-center lg:justify-start">
+                <!-- Description for PRO (Cá Nhân) -->
+                <div th:if="${user.isPro() and !user.isSquad()}" class="space-y-1.5 text-xs text-slate-600">
+                    <p class="font-bold text-purple-700 flex items-center gap-1.5 justify-center lg:justify-start">
                         <i class="fa-solid fa-star text-amber-400"></i> Đặc quyền Gói PRO Sinh Viên Cao Cấp:
                     </p>
                     <ul class="space-y-1 text-left list-none pl-0">
@@ -158,54 +167,54 @@
                 </div>
 
                 <!-- Description for FREE -->
-                <div th:unless="${user.isPro()}" class="space-y-1.5 text-xs text-base-content/80">
+                <div th:unless="${user.isPro()}" class="space-y-1.5 text-xs text-slate-600">
                     <p class="font-bold text-amber-600 flex items-center gap-1.5 justify-center lg:justify-start">
                         <i class="fa-solid fa-circle-info text-amber-500"></i> Hạn ngạch Gói Sinh Viên Tự Học:
                     </p>
                     <ul class="space-y-1 text-left list-none pl-0">
-                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-base-content/60 text-[11px]"></i> Tự tạo tối đa 3 môn học cá nhân</li>
-                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-base-content/60 text-[11px]"></i> Tối đa 3 tài liệu PDF cho mỗi môn học</li>
-                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-base-content/60 text-[11px]"></i> Hạn ngạch 50 câu hỏi RAG AI giáo trình mỗi ngày</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-slate-400 text-[11px]"></i> Tự tạo tối đa 3 môn học cá nhân</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-slate-400 text-[11px]"></i> Tối đa 3 tài liệu PDF cho mỗi môn học</li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-slate-400 text-[11px]"></i> Hạn ngạch 50 câu hỏi RAG AI giáo trình mỗi ngày</li>
                     </ul>
                 </div>
             </div>
 
             <!-- Col 2: Daily RAG Quota Meter (4 cols) -->
-            <div class="lg:col-span-4 bg-base-100/80 p-5 rounded-3xl border border-indigo-100/40 shadow-sm backdrop-blur-md space-y-3">
+            <div class="lg:col-span-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200/80 space-y-3">
                 <div class="flex justify-between items-center text-xs">
-                    <span class="font-bold text-base-content flex items-center gap-1.5">
-                        <i class="fa-solid fa-comments text-indigo-500"></i> Hạn ngạch RAG hôm nay:
+                    <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-comments text-purple-600"></i> Hạn ngạch RAG hôm nay:
                     </span>
                     <!-- Pro / Squad Badge Unlimited -->
-                    <span th:if="${user.isPro()}" class="badge badge-secondary badge-sm font-black text-[10px] bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none">
+                    <span th:if="${user.isPro()}" class="badge font-black text-[10px] bg-gradient-to-r from-purple-600 to-pink-600 text-white border-none py-1 px-2.5">
                         VÔ HẠN (∞)
                     </span>
                     <!-- Free Count -->
-                    <span th:unless="${user.isPro()}" class="font-mono font-bold text-xs text-base-content" th:text="${(user.dailyRagCount != null ? user.dailyRagCount : 0) + ' / 50 câu'}">
+                    <span th:unless="${user.isPro()}" class="font-mono font-bold text-xs text-slate-800" th:text="${(user.dailyRagCount != null ? user.dailyRagCount : 0) + ' / 50 câu'}">
                         0 / 50 câu
                     </span>
                 </div>
 
                 <!-- Progress Bar for Free -->
                 <div th:unless="${user.isPro()}" class="space-y-1.5">
-                    <div class="w-full bg-base-200 rounded-full h-3 overflow-hidden p-0.5 border border-base-300/40">
+                    <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden p-0.5 border border-slate-300/40">
                         <div class="h-2 rounded-full transition-all duration-500"
                              th:style="'width: ' + (${user.dailyRagCount != null ? (user.dailyRagCount * 100 / 50) : 0} > 100 ? 100 : ${user.dailyRagCount != null ? (user.dailyRagCount * 100 / 50) : 0}) + '%;'"
-                             th:classappend="${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 45} ? 'bg-rose-500' : (${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 30} ? 'bg-amber-500' : 'bg-gradient-to-r from-indigo-500 to-purple-600')">
+                             th:classappend="${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 45} ? 'bg-rose-500' : (${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 30} ? 'bg-amber-500' : 'bg-gradient-to-r from-purple-600 to-pink-600')">
                         </div>
                     </div>
-                    <div class="flex justify-between text-[10px] text-base-content/60">
-                        <span>Đã dùng: <strong class="text-base-content" th:text="${user.dailyRagCount != null ? user.dailyRagCount : 0}">0</strong> câu</span>
+                    <div class="flex justify-between text-[10px] text-slate-500">
+                        <span>Đã dùng: <strong class="text-slate-800" th:text="${user.dailyRagCount != null ? user.dailyRagCount : 0}">0</strong> câu</span>
                         <span>Reset lúc 00:00 hàng ngày</span>
                     </div>
                 </div>
 
                 <!-- Progress Bar for Pro / Squad -->
                 <div th:if="${user.isPro()}" class="space-y-1.5">
-                    <div class="w-full bg-purple-500/10 rounded-full h-3 overflow-hidden p-0.5 border border-purple-500/20">
-                        <div class="h-2 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 w-full animate-pulse"></div>
+                    <div class="w-full bg-purple-50 rounded-full h-3 overflow-hidden p-0.5 border border-purple-200">
+                        <div class="h-2 rounded-full bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 w-full animate-pulse"></div>
                     </div>
-                    <div class="flex justify-between text-[10px] text-base-content/70">
+                    <div class="flex justify-between text-[10px] text-slate-600">
                         <span>Đã hỏi: <strong class="text-purple-600 font-bold" th:text="${user.dailyRagCount != null ? user.dailyRagCount : 0}">0</strong> câu hôm nay</span>
                         <span class="text-emerald-600 font-semibold flex items-center gap-1">
                             <i class="fa-solid fa-infinity"></i> Không giới hạn
@@ -219,13 +228,13 @@
                 <!-- If Free: Show Both Upgrades -->
                 <th:block th:if="${!user.isPro()}">
                     <form th:action="@{/auth/upgrade-pro}" method="post">
-                        <button type="submit" class="btn btn-sm btn-primary w-full rounded-xl text-xs font-black bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none shadow-md shadow-purple-500/25 gap-1.5 transition-transform hover:scale-[1.02]">
+                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-none shadow-lg shadow-purple-500/25 gap-1.5 transition-transform hover:scale-[1.02]">
                             <i class="fa-solid fa-bolt text-amber-300"></i> Nâng Cấp PRO ($2)
                         </button>
                     </form>
                     <form th:action="@{/auth/upgrade-squad}" method="post">
-                        <button type="submit" class="btn btn-sm btn-info w-full rounded-xl text-xs font-black bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-none shadow-md shadow-blue-500/25 gap-1.5 transition-transform hover:scale-[1.02]">
-                            <i class="fa-solid fa-users text-cyan-200"></i> Kích Hoạt SQUAD ($5)
+                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white border-none shadow-md gap-1.5 transition-transform hover:scale-[1.02]">
+                            <i class="fa-solid fa-users text-purple-300"></i> Kích Hoạt SQUAD ($5)
                         </button>
                     </form>
                 </th:block>
@@ -233,20 +242,20 @@
                 <!-- If Pro (Cá Nhân): Can Upgrade to Squad -->
                 <th:block th:if="${user.isPro() and !user.isSquad() and !user.isAdmin()}">
                     <form th:action="@{/auth/upgrade-squad}" method="post">
-                        <button type="submit" class="btn btn-sm btn-info w-full rounded-xl text-xs font-black bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white border-none shadow-md shadow-blue-500/25 gap-1.5 transition-transform hover:scale-[1.02]">
-                            <i class="fa-solid fa-users text-cyan-200"></i> Nâng Cấp Lên SQUAD ($5)
+                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-none shadow-lg shadow-purple-500/25 gap-1.5 transition-transform hover:scale-[1.02]">
+                            <i class="fa-solid fa-users text-amber-200"></i> Nâng Cấp Lên SQUAD ($5)
                         </button>
                     </form>
-                    <p class="text-[10px] text-base-content/60 text-center">Nâng cấp để mời thêm 4 bạn cùng dùng PRO</p>
+                    <p class="text-[10px] text-slate-400 text-center">Mời thêm 4 bạn cùng dùng đặc quyền PRO</p>
                 </th:block>
 
                 <!-- If Squad: Badge Active -->
                 <th:block th:if="${user.isSquad()}">
-                    <div class="bg-cyan-500/10 border border-cyan-500/30 p-3 rounded-2xl text-center">
-                        <p class="text-xs font-extrabold text-cyan-700 flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-shield-heart text-cyan-600"></i> Gói Tối Đa
+                    <div class="bg-purple-50 border border-purple-200 p-3 rounded-2xl text-center">
+                        <p class="text-xs font-extrabold text-purple-700 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-shield-heart text-purple-600"></i> Gói Cước Tối Đa
                         </p>
-                        <p class="text-[10px] text-base-content/60 mt-0.5">Bạn đang tận hưởng trọn vẹn mọi đặc quyền</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Bạn đang tận hưởng trọn vẹn mọi đặc quyền</p>
                     </div>
                 </th:block>
             </div>
@@ -254,45 +263,44 @@
         </div>
     </div>
 
-    <!-- 3. SQUAD MANAGEMENT CARD (CHỈ HIỂN THỊ KHI USER LÀ SQUAD HOẶC ADMIN CÓ NHÓM) -->
-    <!-- Đã khắc phục triệt để: Tài khoản Pro cá nhân tuyệt đối KHÔNG hiển thị card này -->
+    <!-- 3. SQUAD MANAGEMENT CARD (White-Card Palette - Tự động ẩn với PRO cá nhân) -->
     <div th:if="${user.isSquad() or (user.isAdmin() and squadMembers != null and !squadMembers.isEmpty())}"
-         class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-900/10 via-blue-900/10 to-slate-900/10 backdrop-blur-xl relative overflow-hidden space-y-6">
+         class="rounded-2xl p-6 sm:p-8 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-6">
         
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-base-200/80 pb-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/25 text-xl">
+                <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shadow-sm text-xl flex-shrink-0">
                     <i class="fa-solid fa-users-rectangle"></i>
                 </div>
                 <div>
-                    <h2 class="font-extrabold text-lg text-base-content flex items-center gap-2">
+                    <h2 class="font-black text-lg text-slate-900 flex items-center gap-2">
                         Quản Lý Nhóm Học Tập (Study Squad)
                     </h2>
-                    <p class="text-xs text-base-content/60">Chia sẻ toàn bộ đặc quyền PRO cho tối đa 5 thành viên trong nhóm</p>
+                    <p class="text-xs text-slate-500">Chia sẻ toàn bộ đặc quyền PRO cho tối đa 5 thành viên trong nhóm</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
-                <span class="badge badge-info font-black text-xs gap-1.5 py-3.5 px-4 shadow-sm text-white bg-gradient-to-r from-cyan-600 to-blue-600 border-none">
-                    <i class="fa-solid fa-user-group text-cyan-200"></i>
+                <span class="badge font-black text-xs gap-1.5 py-3 px-3.5 shadow-sm text-white bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 border-none">
+                    <i class="fa-solid fa-user-group text-purple-200"></i>
                     <span th:text="${squadMembers != null ? squadMembers.size() : 1}">1</span> / <span th:text="${maxSquadMembers}">5</span> Thành Viên
                 </span>
             </div>
         </div>
 
         <!-- Leader View: Form Mời Thành Viên Mới -->
-        <div th:if="${isSquadLeader}" class="bg-base-100/70 p-5 rounded-2xl border border-base-200/80 space-y-3">
-            <label class="label-text font-bold text-xs text-base-content flex items-center gap-1.5">
-                <i class="fa-solid fa-user-plus text-indigo-500"></i> Mời Bạn Bè Vào Nhóm Học Tập (Tối đa 5 người):
+        <div th:if="${isSquadLeader}" class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
+            <label class="label-text font-bold text-xs text-slate-700 flex items-center gap-1.5">
+                <i class="fa-solid fa-user-plus text-purple-600"></i> Mời Bạn Bè Vào Nhóm Học Tập (Tối đa 5 người):
             </label>
             <form th:action="@{/auth/squad/add-member}" method="post" class="flex flex-col sm:flex-row gap-2.5">
                 <div class="relative flex-1">
-                    <i class="fa-solid fa-at absolute left-3.5 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                    <i class="fa-solid fa-at absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input type="text" name="targetUsername" required placeholder="Nhập username bạn bè (ví dụ: student2, binh, an...)" 
-                           class="input input-bordered input-sm pl-9 w-full rounded-xl text-xs font-mono"
+                           class="input input-bordered input-sm pl-9 w-full rounded-xl text-xs font-mono border-slate-200 focus:border-purple-500"
                            th:disabled="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" />
                 </div>
-                <button type="submit" class="btn btn-sm btn-primary rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white border-none shadow-md shadow-indigo-500/20 gap-1.5"
+                <button type="submit" class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl text-xs font-bold border-none shadow-md shadow-purple-500/20 gap-1.5"
                         th:disabled="${squadMembers != null and squadMembers.size() >= maxSquadMembers}">
                     <i class="fa-solid fa-paper-plane"></i> Thêm Vào Nhóm
                 </button>
@@ -300,26 +308,26 @@
             <p th:if="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" class="text-[11px] text-amber-600 font-semibold flex items-center gap-1">
                 <i class="fa-solid fa-circle-exclamation"></i> Nhóm đã đủ tối đa 5 thành viên! Để thêm bạn mới, hãy xóa bớt thành viên cũ.
             </p>
-            <p th:unless="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" class="text-[11px] text-base-content/60">
+            <p th:unless="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" class="text-[11px] text-slate-500">
                 💡 Khi thêm vào nhóm, bạn bè sẽ được nâng cấp lên hạng <strong>SQUAD</strong> và hưởng toàn bộ quyền lợi PRO ngay lập tức.
             </p>
         </div>
 
         <!-- Member View: Thông báo cho thành viên nhóm (KHÔNG BAO GIỜ bị @null) -->
-        <div th:unless="${isSquadLeader}" class="bg-base-100/70 p-4 rounded-2xl border border-base-200/80 text-xs text-base-content/80 flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-sm flex-none">
+        <div th:unless="${isSquadLeader}" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm flex-none">
                 <i class="fa-solid fa-shield-heart"></i>
             </div>
             <div>
-                <span>Bạn đang là thành viên trong Nhóm học tập của Trưởng nhóm <strong class="font-mono text-indigo-600 font-bold" th:text="'@' + ${(user.squadLeaderUsername != null ? user.squadLeaderUsername : 'Leader')}">@leader</strong>. Mọi đặc quyền của gói SQUAD đều được mở khóa cho bạn!</span>
+                <span>Bạn đang là thành viên trong Nhóm học tập của Trưởng nhóm <strong class="font-mono text-purple-700 font-bold" th:text="'@' + ${(user.squadLeaderUsername != null ? user.squadLeaderUsername : 'Leader')}">@leader</strong>. Mọi đặc quyền của gói SQUAD đều được mở khóa cho bạn!</span>
             </div>
         </div>
 
-        <!-- Danh Sách Thành Viên Nhóm (Table) -->
-        <div class="overflow-x-auto bg-base-100/60 rounded-2xl border border-base-200">
+        <!-- Danh Sách Thành Viên Nhóm (Clean Table) -->
+        <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm bg-white">
             <table class="table table-sm w-full">
                 <thead>
-                    <tr class="text-xs text-base-content/60 border-b border-base-200 bg-base-200/30">
+                    <tr class="text-xs text-slate-600 border-b border-slate-200 bg-slate-50">
                         <th class="py-3 pl-4">Thành Viên</th>
                         <th class="py-3">Tên Đăng Nhập</th>
                         <th class="py-3">Vai Trò Nhóm</th>
@@ -327,27 +335,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="m : ${squadMembers}" class="hover:bg-base-200/40 transition-colors border-b border-base-200/40">
+                    <tr th:each="m : ${squadMembers}" class="hover:bg-slate-50/70 transition-colors border-b border-slate-100">
                         <td class="py-3 pl-4">
                             <div class="flex items-center gap-3">
                                 <div class="avatar">
-                                    <div class="w-8 h-8 rounded-xl ring-1 ring-base-300 overflow-hidden bg-base-100">
+                                    <div class="w-8 h-8 rounded-xl ring-1 ring-slate-200 overflow-hidden bg-slate-100">
                                         <img th:src="${m.avatar}" alt="Avatar" referrerpolicy="no-referrer" />
                                     </div>
                                 </div>
-                                <span class="font-bold text-xs text-base-content" th:text="${m.fullName}">Họ và Tên</span>
+                                <span class="font-bold text-xs text-slate-800" th:text="${m.fullName}">Họ và Tên</span>
                             </div>
                         </td>
                         <td class="py-3">
-                            <span class="font-mono text-xs text-base-content/70 font-semibold" th:text="'@' + ${m.username}">@user</span>
+                            <span class="font-mono text-xs text-slate-600 font-semibold" th:text="'@' + ${m.username}">@user</span>
                         </td>
                         <td class="py-3">
                             <span th:if="${m.username == user.squadLeaderUsername or (user.squadLeaderUsername == null and m.username == user.username)}"
-                                  class="badge badge-primary badge-xs text-[10px] font-bold gap-1 py-2 px-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white border-none shadow-sm">
+                                  class="badge font-bold text-[10px] gap-1 py-1.5 px-2.5 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white border-none shadow-sm">
                                 <i class="fa-solid fa-crown text-amber-200"></i> Nhóm Trưởng
                             </span>
                             <span th:unless="${m.username == user.squadLeaderUsername or (user.squadLeaderUsername == null and m.username == user.username)}"
-                                  class="badge badge-ghost badge-xs text-[10px] font-medium py-2 px-2.5">
+                                  class="badge badge-ghost text-slate-600 border border-slate-200 text-[10px] py-1.5 px-2.5 font-medium">
                                 Thành Viên
                             </span>
                         </td>
@@ -356,11 +364,11 @@
                                   th:action="@{/auth/squad/remove-member}" method="post" class="inline"
                                   onsubmit="return confirm('Bạn có chắc chắn muốn xóa thành viên này khỏi nhóm? Tài khoản bạn đó sẽ về lại gói FREE.')">
                                 <input type="hidden" name="targetUsername" th:value="${m.username}" />
-                                <button type="submit" class="btn btn-ghost btn-xs text-rose-500 hover:bg-rose-500/10 rounded-lg font-bold" title="Xóa khỏi nhóm">
+                                <button type="submit" class="btn btn-ghost btn-xs text-rose-500 hover:bg-rose-50 rounded-lg font-bold" title="Xóa khỏi nhóm">
                                     <i class="fa-solid fa-user-minus mr-1"></i> Xóa
                                 </button>
                             </form>
-                            <span th:if="${m.username.equalsIgnoreCase(user.username)}" class="text-[10px] text-base-content/40 italic font-mono pr-2">Bạn (Chủ nhóm)</span>
+                            <span th:if="${m.username.equalsIgnoreCase(user.username)}" class="text-[10px] text-slate-400 italic font-mono pr-2">Bạn (Chủ nhóm)</span>
                         </td>
                     </tr>
                 </tbody>
@@ -368,28 +376,28 @@
         </div>
     </div>
 
-    <!-- 4. FORMS GRID: CẬP NHẬT THÔNG TIN CÁ NHÂN & ĐỔI MẬT KHẨU (2 Cột Cân Đối) -->
+    <!-- 4. FORMS GRID: CẬP NHẬT THÔNG TIN CÁ NHÂN & ĐỔI MẬT KHẨU (White-Card Palette - 2 Cột Cân Đối) -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <!-- Form 1: Cập Nhật Thông Tin Cá Nhân -->
-        <div class="glass-card rounded-3xl p-6 sm:p-7 shadow-lg border border-base-200/80 bg-base-100/80 backdrop-blur-md space-y-5">
-            <div class="flex items-center gap-3 border-b border-base-200 pb-3.5">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-bold text-base shadow-sm">
+        <div class="rounded-2xl p-6 sm:p-7 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-5">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-3.5">
+                <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-base shadow-sm">
                     <i class="fa-solid fa-user-pen"></i>
                 </div>
                 <div>
-                    <h3 class="font-extrabold text-sm sm:text-base text-base-content">Cập Nhật Hồ Sơ</h3>
-                    <p class="text-[11px] text-base-content/60">Thay đổi họ tên hiển thị và lựa chọn ảnh đại diện</p>
+                    <h3 class="font-black text-sm sm:text-base text-slate-900">Cập Nhật Hồ Sơ</h3>
+                    <p class="text-[11px] text-slate-500">Thay đổi họ tên hiển thị và lựa chọn ảnh đại diện</p>
                 </div>
             </div>
 
             <form th:action="@{/profile/update}" th:object="${updateProfileDto}" method="post" class="space-y-4">
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Họ và Tên Hiển Thị</span></label>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Họ và Tên Hiển Thị</span></label>
                     <div class="relative">
-                        <i class="fa-solid fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <i class="fa-solid fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="text" th:field="*{fullName}" required placeholder="Nhập họ và tên đầy đủ của bạn" 
-                               class="input input-bordered pl-9 w-full rounded-xl text-xs" />
+                               class="input input-bordered pl-9 w-full rounded-xl text-xs border-slate-200 focus:border-purple-500" />
                     </div>
                 </div>
 
@@ -398,91 +406,91 @@
 
                 <!-- Avatar Presets Selection (6 Avatar Đa Dạng) -->
                 <div class="space-y-2">
-                    <label class="label-text font-bold text-[11px] text-base-content/70">Chọn nhanh avatar đại diện sinh viên:</label>
+                    <label class="label-text font-bold text-[11px] text-slate-600">Chọn nhanh avatar đại diện sinh viên:</label>
                     <div class="grid grid-cols-6 gap-2">
                         <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=student')"
-                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-indigo-200 hover:border-indigo-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-base-100 shadow-sm" title="Robot Student">
+                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-slate-200 hover:border-purple-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-white shadow-sm" title="Robot Student">
                             <img src="https://api.dicebear.com/7.x/bottts/svg?seed=student" alt="Avatar 1" class="w-full h-full object-cover" />
                         </button>
                         <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=Felix')"
-                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-indigo-200 hover:border-indigo-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-base-100 shadow-sm" title="Dev Felix">
+                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-slate-200 hover:border-purple-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-white shadow-sm" title="Dev Felix">
                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar 2" class="w-full h-full object-cover" />
                         </button>
                         <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=truong')"
-                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-indigo-200 hover:border-indigo-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-base-100 shadow-sm" title="Tech Master">
+                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-slate-200 hover:border-purple-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-white shadow-sm" title="Tech Master">
                             <img src="https://api.dicebear.com/7.x/bottts/svg?seed=truong" alt="Avatar 3" class="w-full h-full object-cover" />
                         </button>
                         <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka')"
-                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-indigo-200 hover:border-indigo-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-base-100 shadow-sm" title="Scholar Aneka">
+                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-slate-200 hover:border-purple-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-white shadow-sm" title="Scholar Aneka">
                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka" alt="Avatar 4" class="w-full h-full object-cover" />
                         </button>
                         <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=pro_student')"
-                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-indigo-200 hover:border-indigo-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-base-100 shadow-sm" title="Pro Bot">
+                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-slate-200 hover:border-purple-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-white shadow-sm" title="Pro Bot">
                             <img src="https://api.dicebear.com/7.x/bottts/svg?seed=pro_student" alt="Avatar 5" class="w-full h-full object-cover" />
                         </button>
                         <button type="button" onclick="selectAvatar('https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah')"
-                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-indigo-200 hover:border-indigo-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-base-100 shadow-sm" title="Student Sarah">
+                                class="avatar-option w-11 h-11 rounded-2xl border-2 border-slate-200 hover:border-purple-600 p-0.5 overflow-hidden transition-all hover:scale-105 bg-white shadow-sm" title="Student Sarah">
                             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="Avatar 6" class="w-full h-full object-cover" />
                         </button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-full rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 border-none text-white shadow-md shadow-indigo-500/25 mt-2 transition">
+                <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-none text-white shadow-lg shadow-purple-500/25 mt-2 transition">
                     <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Cập Nhật Hồ Sơ
                 </button>
             </form>
         </div>
 
         <!-- Form 2: Đổi Mật Khẩu Bảo Mật -->
-        <div class="glass-card rounded-3xl p-6 sm:p-7 shadow-lg border border-base-200/80 bg-base-100/80 backdrop-blur-md space-y-5">
-            <div class="flex items-center gap-3 border-b border-base-200 pb-3.5">
-                <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center font-bold text-base shadow-sm">
+        <div class="rounded-2xl p-6 sm:p-7 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-5">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-3.5">
+                <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base shadow-sm">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <div>
-                    <h3 class="font-extrabold text-sm sm:text-base text-base-content">Đổi Mật Khẩu</h3>
-                    <p class="text-[11px] text-base-content/60">Bảo mật tài khoản sinh viên với chuẩn mã hóa BCrypt</p>
+                    <h3 class="font-black text-sm sm:text-base text-slate-900">Đổi Mật Khẩu</h3>
+                    <p class="text-[11px] text-slate-500">Bảo mật tài khoản sinh viên với chuẩn mã hóa BCrypt</p>
                 </div>
             </div>
 
             <form th:action="@{/profile/change-password}" th:object="${changePasswordDto}" method="post" class="space-y-4">
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Mật Khẩu Hiện Tại</span></label>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Mật Khẩu Hiện Tại</span></label>
                     <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="password" id="old-pass" th:field="*{oldPassword}" required placeholder="••••••••" 
-                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
-                        <button type="button" onclick="togglePass('old-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs border-slate-200 focus:border-purple-500" />
+                        <button type="button" onclick="togglePass('old-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Mật Khẩu Mới (Tối thiểu 6 ký tự)</span></label>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Mật Khẩu Mới (Tối thiểu 6 ký tự)</span></label>
                     <div class="relative">
-                        <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="password" id="new-pass" th:field="*{newPassword}" required minlength="6" placeholder="••••••••" 
-                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
-                        <button type="button" onclick="togglePass('new-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs border-slate-200 focus:border-purple-500" />
+                        <button type="button" onclick="togglePass('new-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Xác Nhận Mật Khẩu Mới</span></label>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Xác Nhận Mật Khẩu Mới</span></label>
                     <div class="relative">
-                        <i class="fa-solid fa-check-double absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
+                        <i class="fa-solid fa-check-double absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="password" id="confirm-pass" th:field="*{confirmPassword}" required minlength="6" placeholder="••••••••" 
-                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
-                        <button type="button" onclick="togglePass('confirm-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
+                               class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs border-slate-200 focus:border-purple-500" />
+                        <button type="button" onclick="togglePass('confirm-pass', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-warning w-full rounded-xl text-xs font-bold text-amber-950 shadow-md shadow-amber-500/20 mt-2 transition">
+                <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white shadow-md transition">
                     <i class="fa-solid fa-lock mr-1"></i> Xác Nhận Đổi Mật Khẩu
                 </button>
             </form>
@@ -491,16 +499,22 @@
         <!-- Profile Interaction Scripts inside section for Thymeleaf Layout -->
         <script>
             function selectAvatar(url) {
-                document.getElementById('avatar-input').value = url;
-                document.getElementById('current-avatar-img').src = url;
+                const input = document.getElementById('avatar-input');
+                if (input) {
+                    input.value = url;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                const img = document.getElementById('current-avatar-img');
+                if (img) img.src = url;
                 // Highlight selected avatar border
                 document.querySelectorAll('.avatar-option').forEach(el => {
-                    el.classList.remove('border-indigo-600', 'ring-2', 'ring-indigo-500');
-                    el.classList.add('border-indigo-200');
+                    el.classList.remove('border-purple-600', 'ring-2', 'ring-purple-400');
+                    el.classList.add('border-slate-200');
                 });
                 if (window.event && window.event.currentTarget) {
-                    window.event.currentTarget.classList.remove('border-indigo-200');
-                    window.event.currentTarget.classList.add('border-indigo-600', 'ring-2', 'ring-indigo-500');
+                    window.event.currentTarget.classList.remove('border-slate-200');
+                    window.event.currentTarget.classList.add('border-purple-600', 'ring-2', 'ring-purple-400');
                 }
             }
 
