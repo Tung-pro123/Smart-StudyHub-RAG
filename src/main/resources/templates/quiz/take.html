@@ -234,6 +234,14 @@
         let totalSeconds = totalMinutes * 60;
         let timeElapsed = 0;
         const answeredQuestions = new Set();
+        let quizSubmitted = false;
+
+        // Canh bao khi F5 hoac roi trang giua chung
+        window.addEventListener('beforeunload', function (e) {
+            if (quizSubmitted) return;
+            e.preventDefault();
+            e.returnValue = '';
+        });
 
         // 1. Timer Logic
         let timerInterval = setInterval(function () {
@@ -296,6 +304,7 @@
         }
 
         function executeSubmit() {
+            quizSubmitted = true;
             clearInterval(timerInterval);
             document.getElementById('time-spent-seconds').value = timeElapsed;
             document.getElementById('quiz-form').submit();
