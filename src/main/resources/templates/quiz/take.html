@@ -27,7 +27,7 @@
             <a th:href="@{'/quiz?courseId=' + ${quiz.course != null ? quiz.course.id : 1}}" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold text-slate-500 gap-1.5">
                 <i class="fa-solid fa-arrow-left"></i> Rời phòng thi
             </a>
-            <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl border-none shadow-md gap-2">
+            <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl border-none shadow-lg shadow-purple-500/25 gap-2">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span>Nộp Bài Thi</span>
             </button>
@@ -128,7 +128,7 @@
                 <!-- Nút nộp bài ở cuối trang -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <span class="text-xs text-slate-500">Kiểm tra kỹ trước khi gửi bài chấm điểm</span>
-                    <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-md bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-2xl border-none shadow-lg shadow-emerald-600/20 px-8 gap-2">
+                    <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-md bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-2xl border-none shadow-lg shadow-purple-500/25 px-8 gap-2">
                         <i class="fa-solid fa-paper-plane"></i>
                         <span>Nộp Bài Thi Ngay</span>
                     </button>
@@ -197,7 +197,7 @@
                 </div>
 
                 <!-- Nút nộp bài trực tiếp ở Sidebar -->
-                <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl border-none shadow-md gap-2">
+                <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-block bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-2xl border-none shadow-lg shadow-purple-500/25 gap-2">
                     <i class="fa-solid fa-check"></i>
                     <span>Nộp Bài Thi</span>
                 </button>
