@@ -112,6 +112,33 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 7: TÁI THIẾT KẾ TOÀN DIỆN GIAO DIỆN PROFILE SANG WHITE-CARD PALETTE & PROGRESSIVE DISCLOSURE (03/11/2026)
+* **Mục tiêu**: Thực hiện chỉ đạo từ Team Lead Tùng trong đợt chuẩn hóa giao diện toàn dự án ngày 03/11:
+  - Cải tạo toàn diện `profile.html` chuyển đổi từ Dark Cards cũ sang **White-Card Palette & Progressive Disclosure**, đồng bộ chuẩn màu sắc với Landing Page và Course Detail Hub (`bg-white/95 border-slate-200/80 text-slate-800 shadow-sm`).
+  - Hero Profile sang trọng nền Obsidian Dark (`#030712`) kết hợp avatar tròn nổi bật và badge phân quyền / trạng thái gói cước.
+  - Thẻ Quota & Tier: bảng theo dõi trực quan hạn ngạch tài liệu / câu hỏi AI, nút nâng cấp mang dải Gradient Brand CTA tím hồng (`from-purple-600 via-violet-600 to-pink-600`).
+  - Thẻ Quản Lý Study Squad: bố cục White-Card, bảng danh sách thành viên chuẩn **Clean Table** bo viền tinh tế, huy hiệu Nhóm Trưởng nổi bật; tự động ẩn khi người dùng là gói Free/Pro cá nhân.
+  - Form Cập Nhật Hồ Sơ & Đổi Mật Khẩu BCrypt: Grid 2 cột cân đối, viền input sáng thanh lịch `border-slate-200 focus:border-purple-500`, 6 Avatar Presets chọn mượt mà.
+  - Khắc phục triệt để lỗi Thymeleaf Layout Decorator nuốt thẻ `<script>` bằng cách đưa toàn bộ JS (`selectAvatar`, `togglePass`) vào bên trong thẻ `<section>`.
+* **Câu Prompt thực tế**:
+  ```text
+  Hãy tái thiết kế toàn diện file src/main/resources/templates/auth/profile.html theo Design System mới của dự án:
+  1. Áp dụng chuẩn White-Card Palette (bg-white/95 border-slate-200/80 text-slate-800) và nút bấm Gradient tím hồng (from-purple-600 via-violet-600 to-pink-600) đồng bộ Landing Page.
+  2. Bố cục Hero Header Obsidian Dark làm nổi bật Avatar, Họ tên, Role badge và Subscription badge.
+  3. Thẻ Quota & Gói cước hiển thị thanh tiến trình trực quan.
+  4. Thẻ Quản lý Study Squad thiết kế dạng Clean Table (rounded-2xl border border-slate-200), huy hiệu Nhóm Trưởng, tự động ẩn khi không phải gói Squad.
+  5. Cập nhật hồ sơ & Đổi mật khẩu chia Grid 2 cột cân đối, có 6 avatar presets chọn nhanh và nút ẩn/hiện mật khẩu.
+  6. RẤT QUAN TRỌNG: Toàn bộ thẻ <script> tương tác phải đặt bên trong thẻ <section> để layout decorator của Thymeleaf không loại bỏ script khỏi DOM.
+  ```
+* **AI đã giúp bạn như thế nào?**:
+  - Tái cấu trúc toàn bộ mã HTML/CSS của `profile.html` đạt chuẩn Design System, giao diện sáng sủa, cao cấp, không bị rối mắt.
+  - Bảo toàn 100% các binding Thymeleaf nghiệp vụ (`th:action`, `th:object`, `th:field`, CSRF token, modal nâng cấp).
+  - Khắc phục hoàn toàn lỗi click chọn avatar không ăn do vị trí đặt script.
+  - Kiểm thử tự động `AuthServiceTest` chạy đạt **15/15 tests PASSED** (0 failure, 0 error).
+* **Ảnh chụp màn hình**: `![Giao diện Profile White-Card mới của Trường](images/truong-step7-whitecard-ui.png)`
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM
 * **Bài học rút ra**:
   1. Sử dụng kết hợp **Cookie HttpOnly lưu JWT Token** cùng với **HttpSession** giúp ứng dụng vừa có tốc độ xử lý nhanh của Session, vừa có tính năng ghi nhớ đăng nhập dài hạn của JWT.
@@ -120,3 +147,5 @@
   4. Khi tích hợp dịch vụ OAuth2 từ bên thứ ba (Google/Facebook/GitHub), luôn áp dụng mô hình **Conditional Configuration (Graceful Degradation)** để môi trường kiểm thử tự động CI/CD và máy local của đồng đội không bị gián đoạn khi chưa có credentials thực tế.
   5. Khi thiết kế mô hình SaaS Freemium (Free vs Pro), việc phân tách ranh giới rõ ràng giữa Auth (quản lý trạng thái và gói cước của User) và Quota Engine (chặn lượt truy vấn RAG và kiểm tra số môn học) giúp kiến trúc micro-modular bền vững, không gây coupling chéo giữa các module.
   6. Khi xây dựng tính năng nhóm (Squad / Team Workspaces), mô hình Single-table Hierarchical Relationship (thông qua trường squadLeaderUsername chỉ về tài khoản chủ nhóm) giúp đơn giản hóa cấu trúc cơ sở dữ liệu mà vẫn đảm bảo tính phân lập dữ liệu và kiểm soát hạn mức nhóm (5 thành viên) cực kỳ chuẩn xác và hiệu quả.
+  7. **Kinh nghiệm về Thymeleaf Layout Decorator**: Khi sử dụng cơ chế kế thừa layout qua cú pháp `th:replace="~{layout/main :: main-layout(..., ~{::section})}"`, Thymeleaf chỉ bóc tách phần tử `<section>` truyền vào layout cha. Bất kỳ thẻ `<script>` hay `<style>` nào nằm bên ngoài thẻ `<section>` sẽ bị nuốt chửng hoàn toàn khỏi DOM khi render. Vì vậy, mọi mã Javascript tương tác của trang con bắt buộc phải đặt bên trong thẻ `<section>`.
+  8. **Quy chuẩn White-Card Palette & Progressive Disclosure**: Thiết kế giao diện ứng dụng quản lý hiện đại đòi hỏi độ tương phản cao, thẻ nền trắng mờ kính (`bg-white/95 border-slate-200/80`) mang lại cảm giác sạch sẽ, dễ đọc văn bản hơn rất nhiều so với Dark card đơn thuần. Đồng thời, việc phân tầng thông tin (chỉ hiển thị chi tiết khi cần) giúp người dùng không bị quá tải thông tin trên một màn hình duy nhất.
