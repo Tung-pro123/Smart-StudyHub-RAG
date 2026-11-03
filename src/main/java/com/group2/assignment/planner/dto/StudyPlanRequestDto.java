@@ -23,6 +23,8 @@ public class StudyPlanRequestDto {
 
     private LocalDate examDate;
 
+    private String targetGrade;
+
     private String goal;
 
     private List<String> squadMembers;

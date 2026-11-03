@@ -4,18 +4,25 @@ import com.group2.assignment.auth.controller.AuthController;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.CourseRepository;
+import com.group2.assignment.planner.dto.PlannerPageDto;
 import com.group2.assignment.planner.dto.StudyPlanRequestDto;
+import com.group2.assignment.planner.dto.TaskToggleResultDto;
 import com.group2.assignment.planner.entity.StudyPlan;
 import com.group2.assignment.planner.entity.StudyTask;
 import com.group2.assignment.planner.service.StudyPlannerService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/planner")
@@ -29,12 +36,17 @@ public class PlannerController {
     public String showPlannerPage(
             Model model,
             HttpSession session,
-            @RequestParam(value = "courseId", required = false) Long courseId) {
+            @RequestParam(value = "courseId", required = false) Long courseId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         User currentUser = getCurrentUser(session);
         List<Course> courses = getCoursesFor(currentUser);
         model.addAttribute("courses", courses);
 
-        model.addAttribute("plans", studyPlannerService.getRecentPlans(currentUser));
+        PlannerPageDto<StudyPlan> plansPage = courseId != null && getOwnedCourse(courseId, currentUser) != null
+                ? studyPlannerService.getPlansByCourseId(courseId, currentUser, page, size)
+                : studyPlannerService.getRecentPlans(currentUser, page, size);
+        addPlansPageAttributes(model, plansPage);
 
         model.addAttribute("selectedCourseId", courseId);
 
@@ -106,20 +118,27 @@ public class PlannerController {
         StudyPlan plan = planOpt.get();
         List<StudyTask> tasks = studyPlannerService.getTasksByPlanId(planId);
 
+        Map<Integer, List<StudyTask>> tasksByWeek = tasks.stream()
+                .collect(Collectors.groupingBy(
+                        StudyTask::getWeekNumber,
+                        LinkedHashMap::new,
+                        Collectors.toList()));
+
         model.addAttribute("plan", plan);
         model.addAttribute("tasks", tasks);
+        model.addAttribute("tasksByWeek", tasksByWeek);
 
         return "planner/view";
     }
 
     @PostMapping("/tasks/{taskId}/toggle")
     @ResponseBody
-    public String toggleTask(@PathVariable Long taskId, HttpSession session) {
-        StudyTask task = studyPlannerService.toggleTaskCompletion(taskId, getCurrentUser(session));
-        if (task != null) {
-            return "success";
+    public ResponseEntity<TaskToggleResultDto> toggleTask(@PathVariable Long taskId, HttpSession session) {
+        TaskToggleResultDto result = studyPlannerService.toggleTaskCompletion(taskId, getCurrentUser(session));
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return "error";
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/history/{courseId}")
@@ -127,7 +146,9 @@ public class PlannerController {
             @PathVariable Long courseId,
             Model model,
             RedirectAttributes redirectAttributes,
-            HttpSession session) {
+            HttpSession session,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
 
         User currentUser = getCurrentUser(session);
         if (getOwnedCourse(courseId, currentUser) == null) {
@@ -136,14 +157,26 @@ public class PlannerController {
             return "redirect:/planner";
         }
 
-        List<StudyPlan> plans = studyPlannerService.getPlansByCourseId(courseId, currentUser);
-        model.addAttribute("plans", plans);
+        PlannerPageDto<StudyPlan> plansPage =
+                studyPlannerService.getPlansByCourseId(courseId, currentUser, page, size);
+        addPlansPageAttributes(model, plansPage);
         model.addAttribute("courses", getCoursesFor(currentUser));
         model.addAttribute("selectedCourseId", courseId);
 
         addSubscriptionAttributes(model, currentUser);
 
         return "planner/index";
+    }
+
+    private void addPlansPageAttributes(Model model, PlannerPageDto<StudyPlan> plansPage) {
+        model.addAttribute("plans", plansPage.getItems());
+        model.addAttribute("plansPage", plansPage);
+        model.addAttribute("currentPage", plansPage.getPage());
+        model.addAttribute("pageSize", plansPage.getSize());
+        model.addAttribute("totalPages", plansPage.getTotalPages());
+        model.addAttribute("totalItems", plansPage.getTotalItems());
+        model.addAttribute("hasPrev", plansPage.isHasPrev());
+        model.addAttribute("hasNext", plansPage.isHasNext());
     }
 
     private User getCurrentUser(HttpSession session) {
