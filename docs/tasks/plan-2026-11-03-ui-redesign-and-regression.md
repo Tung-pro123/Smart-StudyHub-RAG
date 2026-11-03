@@ -198,6 +198,7 @@ Tất cả các trang khi làm mới phải tuân theo đúng bảng mã màu v�
 ---
 
 ### 🛡️ THÀNH VIÊN 6: ÂN
+* **Báo cáo local 03/11**: [Kết quả, ảnh và giới hạn](../evidence/2026-11-03-ui-redesign/an/README.md). AN-02/03/04 đã triển khai; AN-01 và dòng Ping thật của AN-05 vẫn **BLOCKED** (chưa có Gemini key hợp lệ). 307/307 test tự động PASS; 5/6 luồng E2E PASS, không coi mock là kết nối thật. Không sửa layout/fragments hoặc ảnh cũ; chưa push.
 * **Phân hệ**: **Admin Command Center, Quản Lý Sinh Viên & Gemini API Key**
 * **File phụ trách độc quyền (ISOLATED)**:
   - `src/main/resources/templates/admin/dashboard.html`
@@ -208,27 +209,27 @@ Tất cả các trang khi làm mới phải tuân theo đúng bảng mã màu v�
   - [ ] **TASK-AN-01 (ƯU TIÊN SỐ 1 — SỬA LỖI & HOÀN THÀNH E2E-ADM-06)**:
     + Cấu hình API Key Google Gemini hợp lệ vào môi trường máy test cá nhân hoặc nhập trực tiếp qua trang `/admin/settings` rồi bấm "Lưu cấu hình".
     + Bấm nút **"Kiểm tra kết nối tức thì"** $\rightarrow$ Hệ thống hiện thông báo xanh: *"Kết nối Google Gemini thành công! (Thời gian phản hồi: xxx ms)"*.
-    + Chụp lại ảnh màn hình thành công đè vào [`docs/evidence/an/E2E-ADM-06_an.png`](../evidence/an/E2E-ADM-06_an.png) và cập nhật tài liệu báo cáo đóng case `BLOCKED` $\rightarrow$ `PASS 100%`.
-  - [ ] **TASK-AN-02 (Admin Dashboard - Chuẩn Hóa Tư Duy Vận Hành Kỹ Thuật)**:
+    + Theo chỉ đạo người dùng ngày 03/11: giữ nguyên ảnh 02/11; khi có kết quả thành công, lưu ảnh mới tại [`docs/evidence/2026-11-03-ui-redesign/an/E2E-ADM-06_an.png`](../evidence/2026-11-03-ui-redesign/an/E2E-ADM-06_an.png) và cập nhật báo cáo đóng case `BLOCKED` $\rightarrow$ `PASS 100%`.
+  - [x] **TASK-AN-02 (Admin Dashboard - Chuẩn Hóa Tư Duy Vận Hành Kỹ Thuật)**:
     + 4 thẻ KPI thống kê (Tổng tài khoản sinh viên, Tổng môn học toàn hệ thống, Quota RAG hôm nay, Trạng thái AI Model) chuyển sang White-Card Palette sang trọng.
     + Biểu đồ tỷ lệ 3 gói cước (FREE, PRO, SQUAD) hiển thị trực quan, tính toán tỷ lệ trả phí chuẩn xác.
     + **XÓA BỎ HOÀN TOÀN nút/liên kết "Giám sát môn học" vào `/courses`**: Admin là quản trị viên hệ thống, không phải sinh viên, không học tập, không cần duyệt danh sách môn học chi tiết như người dùng học tập.
-  - [ ] **TASK-AN-03 (Quản Lý Sinh Viên - Phân Trang & Chống Tràn 1.000 Sinh Viên)**:
+  - [x] **TASK-AN-03 (Quản Lý Sinh Viên - Phân Trang & Chống Tràn 1.000 Sinh Viên)**:
     + **BẮT BUỘC BỔ SUNG PHÂN TRANG (Pagination)**: Xử lý kịch bản 100 - 1.000 sinh viên, chỉ hiển thị **10 hoặc 15 sinh viên / trang** kèm thanh phân trang (`Trang trước`, `Trang 1, 2, 3...`, `Trang sau`), không được đổ hàng nghìn dòng ra DOM làm đơ lag trình duyệt.
     + **Áp dụng Progressive Disclosure & Clean Data**:
       * Thanh công cụ tìm kiếm và lọc gói cước (FREE, PRO, SQUAD) gọn gàng trên 1 hàng.
       * Bảng sinh viên dạng Clean Table: Avatar bo tròn, họ tên, email, badge gói cước rõ màu, quota RAG.
       * **Triệt tiêu text rác & metadata thừa**: Ẩn các ID kỹ thuật không cần thiết, định dạng ngày hết hạn gói cước chuẩn `dd/MM/yyyy` gọn gàng.
       * Nút thao tác Nâng cấp PRO, Kích hoạt SQUAD, Hạ về FREE, Reset RAG thiết kế nhỏ gọn dạng nút bấm thanh lịch hoặc dropdown hành động để không làm rối mắt bảng dữ liệu.
-  - [ ] **TASK-AN-04 (Settings & Error Page)**:
+  - [x] **TASK-AN-04 (Settings & Error Page)**:
     + Tút lại trang `/admin/settings` cấu hình System Gemini Key với khung che giấu `AIzaSy...****` sang trọng.
     + Tút lại trang `/admin/error.html` báo lỗi 403 Forbidden lịch sự, rõ ràng cho sinh viên đi lạc.
   - [ ] **TASK-AN-05 (Regression Checklist)**:
-    + [ ] Đăng nhập `student` truy cập `/admin/dashboard` bị chặn 403 Forbidden.
-    + [ ] Đăng nhập `admin` vào dashboard hiển thị đủ số liệu thống kê.
-    + [ ] Lọc sinh viên theo từng gói FREE, PRO, SQUAD và tìm kiếm theo tên chuẩn xác.
-    + [ ] Nâng/hạ gói cước cho sinh viên cập nhật tức thì.
-    + [ ] Bấm Reset RAG Quota đưa số lượt trong ngày của sinh viên về 0.
+    + [x] Đăng nhập `student` truy cập `/admin/dashboard` bị chặn 403 Forbidden.
+    + [x] Đăng nhập `admin` vào dashboard hiển thị đủ số liệu thống kê.
+    + [x] Lọc sinh viên theo từng gói FREE, PRO, SQUAD và tìm kiếm theo tên chuẩn xác.
+    + [x] Nâng/hạ gói cước cho sinh viên cập nhật tức thì.
+    + [x] Bấm Reset RAG Quota đưa số lượt trong ngày của sinh viên về 0.
     + [ ] Test Ping kết nối Google Gemini key thật thành công hiển thị xanh và latency.
 
 ---

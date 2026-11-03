@@ -1,0 +1,37 @@
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.964 s -- in com.group2.assignment.AssignmentApplicationTests
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.869 s -- in com.group2.assignment.auth.AuthServiceTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.186 s -- in com.group2.assignment.core.CourseServiceTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.192 s -- in com.group2.assignment.core.HomeControllerTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.628 s -- in com.group2.assignment.planner.PlannerFeatureGatingTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.496 s -- in com.group2.assignment.planner.StudyPlannerServiceSquadTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.644 s -- in com.group2.assignment.quiz.M1AdversarialChallengeTest$PdfBoxOpenHtmlToPdfRuntimeTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.070 s -- in com.group2.assignment.quiz.M1AdversarialChallengeTest$QuizAttemptMappingAdversarialTests
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.129 s -- in com.group2.assignment.quiz.M1AdversarialChallengeTest$UserSquadAdversarialTests
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.882 s -- in com.group2.assignment.quiz.M1AdversarialChallengeTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in com.group2.assignment.quiz.Milestone1EmpiricalStressTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.245 s -- in com.group2.assignment.quiz.Milestone2EmpiricalStressTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.358 s -- in com.group2.assignment.quiz.Milestone3ForensicAuditorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.025 s -- in com.group2.assignment.quiz.QuizAttemptUserMappingTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.294 s -- in com.group2.assignment.quiz.QuizControllerExportConcurrencyAndBoundaryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.237 s -- in com.group2.assignment.quiz.QuizDoDVerificationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.812 s -- in com.group2.assignment.quiz.QuizFeatureGatingTest
+[INFO] Tests run: 49, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.543 s -- in com.group2.assignment.quiz.QuizPdfExportEndpointAdversarialTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.399 s -- in com.group2.assignment.quiz.QuizPdfExportServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.224 s -- in com.group2.assignment.quiz.QuizPdfExportStressTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.298 s -- in com.group2.assignment.quiz.QuizSquadLeaderboardAndExportTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.group2.assignment.quiz.service.PdfTextExtractorTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in com.group2.assignment.quiz.service.QuizGeneratorServiceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.group2.assignment.quiz.service.QuizGradingTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s -- in com.group2.assignment.rag.ChatControllerQuotaTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.109 s -- in com.group2.assignment.rag.DocumentControllerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s -- in com.group2.assignment.rag.LlmKeyRotatorTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in com.group2.assignment.rag.PdfChunkingServiceTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in com.group2.assignment.rag.RagDocumentQuotaTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in com.group2.assignment.rag.RagEngineServiceTest
+[INFO] Tests run: 40, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.720 s -- in com.group2.assignment.settings.AdminHubTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 s -- in com.group2.assignment.settings.ApiKeyServiceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.group2.assignment.settings.SubscriptionQuotaConcurrencyTest
+[INFO] Tests run: 307, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+[INFO] Total time:  33.014 s
+[INFO] Finished at: 2026-11-03T12:31:40+07:00

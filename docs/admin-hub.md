@@ -1,5 +1,14 @@
 # Admin Command Center — công việc của Ân, 31/10/2026
 
+## Cập nhật ngày 03/11/2026 — UI và phân trang backend
+
+- Bốn template Admin dùng White-Card theo Course Hub; nội dung Dashboard không còn liên kết sang `/courses`. KPI chính là số sinh viên; số tài khoản toàn hệ thống giữ ở phần bổ sung. Navbar/sidebar dùng chung không được sửa trong đợt này.
+- `/admin/users?keyword=...&tier=...&page=...`: `page` bắt đầu từ 0, cố định **15 sinh viên/trang**, truy vấn Spring Data `Pageable` tại database. Bộ lọc/từ khóa áp dụng trước phân trang; thứ tự ổn định username rồi ID. Không nhận page size từ client.
+- Trang trước/sau và tối đa 5 số trang lân cận; tìm kiếm/lọc mới về trang đầu. Bốn POST đổi gói/reset nhận thêm ngữ cảnh `keyword`, `tier`, `page`, vẫn yêu cầu CSRF và ROLE_ADMIN. Redirect luôn về `/admin/users`, giữ ngữ cảnh; trang vượt số kết quả được giới hạn về trang cuối còn dữ liệu, kể cả sau đổi gói. Trang âm, không phải số hoặc gây tràn offset trả 400.
+- Trên màn hình nhỏ, mỗi hàng là một thẻ; nhóm thao tác dùng native `details` để thu gọn các nút hiện có, không thêm nghiệp vụ mới. Ngày hết hạn hiển thị `dd/MM/yyyy`. Hướng dẫn cấu hình Gemini lâu dài cũng thu gọn bằng `details`.
+- Ping thành công luôn dùng thông báo xanh “Kết nối Google Gemini thành công!” và latency riêng, không đổi thành cảnh báo vàng chỉ vì chậm. Ping thất bại vẫn đỏ; xử lý và bảo mật key giữ nguyên.
+- Kiểm thử: **307/307 PASS**, riêng Admin **40/40**. E2E **5 PASS, ADM-06 BLOCKED** do chưa có key thật. [Báo cáo và ảnh 03/11](evidence/2026-11-03-ui-redesign/an/README.md). Các mô tả bên dưới là phạm vi trước đợt UI, đọc cùng cập nhật này.
+
 ## Phạm vi đã triển khai
 
 - `/admin/dashboard`: tổng tài khoản; số sinh viên FREE, PRO, SQUAD; tỷ lệ trả phí `(PRO + SQUAD) / tổng sinh viên của ba gói`; tổng môn và chunks đã lưu; tổng lượt RAG còn ghi nhận trong ngày Việt Nam. Quản trị viên không nằm trong thống kê gói sinh viên. CAMPUS cũ vẫn được bảo toàn và không gộp vào SQUAD.

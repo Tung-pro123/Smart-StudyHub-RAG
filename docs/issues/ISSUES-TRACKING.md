@@ -240,3 +240,33 @@ Các mục QA dưới đây được tách khỏi lỗi chức năng `ISSUE-01..
 ### Đối chiếu lỗi Auth đã có
 
 Lần chạy QA Admin tái hiện nút “FREE student” trên `/login` không tự điền form. Đây là **ISSUE-03 đã được giải quyết** bằng việc chuyển script vào bên trong section trên `feature/tung-e2e-testing`.
+
+---
+
+## QA UI Admin — Ân — 03/11/2026
+
+### QA-UI-AN-01 — LOCAL VERIFIED: Phân trang backend theo TASK-AN-03
+
+- **Phạm vi được người dùng cho phép**: `UserRepository`, `AdminController`, bốn template Admin và test liên quan; giữ nguyên layout/fragments và ảnh cũ. Chưa push.
+- **Vấn đề trước thay đổi**: `searchStudents()` trả `List<User>` không giới hạn, template dựng toàn bộ sinh viên. 1.000 tài khoản tạo 1.000 hàng DOM; không đạt yêu cầu mới.
+- **Xử lý**: `Page<User>`/`Pageable` cố định 15, lọc tại database, chuyển trang giữ từ khóa/gói; thao tác POST giữ ngữ cảnh, tự lùi trang nếu trang cuối rỗng. Không thêm dependency, không đổi schema/role/quota logic.
+- **Kiểm chứng**: Test 1.000 bản ghi, trang đầu/kế/cuối, từ khóa + tier, trang sai/rỗng và đổi gói làm rỗng trang cuối. Toàn bộ dự án 307/307 PASS; Admin 40/40 PASS. Browser với 1.000 tài khoản QA chỉ có 15 hàng dữ liệu/trang đầy.
+- **Spec**: [Admin Hub](../admin-hub.md); **minh chứng**: [Báo cáo 03/11](../evidence/2026-11-03-ui-redesign/an/README.md).
+
+### QA-UI-AN-02 — LOCAL VERIFIED: Ping thành công nhưng chậm bị hiển thị vàng
+
+- **Tái hiện trong template trước sửa**: `ping.success() == true` và latency > 1.200 ms gắn `alert-warning`, không đáp ứng yêu cầu hiển thị thành công xanh.
+- **Xử lý**: Màu kết quả chỉ phụ thuộc thành công/thất bại, latency riêng; thông báo thành công rõ ràng, không sửa service Gemini.
+- **Kiểm chứng**: Test render với phản hồi thành công giả lập 3.500 ms vẫn `alert-success`, không chứa `alert-warning` hoặc key. Đây là test logic, **không đóng ADM-06**.
+
+### QA-UI-AN-03 — OPEN / bàn giao Lead: Điều hướng học tập trong navbar/sidebar Admin
+
+- **Người ghi nhận**: Ân; **phụ trách**: Tùng (file dùng chung).
+- **Thực tế trên main@eb0e885 và bản QA**: Admin vẫn thấy Tạo Môn Mới ở navbar và Môn Học Hệ Thống trỏ `/courses` trong sidebar. Nội dung Dashboard của Ân đã bỏ nút giám sát và link chi tiết môn học.
+- **Kỳ vọng theo kế hoạch 03/11**: Điều hướng Admin tập trung vận hành hệ thống; không dùng thao tác học tập như sinh viên.
+- **Phạm vi xử lý còn lại**: Lead đồng bộ `templates/fragments/navbar.html` và `sidebar.html`; Ân giữ nguyên layout/fragments theo chỉ đạo, không che tạm bằng CSS.
+- **Ảnh**: [Dashboard laptop](../evidence/2026-11-03-ui-redesign/an/dashboard-1366_an.png).
+
+### ADM-06 — vẫn BLOCKED ngày 03/11
+
+Không có `.env` hoặc biến Gemini key trong môi trường QA. Đã thử form rỗng, key sai, masking bằng key giả và phản hồi Ping thất bại, không crash. Key thật/kết nối thật chưa nghiệm thu; giữ `QA-ADM-01` BLOCKED theo chỉ đạo người dùng. Không ghi nhận thiếu key là lỗi chức năng. [Ảnh hiện tại](../evidence/2026-11-03-ui-redesign/an/E2E-ADM-06_an.png). Giữ nguyên ảnh ngày 02/11.

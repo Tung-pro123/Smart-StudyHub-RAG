@@ -141,7 +141,7 @@ class AdminHubTest {
                 .andExpect(redirectedUrl("/admin/settings"));
         verify(pingService).testConnection(argThat(dto -> "new-system-secret".equals(dto.getApiKey())), isNull());
         assertThat(analytics.getStats().geminiPingLatencyMs()).isEqualTo(75);
-        mvc.perform(get("/admin/settings").session(session)).andExpect(content().string(containsString("Kết nối siêu tốc")));
+        mvc.perform(get("/admin/settings").session(session)).andExpect(content().string(containsString("Kết nối Google Gemini thành công!")));
     }
 
     @Test
@@ -326,5 +326,92 @@ class AdminHubTest {
         mvc.perform(get("/settings").session(sessionFor(student))).andExpect(redirectedUrl("/courses"));
         mvc.perform(post("/settings/save").session(sessionFor(student)).param("apiKey", "secret"))
                 .andExpect(status().isGone());
+    }
+
+    @Test
+    void pagesAThousandStudentsWithStableOrderingAndBoundedHtml() throws Exception {
+        var fixtures = new java.util.ArrayList<User>();
+        for (int i = 0; i < 1000; i++) {
+            fixtures.add(User.builder().username(String.format("pagination-%04d", i))
+                    .email("pagination-" + i + "@example.com").password("hash")
+                    .fullName("Pagination Student " + i).subscriptionTier(i % 2 == 0 ? "FREE" : "PRO").build());
+        }
+        users.saveAllAndFlush(fixtures);
+        var first = mvc.perform(get("/admin/users").session(session).param("keyword", "pagination-").param("size", "1000"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", hasSize(15)))
+                .andExpect(content().string(not(containsString("pagination-0015@example.com"))))
+                .andReturn();
+        var firstPage = (org.springframework.data.domain.Page<?>) first.getModelAndView().getModel().get("studentPage");
+        assertThat(firstPage.getTotalElements()).isEqualTo(1000);
+        assertThat(firstPage.getTotalPages()).isEqualTo(67);
+        assertThat(((User) firstPage.getContent().get(0)).getUsername()).isEqualTo("pagination-0000");
+        var second = mvc.perform(get("/admin/users").session(session).param("keyword", "pagination-").param("page", "1"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", hasSize(15))).andReturn();
+        var secondPage = (org.springframework.data.domain.Page<?>) second.getModelAndView().getModel().get("studentPage");
+        assertThat(((User) secondPage.getContent().get(0)).getUsername()).isEqualTo("pagination-0015");
+        var last = mvc.perform(get("/admin/users").session(session).param("keyword", "pagination-").param("page", "999"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", hasSize(10))).andReturn();
+        assertThat(((org.springframework.data.domain.Page<?>) last.getModelAndView().getModel().get("studentPage")).getNumber()).isEqualTo(66);
+        var filtered = mvc.perform(get("/admin/users").session(session).param("keyword", "pagination-").param("tier", "PRO").param("page", "1"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", hasSize(15))).andReturn();
+        var filteredPage = (org.springframework.data.domain.Page<?>) filtered.getModelAndView().getModel().get("studentPage");
+        assertThat(filteredPage.getTotalElements()).isEqualTo(500);
+        assertThat(filteredPage.getContent()).allMatch(value -> "PRO".equals(((User) value).getSubscriptionTier()));
+        mvc.perform(get("/admin/users").session(session).param("keyword", "no-match-pagination").param("page", "999"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", empty()))
+                .andExpect(content().string(containsString("Không có sinh viên phù hợp.")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "2147483647", "not-a-number"})
+    void invalidPageReturnsBadRequestInsteadOfCrashing(String page) throws Exception {
+        mvc.perform(get("/admin/users").session(session).param("page", page)).andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"upgrade-pro", "upgrade-squad", "downgrade-free", "reset-rag"})
+    void studentActionsPreserveSearchTierAndPage(String action) throws Exception {
+        mvc.perform(post("/admin/users/{id}/" + action, student.getId()).session(session)
+                        .param("csrfToken", csrf()).param("keyword", "Hub").param("tier", "FREE").param("page", "1"))
+                .andExpect(redirectedUrl("/admin/users?keyword=Hub&tier=FREE&page=1"));
+    }
+
+    @Test
+    void rejectedFilterDoesNotMutateStudentAndEmptyLastPageFallsBack() throws Exception {
+        mvc.perform(post("/admin/users/{id}/upgrade-pro", student.getId()).session(session)
+                        .param("csrfToken", csrf()).param("tier", "INVALID"))
+                .andExpect(status().isBadRequest());
+        assertThat(student.getSubscriptionTier()).isEqualTo("FREE");
+        quota.changeTier(student.getId(), "PRO");
+        mvc.perform(get("/admin/users").session(session).param("keyword", student.getUsername()).param("tier", "FREE").param("page", "1"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", empty()));
+    }
+
+    @Test
+    void slowSuccessfulPingStillShowsGreenSuccessWithoutLeakingKey() throws Exception {
+        when(pingService.testConnection(any(), isNull())).thenReturn(new PingResponseDto(true, 3500, "Kết nối thành công"));
+        mvc.perform(post("/admin/settings/test-ping").session(session).param("csrfToken", csrf()));
+        mvc.perform(get("/admin/settings").session(session)).andExpect(status().isOk())
+                .andExpect(content().string(containsString("alert-success")))
+                .andExpect(content().string(not(containsString("alert-warning"))))
+                .andExpect(content().string(containsString("3500 ms")))
+                .andExpect(content().string(containsString("Kết nối Google Gemini thành công!")))
+                .andExpect(content().string(not(containsString("test-system-key"))));
+    }
+
+    @Test
+    void upgradingTheOnlyStudentOnLastFilteredPageReturnsToRemainingPage() throws Exception {
+        User last = null;
+        for (int i = 0; i < 16; i++) {
+            last = users.save(User.builder().username(String.format("boundary-%02d", i)).email("boundary-" + i + "@example.com")
+                    .password("hash").fullName("Boundary Student").build());
+        }
+        users.flush();
+        mvc.perform(post("/admin/users/{id}/upgrade-pro", last.getId()).session(session)
+                        .param("csrfToken", csrf()).param("keyword", "boundary-").param("tier", "FREE").param("page", "1"))
+                .andExpect(redirectedUrl("/admin/users?keyword=boundary-&tier=FREE&page=1"));
+        var result = mvc.perform(get("/admin/users").session(session).param("keyword", "boundary-").param("tier", "FREE").param("page", "1"))
+                .andExpect(status().isOk()).andExpect(model().attribute("students", hasSize(15))).andReturn();
+        assertThat(((org.springframework.data.domain.Page<?>) result.getModelAndView().getModel().get("studentPage")).getNumber()).isZero();
     }
 }

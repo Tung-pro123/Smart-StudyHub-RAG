@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.List;
 import java.time.LocalDate;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,8 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "and (:tier = '' or coalesce(u.subscriptionTier, 'FREE') = :tier) " +
             "and (lower(u.username) like lower(concat('%', :keyword, '%')) " +
             "or lower(u.fullName) like lower(concat('%', :keyword, '%')) " +
-            "or lower(u.email) like lower(concat('%', :keyword, '%'))) order by u.username")
-    List<User> searchStudents(String keyword, String tier);
+            "or lower(u.email) like lower(concat('%', :keyword, '%'))) order by u.username, u.id")
+    Page<User> searchStudents(String keyword, String tier, Pageable pageable);
 
     @Query("select count(u) from User u where u.role = 'ROLE_STUDENT' and coalesce(u.subscriptionTier, 'FREE') = :tier")
     long countByTier(String tier);

@@ -1,0 +1,134 @@
+[
+  {
+    "page": "error",
+    "width": 1920,
+    "height": 1080,
+    "scroll": 1920,
+    "section": 1152,
+    "viewport": 1920
+  },
+  {
+    "page": "error",
+    "width": 1366,
+    "height": 768,
+    "scroll": 1366,
+    "section": 1047,
+    "viewport": 1366
+  },
+  {
+    "page": "error",
+    "width": 768,
+    "height": 1024,
+    "scroll": 768,
+    "section": 704,
+    "viewport": 768
+  },
+  {
+    "page": "error",
+    "width": 375,
+    "height": 812,
+    "scroll": 375,
+    "section": 343,
+    "viewport": 375
+  },
+  {
+    "page": "dashboard",
+    "width": 1920,
+    "height": 1080,
+    "scroll": 1905,
+    "section": 1152,
+    "viewport": 1905
+  },
+  {
+    "page": "dashboard",
+    "width": 1366,
+    "height": 768,
+    "scroll": 1351,
+    "section": 1031,
+    "viewport": 1351
+  },
+  {
+    "page": "dashboard",
+    "width": 768,
+    "height": 1024,
+    "scroll": 753,
+    "section": 689,
+    "viewport": 753
+  },
+  {
+    "page": "dashboard",
+    "width": 375,
+    "height": 812,
+    "scroll": 360,
+    "section": 328,
+    "viewport": 360
+  },
+  {
+    "page": "users",
+    "width": 1920,
+    "height": 1080,
+    "rows": 15,
+    "scroll": 1905,
+    "section": 1152,
+    "viewport": 1905
+  },
+  {
+    "page": "users",
+    "width": 1366,
+    "height": 768,
+    "rows": 15,
+    "scroll": 1351,
+    "section": 1031,
+    "viewport": 1351
+  },
+  {
+    "page": "users",
+    "width": 768,
+    "height": 1024,
+    "rows": 15,
+    "scroll": 753,
+    "section": 689,
+    "viewport": 753
+  },
+  {
+    "page": "users",
+    "width": 375,
+    "height": 812,
+    "rows": 15,
+    "scroll": 360,
+    "section": 328,
+    "viewport": 360
+  },
+  {
+    "page": "settings",
+    "width": 1920,
+    "height": 1080,
+    "scroll": 1920,
+    "section": 1152,
+    "viewport": 1920
+  },
+  {
+    "page": "settings",
+    "width": 1366,
+    "height": 768,
+    "scroll": 1351,
+    "section": 1031,
+    "viewport": 1351
+  },
+  {
+    "page": "settings",
+    "width": 768,
+    "height": 1024,
+    "scroll": 768,
+    "section": 704,
+    "viewport": 768
+  },
+  {
+    "page": "settings",
+    "width": 375,
+    "height": 812,
+    "scroll": 360,
+    "section": 328,
+    "viewport": 360
+  }
+]

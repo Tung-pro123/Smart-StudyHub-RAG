@@ -17,11 +17,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.UUID;
+import org.springframework.data.domain.PageRequest;
 
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
+    private static final int PAGE_SIZE = 15;
     private final UserRepository users;
     private final AdminAnalyticsService analytics;
     private final SubscriptionQuotaService quota;
@@ -73,42 +75,74 @@ public class AdminController {
 
     @GetMapping("/users")
     public String users(@RequestParam(defaultValue = "") String keyword,
-                        @RequestParam(defaultValue = "") String tier, Model model) {
-        if (!java.util.List.of("", "FREE", "PRO", "SQUAD").contains(tier)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Gói cước không hợp lệ.");
+                        @RequestParam(defaultValue = "") String tier,
+                        @RequestParam(defaultValue = "0") int page, Model model) {
+        validateUserFilter(page, tier);
+        var studentPage = users.searchStudents(keyword.trim(), tier, PageRequest.of(page, PAGE_SIZE));
+        if (page > 0 && page >= studentPage.getTotalPages()) {
+            page = Math.max(0, studentPage.getTotalPages() - 1);
+            studentPage = users.searchStudents(keyword.trim(), tier, PageRequest.of(page, PAGE_SIZE));
         }
         model.addAttribute("keyword", keyword.trim());
         model.addAttribute("tier", tier);
-        model.addAttribute("students", users.searchStudents(keyword.trim(), tier));
+        model.addAttribute("students", studentPage.getContent());
+        model.addAttribute("studentPage", studentPage);
+        model.addAttribute("firstPage", Math.max(0, page - 2));
+        model.addAttribute("lastPage", Math.min(studentPage.getTotalPages() - 1, page + 2));
         model.addAttribute("today", java.time.LocalDate.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh")));
         return "admin/users";
     }
 
     @PostMapping("/users/{id}/upgrade-pro")
-    public String upgrade(@PathVariable Long id, RedirectAttributes redirect) {
+    public String upgrade(@PathVariable Long id, @RequestParam(defaultValue = "") String keyword,
+                          @RequestParam(defaultValue = "") String tier, @RequestParam(defaultValue = "0") int page,
+                          RedirectAttributes redirect) {
+        validateUserFilter(page, tier);
         quota.changeTier(id, "PRO");
         redirect.addFlashAttribute("successMessage", "Đã nâng cấp PRO cho sinh viên.");
-        return "redirect:/admin/users";
+        return redirectToUsers(keyword, tier, page, redirect);
     }
 
     @PostMapping("/users/{id}/upgrade-squad")
-    public String upgradeSquad(@PathVariable Long id, RedirectAttributes redirect) {
+    public String upgradeSquad(@PathVariable Long id, @RequestParam(defaultValue = "") String keyword,
+                               @RequestParam(defaultValue = "") String tier, @RequestParam(defaultValue = "0") int page,
+                               RedirectAttributes redirect) {
+        validateUserFilter(page, tier);
         quota.changeTier(id, "SQUAD");
         redirect.addFlashAttribute("successMessage", "Đã kích hoạt SQUAD cho sinh viên.");
-        return "redirect:/admin/users";
+        return redirectToUsers(keyword, tier, page, redirect);
     }
 
     @PostMapping("/users/{id}/reset-rag")
-    public String resetRag(@PathVariable Long id, RedirectAttributes redirect) {
+    public String resetRag(@PathVariable Long id, @RequestParam(defaultValue = "") String keyword,
+                           @RequestParam(defaultValue = "") String tier, @RequestParam(defaultValue = "0") int page,
+                           RedirectAttributes redirect) {
+        validateUserFilter(page, tier);
         quota.resetRagQuota(id);
         redirect.addFlashAttribute("successMessage", "Đã reset hạn ngạch RAG hôm nay cho sinh viên.");
-        return "redirect:/admin/users";
+        return redirectToUsers(keyword, tier, page, redirect);
     }
 
     @PostMapping("/users/{id}/downgrade-free")
-    public String downgrade(@PathVariable Long id, RedirectAttributes redirect) {
+    public String downgrade(@PathVariable Long id, @RequestParam(defaultValue = "") String keyword,
+                            @RequestParam(defaultValue = "") String tier, @RequestParam(defaultValue = "0") int page,
+                            RedirectAttributes redirect) {
+        validateUserFilter(page, tier);
         quota.changeTier(id, "FREE");
         redirect.addFlashAttribute("successMessage", "Đã chuyển sinh viên về gói FREE.");
+        return redirectToUsers(keyword, tier, page, redirect);
+    }
+
+    private void validateUserFilter(int page, String tier) {
+        if (page < 0 || page > Integer.MAX_VALUE / PAGE_SIZE || !java.util.List.of("", "FREE", "PRO", "SQUAD").contains(tier)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trang hoặc gói cước không hợp lệ.");
+        }
+    }
+
+    private String redirectToUsers(String keyword, String tier, int page, RedirectAttributes redirect) {
+        if (!keyword.isBlank()) redirect.addAttribute("keyword", keyword.trim());
+        if (!tier.isEmpty()) redirect.addAttribute("tier", tier);
+        if (page > 0) redirect.addAttribute("page", page);
         return "redirect:/admin/users";
     }
 
