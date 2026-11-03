@@ -240,7 +240,7 @@ class QuizPdfExportServiceTest {
         // Test overload generateQuizPdf(quiz, true)
         byte[] pdfWithAnswers = quizPdfExportService.generateQuizPdf(quiz, true);
         try {
-            java.nio.file.Path ev = java.nio.file.Paths.get("docs", "evidence", "de-thi-pro.pdf");
+            java.nio.file.Path ev = java.nio.file.Paths.get("docs", "evidence", "nhat", "de-thi-pro.pdf");
             java.nio.file.Files.createDirectories(ev.getParent());
             java.nio.file.Files.write(ev, pdfWithAnswers);
         } catch (Exception ignored) {}
@@ -254,7 +254,7 @@ class QuizPdfExportServiceTest {
             try {
                 org.apache.pdfbox.rendering.PDFRenderer renderer = new org.apache.pdfbox.rendering.PDFRenderer(document);
                 java.awt.image.BufferedImage img = renderer.renderImageWithDPI(1, 150);
-                javax.imageio.ImageIO.write(img, "png", new java.io.File("docs/evidence/E2E-QUIZ-06_nhat.png"));
+                javax.imageio.ImageIO.write(img, "png", new java.io.File("docs/evidence/nhat/E2E-QUIZ-06_nhat.png"));
             } catch (Exception ignored) {}
         }
     }

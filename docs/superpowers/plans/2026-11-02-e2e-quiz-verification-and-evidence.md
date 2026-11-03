@@ -1,7 +1,7 @@
 # Implementation & Verification Plan: Task 5 (Nhật) - AI Quiz Generator, Testing Room, Squad Leaderboard & PDF Export
 
 ## 1. Mục tiêu và Phạm vi
-Kế hoạch này phục vụ việc hoàn thiện các chi tiết kỹ thuật còn thiếu và thực thi kiểm thử End-to-End (E2E) cho phân hệ Quiz của thành viên **Nhật**, thu thập đầy đủ 6 ảnh chụp minh chứng (`E2E-QUIZ-01_nhat.png` -> `E2E-QUIZ-06_nhat.png`) cùng file PDF xuất mẫu (`docs/evidence/de-thi-pro.pdf`).
+Kế hoạch này phục vụ việc hoàn thiện các chi tiết kỹ thuật còn thiếu và thực thi kiểm thử End-to-End (E2E) cho phân hệ Quiz của thành viên **Nhật**, thu thập đầy đủ 6 ảnh chụp minh chứng (`E2E-QUIZ-01_nhat.png` -> `E2E-QUIZ-06_nhat.png`) cùng file PDF xuất mẫu (`docs/evidence/nhat/de-thi-pro.pdf`).
 
 ### Phân vai & Tài khoản kiểm thử
 | Tài khoản | Mật khẩu | Hạng tài khoản | Vai trò trong kịch bản kiểm thử |
@@ -41,7 +41,7 @@ Kế hoạch này phục vụ việc hoàn thiện các chi tiết kỹ thuật 
   - `E2E-QUIZ-04_nhat.png`: Bảng xếp hạng nhóm Squad tại `/quiz` hiển thị thứ hạng `squad_member1` (#1 - 10.0đ) và `squad_leader` (#2 - 8.0đ).
   - `E2E-QUIZ-05_nhat.png`: Đăng nhập `student` (Free), nút xuất PDF bị disabled / badge PRO VIP và route `/quiz/attempt/{id}/pdf` trả về 403 Forbidden.
   - `E2E-QUIZ-06_nhat.png`: Đăng nhập `pro_student`, xuất file PDF thành công, mở xem file hiển thị font Arial tiếng Việt, Watermark "StudyHub AI" và bảng đáp án.
-  - Lưu file PDF tải về vào `docs/evidence/de-thi-pro.pdf`.
+  - Lưu file PDF tải về vào `docs/evidence/nhat/de-thi-pro.pdf`.
 
 ---
 
@@ -49,6 +49,6 @@ Kế hoạch này phục vụ việc hoàn thiện các chi tiết kỹ thuật 
 - [ ] File `pdf-template.html` có watermark "StudyHub AI" và Answer Key Grid.
 - [ ] Dữ liệu demo có sẵn môn học, tài liệu và điểm xếp hạng squad.
 - [ ] Toàn bộ unit/integration tests liên quan đều PASS.
-- [ ] Có đầy đủ 6 ảnh trong `docs/evidence/` đúng định dạng tên chuẩn.
-- [ ] Có file `docs/evidence/de-thi-pro.pdf` hiển thị tiếng Việt chuẩn.
+- [ ] Có đầy đủ 6 ảnh trong `docs/evidence/nhat/` đúng định dạng tên chuẩn.
+- [ ] Có file `docs/evidence/nhat/de-thi-pro.pdf` hiển thị tiếng Việt chuẩn.
 

@@ -40,7 +40,7 @@ public class StudyPlannerService {
     private final ObjectMapper objectMapper;
     private final SystemAiKeyService systemAiKeyService;
 
-    @Value("${studyhub.ai.planner-model:gemini-3.8-flash}")
+    @Value("${studyhub.ai.planner-model:gemini-3.5-flash-lite}")
     private String plannerModel;
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
@@ -371,9 +371,9 @@ public class StudyPlannerService {
             models.add(plannerModel.trim());
         }
         models.addAll(List.of(
+                "gemini-3.5-flash-lite",
                 "gemini-3.8-flash",
-                "gemini-flash-latest",
-                "gemini-2.5-flash-lite"
+                "gemini-flash-latest"
         ));
         return new ArrayList<>(models);
     }

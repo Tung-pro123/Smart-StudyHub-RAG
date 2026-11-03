@@ -1,101 +1,89 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="navbar" class="navbar glass-card sticky top-0 z-50 px-4 md:px-8 border-b shadow-sm">
+<div th:fragment="navbar" class="navbar bg-white/80 backdrop-blur-md sticky top-0 z-40 px-4 md:px-8 border-b border-slate-200/80 shadow-sm">
     <!-- Mobile Drawer Open Button -->
     <div class="flex-none lg:hidden">
-        <label for="main-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost">
+        <label for="main-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost text-slate-700">
             <i class="fa-solid fa-bars text-xl"></i>
         </label>
     </div>
 
-    <!-- Brand Logo -->
-    <div class="flex-1 items-center gap-3">
-        <a th:href="@{/}" class="flex items-center gap-3 group">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                <i class="fa-solid fa-graduation-cap text-lg"></i>
+    <!-- Mobile Brand Logo (Chỉ hiển thị trên mobile khi sidebar ẩn) -->
+    <div class="flex-1 lg:hidden items-center gap-2">
+        <a th:href="@{/}" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                <i class="fa-solid fa-graduation-cap"></i>
             </div>
-            <div>
-                <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">StudyHub AI</span>
-            </div>
+            <span class="font-extrabold text-base tracking-tight bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 bg-clip-text text-transparent">StudyHub</span>
         </a>
     </div>
 
-    <!-- Quick Navigation Links (Phân quyền Admin vs Sinh Viên) -->
-    <div class="flex-none hidden md:flex items-center gap-2">
-        <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
-            <a th:href="@{/admin/dashboard}" class="btn btn-ghost btn-sm font-semibold text-purple-600">
-                <i class="fa-solid fa-chart-line mr-1"></i> Admin Dashboard
-            </a>
-            <a th:href="@{/admin/users}" class="btn btn-ghost btn-sm font-semibold text-indigo-600">
-                <i class="fa-solid fa-users mr-1"></i> Quản Lý Sinh Viên
-            </a>
-            <a th:href="@{/admin/settings}" class="btn btn-ghost btn-sm font-semibold text-amber-600">
-                <i class="fa-solid fa-key mr-1"></i> Cấu Hình AI
-            </a>
-            <a th:href="@{/courses}" class="btn btn-ghost btn-sm font-semibold text-base-content/70">
-                <i class="fa-solid fa-book-open mr-1"></i> Môn Học Hệ Thống
-            </a>
-        </th:block>
-
-        <th:block th:unless="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
-            <a th:href="@{/courses}" class="btn btn-ghost btn-sm font-semibold">
-                <i class="fa-solid fa-book-open mr-1 text-indigo-500"></i> Môn Học
-            </a>
-            <a th:href="@{/planner}" class="btn btn-ghost btn-sm font-semibold">
-                <i class="fa-solid fa-calendar-check mr-1 text-emerald-500"></i> Lịch Học Vừa Sức
-            </a>
-            <a th:href="@{/quiz}" class="btn btn-ghost btn-sm font-semibold">
-                <i class="fa-solid fa-list-check mr-1 text-amber-500"></i> Luyện Đề Trắc Nghiệm
-            </a>
-        </th:block>
+    <!-- Desktop Title / Breadcrumb (Bên trái của Topbar trên desktop) -->
+    <div class="flex-1 hidden lg:flex items-center gap-2">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Hệ Thống Học Tập</span>
+        <span class="text-slate-300">/</span>
+        <h2 class="font-extrabold text-sm text-slate-800">StudyHub AI Dashboard</h2>
     </div>
 
-    <!-- Theme Controller (DaisyUI) -->
-    <div class="flex-none ml-3 flex items-center">
-        <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
-            <!-- this hidden checkbox controls the state -->
-            <input type="checkbox" class="theme-controller" value="synthwave" />
-            <!-- sun icon -->
-            <i class="swap-off fa-solid fa-sun text-amber-500 text-lg"></i>
-            <!-- moon icon -->
-            <i class="swap-on fa-solid fa-moon text-indigo-400 text-lg"></i>
-        </label>
-    </div>
+    <!-- Quick Action Buttons (Bên phải Topbar) -->
+    <div class="flex-none flex items-center gap-2.5">
+        <!-- Nút Tạo Môn Học Nhanh -->
+        <button th:if="${canCreateCourse == null or canCreateCourse}" 
+                onclick="const m = document.getElementById('modal-create-course'); if(m) m.showModal(); else window.location.href='/courses';" 
+                class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-none rounded-xl text-xs font-bold shadow-sm shadow-purple-500/20 hidden sm:inline-flex gap-1.5">
+            <i class="fa-solid fa-plus text-[11px]"></i> Tạo Môn Mới
+        </button>
 
-    <!-- User Profile Dropdown (Thymeleaf Session) -->
-    <div class="flex-none ml-2">
-        <div th:if="${session.currentUser != null}" class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar online ring-2 ring-indigo-500/30">
-                <div class="w-10 rounded-full">
-                    <img th:src="${session.currentUser.avatar != null ? session.currentUser.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=student'}"
-                         alt="Avatar" />
-                </div>
-            </div>
-            <ul tabindex="0" class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content glass-card rounded-2xl w-56 border border-base-200">
-                <li class="menu-title px-4 py-2 border-b border-base-200/60">
-                    <div class="flex items-center justify-between">
-                        <span class="font-extrabold text-base-content text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
-                        <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge badge-info badge-xs text-[9px] font-bold">SQUAD</span>
-                        <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.subscriptionTier != 'SQUAD' and session.currentUser.subscriptionTier != 'CAMPUS'}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
-                        <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
-                    </div>
-                    <span class="text-[10px] text-base-content/60 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>
-                </li>
-                <li><a th:href="@{/profile}"><i class="fa-solid fa-user text-indigo-500"></i> Hồ Sơ Cá Nhân</a></li>
-                <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/dashboard}"><i class="fa-solid fa-chart-line text-purple-600"></i> Quản Trị Admin</a></li>
-                <li th:if="${session.currentUser.role != 'ROLE_ADMIN' and !session.currentUser.isPro()}"><a href="javascript:void(0)" onclick="const m = document.getElementById('modal-pricing-upgrade'); if(m) m.showModal(); else window.location.href='/courses';" class="text-purple-600 font-bold"><i class="fa-solid fa-bolt text-amber-500"></i> Nâng Cấp Gói Pro</a></li>
-                <li><a th:href="@{/settings}"><i class="fa-solid fa-key text-purple-500"></i> Cài Đặt Hệ Thống</a></li>
-                <li class="border-t border-base-200/60 mt-1 pt-1">
-                    <a th:href="@{/logout}" class="text-rose-500 hover:bg-rose-500/10"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a>
-                </li>
-            </ul>
+        <!-- Nút Bảng Giá Nhanh -->
+        <button onclick="const m = document.getElementById('modal-pricing-upgrade'); if(m) m.showModal(); else window.location.href='/courses';" 
+                class="btn btn-sm btn-ghost text-slate-600 hover:text-indigo-600 rounded-xl text-xs font-bold hidden md:inline-flex gap-1.5">
+            <i class="fa-solid fa-gem text-amber-500 text-[11px]"></i> Gói Cước
+        </button>
+
+        <!-- Theme Controller (DaisyUI) -->
+        <div class="flex-none ml-1">
+            <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm text-slate-600">
+                <input type="checkbox" class="theme-controller" value="synthwave" />
+                <i class="swap-off fa-solid fa-sun text-amber-500 text-base"></i>
+                <i class="swap-on fa-solid fa-moon text-indigo-400 text-base"></i>
+            </label>
         </div>
 
-        <div th:unless="${session.currentUser != null}" class="ml-2">
-            <a th:href="@{/login}" class="btn btn-sm btn-primary rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20">
-                <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
-            </a>
+        <!-- User Profile Dropdown -->
+        <div class="flex-none ml-1">
+            <div th:if="${session.currentUser != null}" class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar ring-2 ring-indigo-500/30">
+                    <div class="w-9 h-9 rounded-full">
+                        <img th:src="${session.currentUser.avatar != null ? session.currentUser.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=student'}"
+                             alt="Avatar" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-white text-slate-700 rounded-2xl w-56 border border-slate-200">
+                    <li class="menu-title px-4 py-2 border-b border-slate-100">
+                        <div class="flex items-center justify-between">
+                            <span class="font-extrabold text-slate-900 text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
+                            <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge badge-info badge-xs text-[9px] font-bold">SQUAD</span>
+                            <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.subscriptionTier != 'SQUAD' and session.currentUser.subscriptionTier != 'CAMPUS'}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
+                            <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>
+                    </li>
+                    <li><a th:href="@{/profile}"><i class="fa-solid fa-user text-indigo-500"></i> Hồ Sơ Cá Nhân</a></li>
+                    <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/dashboard}"><i class="fa-solid fa-chart-line text-purple-600"></i> Quản Trị Admin</a></li>
+                    <li th:if="${session.currentUser.role != 'ROLE_ADMIN' and !session.currentUser.isPro()}"><a href="javascript:void(0)" onclick="const m = document.getElementById('modal-pricing-upgrade'); if(m) m.showModal(); else window.location.href='/courses';" class="text-purple-600 font-bold"><i class="fa-solid fa-bolt text-amber-500"></i> Nâng Cấp Gói Pro</a></li>
+                    <li><a th:href="@{/settings}"><i class="fa-solid fa-key text-purple-500"></i> Cài Đặt Hệ Thống</a></li>
+                    <li class="border-t border-slate-100 mt-1 pt-1">
+                        <a th:href="@{/logout}" class="text-rose-600 hover:bg-rose-50"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div th:unless="${session.currentUser != null}">
+                <a th:href="@{/login}" class="btn btn-sm btn-primary rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20">
+                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
+                </a>
+            </div>
         </div>
     </div>
 

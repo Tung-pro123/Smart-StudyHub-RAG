@@ -203,6 +203,32 @@
   - Tích hợp chặt chẽ với phương thức `User.isPro()` để tài khoản hạng `SQUAD` (Nhóm học tập) cũng tự động được hưởng quyền tải không giới hạn như `PRO`.
   - Chạy `mvn test` xác thực toàn bộ **111/111 test cases** đều PASS xanh 100%.
 
+### 🔹 GIAI ĐOẠN 5: THỰC NGHIỆM KIỂM THỬ THỦ CÔNG E2E TRÊN TRÌNH DUYỆT (MANUAL TESTING & VERIFICATION)
+
+* **Mục tiêu**:
+  - Trực tiếp thực nghiệm kiểm thử toàn diện trên trình duyệt Chromium cho 7 kịch bản cốt lõi của phân hệ Tài liệu & RAG AI (`E2E-RAG-01` đến `E2E-RAG-07`).
+  - Kiểm tra tính toàn vẹn của luồng tải PDF, trực quan hóa Chunks ngữ nghĩa, xóa tài liệu cascade, chatbot giáo trình trích dẫn nguồn số trang, và cơ chế kiểm soát hạn ngạch (3 tài liệu/môn và 50 câu RAG/ngày cho gói Free).
+  - Thu thập đầy đủ 7 ảnh chụp màn hình minh chứng sắc nét lưu vào thư mục `docs/evidence/`.
+
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi là Bình, đang trực tiếp kiểm thử thủ công (Manual Testing) trên trình duyệt cho 7 kịch bản của phân hệ Tài liệu & RAG AI (môn HSF302):
+  1. Hãy viết một đoạn mã Java ngắn dùng Apache PDFBox để sinh nhanh cho tôi các file slide PDF mẫu chuẩn học thuật (chủ đề Entity Lifecycle, Spring Data JPA, Microservices) có độ dài 2 - 3 trang để tôi tự tải lên test chức năng cắt Chunks và Citation Card.
+  2. Hướng dẫn tôi câu lệnh SQL trong H2 Web Console để cập nhật số câu hỏi trong ngày (daily_rag_count = 50) của tài khoản 'student' nhằm kiểm tra trực tiếp thông báo chặn trần trên giao diện mà không phải gõ tay 50 câu hỏi.
+  3. Giải thích giúp tôi cách giao diện hiển thị accordion trích dẫn nguồn (Citation) và cơ chế khóa Dropzone khi môn học đạt đủ 3 tài liệu ở gói Free.
+  ```
+
+* **AI đã giúp bạn như thế nào?**:
+  - **Tạo tài liệu học thuật mẫu chuẩn xác**: AI đã cung cấp script Java PDFBox sinh ra 4 file slide PDF học phần HSF302 (`slide-spring-jpa-core.pdf`, `slide-spring-security.pdf`...) với các đoạn văn bản kỹ thuật đầy đủ để thuật toán RAG nhận diện và băm chunks chính xác.
+  - **Tư vấn giải pháp kiểm thử hạn ngạch thông minh**: Hướng dẫn câu lệnh SQL cập nhật trạng thái `daily_rag_count = 50` và `last_rag_reset_date = CURRENT_DATE` trên H2 Console, giúp Bình kích hoạt và đối chứng ngay cảnh báo chặn trần đỏ của hệ thống trên giao diện thực tế.
+  - **Hỗ trợ phân tích kết quả giao diện**: Đối chiếu hiển thị của các thẻ Accordion trích dẫn trang đối chứng (0% ảo giác) và trạng thái vô hạn của gói Pro.
+
+* **Đánh giá & Kết quả nghiệm thu của bản thân**:
+  - Bản thân đã trực tiếp đăng nhập lần lượt các tài khoản `student` (Free) và `pro_student` (Pro) để thao tác, xác thực và chụp lại trọn vẹn 7 ảnh minh chứng đạt chuẩn.
+  - Kết quả: Toàn bộ 7/7 kịch bản kiểm thử đều đạt trạng thái **`✅ PASS 100%`**.
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM KHI DÙNG AI
 * **AI đã giúp ích nhiều nhất cho bạn ở khâu nào?**: 
   - Khâu thiết kế kiến trúc Multi-Key Rotator kết hợp Cooldown Map và quy trình làm rõ yêu cầu qua `/grill-me`. AI đã phân tích từng nhánh thiết kế, đề xuất giải pháp nội bộ nhẹ gọn không cần cài thêm service ngoài mà vẫn giải quyết triệt để bài toán nghẽn hạn ngạch (Rate Limit 15 RPM của Gemini Free).

@@ -3,16 +3,16 @@
 <head th:replace="~{fragments/head :: common-head(${pageTitle})}"></head>
 <body class="bg-gradient-to-br from-slate-50 via-indigo-50/20 to-purple-50/30 min-h-screen text-base-content flex flex-col">
 
-    <!-- Drawer wrapper for Mobile Responsive -->
-    <div class="drawer flex-grow">
+    <!-- Drawer wrapper: lg:drawer-open keeps vertical navigation sidebar permanently docked on left on desktop -->
+    <div class="drawer lg:drawer-open flex-grow">
         <input id="main-drawer" type="checkbox" class="drawer-toggle" />
         
         <div class="drawer-content flex flex-col min-h-screen">
             <!-- Navbar Header -->
             <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-            <!-- Main Page Content Content Area -->
-            <main class="flex-grow container mx-auto px-4 md:px-8 py-8">
+            <!-- Main Page Content Area -->
+            <main class="flex-grow container mx-auto px-4 md:px-8 py-8 max-w-7xl">
                 <th:block th:replace="${content}"></th:block>
             </main>
 
@@ -20,7 +20,7 @@
             <div th:replace="~{fragments/footer :: footer}"></div>
         </div>
 
-        <!-- Sidebar Drawer for Mobile -->
+        <!-- Vertical Navigation Sidebar (Left side of screen) -->
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
     </div>
 

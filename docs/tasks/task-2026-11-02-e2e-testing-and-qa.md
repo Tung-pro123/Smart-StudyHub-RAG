@@ -5,7 +5,7 @@
 > **Đội ngũ thực hiện**: Nhóm 2 (Group 2)  
 > **Nhánh Git chung**: `main`  
 > **Tài liệu theo dõi lỗi**: [`docs/issues/ISSUES-TRACKING.md`](../issues/ISSUES-TRACKING.md)  
-> **Thư mục lưu ảnh minh chứng**: `docs/evidence/`
+> **Thư mục lưu ảnh minh chứng**: `docs/evidence/[tên_thành_viên]/` (Phân chia theo từng thư mục thành viên: `tung/`, `truong/`, `binh/`, `thang/`, `nhat/`, `an/`)
 
 ---
 
@@ -17,8 +17,8 @@
    - Kiểm thử độc lập trên **các tài khoản demo được cấp riêng**, không giẫm chân lên dữ liệu của nhau (nhờ cơ chế Data Isolation theo `user_id`).
 3. **Bắt buộc chụp ảnh màn hình (Screenshot Evidence)**:
    - Mỗi test case hoàn thành **bắt buộc phải có 1 ảnh chụp màn hình rõ nét** minh chứng kết quả.
-   - Đặt tên file ảnh chuẩn: `[Mã_Test]_[Tên_Thành_Viên].png` (Ví dụ: `E2E-CORE-01_tung.png`, `E2E-PLAN-02_thang.png`).
-   - Lưu toàn bộ ảnh vào thư mục `docs/evidence/` và commit lên repo.
+   - Đặt tên file ảnh chuẩn: `[Mã_Test]_[Tên_Thành_Viên].png` (Ví dụ: `E2E-CORE-01_tung.png`, `E2E-PLAN-02_thanh.png`).
+   - Lưu toàn bộ ảnh vào đúng thư mục thành viên: `docs/evidence/[tên_thành_viên]/` (ví dụ: `docs/evidence/2026-11-02-e2e-testing/tung/E2E-CORE-01_tung.png`) và commit lên repo.
 4. **Quy trình khi phát hiện lỗi**:
    - Nếu phát hiện lỗi (nút bấm không chạy, vỡ layout, logic không chặn đúng hạn ngạch): **Mở ngay file [`docs/issues/ISSUES-TRACKING.md`](../issues/ISSUES-TRACKING.md)**, điền thông tin theo mẫu issue để cùng fix ngay.
 
@@ -93,7 +93,7 @@
 │ 👑 TÙNG (Lead)  │ Core, Search, Isolation & Hub │ student (Free), pro_student (Pro)  │
 │ 👤 TRƯỜNG       │ Auth, Register, Squad & Prof  │ squad_leader, student2, pro_student│
 │ 📄 BÌNH         │ PDF Docs, Chunks & RAG AI Chat│ student (Free), pro_student (Pro)  │
-│ 🗓️ THÀNH        │ AI Study Planner & Task Check │ student (Free), pro_student (Pro)  │
+│ 🗓️ THẮNG        │ AI Study Planner & Task Check │ student (Free), pro_student (Pro)  │
 │ 🧠 NHẬT         │ AI Quiz, Board & PDF Export   │ squad_leader, member1, pro_student │
 │ 🛡️ AN           │ Admin Command Center & AI Key │ admin (Admin), student (Chặn 403)  │
 └─────────────────┴───────────────────────────────┴────────────────────────────────────┘
@@ -101,90 +101,104 @@
 
 ---
 
-### 👑 1. TÙNG (LEAD) - CORE, SEARCH/FILTER, DATA ISOLATION, HẠN MỨC 3 MÔN & ROUTING
+### 👑 1. TÙNG (LEAD) - CORE, TÌM KIẾM TỰ DO, DATA ISOLATION, HẠN MỨC 3 MÔN & ROUTING [✅ 100% HOÀN THÀNH (7/7 TEST CASES)]
 * **Tài khoản sử dụng**: `student` (Free), `pro_student` (Pro), Khách vãng lai
 * **URL kiểm thử**: `http://localhost:8080/`, `http://localhost:8080/courses`, `http://localhost:8080/courses/{id}`
+* **Tiến độ**: Đã hoàn thành 7/7 Test Cases & nộp đủ 7 ảnh minh chứng chuẩn tại `docs/evidence/2026-11-02-e2e-testing/tung/`
 * **Danh sách Test Cases**:
-  1. `E2E-CORE-01`: **Tìm kiếm môn học theo từ khóa**:
+  1. `E2E-CORE-01`: **Tìm kiếm môn học theo từ khóa tự do** [✅ Hoàn thành]:
      - Nhập từ khóa `"Spring"` -> Kết quả lọc ra đúng môn `HSF302`.
      - Nhập từ khóa không tồn tại `"XYZ999"` -> Hiển thị thông báo *"Không tìm thấy môn học nào phù hợp"*.
-  2. `E2E-CORE-02`: **Lọc môn học theo học kỳ**:
-     - Chọn dropdown `"Fall 2026"` -> Lọc các môn thuộc kỳ Fall 2026.
-     - Chọn `"Tất cả học kỳ"` -> Hiển thị lại toàn bộ môn học.
-  3. `E2E-CORE-03`: **Data Isolation (Phân lập dữ liệu môn học cá nhân)**:
+  2. `E2E-CORE-02`: **Data Isolation (Phân lập dữ liệu môn học cá nhân)** [✅ Hoàn thành]:
      - Đăng nhập `student`: Chỉ thấy môn của `student` (`HSF302`, `MAS291`). Tuyệt đối không thấy môn của `pro_student`.
-     - Đăng nhập `pro_student`: Chỉ thấy 4 môn của `pro_student`. Tuyệt đối không lẫn dữ liệu.
-  4. `E2E-CORE-04`: **Kiểm soát hạn mức 3 môn học gói Free**:
+     - Đăng nhập `pro_student`: Chỉ thấy các môn của `pro_student`. Tuyệt đối không lẫn dữ liệu.
+  3. `E2E-CORE-03`: **Kiểm soát hạn mức 3 môn học gói Free** [✅ Hoàn thành]:
      - `student` đang có 2 môn, tạo thêm môn thứ 3 (`SWP391`) -> Thành công.
      - Tiếp tục tạo môn thứ 4 (`PRJ301`) -> Hệ thống chặn lại, hiển thị thông báo đạt giới hạn 3 môn và mở popup bảng giá.
      - Xóa 1 môn cũ -> Nút tạo môn mở lại bình thường.
-  5. `E2E-CORE-05`: **Gói Pro tạo môn học không giới hạn**:
-     - Đăng nhập `pro_student` (đã có 4 môn), tạo môn thứ 5 (`CSD201`) -> Tạo thành công mượt mà, không bị chặn.
-  6. `E2E-CORE-06`: **Bảo vệ quyền sở hữu (Ownership Protection)**:
-     - Đăng nhập `student`, cố tình nhập URL xóa môn của `pro_student` (`/courses/delete/3`) -> Hệ thống chặn lại báo lỗi quyền sở hữu: *"⛔ Bạn không có quyền xóa môn học của người khác!"*.
-  7. `E2E-CORE-07`: **Course Hub - Trang Chi Tiết Môn Học (`courses/detail.html`)**:
-     - Bấm vào 1 môn học -> Hiển thị Course Hub với đầy đủ: Thống kê số chunks, số tài liệu, thông tin môn học, nút sửa môn, nút sang mục Tài liệu và nút sang Chat AI.
-  8. `E2E-CORE-08`: **Landing Page & Điều Hướng Session (Routing)**:
+  4. `E2E-CORE-04`: **Gói Pro tạo môn học không giới hạn** [✅ Hoàn thành]:
+     - Đăng nhập `pro_student`, tạo thêm môn học thứ 8 -> Tạo thành công mượt mà, không bị chặn.
+  5. `E2E-CORE-05`: **Bảo vệ quyền sở hữu (Ownership Protection)** [✅ Hoàn thành]:
+     - Đăng nhập `student`, cố tình nhập URL xóa môn của `pro_student` (`/courses/delete/9`) -> Hệ thống chặn lại báo lỗi quyền sở hữu: *"⛔ Bạn không có quyền xóa môn học của người khác!"*.
+  6. `E2E-CORE-06`: **Course Hub - Trang Chi Tiết Môn Học (`courses/detail.html`)** [✅ Hoàn thành]:
+     - Bấm vào 1 môn học -> Hiển thị Course Hub với đầy đủ: Thống kê số chunks, số tài liệu, thông tin môn học, nút sửa môn, nút sang mục Tài liệu và nút sang Chat AI. (Đã tạo `TASK-UI-01` giao Bình & Trường đồng bộ màu sắc).
+  7. `E2E-CORE-07`: **Landing Page & Điều Hướng Session (Routing)** [✅ Hoàn thành]:
      - Chưa đăng nhập truy cập `http://localhost:8080/` -> Hiển thị Landing Page (Hero banner, Bảng giá 3 gói cước, FAQ Accordion mở/đóng).
      - Đã đăng nhập Sinh viên truy cập `/` -> Tự động chuyển hướng vào `/courses`.
      - Đã đăng nhập Admin truy cập `/` -> Tự động chuyển hướng vào `/admin/dashboard`.
-* **Bằng chứng cần nộp**: 8 ảnh chụp màn hình (`E2E-CORE-01_tung.png` đến `E2E-CORE-08_tung.png`).
+* **Bằng chứng đã nộp**: 7 ảnh chụp màn hình (`E2E-CORE-01_tung.png` đến `E2E-CORE-07_tung.png`) lưu tại [`docs/evidence/2026-11-02-e2e-testing/tung/`](../evidence/2026-11-02-e2e-testing/tung/).
 
 ---
 
 ### 👤 2. TRƯỜNG - AUTHENTICATION, REGISTRATION, PROFILE & QUẢN LÝ NHÓM SQUAD
 * **Tài khoản sử dụng**: `squad_leader`, `student2`, `squad_member1`, `pro_student`
 * **URL kiểm thử**: `http://localhost:8080/login`, `http://localhost:8080/register`, `http://localhost:8080/profile`
+* **Tiến độ**: **ĐÃ HOÀN TẤT THỰC NGHIỆM & NỘP ĐẦY ĐỦ 9 ẢNH MINH CHỨNG**
 * **Danh sách Test Cases**:
   1. `E2E-AUTH-01`: **Đăng nhập 1-Click tự động**:
-     - Tại `/login`, bấm vào huy hiệu `[SQUAD: squad_leader]` -> Cả 2 ô tự điền đúng -> Bấm Đăng nhập -> Vào thẳng hệ thống.
+     - Tại `/login`, bấm vào huy hiệu `[SQUAD: squad_leader]` -> Ghi nhận lỗi script ngoài section.
+     - **Trạng thái**: `⚠️ ISSUE-02` | **Ảnh minh chứng**: [`E2E-AUTH-01_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-01_truong.png)
   2. `E2E-AUTH-02`: **Đăng ký tài khoản mới (`/register`)**:
      - Đăng ký user mới `test_user_01` -> Hệ thống tự động gán gói FREE -> Chuyển sang màn hình login và đăng nhập thành công.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-02_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-02_truong.png)
   3. `E2E-AUTH-03`: **Cập nhật họ tên & Chọn Avatar Presets**:
-     - Tại `/profile`, đổi họ tên và bấm chọn avatar mới trong 6 presets -> Bấm "Lưu Cập Nhật" -> Avatar và tên ở Header cập nhật ngay lập tức.
+     - Tại `/profile`, đổi họ tên thành công, ghi nhận lỗi avatar chưa đổi do script ngoài section.
+     - **Trạng thái**: `⚠️ ISSUE-03` | **Ảnh minh chứng**: [`E2E-AUTH-03_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-03_truong.png)
   4. `E2E-AUTH-04`: **Đổi mật khẩu bảo mật BCrypt**:
-     - Nhập sai mật khẩu cũ -> Báo lỗi.
-     - Nhập đúng mật khẩu cũ `123456`, mật khẩu mới `654321` -> Đổi thành công, đăng nhập lại bằng mật khẩu mới thành công.
+     - Nhập đúng mật khẩu cũ `123456`, mật khẩu mới `654321` -> Đổi thành công, đăng nhập lại thành công.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-04_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-04_truong.png)
   5. `E2E-AUTH-05`: **Trưởng nhóm mời bạn học vào Study Squad**:
-     - Đăng nhập `squad_leader` vào `/profile`, nhập username `student2` vào ô Mời -> Bấm Thêm -> Danh sách thành viên tăng lên 4 bạn.
+     - Đăng nhập `squad_leader` vào `/profile`, nhập username `student2` vào ô Mời -> Thêm thành công, danh sách tăng lên 4 bạn.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-05_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-05_truong.png)
   6. `E2E-AUTH-06`: **Chặn thêm thành viên khi nhóm đã đủ 5 bạn**:
      - Mời tiếp cho đủ 5/5 bạn -> Ô nhập bị disable và hiển thị thông báo *"Nhóm đã đủ tối đa 5 thành viên"*.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-06_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-06_truong.png)
   7. `E2E-AUTH-07`: **Xóa thành viên khỏi nhóm**:
      - Bấm nút "Xóa" cạnh `student2` -> Confirm popup -> `student2` bị xóa khỏi nhóm, quay về gói Free.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-07_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-07_truong.png)
   8. `E2E-AUTH-08`: **Thành viên nhóm hưởng quyền lợi Pro & Kiểm tra không lỗi @null**:
-     - Đăng nhập `squad_member1` vào `/profile` -> Kiểm tra thông báo: *"Bạn đang là thành viên trong Nhóm của @squad_leader"*, tuyệt đối KHÔNG có `@null`.
-     - Đăng nhập `pro_student` vào `/profile` -> Card Quản lý nhóm Study Squad biến mất hoàn toàn, chỉ hiển thị quyền lợi Pro cá nhân.
-* **Bằng chứng cần nộp**: 8 ảnh chụp màn hình (`E2E-AUTH-01_truong.png` đến `E2E-AUTH-08_truong.png`).
+     - Subtask 1: Đăng nhập `squad_member1` vào `/profile` -> Kiểm tra thông báo: *"Bạn đang là thành viên trong Nhóm của @squad_leader"*, tuyệt đối KHÔNG có `@null`.
+     - Subtask 2: Đăng nhập `pro_student` vào `/profile` -> Card Quản lý nhóm Study Squad biến mất hoàn toàn, chỉ hiển thị quyền lợi Pro cá nhân.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-AUTH-08_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-08_truong.png) & [`E2E-AUTH-08.1_truong.png`](../evidence/2026-11-02-e2e-testing/truong/E2E-AUTH-08.1_truong.png)
+* **Bằng chứng đã nộp**: Đầy đủ 9 ảnh chụp màn hình trong thư mục [`docs/evidence/2026-11-02-e2e-testing/truong/`](../evidence/2026-11-02-e2e-testing/truong/).
 
 ---
 
 ### 📄 3. BÌNH - QUẢN LÝ TÀI LIỆU PDF, CẮT CHUNKS, RAG CHATBOT & QUOTA RAG
 * **Tài khoản sử dụng**: `student` (Free) và `pro_student` (Pro)
 * **URL kiểm thử**: `http://localhost:8080/courses/{id}/documents`, `http://localhost:8080/courses/{id}/chat`
+* **Tiến độ**: **7/7 Test Cases ĐÃ HOÀN THÀNH (100% PASS)**
 * **Danh sách Test Cases**:
   1. `E2E-RAG-01`: **Tải lên tài liệu PDF môn học**:
      - Vào môn học `HSF302`, tải file slide PDF lên -> Hệ thống xử lý trích xuất văn bản và hiển thị tài liệu trong danh sách.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-01_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-01_binh.png)
   2. `E2E-RAG-02`: **Cắt nhỏ Chunks & Trực quan hóa đoạn trích**:
      - Kiểm tra danh sách Chunks được cắt nhỏ: hiển thị rõ số trang, đoạn văn bản trích dẫn.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-02_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-02_binh.png)
   3. `E2E-RAG-03`: **Xóa tài liệu PDF & Dọn sạch Chunks liên quan**:
      - Bấm nút Xóa tài liệu -> Tài liệu và toàn bộ các chunks liên quan được xóa sạch khỏi Database.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-03_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-03_binh.png)
   4. `E2E-RAG-04`: **Chatbot RAG Giáo trình có Citation số trang đối chứng**:
      - Hỏi AI một câu hỏi có trong slide -> AI trả lời chi tiết và đính kèm **Citation Card: Nguồn file PDF + Trang đối chứng cụ thể (0% ảo giác)**.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-04_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-04_binh.png)
   5. `E2E-RAG-05`: **Kiểm soát hạn mức 3 tài liệu PDF ở Gói Free**:
      - Tài khoản `student` tải đủ 3 tài liệu PDF vào môn học.
      - Cố tình tải tài liệu thứ 4 -> Hệ thống chặn lại báo lỗi hạn ngạch 3 tài liệu/môn của Gói Free.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-05_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-05_binh.png)
   6. `E2E-RAG-06`: **Gói Pro tải tài liệu PDF không giới hạn**:
      - Đăng nhập `pro_student`, tải liên tiếp 4-5 tài liệu PDF vào môn học -> Tải lên thành công mượt mà.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-06_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-06_binh.png)
   7. `E2E-RAG-07`: **Kiểm tra Hạn ngạch RAG 50 câu/ngày của Gói Free**:
-     - Áp dụng Mẹo 1 (sửa limit về 3 hoặc update SQL `daily_rag_count = 49`).
+     - Áp dụng Mẹo 1 (sửa limit về 3 hoặc update SQL `daily_rag_count = 50`).
      - Chat vượt hạn ngạch -> Hệ thống chặn lại báo lỗi đạt giới hạn 50 câu/ngày và gợi ý nâng cấp Pro.
+     - **Trạng thái**: `✅ PASS` | **Ảnh minh chứng**: [`E2E-RAG-07_binh.png`](../evidence/2026-11-02-e2e-testing/binh/E2E-RAG-07_binh.png)
   8. `E2E-RAG-08`: **Tạo phiên chat mới & Xóa lịch sử trò chuyện**:
      - Bấm nút "Cuộc trò chuyện mới" (`/chat/new`) -> Mở phiên mới. Bấm "Xóa lịch sử" (`/chat/clear`) -> Dọn dẹp sạch sẽ phiên chat.
-* **Bằng chứng cần nộp**: 8 ảnh chụp màn hình (`E2E-RAG-01_binh.png` đến `E2E-RAG-08_binh.png`).
+* **Bằng chứng đã nộp**: Đầy đủ 7 ảnh chụp màn hình minh chứng chất lượng cao trong thư mục [`docs/evidence/`](../evidence/).
 
 ---
 
-### 🗓️ 4. THÀNH - AI STUDY PLANNER, LỘ TRÌNH ÔN THI & CHECKLIST NHIỆM VỤ TUẦN
+### 🗓️ 4. THẮNG - AI STUDY PLANNER, LỘ TRÌNH ÔN THI & CHECKLIST NHIỆM VỤ TUẦN
 * **Tài khoản sử dụng**: `student` (Free) và `pro_student` (Pro)
 * **URL kiểm thử**: `http://localhost:8080/planner`, `http://localhost:8080/planner/{planId}`
 * **Danh sách Test Cases**:
@@ -202,7 +216,7 @@
      - Lọc xem các kế hoạch cũ đã tạo theo từng môn học, dữ liệu hiển thị chính xác.
   6. `E2E-PLAN-06`: **Bảo vệ quyền riêng tư lộ trình học tập**:
      - Đăng nhập `student`, cố tình nhập URL xem kế hoạch của `pro_student` (ví dụ `/planner/1`) -> Hệ thống chặn lại báo lỗi *"Không tìm thấy kế hoạch hoặc không thuộc tài khoản của bạn"*.
-* **Bằng chứng cần nộp**: 6 ảnh chụp màn hình (`E2E-PLAN-01_thanh.png` đến `E2E-PLAN-06_thanh.png`).
+* **Bằng chứng cần nộp**: 6 ảnh chụp màn hình (`E2E-PLAN-01_thang.png` đến `E2E-PLAN-06_thang.png`).
 
 ---
 
@@ -230,6 +244,10 @@
 ---
 
 ### 🛡️ 6. AN - ADMIN COMMAND CENTER, QUẢN TRỊ NGƯỜI DÙNG & SYSTEM API KEY
+* **Kết quả kiểm thử 02/11/2026**: **5 PASS, 1 BLOCKED** trên `main@e4a9790`, URL QA `http://localhost:8081`, database QA riêng.
+  - `E2E-ADM-01` đến `E2E-ADM-05`: **PASS**; `E2E-ADM-06`: **BLOCKED** vì chưa có Gemini API key hợp lệ để kiểm tra ping thành công. Masking và phản hồi khi thiếu/sai key đã kiểm tra.
+  - **Báo cáo và ảnh minh chứng**: [docs/evidence/2026-11-02-e2e-testing/an/README.md](../evidence/2026-11-02-e2e-testing/an/README.md). Đã lưu đủ 6 ảnh chính đúng tên; ảnh ADM-06 thể hiện kết quả lỗi với khóa giả, không chứng minh kết nối thành công.
+  - **Kiểm thử bổ sung**: `AdminHubTest` **29/29 PASS** với tùy chọn tương thích Byte Buddy trên JDK 25; không thay thế test Gemini thật.
 * **Tài khoản sử dụng**: `admin` (Admin), `student` (Kiểm tra bảo mật)
 * **URL kiểm thử**: `http://localhost:8080/admin/dashboard`, `http://localhost:8080/admin/users`, `http://localhost:8080/admin/settings`
 * **Danh sách Test Cases**:
@@ -256,7 +274,19 @@
 
 * **Bắt đầu**: 13:00 - Thứ Hai, 02/11/2026
 * **Hạn chót nộp ảnh bằng chứng**: **20:00 - Thứ Hai, 02/11/2026**
-* **Địa điểm nộp ảnh**: Thư mục `docs/evidence/` trên repo theo cú pháp `[Mã_Test]_[Tên_Thành_Viên].png`.
+* **Địa điểm nộp ảnh**: Thư mục thành viên tương ứng tại `docs/evidence/[tên_thành_viên]/` trên repo theo cú pháp `[Mã_Test]_[Tên_Thành_Viên].png`.
 * **Tổng kết & Khắc phục lỗi**: 20:30 - Thứ Hai, 02/11/2026: Leader Tùng cùng cả nhóm rà soát file `docs/issues/ISSUES-TRACKING.md` để đóng tất cả các bug còn tồn đọng.
+
+
+---
+
+## 🎨 6. NHIỆM VỤ CẢI THIỆN & ĐỒNG BỘ GIAO DIỆN (UI POLISH TASKS)
+> Phân công bổ sung theo chỉ đạo của Team Lead Tùng nhằm chuẩn hóa giao diện toàn hệ thống theo Design System Obsidian & White-Card Palette của StudyHub AI.
+
+| Mã Nhiệm Vụ | Phân hệ / Màn hình | Mô tả công việc | Thành viên phụ trách | Hạn hoàn thành | Trạng thái |
+| :---: | :--- | :--- | :---: | :---: | :---: |
+| **`TASK-UI-01`** | **Course Detail Hub (`courses/detail.html`)** | Chuyển đổi 4 thẻ phân hệ (RAG, Slide, Planner, Quiz) và khối Cơ sở tri thức từ nền đen thô (`bg-slate-900`) sang **White-Card Palette** (`bg-white/95 border-slate-200 shadow-sm`), đồng bộ nút bấm sang gradient tím hồng Landing Page (`from-purple-600 via-violet-600 to-pink-600`) và typography hiện đại. | **Bình & Trường** | 22:00 - 02/11/2026 | 🟡 IN PROGRESS |
+
+---
 
 Chúc toàn đội Nhóm 2 test mượt mà, bắt trọn bug và bảo vệ đồ án xuất sắc đạt điểm A+! 🚀

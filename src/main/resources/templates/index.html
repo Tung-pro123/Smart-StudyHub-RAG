@@ -1,235 +1,289 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: main-layout(
-        'StudyHub AI - Quản Lý Môn Học & RAG Giáo Trình',
+        'StudyHub AI - Quản Lý Môn Học & Không Gian Học Tập AI',
         ~{::section}
       )}">
 <body>
-<section class="space-y-8">
+<section class="space-y-8 relative w-full">
 
-    <!-- Flash Messages (Alerts) -->
-    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
+    <!-- Flash Messages (Toast Cards - Sang Trọng, Tinh Tế, Không Còn Màu Xanh Đậm Thô) -->
+    <div th:if="${successMessage}" class="rounded-2xl p-4 bg-emerald-50/95 backdrop-blur-md border border-emerald-200/80 text-emerald-950 shadow-sm flex items-center justify-between relative z-20">
         <div class="flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-xl"></i>
-            <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
-
-    <div th:if="${errorMessage}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-            <span class="font-bold text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
-
-    <!-- Hero Header Banner -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white p-8 md:p-12 shadow-xl border border-white/10">
-        <div class="relative z-10 max-w-3xl space-y-4">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-indigo-200 text-xs font-bold border border-white/20">
-                <i class="fa-solid fa-sparkles text-amber-300"></i> HSF302 Assignment • Smart StudyHub Platform
+            <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow-sm shadow-emerald-500/20">
+                <i class="fa-solid fa-circle-check"></i>
             </div>
-            <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
-                Học Tập Vừa Sức Cùng <span class="bg-gradient-to-r from-amber-300 via-rose-300 to-indigo-200 bg-clip-text text-transparent">Trợ Lý AI RAG</span>
+            <div>
+                <span class="font-extrabold text-xs sm:text-sm text-emerald-950 block" th:text="${successMessage}">Thao tác thành công!</span>
+                <span class="text-[11px] text-emerald-700/80">Không gian học tập cá nhân hóa đã được đồng bộ sẵn sàng</span>
+            </div>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-emerald-700 hover:bg-emerald-100">✕</button>
+    </div>
+
+    <div th:if="${errorMessage}" class="rounded-2xl p-4 bg-rose-50/95 backdrop-blur-md border border-rose-200/80 text-rose-950 shadow-sm flex items-center justify-between relative z-20">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-rose-600 text-white flex items-center justify-center text-sm shadow-sm shadow-rose-500/20">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <span class="font-extrabold text-xs sm:text-sm text-rose-950 block" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+                <span class="text-[11px] text-rose-700/80">Vui lòng kiểm tra lại thao tác hoặc liên hệ hỗ trợ</span>
+            </div>
+        </div>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-rose-700 hover:bg-rose-100">✕</button>
+    </div>
+
+    <!-- 1. HERO HEADER BANNER (Đồng bộ 100% Obsidian Dark & Gradient Landing Page) -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#030712] via-[#090d16] to-[#0f172a] text-white p-8 md:p-10 shadow-2xl border border-white/10">
+        <!-- Ambient Cyber Glows (Đồng bộ Landing Page) -->
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-3xl space-y-3.5">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-purple-300 text-xs font-bold border border-purple-500/30">
+                <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>HSF302 Assignment • Smart StudyHub Platform</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight leading-tight">
+                Quản Lý Môn Học &amp; <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Không Gian Học Tập AI</span>
             </h1>
-            <p class="text-indigo-100/80 text-sm md:text-base leading-relaxed">
-                Quản lý môn học thông minh, tải lên giáo trình PDF để tự động cắt nhỏ đoạn Chunks, trò chuyện hỏi đáp chuyên sâu bám sát tài liệu và sinh đề thi trắc nghiệm AI tức thì.
+            <p class="text-gray-300 text-xs md:text-sm leading-relaxed max-w-2xl font-normal">
+                Tự tạo môn học cá nhân hóa theo kỳ học thực tế, nạp file PDF slide bài giảng để tự động phân tích và kích hoạt trợ lý AI đồng hành ôn thi đạt điểm A+.
             </p>
-            <div class="pt-2 flex flex-wrap gap-3">
-                <!-- Nút dành riêng cho Quản Trị Viên (Admin) -->
+            <div class="pt-2 flex flex-wrap items-center gap-2.5">
+                <!-- Nút dành cho Admin (Không tham gia học, chỉ theo dõi và quản trị) -->
                 <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
-                    <a th:href="@{/admin/dashboard}" class="btn btn-primary bg-purple-600 hover:bg-purple-700 border-none text-white shadow-lg shadow-purple-500/30 rounded-xl font-bold">
-                        <i class="fa-solid fa-chart-line mr-1"></i> Admin Command Center
+                    <a th:href="@{/admin/dashboard}" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-none text-white rounded-xl font-bold shadow-lg shadow-purple-500/25 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-cyan-300"></i>
+                        <span>Vào Trung Tâm Chỉ Huy Quản Trị</span>
                     </a>
-                    <a th:href="@{/admin/users}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                        <i class="fa-solid fa-users mr-1"></i> Quản Lý Sinh Viên
+                    <a th:href="@{/admin/users}" class="btn btn-sm h-10 px-4 bg-white/10 hover:bg-white/15 border border-white/20 text-white rounded-xl font-semibold backdrop-blur-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-users text-purple-300"></i>
+                        <span>Quản Lý Sinh Viên</span>
                     </a>
-                    <a th:href="@{/admin/settings}" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                        <i class="fa-solid fa-key mr-1"></i> Cấu Hình System AI Key
-                    </a>
-                    <button onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                        <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Mẫu Hệ Thống
-                    </button>
                 </th:block>
 
-                <!-- Nút dành cho Sinh Viên / Khách -->
+                <!-- Nút dành cho Sinh Viên -->
                 <th:block th:unless="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
-                    <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary bg-indigo-500 hover:bg-indigo-600 border-none text-white shadow-lg shadow-indigo-500/30 rounded-xl">
-                        <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
+                    <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-none text-white rounded-xl font-bold shadow-lg shadow-purple-500/25 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span>Tạo Môn Học Mới</span>
                     </button>
-                    <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning text-white shadow-lg shadow-amber-500/30 rounded-xl font-bold">
+                    <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-sm h-10 px-4 btn-warning text-white rounded-xl font-bold shadow-md">
                         <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Tạo Thêm Môn
                     </button>
-                    <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl">
-                        <i class="fa-solid fa-gem mr-1 text-amber-300"></i> Bảng Giá Gói Cước
+                    <button onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-sm h-10 px-4 bg-white/10 hover:bg-white/15 border border-white/20 text-white rounded-xl font-semibold backdrop-blur-md transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-gem text-xs text-amber-300"></i>
+                        <span>Bảng Giá Gói Cước</span>
                     </button>
-                    <a th:href="@{/planner}" class="btn btn-ghost text-white/90 hover:bg-white/10 rounded-xl">
-                        <i class="fa-solid fa-calendar-check mr-1 text-emerald-300"></i> Kế Hoạch Ôn Thi
+                    <a th:href="@{/planner}" class="btn btn-sm h-10 px-4 btn-ghost text-gray-200 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-xs text-emerald-400"></i>
+                        <span>Lịch Học Vừa Sức</span>
+                    </a>
+                    <a th:href="@{/quiz}" class="btn btn-sm h-10 px-4 btn-ghost text-gray-200 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-xs text-amber-400"></i>
+                        <span>Luyện Đề Trắc Nghiệm</span>
                     </a>
                 </th:block>
             </div>
         </div>
-        <!-- Decorative Circle -->
-        <div class="absolute -right-12 -bottom-12 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
     </div>
 
-    <!-- Quick Stats Bar -->
+    <!-- 2. QUICK STATS BAR (TOÀN BỘ CARD MÀU TRẮNG TINH TẾ, HIỆN ĐẠI) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Card 1: Hạn ngạch môn học & Gói cước -->
-        <div class="glass-card rounded-2xl p-5 flex items-center justify-between shadow-sm hover:border-indigo-500/40 transition-all border border-base-200">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center text-xl font-bold">
+        <!-- Thẻ 1: Môn Học & Hạn Ngạch (White Card) -->
+        <div class="rounded-2xl p-5 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all flex items-center justify-between">
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-bold">
                     <i class="fa-solid fa-book-bookmark"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <p class="text-xs font-semibold text-base-content/60 uppercase">Môn Học & Hạn Ngạch</p>
-                        <span th:if="${isProUser}" class="badge badge-primary badge-xs font-bold text-[10px]">PRO</span>
-                        <span th:unless="${isProUser}" class="badge badge-ghost badge-xs font-bold text-[10px]">FREE</span>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Môn Học &amp; Hạn Ngạch</p>
+                        <span th:if="${isProUser}" class="badge badge-primary badge-xs font-black text-[9px]">PRO</span>
+                        <span th:unless="${isProUser}" class="badge badge-ghost badge-xs font-black text-[9px] bg-slate-100 text-slate-600 border-slate-200">FREE</span>
                     </div>
-                    <div class="flex items-baseline gap-2 mt-0.5">
-                        <h4 class="text-2xl font-black text-base-content" th:text="${totalCourses}">3</h4>
-                        <span th:if="${!isProUser}" class="text-xs font-bold text-base-content/50">/ <span th:text="${maxCoursesFree}">3</span> môn</span>
-                        <span th:if="${isProUser}" class="text-xs font-bold text-emerald-500">/ ∞ môn</span>
+                    <div class="flex items-baseline gap-1.5 mt-0.5">
+                        <h4 class="text-2xl font-black text-slate-900" th:text="${totalCourses}">2</h4>
+                        <span th:if="${!isProUser}" class="text-xs font-bold text-slate-400">/ <span th:text="${maxCoursesFree}">3</span> môn</span>
+                        <span th:if="${isProUser}" class="text-xs font-bold text-emerald-600">/ ∞ không giới hạn</span>
                     </div>
                 </div>
             </div>
-            <!-- Mini Upgrade Button if Free (Ẩn với Admin) -->
-            <button th:if="${session.currentUser == null or (session.currentUser.role != 'ROLE_ADMIN' and !isProUser)}" onclick="document.getElementById('modal-pricing-upgrade').showModal()"
-                    class="btn btn-xs btn-outline btn-primary rounded-lg text-[11px] gap-1 hover:text-white"
-                    title="Nâng cấp gói để không giới hạn môn học">
-                <i class="fa-solid fa-bolt text-amber-400"></i> Nâng cấp
+            <button th:if="${session.currentUser == null or (session.currentUser.role != 'ROLE_ADMIN' and !isProUser)}" 
+                    onclick="document.getElementById('modal-pricing-upgrade').showModal()"
+                    class="btn btn-xs rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-[11px] font-bold gap-1 transition-all"
+                    title="Nâng cấp gói">
+                <i class="fa-solid fa-bolt text-amber-500"></i> Nâng cấp
             </button>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-emerald-500/40 transition-all border border-base-200">
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xl font-bold">
-                <i class="fa-solid fa-database"></i>
+        <!-- Thẻ 2: Hạn Ngạch RAG Hôm Nay (White Card) -->
+        <div class="rounded-2xl p-5 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-md hover:border-purple-300 transition-all flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-comments"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold text-base-content/60 uppercase">Cơ Sở Dữ Liệu</p>
-                <h4 class="text-sm font-bold text-emerald-600 flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> H2 File + Flyway
-                </h4>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Hỏi Đáp RAG Hôm Nay</p>
+                <div class="flex items-baseline gap-1.5 mt-0.5">
+                    <h4 th:if="${isProUser}" class="text-lg font-black text-emerald-600 flex items-center gap-1">
+                        <i class="fa-solid fa-infinity text-xs"></i> Không giới hạn
+                    </h4>
+                    <h4 th:unless="${isProUser}" class="text-2xl font-black text-slate-900">
+                        <span th:text="${currentUser != null and currentUser.dailyRagCount != null ? currentUser.dailyRagCount : 0}">0</span>
+                        <span class="text-xs font-bold text-slate-400">/ 50 câu</span>
+                    </h4>
+                </div>
+                <p class="text-[11px] text-slate-500">Trích dẫn đối chứng 0% ảo giác</p>
             </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-purple-500/40 transition-all border border-base-200">
-            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-xl font-bold">
-                <i class="fa-solid fa-brain"></i>
+        <!-- Thẻ 3: Gói Hội Viên (White Card) -->
+        <div class="rounded-2xl p-5 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-md hover:border-amber-300 transition-all flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-crown"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold text-base-content/60 uppercase">Mô Hình AI</p>
-                <h4 class="text-sm font-bold text-base-content">Gemini 1.5 & Groq</h4>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Gói Cước Đang Dùng</p>
+                <div class="mt-0.5">
+                    <span th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}" class="text-sm font-black text-purple-700">Quản Trị Viên (ADMIN)</span>
+                    <span th:if="${session.currentUser != null and session.currentUser.subscriptionTier == 'SQUAD'}" class="text-sm font-black text-cyan-700">Gói Nhóm (SQUAD)</span>
+                    <span th:if="${session.currentUser != null and session.currentUser.subscriptionTier == 'PRO' and session.currentUser.role != 'ROLE_ADMIN'}" class="text-sm font-black text-pink-600">Gói Chuyên Sâu (PRO)</span>
+                    <span th:if="${session.currentUser == null or (session.currentUser.subscriptionTier == 'FREE' and session.currentUser.role != 'ROLE_ADMIN')}" class="text-sm font-black text-slate-800">Sinh Viên Tự Học (FREE)</span>
+                </div>
+                <p class="text-[11px] text-slate-500">Mở khóa RAG &amp; Đề thi AI</p>
             </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:border-amber-500/40 transition-all border border-base-200">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-xl font-bold">
-                <i class="fa-solid fa-layer-group"></i>
+        <!-- Thẻ 4: Phương Thức Học Tập BYOC (White Card) -->
+        <div class="rounded-2xl p-5 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-graduation-cap"></i>
             </div>
             <div>
-                <p class="text-xs font-semibold text-base-content/60 uppercase">Kiến Trúc Chuẩn</p>
-                <h4 class="text-sm font-bold text-base-content">Package-by-Feature</h4>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Phương Thức Học Tập</p>
+                <h4 class="text-xl font-black text-slate-900 mt-0.5">Tự Nạp Slide (BYOC)</h4>
+                <p class="text-[11px] text-emerald-700 font-semibold">Tự do mọi trường đại học</p>
             </div>
         </div>
     </div>
 
-    <!-- Courses Management Section -->
+    <!-- 3. KHU VỰC QUẢN LÝ MÔN HỌC (COURSES SECTION) -->
     <div class="space-y-6">
-        <!-- Top Controls: Title, Search, Filter, Add button -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <!-- Header Thanh Điều Khiển: Tiêu Đề, Search Tự Do (White Card) -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-sm">
             <div>
-                <h2 class="text-2xl font-black text-base-content flex items-center gap-2">
-                    <i class="fa-solid fa-shapes text-indigo-600"></i> Danh Sách Môn Học
+                <h2 class="text-xl font-black text-slate-900 flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-sm shadow-xs">
+                        <i class="fa-solid fa-shapes"></i>
+                    </div>
+                    <span>Danh Sách Môn Học</span>
                 </h2>
-                <p class="text-xs md:text-sm text-base-content/60">Chọn môn học để xem chi tiết, nạp tài liệu PDF hoặc chat hỏi đáp giáo trình</p>
+                <p class="text-xs text-slate-500 mt-0.5">Chọn một môn học để vào lớp, hỏi đáp AI bám sát giáo trình hoặc luyện đề thi</p>
             </div>
 
-            <!-- Search & Filter Bar Form -->
+            <!-- Form Tìm Kiếm Tự Do Tinh Gọn -->
             <form th:action="@{/courses}" method="get" class="flex flex-wrap items-center gap-2">
-                <!-- Search Input -->
+                <!-- Ô Nhập Tìm Kiếm Tự Do (Mã môn, tên môn, học kỳ...) -->
                 <div class="relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
-                    <input type="text" name="keyword" th:value="${currentKeyword}" placeholder="Tìm mã môn, tên môn hoặc học kỳ..." 
-                           class="input input-sm input-bordered pl-8 w-56 md:w-80 rounded-xl text-xs" />
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" name="keyword" th:value="${currentKeyword}" placeholder="Tìm mã môn, tên môn, học kỳ..." 
+                           class="input input-sm h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-9 w-52 md:w-64 rounded-xl text-xs focus:border-purple-600 focus:ring-1 focus:ring-purple-600 focus:bg-white transition" />
                 </div>
 
-                <!-- Action Buttons -->
-                <button type="submit" class="btn btn-sm btn-primary rounded-xl" title="Tìm kiếm">
+                <!-- Nút Hành Động -->
+                <button type="submit" class="btn btn-sm h-10 bg-purple-600 hover:bg-purple-700 border-none text-white rounded-xl font-bold shadow-sm shadow-purple-500/20 text-xs px-4" title="Tìm kiếm môn học">
                     <i class="fa-solid fa-magnifying-glass mr-1"></i> Tìm Kiếm
                 </button>
-                <a th:if="${currentKeyword != null and !currentKeyword.isEmpty()}" th:href="@{/courses}" 
-                   class="btn btn-sm btn-ghost rounded-xl text-xs text-base-content/60" title="Đặt lại">
+                <a th:if="${currentKeyword != null and !currentKeyword.isEmpty()}" 
+                   th:href="@{/courses}" 
+                   class="btn btn-sm h-10 btn-ghost text-slate-500 hover:text-purple-700 rounded-xl text-xs px-3" title="Đặt lại tìm kiếm">
                     <i class="fa-solid fa-rotate-left mr-1"></i> Đặt Lại
                 </a>
 
-                <!-- Create Course Button (Conditionally handles Quota Limit) -->
-                <button th:if="${canCreateCourse}" type="button" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-sm btn-primary rounded-xl ml-2 bg-gradient-to-r from-indigo-600 to-purple-600 border-none text-white shadow-md">
-                    <i class="fa-solid fa-plus"></i> Thêm Môn
+                <!-- Nút Thêm Môn (Đồng bộ Gradient Landing Page) -->
+                <button th:if="${canCreateCourse}" type="button" onclick="document.getElementById('modal-create-course').showModal()" 
+                        class="btn btn-sm h-10 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-none text-white rounded-xl ml-1 font-bold shadow-md shadow-purple-500/20 text-xs px-4">
+                    <i class="fa-solid fa-plus mr-1"></i> Thêm Môn
                 </button>
-                <button th:unless="${canCreateCourse}" type="button" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-sm btn-warning rounded-xl ml-2 text-white shadow-md gap-1" title="Đã đạt giới hạn 3 môn của gói Free. Nhấn để nâng cấp!">
+                <button th:unless="${canCreateCourse}" type="button" onclick="document.getElementById('modal-pricing-upgrade').showModal()" 
+                        class="btn btn-sm btn-warning rounded-xl ml-2 text-white shadow-sm gap-1 font-bold text-xs" 
+                        title="Đã đạt giới hạn 3 môn của gói Free. Nhấn để nâng cấp!">
                     <i class="fa-solid fa-lock"></i> Thêm Môn <span class="badge badge-xs badge-neutral text-[9px]">PRO</span>
                 </button>
             </form>
         </div>
 
-        <!-- Empty State (When no courses found) -->
-        <div th:if="${courses.empty}" class="glass-card rounded-3xl p-12 text-center space-y-4 border border-dashed border-base-300">
-            <div class="w-16 h-16 rounded-full bg-indigo-500/10 text-indigo-600 mx-auto flex items-center justify-center text-2xl">
+        <!-- TRẠNG THÁI TRỐNG (EMPTY STATE KHI TÌM KHÔNG THẤY) -->
+        <div th:if="${courses.empty}" class="rounded-3xl p-12 text-center space-y-4 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm">
+            <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 mx-auto flex items-center justify-center text-3xl">
                 <i class="fa-solid fa-folder-open"></i>
             </div>
-            <h3 class="text-lg font-bold text-base-content">Không tìm thấy môn học nào</h3>
-            <p class="text-xs text-base-content/60 max-w-sm mx-auto">
-                Không có môn học phù hợp với từ khóa hoặc bạn chưa tạo môn học nào. Hãy bấm nút dưới đây để tạo ngay môn đầu tiên!
+            <h3 class="text-lg font-bold text-slate-900">Không tìm thấy môn học nào phù hợp</h3>
+            <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                Không tìm thấy môn học nào khớp với từ khóa hoặc bạn chưa tạo môn học nào. Hãy kiểm tra lại từ khóa hoặc bấm nút dưới đây để tạo môn mới!
             </p>
-            <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-primary btn-sm rounded-xl">
-                <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Đầu Tiên
-            </button>
-            <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-warning btn-sm rounded-xl text-white">
-                <i class="fa-solid fa-lock mr-1"></i> Nâng Cấp Để Tạo Thêm Môn
-            </button>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <a th:if="${currentKeyword != null and !currentKeyword.isEmpty()}" th:href="@{/courses}" class="btn btn-sm btn-outline border-slate-300 text-slate-700 hover:bg-slate-100 rounded-xl font-semibold text-xs">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Xem Tất Cả Môn
+                </a>
+                <button th:if="${canCreateCourse}" onclick="document.getElementById('modal-create-course').showModal()" class="btn btn-sm bg-gradient-to-r from-indigo-600 to-purple-600 border-none text-white rounded-xl font-bold shadow-md shadow-indigo-500/20 text-xs">
+                    <i class="fa-solid fa-plus mr-1"></i> Tạo Môn Học Mới
+                </button>
+                <button th:unless="${canCreateCourse}" onclick="document.getElementById('modal-pricing-upgrade').showModal()" class="btn btn-sm btn-warning rounded-xl text-white font-bold text-xs">
+                    <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Để Tạo Thêm Môn
+                </button>
+            </div>
         </div>
 
-        <!-- Course Cards Grid -->
+        <!-- LƯỚI CARD MÔN HỌC (3 CỘT, MỖI CARD MÀU TRẮNG HIỆN ĐẠI, TINH TẾ) -->
         <div th:unless="${courses.empty}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div th:each="course : ${courses}" class="glass-card rounded-3xl p-6 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group border border-base-200">
+            <div th:each="course : ${courses}" 
+                 class="rounded-3xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-xl hover:border-indigo-400/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                
+                <!-- Thanh viền màu gradient trên cùng nhận diện theo môn -->
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r"
+                     th:classappend="${course.color} ?: 'from-indigo-600 to-purple-600'"></div>
+
                 <div class="space-y-4">
-                    <p th:if="${currentUser != null and currentUser.admin}" class="text-xs text-base-content/60" th:text="${course.ownerUsername != null} ? |Bởi: ${course.ownerUsername}| : 'Môn mẫu hệ thống'"></p>
-                    <!-- Card Top Header -->
+                    <!-- Dòng tác giả nếu là Admin xem môn của sinh viên khác (BẮT BUỘC ĐỂ TEST AdminHubTest PASS) -->
+                    <p th:if="${currentUser != null and currentUser.admin}" class="text-xs text-indigo-600 font-semibold" th:text="${course.ownerUsername != null} ? |Bởi: ${course.ownerUsername}| : 'Môn mẫu hệ thống'"></p>
+
+                    <!-- Header Card: Icon, Mã Môn & Menu 3 Chấm -->
                     <div class="flex items-start justify-between">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20"
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-500/20 transition-transform group-hover:scale-105"
                                  th:classappend="${course.color} ?: 'from-indigo-600 to-purple-600'">
                                 <i class="fa-solid" th:classappend="${course.icon} ?: 'fa-book-open'"></i>
                             </div>
                             <div>
-                                <span class="badge badge-sm font-extrabold text-white bg-slate-800" th:text="${course.code}">HSF302</span>
-                                <span class="text-[11px] block text-base-content/60 font-semibold mt-0.5" th:text="${course.semester} + ' • ' + ${course.credits} + ' tín chỉ'">Fall 2026 • 3 tín chỉ</span>
+                                <span class="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 text-xs font-black tracking-wide" th:text="${course.code}">HSF302</span>
+                                <span class="text-[11px] block text-slate-500 font-semibold mt-1" th:text="${course.semester} + ' • ' + ${course.credits} + ' tín chỉ'">Fall 2026 • 3 tín chỉ</span>
                             </div>
                         </div>
 
-                        <!-- Card Dropdown Actions Menu -->
+                        <!-- Dropdown Menu 3 chấm (Gom gọn thao tác quản trị phụ) -->
                         <div class="dropdown dropdown-end">
-                            <button tabindex="0" class="btn btn-ghost btn-circle btn-xs text-base-content/50 hover:text-base-content">
+                            <button tabindex="0" class="btn btn-ghost btn-circle btn-xs text-slate-400 hover:text-slate-700" title="Thao tác môn học">
                                 <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
                             </button>
-                            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg glass-card rounded-2xl w-44 text-xs font-semibold border border-base-200">
+                            <ul tabindex="0" class="dropdown-content z-20 menu p-2 shadow-xl rounded-2xl w-44 text-xs font-semibold bg-white border border-slate-100 text-slate-700">
                                 <li>
-                                    <a th:href="@{'/courses/' + ${course.id}}">
-                                        <i class="fa-solid fa-eye text-indigo-500"></i> Xem Chi Tiết
+                                    <a th:href="@{'/courses/' + ${course.id}}" class="hover:bg-indigo-50 hover:text-indigo-600">
+                                        <i class="fa-solid fa-door-open text-indigo-500"></i> Vào Lớp Học
                                     </a>
                                 </li>
                                 <li>
-                                    <button type="button" th:attr="onclick='openEditModal(' + ${course.id} + ', \'' + ${#strings.escapeJavaScript(course.code)} + '\', \'' + ${#strings.escapeJavaScript(course.name)} + '\', \'' + ${#strings.escapeJavaScript(course.description ?: '')} + '\', \'' + ${#strings.escapeJavaScript(course.semester ?: 'Fall 2026')} + '\', ' + ${course.credits ?: 3} + ', \'' + ${#strings.escapeJavaScript(course.color ?: '')} + '\', \'' + ${#strings.escapeJavaScript(course.icon ?: '')} + '\')'">
+                                    <button type="button" class="hover:bg-amber-50 hover:text-amber-600" 
+                                            th:attr="onclick='openEditModal(' + ${course.id} + ', \'' + ${#strings.escapeJavaScript(course.code)} + '\', \'' + ${#strings.escapeJavaScript(course.name)} + '\', \'' + ${#strings.escapeJavaScript(course.description ?: '')} + '\', \'' + ${#strings.escapeJavaScript(course.semester ?: 'Fall 2026')} + '\', ' + ${course.credits ?: 3} + ', \'' + ${#strings.escapeJavaScript(course.color ?: '')} + '\', \'' + ${#strings.escapeJavaScript(course.icon ?: '')} + '\')'">
                                         <i class="fa-solid fa-pen-to-square text-amber-500"></i> Chỉnh Sửa
                                     </button>
                                 </li>
-                                <li class="border-t border-base-200/50 mt-1 pt-1">
+                                <li class="border-t border-slate-100 mt-1 pt-1">
                                     <a th:href="@{'/courses/delete/' + ${course.id}}"
-                                       onclick="return confirm('Bạn có chắc chắn muốn xóa môn học này không? Mọi tài liệu PDF và Chunks liên quan sẽ bị xóa hoàn toàn!')"
-                                       class="text-rose-500 hover:bg-rose-500/10">
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa môn học này không? Toàn bộ tài liệu PDF và dữ liệu liên quan sẽ bị xóa vĩnh viễn!')"
+                                       class="text-rose-600 hover:bg-rose-50">
                                         <i class="fa-solid fa-trash-can"></i> Xóa Môn Học
                                     </a>
                                 </li>
@@ -237,119 +291,121 @@
                         </div>
                     </div>
 
-                    <!-- Course Title & Description (Click title opens detail) -->
+                    <!-- Tên Môn Học & Mô Tả Súc Tích -->
                     <div>
-                        <a th:href="@{'/courses/' + ${course.id}}" class="group-hover:text-indigo-600 transition-colors">
-                            <h3 class="text-lg font-bold text-base-content leading-snug line-clamp-1" th:text="${course.name}">
+                        <a th:href="@{'/courses/' + ${course.id}}" class="block group-hover:text-indigo-600 transition-colors">
+                            <h3 class="text-base font-bold text-slate-900 leading-snug line-clamp-1" th:text="${course.name}">
                                 JPA and Spring Framework
                             </h3>
                         </a>
-                        <p class="text-xs text-base-content/70 mt-1.5 line-clamp-2 leading-relaxed" th:text="${course.description}">
-                            Mô tả chi tiết nội dung chương trình học...
+                        <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed" th:text="${course.description}">
+                            Mô tả chi tiết nội dung chương trình học của môn...
                         </p>
                     </div>
 
-                    <!-- Course Stats Badge -->
+                    <!-- Badges Trạng Thái Phân Cấp & Quyền Sở Hữu (BẮT BUỘC ĐỂ TEST AdminHubTest PASS) -->
                     <div class="flex items-center gap-2 pt-1 flex-wrap">
-                        <span class="badge badge-sm badge-outline badge-primary font-bold text-[10px]">
-                            <i class="fa-solid fa-puzzle-piece mr-1"></i>
-                            <span th:text="${course.chunkCount}">0</span> Chunks
+                        <span th:if="${course.chunkCount > 0}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200/60 text-emerald-700 text-[11px] font-semibold">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Sẵn sàng hỏi đáp AI
                         </span>
-                        <span th:if="${course.isSystemSample()}" class="badge badge-sm bg-indigo-500/15 text-indigo-400 font-bold text-[10px] border-none">
-                            <i class="fa-solid fa-cubes mr-1"></i> Mẫu chung
+                        <span th:unless="${course.chunkCount > 0}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-500 text-[11px] font-medium">
+                            <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i> Cần nạp slide
                         </span>
-                        <span th:unless="${course.isSystemSample()}" class="badge badge-sm bg-emerald-500/15 text-emerald-400 font-bold text-[10px] border-none">
-                            <i class="fa-solid fa-user-check mr-1"></i> <span th:text="${currentUser != null and course.isOwnedBy(currentUser.id)} ? 'Môn của bạn' : 'Môn sinh viên'">Môn của bạn</span>
+
+                        <span th:if="${course.isSystemSample()}" class="px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-semibold text-[10px]">
+                            Môn mẫu
                         </span>
-                        <span class="badge badge-sm badge-ghost text-base-content/60 text-[10px]">
-                            <i class="fa-solid fa-clock mr-1"></i> <span th:text="${#temporals.format(course.createdAt, 'dd/MM/yyyy')}">18/10/2026</span>
+                        <span th:unless="${course.isSystemSample()}" class="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 font-semibold text-[10px]">
+                            <span th:text="${currentUser != null and course.isOwnedBy(currentUser.id)} ? 'Môn của bạn' : 'Môn sinh viên'">Môn của bạn</span>
+                        </span>
+
+                        <span class="text-slate-400 text-[11px] ml-auto">
+                            <i class="fa-regular fa-calendar mr-1"></i><span th:text="${#temporals.format(course.createdAt, 'dd/MM/yyyy')}">18/10/2026</span>
                         </span>
                     </div>
                 </div>
 
-                <!-- 4 Feature Action Buttons: RAG, Planner, Quiz, Detail -->
-                <div class="pt-5 border-t border-base-200/60 mt-5 grid grid-cols-4 gap-1.5">
-                    <a th:href="@{'/courses/' + ${course.id} + '/chat'}" class="btn btn-xs btn-primary font-bold rounded-lg" title="Trợ lý RAG Giáo Trình (Bình)">
-                        <i class="fa-solid fa-comments"></i> RAG
-                    </a>
-                    <a th:href="@{'/planner?courseId=' + ${course.id}}" class="btn btn-xs btn-outline font-bold rounded-lg" title="Lập Kế Hoạch Ôn Tập Vừa Sức (Thắng)">
-                        <i class="fa-solid fa-calendar-days text-emerald-500"></i> Lịch
-                    </a>
-                    <a th:href="@{'/quiz?courseId=' + ${course.id}}" class="btn btn-xs btn-outline font-bold rounded-lg" title="Luyện Đề Trắc Nghiệm AI (Nhật)">
-                        <i class="fa-solid fa-circle-question text-amber-500"></i> Quiz
-                    </a>
-                    <a th:href="@{'/courses/' + ${course.id}}" class="btn btn-xs btn-ghost font-bold rounded-lg" title="Xem Chi Tiết Môn Học">
-                        <i class="fa-solid fa-arrow-right"></i>
+                <!-- Footer Action: DUY NHẤT 1 NÚT CTA CHÍNH (Đồng bộ Gradient Landing Page) -->
+                <div class="pt-5 mt-5 border-t border-slate-100">
+                    <a th:href="@{'/courses/' + ${course.id}}" 
+                       class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-xs tracking-wide shadow-md shadow-purple-500/20 group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-all">
+                        <span>Vào Lớp Học</span>
+                        <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1.5 transition-transform duration-200"></i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal 1: Tạo Môn Học Mới -->
+    <!-- MODAL 1: TẠO MÔN HỌC MỚI (MODERN SAAS LIGHT THEME) -->
     <dialog id="modal-create-course" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box glass-card p-6 rounded-3xl border border-white/20 max-w-lg">
-            <h3 class="font-extrabold text-xl text-base-content flex items-center gap-2">
+        <div class="modal-box bg-white text-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 max-w-lg shadow-2xl relative overflow-hidden">
+            <h3 class="font-extrabold text-xl text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-folder-plus text-indigo-600"></i> Thêm Môn Học Mới
             </h3>
-            <p class="text-xs text-base-content/60 mt-1">Khởi tạo môn học để bắt đầu nạp tài liệu PDF và kết nối các tính năng AI</p>
+            <p class="text-xs text-slate-500 mt-1">Khởi tạo môn học để bắt đầu nạp slide giáo trình và kích hoạt trợ lý AI</p>
 
             <form th:action="@{/courses/create}" th:object="${newCourse}" method="post" class="space-y-4 mt-5">
                 <div class="grid grid-cols-2 gap-3">
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Mã Môn Học *</span></label>
-                        <input type="text" th:field="*{code}" required placeholder="Ví dụ: HSF302" class="input input-sm input-bordered w-full rounded-xl uppercase font-bold" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Mã Môn Học *</span></label>
+                        <input type="text" th:field="*{code}" required placeholder="Ví dụ: HSF302" 
+                               class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl uppercase font-bold focus:border-indigo-500 focus:bg-white" />
                     </div>
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Học Kỳ</span></label>
-                        <input type="text" th:field="*{semester}" placeholder="Fall 2026" class="input input-sm input-bordered w-full rounded-xl" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Học Kỳ</span></label>
+                        <input type="text" th:field="*{semester}" placeholder="Fall 2026" 
+                               class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
                     <div class="col-span-2 form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Tên Môn Học *</span></label>
-                        <input type="text" th:field="*{name}" required placeholder="JPA and Spring Framework..." class="input input-sm input-bordered w-full rounded-xl" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Tên Môn Học *</span></label>
+                        <input type="text" th:field="*{name}" required placeholder="JPA and Spring Framework..." 
+                               class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white" />
                     </div>
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Số Tín Chỉ</span></label>
-                        <input type="number" th:field="*{credits}" min="1" max="10" class="input input-sm input-bordered w-full rounded-xl" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Số Tín Chỉ</span></label>
+                        <input type="number" th:field="*{credits}" min="1" max="10" 
+                               class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white" />
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Mô Tả Tóm Tắt</span></label>
-                    <textarea th:field="*{description}" rows="2" placeholder="Tóm tắt kiến thức trọng tâm của môn học..." class="textarea textarea-bordered textarea-sm w-full rounded-xl"></textarea>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Mô Tả Tóm Tắt</span></label>
+                    <textarea th:field="*{description}" rows="2" placeholder="Tóm tắt kiến thức trọng tâm của môn học..." 
+                              class="textarea textarea-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white"></textarea>
                 </div>
 
-                <!-- Color Palette Select -->
+                <!-- Lựa chọn màu sắc -->
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Màu Sắc Đại Diện</span></label>
-                    <select th:field="*{color}" class="select select-sm select-bordered rounded-xl text-xs">
-                        <option value="from-indigo-600 to-purple-600">Indigo & Purple (Mặc định)</option>
-                        <option value="from-emerald-600 to-teal-600">Emerald & Teal (Xanh lá)</option>
-                        <option value="from-amber-500 to-rose-600">Amber & Rose (Cam hồng rực rỡ)</option>
-                        <option value="from-blue-600 to-cyan-600">Blue & Cyan (Xanh dương hiện đại)</option>
-                        <option value="from-purple-600 to-pink-600">Purple & Pink (Tím quý phái)</option>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Màu Sắc Đại Diện</span></label>
+                    <select th:field="*{color}" class="select select-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl text-xs focus:border-indigo-500 focus:bg-white">
+                        <option value="from-indigo-600 to-purple-600">Indigo &amp; Purple (Mặc định)</option>
+                        <option value="from-emerald-600 to-teal-600">Emerald &amp; Teal (Xanh lá)</option>
+                        <option value="from-amber-500 to-rose-600">Amber &amp; Rose (Cam hồng)</option>
+                        <option value="from-blue-600 to-cyan-600">Blue &amp; Cyan (Xanh dương)</option>
+                        <option value="from-purple-600 to-pink-600">Purple &amp; Pink (Tím)</option>
                     </select>
                 </div>
 
-                <!-- Icon Select -->
+                <!-- Lựa chọn icon -->
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Icon Biểu Tượng</span></label>
-                    <select th:field="*{icon}" class="select select-sm select-bordered rounded-xl text-xs">
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Icon Biểu Tượng</span></label>
+                    <select th:field="*{icon}" class="select select-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl text-xs focus:border-indigo-500 focus:bg-white">
                         <option value="fa-laptop-code">Laptop Code (Công nghệ phần mềm)</option>
                         <option value="fa-book-open">Sách Giáo Trình (Lý thuyết)</option>
-                        <option value="fa-chart-pie">Biểu Đồ Thống Kê (Toán / Phân tích)</option>
+                        <option value="fa-chart-pie">Biểu Đồ Thống Kê (Toán / Data)</option>
                         <option value="fa-cubes-stacked">Khối Dự Án (SWP / Project)</option>
                         <option value="fa-brain">Trí Tuệ Nhân Tạo (AI / RAG)</option>
-                        <option value="fa-database">Cơ Sở Dữ Liệu (SQL / JPA)</option>
+                        <option value="fa-database">Cơ Sở Dữ Liệu (SQL / DB)</option>
                     </select>
                 </div>
 
                 <div class="modal-action mt-6">
-                    <button type="button" onclick="document.getElementById('modal-create-course').close()" class="btn btn-sm btn-ghost rounded-xl">Hủy</button>
-                    <button type="submit" class="btn btn-sm btn-primary rounded-xl px-5">Lưu Môn Học</button>
+                    <button type="button" onclick="document.getElementById('modal-create-course').close()" class="btn btn-sm btn-ghost text-slate-500 hover:text-slate-800 rounded-xl">Hủy</button>
+                    <button type="submit" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 border-none text-white rounded-xl px-5 font-bold shadow-md shadow-indigo-500/20">Lưu Môn Học</button>
                 </div>
             </form>
         </div>
@@ -358,59 +414,59 @@
         </form>
     </dialog>
 
-    <!-- Modal 2: Chỉnh Sửa Môn Học (Dynamic JS populate) -->
+    <!-- MODAL 2: CHỈNH SỬA MÔN HỌC (MODERN SAAS LIGHT THEME) -->
     <dialog id="modal-edit-course" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box glass-card p-6 rounded-3xl border border-white/20 max-w-lg">
-            <h3 class="font-extrabold text-xl text-base-content flex items-center gap-2">
+        <div class="modal-box bg-white text-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 max-w-lg shadow-2xl relative overflow-hidden">
+            <h3 class="font-extrabold text-xl text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-pen-to-square text-amber-500"></i> Chỉnh Sửa Môn Học
             </h3>
-            <p class="text-xs text-base-content/60 mt-1">Cập nhật thông tin chi tiết môn học</p>
+            <p class="text-xs text-slate-500 mt-1">Cập nhật thông tin chi tiết môn học</p>
 
             <form id="form-edit-course" method="post" class="space-y-4 mt-5">
                 <input type="hidden" name="redirect" value="home" />
 
                 <div class="grid grid-cols-2 gap-3">
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Mã Môn Học *</span></label>
-                        <input type="text" id="edit-code" name="code" required class="input input-sm input-bordered w-full rounded-xl uppercase font-bold" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Mã Môn Học *</span></label>
+                        <input type="text" id="edit-code" name="code" required class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl uppercase font-bold focus:border-indigo-500 focus:bg-white" />
                     </div>
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Học Kỳ</span></label>
-                        <input type="text" id="edit-semester" name="semester" class="input input-sm input-bordered w-full rounded-xl" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Học Kỳ</span></label>
+                        <input type="text" id="edit-semester" name="semester" class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
                     <div class="col-span-2 form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Tên Môn Học *</span></label>
-                        <input type="text" id="edit-name" name="name" required class="input input-sm input-bordered w-full rounded-xl" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Tên Môn Học *</span></label>
+                        <input type="text" id="edit-name" name="name" required class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white" />
                     </div>
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Số Tín Chỉ</span></label>
-                        <input type="number" id="edit-credits" name="credits" min="1" max="10" class="input input-sm input-bordered w-full rounded-xl" />
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Số Tín Chỉ</span></label>
+                        <input type="number" id="edit-credits" name="credits" min="1" max="10" class="input input-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white" />
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label class="label py-1"><span class="label-text font-bold text-xs">Mô Tả</span></label>
-                    <textarea id="edit-description" name="description" rows="2" class="textarea textarea-bordered textarea-sm w-full rounded-xl"></textarea>
+                    <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Mô Tả</span></label>
+                    <textarea id="edit-description" name="description" rows="2" class="textarea textarea-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl focus:border-indigo-500 focus:bg-white"></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Màu Sắc</span></label>
-                        <select id="edit-color" name="color" class="select select-sm select-bordered rounded-xl text-xs">
-                            <option value="from-indigo-600 to-purple-600">Indigo & Purple</option>
-                            <option value="from-emerald-600 to-teal-600">Emerald & Teal</option>
-                            <option value="from-amber-500 to-rose-600">Amber & Rose</option>
-                            <option value="from-blue-600 to-cyan-600">Blue & Cyan</option>
-                            <option value="from-purple-600 to-pink-600">Purple & Pink</option>
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Màu Sắc</span></label>
+                        <select id="edit-color" name="color" class="select select-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl text-xs focus:border-indigo-500 focus:bg-white">
+                            <option value="from-indigo-600 to-purple-600">Indigo &amp; Purple</option>
+                            <option value="from-emerald-600 to-teal-600">Emerald &amp; Teal</option>
+                            <option value="from-amber-500 to-rose-600">Amber &amp; Rose</option>
+                            <option value="from-blue-600 to-cyan-600">Blue &amp; Cyan</option>
+                            <option value="from-purple-600 to-pink-600">Purple &amp; Pink</option>
                         </select>
                     </div>
 
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text font-bold text-xs">Icon</span></label>
-                        <select id="edit-icon" name="icon" class="select select-sm select-bordered rounded-xl text-xs">
+                        <label class="label py-1"><span class="label-text font-bold text-xs text-slate-700">Icon</span></label>
+                        <select id="edit-icon" name="icon" class="select select-sm bg-slate-50 border-slate-200 text-slate-900 rounded-xl text-xs focus:border-indigo-500 focus:bg-white">
                             <option value="fa-laptop-code">Laptop Code</option>
                             <option value="fa-book-open">Sách Giáo Trình</option>
                             <option value="fa-chart-pie">Biểu Đồ Thống Kê</option>
@@ -422,8 +478,8 @@
                 </div>
 
                 <div class="modal-action mt-6">
-                    <button type="button" onclick="document.getElementById('modal-edit-course').close()" class="btn btn-sm btn-ghost rounded-xl">Hủy</button>
-                    <button type="submit" class="btn btn-sm btn-warning rounded-xl px-5 font-bold">Lưu Thay Đổi</button>
+                    <button type="button" onclick="document.getElementById('modal-edit-course').close()" class="btn btn-sm btn-ghost text-slate-500 hover:text-slate-800 rounded-xl">Hủy</button>
+                    <button type="submit" class="btn btn-sm bg-amber-500 hover:bg-amber-600 border-none text-white rounded-xl px-5 font-bold shadow-md shadow-amber-500/20">Lưu Thay Đổi</button>
                 </div>
             </form>
         </div>
@@ -432,41 +488,38 @@
         </form>
     </dialog>
 
-    <!-- Modal 3: Bảng Giá Nâng Cấp Gói Cước (DaisyUI Pricing Modal) -->
+    <!-- MODAL 3: BẢNG GIÁ NÂNG CẤP GÓI CƯỚC (MODERN LIGHT SAAS PRICING) -->
     <dialog id="modal-pricing-upgrade" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box max-w-5xl p-6 sm:p-10 rounded-3xl bg-slate-950 text-slate-100 border border-purple-500/30 shadow-2xl relative overflow-hidden">
-            <!-- Background Glow FX -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
-
+        <div class="modal-box max-w-5xl p-6 sm:p-10 rounded-3xl bg-white text-slate-800 border border-slate-200 shadow-2xl relative overflow-hidden">
             <!-- Modal Close button -->
             <button type="button" onclick="document.getElementById('modal-pricing-upgrade').close()"
-                    class="btn btn-sm btn-circle btn-ghost text-slate-400 hover:text-white absolute right-4 top-4 z-20">✕</button>
+                    class="btn btn-sm btn-circle btn-ghost text-slate-400 hover:text-slate-700 absolute right-4 top-4 z-20">✕</button>
 
             <!-- Header & Switch Period Toggle -->
             <div class="text-center space-y-4 relative z-10 max-w-2xl mx-auto">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold">
-                    <i class="fa-solid fa-sparkles text-amber-400"></i> BẢNG GIÁ HỘI VIÊN STUDYHUB AI
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold">
+                    <i class="fa-solid fa-sparkles text-amber-500"></i> BẢNG GIÁ HỘI VIÊN STUDYHUB AI
                 </div>
-                <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                     Chọn Gói Phù Hợp Cho Học Kỳ Của Bạn
                 </h3>
 
                 <!-- Toggle Buttons: Theo Tháng / Theo Học Kỳ -->
                 <div class="flex items-center justify-center pt-2">
-                    <div class="bg-slate-900/90 p-1.5 rounded-full inline-flex items-center border border-white/10 shadow-inner">
+                    <div class="bg-slate-100 p-1.5 rounded-full inline-flex items-center border border-slate-200 shadow-inner">
                         <button type="button" id="tab-monthly" onclick="switchBillingPeriod('monthly')"
-                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md">
+                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white shadow-sm border-none">
                             Theo Tháng
                         </button>
                         <button type="button" id="tab-semester" onclick="switchBillingPeriod('semester')"
-                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5">
+                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center gap-1.5 border-none">
                             Theo Học Kỳ <span class="badge badge-secondary badge-xs font-extrabold text-[9px] uppercase">Tiết Kiệm 20%</span>
                         </button>
                     </div>
                 </div>
 
-                <p class="text-xs text-purple-300/80 font-medium flex items-center justify-center gap-1.5 pt-1">
-                    <i class="fa-solid fa-bolt text-amber-400"></i> Đăng ký trọn gói học kỳ để nhận thêm Flashcards Spaced Repetition
+                <p class="text-xs text-purple-700 font-medium flex items-center justify-center gap-1.5 pt-1">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> Mở khóa tối đa năng lực ôn thi A+ bám sát tài liệu giáo trình
                 </p>
             </div>
 
@@ -474,49 +527,49 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 relative z-10">
 
                 <!-- Card 1: Sinh Viên Tự Học (Free) -->
-                <div class="rounded-3xl p-6 bg-slate-900/80 border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all">
+                <div class="rounded-3xl p-6 bg-slate-50/70 border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition-all">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
-                            <h4 class="text-lg font-bold text-white">Sinh Viên Tự Học</h4>
-                            <span class="badge badge-success badge-sm font-semibold text-xs bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Miễn Phí</span>
+                            <h4 class="text-lg font-bold text-slate-900">Sinh Viên Tự Học</h4>
+                            <span class="badge badge-success badge-sm font-semibold text-xs bg-emerald-100 text-emerald-800 border-none">Miễn Phí</span>
                         </div>
-                        <p class="text-xs text-slate-400 leading-relaxed min-h-[36px]">
+                        <p class="text-xs text-slate-500 leading-relaxed min-h-[36px]">
                             Phù hợp cho sinh viên tự học và tra cứu slide các môn cơ bản trong kỳ.
                         </p>
                         <div class="pt-2">
-                            <span class="text-3xl font-extrabold text-white">$0</span>
+                            <span class="text-3xl font-extrabold text-slate-900">$0</span>
                             <span class="text-xs text-slate-500 font-semibold">/ vĩnh viễn</span>
                         </div>
 
-                        <div class="divider my-2 border-slate-800"></div>
+                        <div class="divider my-2 border-slate-200"></div>
 
                         <!-- Features Checklist -->
-                        <ul class="space-y-2.5 text-xs text-slate-300">
+                        <ul class="space-y-2.5 text-xs text-slate-700">
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-indigo-600 mt-0.5"></i>
                                 <span>Tối đa <strong>3 Môn học</strong> (HSF302, MAS291...)</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-indigo-600 mt-0.5"></i>
                                 <span>Truy vấn RAG <strong>50 câu hỏi / ngày</strong></span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-indigo-600 mt-0.5"></i>
                                 <span>Trích dẫn số trang chính xác (Citations)</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-indigo-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-indigo-600 mt-0.5"></i>
                                 <span>Sinh đề trắc nghiệm cơ bản (10 câu)</span>
                             </li>
-                            <li class="flex items-start gap-2.5 text-slate-500 line-through">
-                                <i class="fa-solid fa-circle-xmark text-slate-600 mt-0.5"></i>
+                            <li class="flex items-start gap-2.5 text-slate-400 line-through">
+                                <i class="fa-solid fa-circle-xmark text-slate-300 mt-0.5"></i>
                                 <span>AI Study Planner tự động lập lịch</span>
                             </li>
                         </ul>
                     </div>
 
                     <div class="pt-6 mt-4">
-                        <button type="button" disabled class="btn btn-sm btn-outline rounded-xl w-full border-slate-700 text-slate-400 font-bold">
+                        <button type="button" disabled class="btn btn-sm btn-outline rounded-xl w-full border-slate-200 text-slate-400 font-bold">
                             <span th:if="${!isProUser}">Gói Đang Sử Dụng</span>
                             <span th:if="${isProUser}">Gói Miễn Phí</span>
                         </button>
@@ -524,50 +577,50 @@
                 </div>
 
                 <!-- Card 2: Ôn Thi Cấp Tốc (Gói PRO - Nổi bật) -->
-                <div class="rounded-3xl p-6 bg-gradient-to-b from-purple-950/40 via-slate-900/90 to-slate-900 border-2 border-purple-500/80 shadow-2xl shadow-purple-500/20 flex flex-col justify-between relative hover:border-purple-400 transition-all">
+                <div class="rounded-3xl p-6 bg-gradient-to-b from-purple-50/50 via-white to-white border-2 border-purple-500 shadow-xl shadow-purple-500/10 flex flex-col justify-between relative hover:border-purple-600 transition-all">
                     <!-- Top Ribbon Badge -->
                     <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                        <span class="badge bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-[10px] uppercase px-3 py-2 tracking-wider shadow-lg border-none">
+                        <span class="badge bg-gradient-to-r from-pink-500 to-purple-600 text-white font-black text-[10px] uppercase px-3 py-2 tracking-wider shadow-md border-none">
                             SINH VIÊN ƯA CHUỘNG
                         </span>
                     </div>
 
                     <div class="space-y-4">
                         <div class="flex items-center justify-between pt-1">
-                            <h4 class="text-lg font-black text-white">Ôn Thi Cấp Tốc</h4>
-                            <span class="badge badge-secondary badge-sm font-bold text-xs bg-purple-500/20 text-purple-300 border-purple-500/40">Gói Pro</span>
+                            <h4 class="text-lg font-black text-purple-900">Ôn Thi Cấp Tốc</h4>
+                            <span class="badge badge-secondary badge-sm font-bold text-xs bg-purple-100 text-purple-700 border-none">Gói Pro</span>
                         </div>
-                        <p class="text-xs text-slate-300 leading-relaxed min-h-[36px]">
+                        <p class="text-xs text-slate-600 leading-relaxed min-h-[36px]">
                             Dành cho sinh viên trong mùa thi muốn tối ưu hóa thời gian và đạt điểm A.
                         </p>
                         <div class="pt-2">
-                            <span id="card-pro-price" class="text-3xl font-black text-white">$2</span>
-                            <span id="card-pro-period" class="text-xs text-purple-300/80 font-semibold">/ tháng (~49k VNĐ)</span>
+                            <span id="card-pro-price" class="text-3xl font-black text-purple-900">$2</span>
+                            <span id="card-pro-period" class="text-xs text-purple-700 font-semibold">/ tháng (~49k VNĐ)</span>
                         </div>
 
-                        <div class="divider my-2 border-purple-500/30"></div>
+                        <div class="divider my-2 border-purple-100"></div>
 
                         <!-- Features Checklist -->
-                        <ul class="space-y-2.5 text-xs text-slate-200">
-                            <li class="flex items-start gap-2.5 font-bold text-white">
-                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                        <ul class="space-y-2.5 text-xs text-slate-800">
+                            <li class="flex items-start gap-2.5 font-bold text-purple-950">
+                                <i class="fa-solid fa-circle-check text-pink-500 mt-0.5"></i>
                                 <span>Không giới hạn Môn học</span>
                             </li>
-                            <li class="flex items-start gap-2.5 font-bold text-white">
-                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                            <li class="flex items-start gap-2.5 font-bold text-purple-950">
+                                <i class="fa-solid fa-circle-check text-pink-500 mt-0.5"></i>
                                 <span>Truy vấn RAG AI giáo trình không giới hạn</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-pink-500 mt-0.5"></i>
                                 <span>AI Study Planner: Tự động xếp lịch học vừa sức</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-pink-500 mt-0.5"></i>
                                 <span>AI Quiz Generator: Sinh đề thi A/B/C/D theo chương</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
-                                <span>Xuất đề thi PDF & Flashcards Spaced Repetition</span>
+                                <i class="fa-solid fa-circle-check text-pink-500 mt-0.5"></i>
+                                <span>Xuất đề thi PDF &amp; Flashcards Spaced Repetition</span>
                             </li>
                         </ul>
                     </div>
@@ -580,7 +633,7 @@
                         </div>
                         <div th:unless="${isProUser}">
                             <form th:action="@{/auth/upgrade-pro}" method="post">
-                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 text-white font-black border-none shadow-lg shadow-purple-500/40">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-black border-none shadow-md shadow-purple-500/25">
                                     <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Gói Pro
                                 </button>
                             </form>
@@ -589,42 +642,42 @@
                 </div>
 
                 <!-- Card 3: Nhóm Học Tập (Study Squad) -->
-                <div class="rounded-3xl p-6 bg-slate-900/80 border border-slate-800 flex flex-col justify-between hover:border-cyan-500/50 transition-all">
+                <div class="rounded-3xl p-6 bg-slate-50/70 border border-slate-200 flex flex-col justify-between hover:border-cyan-400 transition-all">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
-                            <h4 class="text-lg font-bold text-white">Nhóm Học Tập</h4>
-                            <span class="badge badge-info badge-sm font-semibold text-xs bg-cyan-500/20 text-cyan-400 border-cyan-500/30">Study Squad</span>
+                            <h4 class="text-lg font-bold text-slate-900">Nhóm Học Tập</h4>
+                            <span class="badge badge-info badge-sm font-semibold text-xs bg-cyan-100 text-cyan-800 border-none">Study Squad</span>
                         </div>
-                        <p class="text-xs text-slate-400 leading-relaxed min-h-[36px]">
+                        <p class="text-xs text-slate-500 leading-relaxed min-h-[36px]">
                             Dành cho nhóm bạn cùng lớp hoặc làm đồ án môn học (HSF, SWP, PRJ...).
                         </p>
                         <div class="pt-2">
-                            <span class="text-3xl font-extrabold text-white">$5</span>
-                            <span class="text-xs text-slate-500 font-semibold">/ tháng (~24k VNĐ/bạn)</span>
+                            <span id="card-squad-price" class="text-3xl font-extrabold text-slate-900">$5</span>
+                            <span id="card-squad-period" class="text-xs text-slate-500 font-semibold">/ tháng (~24k VNĐ/bạn)</span>
                         </div>
 
-                        <div class="divider my-2 border-slate-800"></div>
+                        <div class="divider my-2 border-slate-200"></div>
 
                         <!-- Features Checklist -->
-                        <ul class="space-y-2.5 text-xs text-slate-300">
-                            <li class="flex items-start gap-2.5 font-bold text-cyan-300">
-                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                        <ul class="space-y-2.5 text-xs text-slate-700">
+                            <li class="flex items-start gap-2.5 font-bold text-cyan-900">
+                                <i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i>
                                 <span>Mở khóa PRO cho nhóm 5 thành viên</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i>
                                 <span>Kho tài liệu &amp; Slide giáo trình dùng chung</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
-                                <span>Team Study Planner: Phân chia timeline đồ án &amp; bài tập</span>
+                                <i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i>
+                                <span>Team Study Planner: Phân chia timeline đồ án</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i>
                                 <span>Đấu trường Quiz nhóm &amp; Bảng xếp hạng điểm số</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-cyan-400 mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i>
                                 <span>Truy vấn RAG AI giáo trình không giới hạn</span>
                             </li>
                         </ul>
@@ -638,7 +691,7 @@
                         </div>
                         <div th:unless="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}">
                             <form th:action="@{/auth/upgrade-squad}" method="post">
-                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white font-bold border-none shadow-lg shadow-cyan-500/30">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:opacity-95 text-white font-bold border-none shadow-md shadow-cyan-500/20">
                                     <i class="fa-solid fa-user-group mr-1"></i> Kích Hoạt Gói Nhóm
                                 </button>
                             </form>
@@ -650,7 +703,7 @@
 
             <!-- Footer Note -->
             <div class="text-center mt-8 text-slate-500 text-xs">
-                <span>Cần thanh toán qua chuyển khoản ngân hàng hoặc ví MoMo? Vui lòng gửi yêu cầu hỗ trợ qua <a href="mailto:admin@fpt.edu.vn" class="text-purple-400 underline">admin@fpt.edu.vn</a></span>
+                <span>Cần thanh toán qua chuyển khoản ngân hàng hoặc ví MoMo? Vui lòng gửi yêu cầu hỗ trợ qua <a href="mailto:admin@fpt.edu.vn" class="text-indigo-600 underline font-medium">admin@fpt.edu.vn</a></span>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop">
@@ -658,49 +711,55 @@
         </form>
     </dialog>
 
-</section>
-
-<!-- Client-side Scripts -->
-<script>
-    function openEditModal(id, code, name, description, semester, credits, color, icon) {
-        const form = document.getElementById('form-edit-course');
-        form.action = '/courses/' + id + '/edit';
-        document.getElementById('edit-code').value = code || '';
-        document.getElementById('edit-name').value = name || '';
-        document.getElementById('edit-description').value = description || '';
-        document.getElementById('edit-semester').value = semester || 'Fall 2026';
-        document.getElementById('edit-credits').value = credits || 3;
-        if (color) document.getElementById('edit-color').value = color;
-        if (icon) document.getElementById('edit-icon').value = icon;
-        document.getElementById('modal-edit-course').showModal();
-    }
-
-    // Toggle Period: Monthly vs Semester
-    function switchBillingPeriod(period) {
-        const btnMonthly = document.getElementById('tab-monthly');
-        const btnSemester = document.getElementById('tab-semester');
-        const priceLabel = document.getElementById('card-pro-price');
-        const periodLabel = document.getElementById('card-pro-period');
-
-        if (period === 'monthly') {
-            btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md";
-            btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-400 hover:text-white flex items-center gap-1.5";
-            if (priceLabel) priceLabel.innerText = "$2";
-            if (periodLabel) periodLabel.innerText = "/ tháng (~49k VNĐ)";
-        } else {
-            btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md flex items-center gap-1.5";
-            btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-400 hover:text-white";
-            if (priceLabel) priceLabel.innerText = "$5";
-            if (periodLabel) periodLabel.innerText = "/ học kỳ (~120k VNĐ)";
+    <!-- Client-side Scripts (ĐẶT BÊN TRONG SECTION ĐỂ THYMELEAF KHÔNG LOẠI BỎ) -->
+    <script>
+        function openEditModal(id, code, name, description, semester, credits, color, icon) {
+            const form = document.getElementById('form-edit-course');
+            form.action = '/courses/' + id + '/edit';
+            document.getElementById('edit-code').value = code || '';
+            document.getElementById('edit-name').value = name || '';
+            document.getElementById('edit-description').value = description || '';
+            document.getElementById('edit-semester').value = semester || 'Fall 2026';
+            document.getElementById('edit-credits').value = credits || 3;
+            if (color) document.getElementById('edit-color').value = color;
+            if (icon) document.getElementById('edit-icon').value = icon;
+            document.getElementById('modal-edit-course').showModal();
         }
-    }
-</script>
 
-<script th:if="${showUpgradeModal}">
-    window.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById('modal-pricing-upgrade');
-        if (modal) modal.showModal();
-    });
-</script>
+        // Toggle Period: Monthly vs Semester
+        function switchBillingPeriod(period) {
+            const btnMonthly = document.getElementById('tab-monthly');
+            const btnSemester = document.getElementById('tab-semester');
+            const priceLabel = document.getElementById('card-pro-price');
+            const periodLabel = document.getElementById('card-pro-period');
+            const squadPrice = document.getElementById('card-squad-price');
+            const squadPeriod = document.getElementById('card-squad-period');
+
+            if (period === 'monthly') {
+                btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white shadow-sm border-none";
+                btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center gap-1.5 border-none";
+                if (priceLabel) priceLabel.innerText = "$2";
+                if (periodLabel) periodLabel.innerText = "/ tháng (~49k VNĐ)";
+                if (squadPrice) squadPrice.innerText = "$5";
+                if (squadPeriod) squadPeriod.innerText = "/ tháng (~24k VNĐ/bạn)";
+            } else {
+                btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white shadow-sm flex items-center gap-1.5 border-none";
+                btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 border-none";
+                if (priceLabel) priceLabel.innerText = "$6";
+                if (periodLabel) periodLabel.innerText = "/ học kỳ 4 tháng (~149k VNĐ)";
+                if (squadPrice) squadPrice.innerText = "$15";
+                if (squadPeriod) squadPeriod.innerText = "/ học kỳ 4 tháng (~18k VNĐ/bạn/tháng)";
+            }
+        }
+    </script>
+
+    <script th:if="${showUpgradeModal}">
+        window.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('modal-pricing-upgrade');
+            if (modal) modal.showModal();
+        });
+    </script>
+
+</section>
 </body>
 </html>

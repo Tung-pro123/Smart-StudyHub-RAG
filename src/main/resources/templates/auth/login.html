@@ -1,154 +1,264 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/main :: main-layout(
-        'Đăng Nhập - StudyHub AI',
-        ~{::section}
-      )}">
-<body>
-<section class="max-w-md mx-auto my-8 space-y-6">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light">
+<head th:replace="~{fragments/head :: common-head('Đăng Nhập - StudyHub AI')}"></head>
+<body class="min-h-screen bg-slate-50 font-sans antialiased text-slate-800">
 
-    <!-- Flash Messages -->
-    <div th:if="${successMessage}" class="alert alert-success shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-xl"></i>
-            <span class="font-bold text-xs md:text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+<div class="min-h-screen w-full flex flex-col lg:flex-row">
+
+    <!-- 1. CỘT TRÁI (HERO BRAND PANEL - 50% DESKTOP): ĐỒNG BỘ 100% VỚI NỀN TỐI & MÀU SẮC LANDING PAGE -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#030712] via-[#090d16] to-[#0f172a] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
+        <!-- Hiệu ứng ánh sáng đa chiều Cyber Cyan & Violet (Đồng bộ Landing Page) -->
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Header: Logo & Tên Hệ Thống (Đồng bộ Navbar Landing Page) -->
+        <div class="relative z-10">
+            <a th:href="@{/}" class="inline-flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-purple-500/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-xl text-white tracking-tight">StudyHub AI</span>
+                        <span class="badge badge-xs bg-purple-500/20 text-purple-300 border border-purple-400/30 text-[9px] font-mono">v2.4</span>
+                    </div>
+                    <p class="text-[11px] text-gray-400 font-semibold tracking-wide">Smart Multi-Course Hub &amp; RAG AI</p>
+                </div>
+            </a>
         </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
 
-    <div th:if="${errorMessage}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-            <span class="font-bold text-xs md:text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
-
-    <div th:if="${param.error != null and param.error[0] == 'unauthorized'}" class="alert alert-warning shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-amber-500">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-lock text-xl"></i>
-            <span class="font-bold text-xs md:text-sm">Vui lòng đăng nhập để truy cập tính năng học tập và bảo mật của bạn!</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
-
-    <div th:if="${param.error != null and param.error[0] == 'oauth2_failed'}" class="alert alert-error shadow-lg rounded-2xl flex items-center justify-between text-white border-none bg-rose-600">
-        <div class="flex items-center gap-3">
-            <i class="fa-brands fa-google text-xl"></i>
-            <span class="font-bold text-xs md:text-sm">Đăng nhập Google thất bại. Vui lòng thử lại hoặc đăng nhập bằng tài khoản thường.</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
-
-    <!-- Login Card Glassmorphism -->
-    <div class="glass-card rounded-3xl p-8 shadow-2xl border border-white/20 space-y-6">
-        <div class="text-center space-y-2">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-2xl mx-auto shadow-lg shadow-indigo-500/30">
-                <i class="fa-solid fa-shield-halved"></i>
+        <!-- Center: Nội Dung Trọng Tâm & Mockup RAG (Đồng bộ Visual Landing Page) -->
+        <div class="relative z-10 space-y-8 my-auto py-8">
+            <div class="space-y-3 max-w-lg">
+                <h1 class="text-3xl xl:text-4xl font-black text-white leading-tight tracking-tight">
+                    Unlock the Hidden Knowledge<br />
+                    in Your <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Courseware.</span>
+                </h1>
+                <p class="text-sm text-gray-300 leading-relaxed font-normal">
+                    Nền tảng hỗ trợ sinh viên tự quản lý môn học, nạp slide &amp; giáo trình PDF, RAG AI tự động phân tích và giải đáp thắc mắc 100% bám sát tài liệu kèm trích dẫn số trang đối chứng.
+                </p>
             </div>
-            <h2 class="text-2xl font-black text-base-content tracking-tight">Đăng Nhập StudyHub</h2>
-        </div>
 
-        <form th:action="@{/login}" th:object="${loginDto}" method="post" class="space-y-4">
-            <div class="form-control">
-                <label class="label py-1"><span class="label-text font-bold text-xs">Tên Đăng Nhập</span></label>
-                <div class="relative">
-                    <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
-                    <input type="text" th:field="*{username}" required placeholder="Nhập tên đăng nhập của bạn" 
-                           class="input input-bordered pl-9 w-full rounded-xl text-xs" />
+            <!-- Thẻ Mockup Showcase RAG (Đồng bộ thẻ Live RAG Assistant trên Landing Page) -->
+            <div class="rounded-2xl p-5 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl space-y-3.5 max-w-md">
+                <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300">
+                            <i class="fa-solid fa-book-bookmark text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">HSF302 - JPA and Spring Framework</h4>
+                            <p class="text-[10px] text-gray-400">Slide bài giảng tuần 1 - 10 • 15 Chunks</p>
+                        </div>
+                    </div>
+                    <span class="badge badge-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold px-2 py-1">
+                        <i class="fa-solid fa-circle text-[6px] mr-1 text-emerald-400"></i> Page 14 Citation
+                    </span>
+                </div>
+                
+                <div class="p-3 rounded-xl bg-black/40 text-[11px] text-gray-200 leading-relaxed font-mono flex items-start gap-2 border border-white/5">
+                    <i class="fa-solid fa-quote-left text-purple-400 text-xs mt-0.5 shrink-0"></i>
+                    <span>"Theo Slide 03 trang 14, Spring Data JPA tự động sinh câu truy vấn từ tên phương thức repository..."</span>
+                </div>
+
+                <div class="flex items-center justify-between text-[10px] text-gray-300 pt-1">
+                    <span class="flex items-center gap-1.5 text-emerald-400 font-semibold"><i class="fa-solid fa-shield-halved"></i> 100% Grounded (Không ảo giác)</span>
+                    <span class="flex items-center gap-1.5 text-pink-400"><i class="fa-solid fa-file-pdf"></i> Tự nạp slide BYOC</span>
                 </div>
             </div>
 
-            <div class="form-control">
-                <label class="label py-1"><span class="label-text font-bold text-xs">Mật Khẩu</span></label>
-                <div class="relative">
-                    <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40 text-xs"></i>
-                    <input type="password" id="login-password" th:field="*{password}" required placeholder="••••••••" 
-                           class="input input-bordered pl-9 pr-9 w-full rounded-xl text-xs" />
-                    <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content text-xs">
-                        <i class="fa-solid fa-eye"></i>
+            <!-- 3 Badges Tiện Ích Chuẩn -->
+            <div class="grid grid-cols-3 gap-3 max-w-md">
+                <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
+                    <p class="text-xs font-bold text-white">Linh Hoạt</p>
+                    <p class="text-[10px] text-gray-400">Tự do mọi trường</p>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
+                    <p class="text-xs font-bold text-white">0% Ảo Giác</p>
+                    <p class="text-[10px] text-gray-400">Dẫn nguồn trang slide</p>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
+                    <p class="text-xs font-bold text-white">An Tâm</p>
+                    <p class="text-[10px] text-gray-400">Dữ liệu cô lập 100%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Cột Trái -->
+        <div class="relative z-10 flex items-center justify-between text-[11px] text-gray-400 pt-4 border-t border-white/10">
+            <span>Chính sách bảo mật • Điều khoản học tập</span>
+            <span>HSF302 - Fall 2026</span>
+        </div>
+    </div>
+
+    <!-- 2. CỘT PHẢI (LOGIN FORM PANEL - 50% DESKTOP): NỀN TRẮNG TINH KHIẾT, FORM THANH LỊCH -->
+    <div class="w-full lg:w-1/2 bg-white flex flex-col justify-between p-6 sm:p-12 xl:p-16 overflow-y-auto">
+        <!-- Nút Quay Lại Trang Chủ -->
+        <div class="flex items-center justify-between">
+            <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-purple-600 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay lại Trang Chủ
+            </a>
+            <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Hỗ trợ sinh viên 24/7</span>
+        </div>
+
+        <!-- Hộp Form Đăng Nhập Căn Giữa -->
+        <div class="max-w-md w-full mx-auto my-auto py-8 space-y-6">
+            <!-- Tiêu đề Form -->
+            <div class="space-y-1.5">
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Đăng nhập tài khoản</h2>
+                <p class="text-xs text-slate-500">Nhập tên đăng nhập và mật khẩu của bạn để truy cập không gian học tập.</p>
+            </div>
+
+            <!-- Flash Thông Báo Lỗi / Thành Công -->
+            <div th:if="${successMessage}" class="alert alert-success shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-emerald-600 text-xs py-2.5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span class="font-bold" th:text="${successMessage}">Thao tác thành công!</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-error shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-rose-600 text-xs py-2.5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span class="font-bold" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+            </div>
+
+            <div th:if="${param.error != null and param.error[0] == 'unauthorized'}" class="alert alert-warning shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-amber-500 text-xs py-2.5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-lock"></i>
+                    <span class="font-bold">Phiên học tập đã hết hạn. Vui lòng đăng nhập lại!</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+            </div>
+
+            <div th:if="${param.error != null and param.error[0] == 'oauth2_failed'}" class="alert alert-error shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-rose-600 text-xs py-2.5">
+                <div class="flex items-center gap-2">
+                    <i class="fa-brands fa-google text-lg"></i>
+                    <span class="font-bold">Đăng nhập Google thất bại. Vui lòng thử lại hoặc đăng nhập bằng tài khoản bên dưới.</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+            </div>
+
+            <!-- Form Đăng Nhập Chính -->
+            <form th:action="@{/login}" th:object="${loginDto}" method="post" class="space-y-4">
+                <!-- Tên Đăng Nhập -->
+                <div class="form-control space-y-1">
+                    <label class="label p-0"><span class="label-text font-bold text-xs text-slate-700">Tên Đăng Nhập</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="login-username" th:field="*{username}" required placeholder="student, pro_student, squad_leader..." 
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-purple-600 focus:ring-1 focus:ring-purple-600 transition" />
+                    </div>
+                </div>
+
+                <!-- Mật Khẩu -->
+                <div class="form-control space-y-1">
+                    <div class="flex items-center justify-between">
+                        <label class="label p-0"><span class="label-text font-bold text-xs text-slate-700">Mật Khẩu</span></label>
+                        <a href="javascript:void(0)" onclick="alert('Vui lòng liên hệ Admin hoặc đăng nhập bằng tài khoản Demo bên dưới!')" class="text-[11px] font-semibold text-purple-600 hover:underline">Quên mật khẩu?</a>
+                    </div>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="password" id="login-password" th:field="*{password}" required placeholder="••••••••" 
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-10 w-full rounded-xl text-xs focus:bg-white focus:border-purple-600 focus:ring-1 focus:ring-purple-600 transition" />
+                        <button type="button" onclick="togglePasswordVisibility('login-password', this)" 
+                                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs transition" title="Hiện/ẩn mật khẩu">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Checkbox Ghi nhớ -->
+                <div class="flex items-center justify-between pt-1">
+                    <label class="label cursor-pointer p-0 gap-2">
+                        <input type="checkbox" checked="checked" class="checkbox checkbox-xs rounded checkbox-primary border-slate-300" />
+                        <span class="label-text text-xs text-slate-600">Ghi nhớ đăng nhập trên thiết bị này</span>
+                    </label>
+                </div>
+
+                <!-- Nút Đăng Nhập Chính: Gradient Tím-Hồng ĐỒNG BỘ 100% VỚI NÚT LANDING PAGE -->
+                <button type="submit" class="btn h-11 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl border-none shadow-lg shadow-purple-500/25 text-xs transition-all w-full flex items-center justify-center gap-2 mt-2">
+                    <span>Đăng Nhập Ngay</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+
+            <!-- Divider: Hoặc đăng nhập nhanh -->
+            <div class="flex items-center gap-3 my-4">
+                <div class="flex-1 h-px bg-slate-200"></div>
+                <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Hoặc đăng nhập nhanh với</span>
+                <div class="flex-1 h-px bg-slate-200"></div>
+            </div>
+
+            <!-- Demo Credentials Box (1-Click Fill) Tinh Tế -->
+            <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 text-xs space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-700 flex items-center gap-1.5 text-purple-700">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Tài Khoản Demo (1-Click):
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-mono bg-white px-2 py-0.5 rounded-md border border-slate-200">Mật khẩu: 123456</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="fillDemo('student', '123456')" 
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-purple-400 hover:bg-purple-50/50 hover:text-purple-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                        <span class="badge badge-xs bg-slate-100 text-slate-600 font-mono text-[9px] mr-1.5 border-none">FREE</span>
+                        <span class="font-bold">student</span>
+                    </button>
+                    <button type="button" onclick="fillDemo('pro_student', '123456')" 
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-purple-400 hover:bg-purple-50/50 hover:text-purple-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                        <span class="badge badge-xs bg-purple-100 text-purple-800 font-mono text-[9px] mr-1.5 border-none">PRO</span>
+                        <span class="font-bold">pro_student</span>
+                    </button>
+                    <button type="button" onclick="fillDemo('squad_leader', '123456')" 
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-cyan-400 hover:bg-cyan-50/50 hover:text-cyan-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                        <span class="badge badge-xs bg-cyan-100 text-cyan-800 font-mono text-[9px] mr-1.5 border-none">SQUAD</span>
+                        <span class="font-bold">squad_leader</span>
+                    </button>
+                    <button type="button" onclick="fillDemo('admin', '123456')" 
+                            class="btn btn-xs bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/50 hover:text-amber-700 justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
+                        <span class="badge badge-xs bg-amber-100 text-amber-800 font-mono text-[9px] mr-1.5 border-none">ADMIN</span>
+                        <span class="font-bold">admin</span>
                     </button>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-full rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 border-none text-white shadow-lg shadow-indigo-500/20 mt-2">
-                <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập Ngay
-            </button>
-        </form>
-
-        <!-- Divider: Hoặc đăng nhập với -->
-        <div class="flex items-center gap-3 my-4">
-            <div class="flex-1 h-px bg-base-300"></div>
-            <span class="text-xs text-base-content/50 font-medium">Hoặc đăng nhập với</span>
-            <div class="flex-1 h-px bg-base-300"></div>
-        </div>
-
-        <!-- Google OAuth2 Login Button -->
-        <div class="space-y-3">
-            <a th:href="@{/oauth2/authorization/google}"
-               class="btn btn-outline w-full border-base-300 hover:bg-white hover:border-red-500 hover:text-red-500 rounded-xl text-xs font-bold h-12">
-                <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Đăng nhập với Google
-            </a>
-        </div>
-
-        <!-- Demo Credentials Box (1-Click Fill) -->
-        <div class="bg-base-200/60 rounded-2xl p-4 border border-base-300/60 text-xs space-y-2.5">
-            <div class="flex items-center justify-between">
-                <span class="font-bold text-base-content flex items-center gap-1.5 text-indigo-500">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Tài Khoản Demo (Bấm để điền nhanh):
-                </span>
-                <span class="text-[10px] text-base-content/50 font-mono">Pass: 123456</span>
+            <!-- Google OAuth2 Login Button -->
+            <div>
+                <a th:href="@{/oauth2/authorization/google}"
+                   class="btn btn-outline w-full border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 rounded-xl text-xs font-bold h-11 flex items-center justify-center gap-2.5 transition">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span>Đăng nhập nhanh bằng Google</span>
+                </a>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
-                <button type="button" onclick="fillDemo('student', '123456')" 
-                        class="btn btn-xs btn-outline border-base-300 hover:border-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-400 justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
-                    <span class="badge badge-xs badge-ghost mr-1 font-mono text-[9px]">FREE</span>
-                    <span class="font-bold">student</span>
-                </button>
-                <button type="button" onclick="fillDemo('pro_student', '123456')" 
-                        class="btn btn-xs btn-outline border-base-300 hover:border-secondary hover:bg-secondary/10 hover:text-secondary justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
-                    <span class="badge badge-xs badge-secondary mr-1 font-mono text-[9px]">PRO</span>
-                    <span class="font-bold">pro_student</span>
-                </button>
-                <button type="button" onclick="fillDemo('squad_leader', '123456')" 
-                        class="btn btn-xs btn-outline border-base-300 hover:border-info hover:bg-info/10 hover:text-info justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
-                    <span class="badge badge-xs badge-info mr-1 font-mono text-[9px]">SQUAD</span>
-                    <span class="font-bold">squad_leader</span>
-                </button>
-                <button type="button" onclick="fillDemo('admin', '123456')" 
-                        class="btn btn-xs btn-outline border-base-300 hover:border-warning hover:bg-warning/10 hover:text-warning justify-start normal-case text-[11px] h-auto py-1.5 px-2.5 rounded-xl transition">
-                    <span class="badge badge-xs badge-warning mr-1 font-mono text-[9px]">ADMIN</span>
-                    <span class="font-bold">admin</span>
-                </button>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between text-[10px] text-base-content/60 pt-1.5 border-t border-base-300/40 gap-1">
-                <span>Khác: 
-                    <button type="button" onclick="fillDemo('student2', '123456')" class="text-primary hover:underline font-semibold">student2</button>, 
-                    <button type="button" onclick="fillDemo('squad_member1', '123456')" class="text-primary hover:underline font-semibold">member1</button>, 
-                    <button type="button" onclick="fillDemo('truong', '123456')" class="text-purple-500 hover:underline font-semibold">truong (Admin)</button>
-                </span>
+            <!-- Chuyển Sang Đăng Ký -->
+            <div class="text-center text-xs text-slate-500 pt-2">
+                Chưa có tài khoản? 
+                <a th:href="@{/register}" class="font-bold text-purple-600 hover:text-pink-600 hover:underline ml-1">Đăng ký tài khoản mới &gt;</a>
             </div>
         </div>
 
-        <div class="text-center text-xs text-base-content/60">
-            Chưa có tài khoản? 
-            <a th:href="@{/register}" class="font-bold text-primary hover:underline ml-1">Đăng ký tài khoản mới</a>
+        <!-- Footer Cột Phải -->
+        <div class="text-center text-[11px] text-slate-400 pt-4">
+            Smart Multi-Course Study Hub &amp; RAG AI • Assignment HSF302
         </div>
     </div>
 
-</section>
+</div>
 
+<!-- JavaScript Xử Lý Form & Con Mắt Xem Mật Khẩu -->
 <script>
     function fillDemo(username, password) {
-        const uInput = document.querySelector('input[name="username"]');
+        const uInput = document.getElementById('login-username');
         const pInput = document.getElementById('login-password');
         if (uInput) uInput.value = username;
         if (pInput) pInput.value = password;
@@ -156,17 +266,23 @@
 
     function togglePasswordVisibility(inputId, btn) {
         const input = document.getElementById(inputId);
+        if (!input) return;
         const icon = btn.querySelector('i');
         if (input.type === 'password') {
             input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
+            if (icon) {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
         } else {
             input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+            if (icon) {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         }
     }
 </script>
+
 </body>
 </html>
