@@ -100,20 +100,20 @@ Tất cả các trang khi làm mới phải tuân theo đúng bảng mã màu v�
   - `src/main/resources/templates/auth/profile.html`
   - *(Lưu ý: Hai trang `auth/login.html` và `auth/register.html` Team Lead Tùng đã thiết kế chuẩn mực 50/50 Split cực đẹp, **GIỮ NGUYÊN 100%, Trường TUYỆT ĐỐI KHÔNG sửa lại để tránh hỏng layout**).*
 * **Kế hoạch nhiệm vụ chi tiết (02/11 - 03/11)**:
-  - [ ] **TASK-TRUONG-01 (Cải Tạo Giao Diện Profile & Study Squad - White-Card Palette)**:
+  - [x] **TASK-TRUONG-01 (Cải Tạo Giao Diện Profile & Study Squad - White-Card Palette)**:
     + Áp dụng **Progressive Disclosure**: Chia trang cá nhân `profile.html` thành 3 khối thẻ trắng (`bg-white/95 border-slate-200/80 text-slate-800 shadow-sm`) độc lập, không nhồi nhét dồn cục:
       1. **Thẻ Thông Tin Cá Nhân & Avatar Presets**: Xem họ tên, username, email, chọn avatar preset mượt mà.
       2. **Thẻ Bảo Mật & Đổi Mật Khẩu BCrypt**: Form đổi mật khẩu gọn gàng, các trường nhập có viền sáng thanh lịch.
       3. **Thẻ Quản Lý Nhóm Study Squad**: Huy hiệu Trưởng nhóm / Thành viên với gradient tím hồng (`from-purple-600 via-violet-600 to-pink-600`); danh sách thành viên dạng Clean Table, nút xóa bạn tinh tế; tự động ẩn với gói PRO độc lập.
     + **Lưu ý đặc biệt**: Đặt toàn bộ thẻ `<script>` xử lý avatar bên trong thẻ `<section>` để Thymeleaf layout decorator không nuốt mất script.
-  - [ ] **TASK-TRUONG-02 (Regression Checklist - Tự Kiểm Thử Trước Khi Nộp)**:
-    + [ ] Đăng nhập form thường thành công.
-    + [ ] Bấm thử cả 4 nút 1-Click Login tự điền và submit mượt mà.
-    + [ ] Đăng ký tài khoản mới tự gán gói FREE.
-    + [ ] Đổi họ tên và bấm chọn avatar preset cập nhật ngay.
-    + [ ] Đổi mật khẩu cũ/mới kiểm tra mã hóa BCrypt.
-    + [ ] Mời thành viên vào squad (tối đa 5 bạn), kiểm tra disabled ô nhập khi đủ 5.
-    + [ ] Xóa thành viên khỏi nhóm quay về FREE.
+  - [x] **TASK-TRUONG-02 (Regression Checklist - Tự Kiểm Thử Trước Khi Nộp)**:
+    + [x] Đăng nhập form thường thành công.
+    + [x] Bấm thử cả 4 nút 1-Click Login tự điền và submit mượt mà.
+    + [x] Đăng ký tài khoản mới tự gán gói FREE.
+    + [x] Đổi họ tên và bấm chọn avatar preset cập nhật ngay.
+    + [x] Đổi mật khẩu cũ/mới kiểm tra mã hóa BCrypt.
+    + [x] Mời thành viên vào squad (tối đa 5 bạn), kiểm tra disabled ô nhập khi đủ 5.
+    + [x] Xóa thành viên khỏi nhóm quay về FREE.
 
 ---
 
