@@ -53,6 +53,15 @@ public class Quiz {
     @Builder.Default
     private Integer timeLimitMinutes = 15;
 
+    /**
+     * Cờ đánh dấu đề thi dùng chung cho cả Squad hay là Đề thi cá nhân (Solo):
+     * - true (hoặc null): Mọi thành viên Squad đều thấy, cùng làm và tính điểm Squad Leaderboard.
+     * - false: Đề thi riêng tư (Solo). Chỉ tác giả (createdBy) thấy và làm bài.
+     */
+    @Column(name = "squad_shared")
+    @Builder.Default
+    private Boolean squadShared = true;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -65,10 +74,43 @@ public class Quiz {
         if (this.difficulty == null) this.difficulty = "MEDIUM";
         if (this.totalQuestions == null) this.totalQuestions = 5;
         if (this.timeLimitMinutes == null) this.timeLimitMinutes = 15;
+        if (this.squadShared == null) this.squadShared = true;
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    /** Kiểm tra xem đề thi có phải là đề riêng tư (Solo) hay không */
+    public boolean isSolo() {
+        return Boolean.FALSE.equals(this.squadShared);
+    }
+
+    /** Kiểm tra xem người dùng có quyền nhìn thấy và làm đề thi này hay không */
+    public boolean isAccessibleBy(User user) {
+        if (user == null) return false;
+        if (user.isAdmin()) return true;
+        // Nếu không phải đề thi Solo (dùng chung trong môn): ai có quyền truy cập môn cũng được xem
+        if (!isSolo()) return true;
+        // Nếu là đề thi Solo: chỉ chính tác giả tạo đề mới được xem và làm bài
+        return this.createdBy != null && user.getId() != null && user.getId().equals(this.createdBy.getId());
+    }
+
+    /** Kiểm tra xem người dùng có quyền xóa đề thi này hay không (RBAC) */
+    public boolean canDelete(User user) {
+        if (user == null) return false;
+        if (user.isAdmin()) return true;
+        if (this.course != null && Boolean.TRUE.equals(this.course.getSquadShared())) {
+            if (isSolo()) {
+                // Đề thi Solo trong môn nhóm: tác giả tự xóa được đề của mình
+                return this.createdBy != null && user.getId() != null && user.getId().equals(this.createdBy.getId());
+            }
+            // Đề thi dùng chung của nhóm: chỉ Trưởng nhóm hoặc Admin
+            return user.isSquadLeader();
+        }
+        // Môn học cá nhân: chủ sở hữu môn học
+        return this.course == null || this.course.getUser() == null ||
+                (user.getId() != null && user.getId().equals(this.course.getUser().getId()));
     }
 }

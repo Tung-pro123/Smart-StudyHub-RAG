@@ -68,7 +68,7 @@ public class QuizController {
             selectedCourse = courses.get(0);
         }
 
-        List<Quiz> quizzes = selectedCourse != null ? quizService.getQuizzesByCourse(selectedCourse.getId()) : List.of();
+        List<Quiz> quizzes = selectedCourse != null ? quizService.getQuizzesByCourse(selectedCourse.getId(), currentUser) : List.of();
         if (difficulty != null && !difficulty.equalsIgnoreCase("ALL")) {
             quizzes = quizzes.stream()
                     .filter(q -> q.getDifficulty() != null && q.getDifficulty().equalsIgnoreCase(difficulty))
@@ -103,6 +103,7 @@ public class QuizController {
         model.addAttribute("isFreeTier", !isPro);
         model.addAttribute("isSquad", isSquad);
         model.addAttribute("squadLeaderboard", squadLeaderboard);
+        model.addAttribute("currentUser", currentUser);
 
         // Quyền xóa đề thi: Admin hoặc (nếu môn squad -> squadLeader, nếu môn cá nhân -> chủ môn)
         boolean canDeleteQuiz = (currentUser != null) && (
@@ -150,6 +151,7 @@ public class QuizController {
             @RequestParam(value = "timeLimitMinutes", defaultValue = "15") int timeLimitMinutes,
             @RequestParam(value = "fromPage", required = false) Integer fromPage,
             @RequestParam(value = "toPage", required = false) Integer toPage,
+            @RequestParam(value = "squadShared", required = false) Boolean squadShared,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
@@ -187,9 +189,9 @@ public class QuizController {
         try {
             Quiz quiz;
             if (documentId != null && documentId > 0) {
-                quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser);
+                quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, squadShared);
             } else {
-                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser);
+                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, squadShared);
             }
 
             redirectAttributes.addFlashAttribute("successMessage", "Sinh đề trắc nghiệm thành công với " + quiz.getTotalQuestions() + " câu hỏi!");
@@ -202,11 +204,15 @@ public class QuizController {
     }
 
     @GetMapping("/{id}")
-    public String takeQuiz(@PathVariable("id") Long id, HttpSession session, Model model) {
+    public String takeQuiz(@PathVariable("id") Long id, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         Quiz quiz = quizService.getQuizById(id);
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
+        if (!quiz.isAccessibleBy(currentUser)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "⛔ Bạn không có quyền truy cập đề thi riêng tư này!");
+            return "redirect:/quiz?courseId=" + (quiz.getCourse() != null ? quiz.getCourse().getId() : "");
+        }
         List<QuizQuestion> questions = quizService.getQuestionsByQuizId(id);
 
-        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
         boolean isPro = currentUser != null && currentUser.isPro();
 
         model.addAttribute("quiz", quiz);
@@ -226,6 +232,13 @@ public class QuizController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        Quiz quiz = quizService.getQuizById(id);
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
+        if (!quiz.isAccessibleBy(currentUser)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "⛔ Bạn không có quyền nộp bài cho đề thi riêng tư này!");
+            return "redirect:/quiz?courseId=" + (quiz.getCourse() != null ? quiz.getCourse().getId() : "");
+        }
+
         Map<Long, String> answers = new HashMap<>();
         List<QuizQuestion> questions = quizService.getQuestionsByQuizId(id);
 
@@ -242,7 +255,6 @@ public class QuizController {
                 .answers(answers)
                 .build();
 
-        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
         QuizResultDto result = quizService.submitAndGrade(id, submission, currentUser);
         return "redirect:/quiz/attempt/" + result.getAttemptId();
     }

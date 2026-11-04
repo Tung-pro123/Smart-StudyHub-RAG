@@ -11,19 +11,22 @@ import java.util.List;
 @Repository
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Long> {
     List<QuizAttempt> findAllByQuizIdOrderByCompletedAtDesc(Long quizId);
+
     long countByQuizId(Long quizId);
+
     void deleteAllByQuizId(Long quizId);
 
     @Query("SELECT a FROM QuizAttempt a JOIN a.quiz q WHERE q.course.id = :courseId ORDER BY a.completedAt DESC")
     List<QuizAttempt> findRecentAttemptsByCourseId(@Param("courseId") Long courseId);
 
     @Query("SELECT u.id, u.username, u.fullName, u.avatar, MAX(a.totalScore), COUNT(a.id) " +
-           "FROM QuizAttempt a JOIN a.user u " +
-           "WHERE (:courseId IS NULL OR a.quiz.course.id = :courseId) " +
-           "AND (u.username = :leaderUsername OR u.squadLeaderUsername = :leaderUsername " +
-           "     OR (u.username = :memberUsername AND u.squadLeaderUsername IS NOT NULL)) " +
-           "GROUP BY u.id, u.username, u.fullName, u.avatar " +
-           "ORDER BY MAX(a.totalScore) DESC, COUNT(a.id) DESC, u.username ASC")
+            "FROM QuizAttempt a JOIN a.user u " +
+            "WHERE (:courseId IS NULL OR a.quiz.course.id = :courseId) " +
+            "AND (a.quiz.squadShared IS NULL OR a.quiz.squadShared = true) " +
+            "AND (u.username = :leaderUsername OR u.squadLeaderUsername = :leaderUsername " +
+            "     OR (u.username = :memberUsername AND u.squadLeaderUsername IS NOT NULL)) " +
+            "GROUP BY u.id, u.username, u.fullName, u.avatar " +
+            "ORDER BY MAX(a.totalScore) DESC, COUNT(a.id) DESC, u.username ASC")
     List<Object[]> findSquadLeaderboardRaw(
             @Param("leaderUsername") String leaderUsername,
             @Param("memberUsername") String memberUsername,
@@ -33,4 +36,3 @@ public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Long> 
         return findSquadLeaderboardRaw(leaderUsername, leaderUsername, courseId);
     }
 }
-

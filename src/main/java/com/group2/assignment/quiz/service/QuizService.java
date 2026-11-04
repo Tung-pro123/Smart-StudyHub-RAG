@@ -150,6 +150,16 @@ public class QuizService {
         return quizRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId);
     }
 
+    public List<Quiz> getQuizzesByCourse(Long courseId, User currentUser) {
+        List<Quiz> quizzes = quizRepository.findAllByCourseIdOrderByCreatedAtDesc(courseId);
+        if (quizzes.isEmpty() || currentUser == null || currentUser.isAdmin()) {
+            return quizzes;
+        }
+        return quizzes.stream()
+                .filter(q -> q.isAccessibleBy(currentUser))
+                .toList();
+    }
+
     public List<QuizQuestion> getQuestionsByQuizId(Long quizId) {
         return quizQuestionRepository.findAllByQuizIdOrderBySortOrderAsc(quizId);
     }
@@ -164,19 +174,16 @@ public class QuizService {
         Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đề thi với ID: " + id));
 
-        // Kiểm tra phân quyền bảo vệ đề thi theo mô hình Shared Squad Hub
-        if (currentUser != null && !currentUser.isAdmin()) {
-            Course course = quiz.getCourse();
-            if (course != null && Boolean.TRUE.equals(course.getSquadShared())) {
-                // Môn học nhóm Squad: CHỈ Trưởng Nhóm hoặc Admin mới có quyền xóa đề thi
-                if (!currentUser.isSquadLeader()) {
+        // Kiểm tra phân quyền bảo vệ đề thi theo mô hình Shared Squad Hub & Solo Quiz
+        if (currentUser != null && !quiz.canDelete(currentUser)) {
+            if (quiz.getCourse() != null && Boolean.TRUE.equals(quiz.getCourse().getSquadShared())) {
+                if (quiz.isSolo()) {
+                    throw new SecurityException("Chỉ người tạo đề thi cá nhân mới có quyền xóa đề thi này!");
+                } else {
                     throw new SecurityException("Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa đề thi của nhóm!");
                 }
-            } else if (course != null && course.getUser() != null) {
-                // Môn học cá nhân: chỉ chủ sở hữu môn học mới được xóa
-                if (!course.getUser().getId().equals(currentUser.getId())) {
-                    throw new SecurityException("Bạn không có quyền xóa đề thi của người khác!");
-                }
+            } else {
+                throw new SecurityException("Bạn không có quyền xóa đề thi của người khác!");
             }
         }
 
@@ -196,6 +203,11 @@ public class QuizService {
 
     @Transactional
     public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser) throws IOException {
+        return createQuizFromPdf(courseId, file, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, null);
+    }
+
+    @Transactional
+    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser, Boolean squadShared) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
@@ -207,9 +219,14 @@ public class QuizService {
             defaultTitle += " (Trang " + fromPage + "-" + toPage + ")";
         }
 
+        boolean resolvedSquadShared = (squadShared != null)
+                ? squadShared
+                : (course.getSquadShared() != null && course.getSquadShared());
+
         Quiz quiz = Quiz.builder()
                 .course(course)
                 .createdBy(currentUser)
+                .squadShared(resolvedSquadShared)
                 .title(defaultTitle)
                 .chapterTopic(chapterTopic != null && !chapterTopic.isBlank() ? chapterTopic.trim() : "Toàn bộ tài liệu")
                 .difficulty(difficulty != null ? difficulty : "MEDIUM")
@@ -236,6 +253,11 @@ public class QuizService {
 
     @Transactional
     public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser) throws IOException {
+        return createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, null);
+    }
+
+    @Transactional
+    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser, Boolean squadShared) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
@@ -259,9 +281,14 @@ public class QuizService {
             defaultTitle += " (Trang " + fromPage + "-" + toPage + ")";
         }
 
+        boolean resolvedSquadShared = (squadShared != null)
+                ? squadShared
+                : (course.getSquadShared() != null && course.getSquadShared());
+
         Quiz quiz = Quiz.builder()
                 .course(course)
                 .createdBy(currentUser)
+                .squadShared(resolvedSquadShared)
                 .title(defaultTitle)
                 .chapterTopic(chapterTopic != null && !chapterTopic.isBlank() ? chapterTopic.trim() : doc.getFileName())
                 .difficulty(difficulty != null ? difficulty : "MEDIUM")
