@@ -7,6 +7,98 @@
 <body>
 <section class="space-y-6 relative max-w-7xl mx-auto">
 
+    <!-- CSS Styling dành riêng cho bảng Markdown & Code Blocks do AI sinh ra -->
+    <style>
+        .markdown-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.8125rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .markdown-body th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #cbd5e1;
+            text-align: left;
+        }
+        .markdown-body td {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .markdown-body tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+        .markdown-body tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .markdown-body ul {
+            list-style-type: disc;
+            margin-left: 1.25rem;
+            margin-top: 0.35rem;
+            margin-bottom: 0.35rem;
+        }
+        .markdown-body ol {
+            list-style-type: decimal;
+            margin-left: 1.25rem;
+            margin-top: 0.35rem;
+            margin-bottom: 0.35rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.2rem;
+        }
+        .markdown-body code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.375rem;
+            color: #7c3aed;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+        .markdown-body pre {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+        .markdown-body pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+            font-weight: normal;
+        }
+        .markdown-body blockquote {
+            border-left: 3px solid #8b5cf6;
+            padding-left: 0.75rem;
+            margin: 0.5rem 0;
+            color: #475569;
+            font-style: italic;
+        }
+        .markdown-body strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+            color: #0f172a;
+            font-weight: 800;
+            margin-top: 0.75rem;
+            margin-bottom: 0.35rem;
+        }
+    </style>
+
+    <!-- Thư viện marked.js phục vụ render Markdown và Table chuyên nghiệp -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <!-- Ambient Background Glow Accents -->
     <div class="absolute -top-20 -left-20 w-80 h-80 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute top-1/2 -right-24 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
@@ -33,23 +125,25 @@
 
         <!-- Status Badges & Quick Links -->
         <div class="flex items-center gap-3 flex-wrap">
-            <div th:if="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div th:if="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>AI Multi-Key Engine: Đã Sẵn Sàng</span>
             </div>
-            <div th:unless="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold shadow-sm">
+            <div th:unless="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-amber-50 text-amber-800 border border-amber-300 text-xs font-bold shadow-xs">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span>Chưa cài Centralized Key</span>
             </div>
 
             <!-- Gói Pro Badge -->
-            <div th:if="${isPro}" class="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-400/40 text-amber-300 text-xs font-black shadow-sm">
-                <i class="fa-solid fa-crown text-amber-300"></i>
+            <div th:if="${isPro}" class="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 text-amber-800 text-xs font-black shadow-xs">
+                <i class="fa-solid fa-crown text-amber-500"></i>
                 <span>GÓI PRO: VÔ HẠN RAG</span>
             </div>
 
-            <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm h-10 px-4 btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl font-bold gap-2">
-                <i class="fa-solid fa-file-pdf text-rose-400"></i>
+            <!-- Nút Quản Lý Giáo Trình & Chunks: Chuẩn White Card, chữ rõ nét 100% -->
+            <a th:href="@{/courses/{id}/documents(id=${course.id})}" 
+               class="btn btn-sm h-10 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 shadow-sm rounded-xl font-bold gap-2 transition-all">
+                <i class="fa-solid fa-file-pdf text-rose-500"></i>
                 <span>Quản Lý Giáo Trình & Chunks</span>
             </a>
         </div>
@@ -211,8 +305,11 @@
                         <div class="chat-bubble text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3"
                              th:classappend="${msg.sender == 'USER'} ? 'bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 text-white rounded-2xl shadow-sm whitespace-pre-wrap' : 'bg-slate-50 border border-slate-200/80 text-slate-800 rounded-2xl shadow-sm'">
                             
-                            <!-- AI formatted Answer / User plain question -->
-                            <div class="markdown-body whitespace-pre-wrap" th:text="${msg.content}">Nội dung câu hỏi hoặc câu trả lời</div>
+                            <!-- User plain question -->
+                            <div th:if="${msg.sender == 'USER'}" class="whitespace-pre-wrap" th:text="${msg.content}">Câu hỏi người dùng</div>
+
+                            <!-- AI formatted Answer with marked.js -->
+                            <div th:if="${msg.sender == 'AI'}" class="markdown-body ai-markdown-content" th:attr="data-raw=${msg.content}" th:text="${msg.content}">Nội dung câu trả lời AI</div>
 
                             <!-- Expandable RAG Context Citations for AI -->
                             <div th:if="${msg.sender == 'AI' and msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
@@ -266,7 +363,7 @@
 
     </div>
 
-<!-- Pure Vanilla JS Chat Handler with Async Fetch API -->
+<!-- Pure Vanilla JS Chat Handler with Async Fetch API & Marked.js -->
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const courseId = /*[[${course.id}]]*/ 1;
@@ -279,6 +376,28 @@
         const sendBtn = document.getElementById('sendBtn');
         const typingIndicator = document.getElementById('typingIndicator');
         const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
+
+        // Hàm render nội dung Markdown bằng marked.js
+        function renderMarkdownContent(text) {
+            if (!text) return '';
+            try {
+                if (typeof marked !== 'undefined') {
+                    // Cấu hình gfm (GitHub Flavored Markdown) và ngắt dòng tự nhiên
+                    return marked.parse(text, { gfm: true, breaks: true });
+                }
+            } catch (e) {
+                console.warn('Lỗi parse marked:', e);
+            }
+            return escapeHtml(text);
+        }
+
+        // Tự động render tất cả tin nhắn AI có sẵn từ server khi tải trang
+        document.querySelectorAll('.ai-markdown-content').forEach(function(el) {
+            const rawContent = el.getAttribute('data-raw');
+            if (rawContent) {
+                el.innerHTML = renderMarkdownContent(rawContent);
+            }
+        });
 
         // Khóa input nếu sinh viên Free đã hết hạn ngạch
         if (!isProUser && initialQuota === 0) {
@@ -360,7 +479,7 @@
                         updateQuotaUI(data.remainingQuota);
                     }
 
-                    // 6. Append AI Answer to UI
+                    // 6. Append AI Answer to UI (Rendered by marked.js)
                     appendAiMessage(data.answer, data.citations);
 
                 } catch (error) {
@@ -471,7 +590,7 @@
                     <span class="font-bold">Trợ Lý AI Giáo Trình</span> <time class="text-[10px] text-slate-400 ml-1 font-mono">${timeStr}</time>
                 </div>
                 <div class="chat-bubble bg-slate-50 border border-slate-200/80 text-slate-800 rounded-2xl shadow-sm text-xs md:text-sm leading-relaxed max-w-[85%] space-y-3">
-                    <div class="markdown-body whitespace-pre-wrap">${formatSimpleMarkdown(answer)}</div>
+                    <div class="markdown-body ai-markdown-content">${renderMarkdownContent(answer)}</div>
                     ${citationsHtml}
                 </div>
             `;
@@ -485,16 +604,6 @@
                       .replace(/>/g, "&gt;")
                       .replace(/"/g, "&quot;")
                       .replace(/'/g, "&#039;");
-        }
-
-        function formatSimpleMarkdown(text) {
-            if (!text) return '';
-            let html = escapeHtml(text);
-            // Bold **text**
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>');
-            // Inline code `code`
-            html = html.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-200 text-purple-700 font-mono text-xs">$1</code>');
-            return html;
         }
     });
 </script>

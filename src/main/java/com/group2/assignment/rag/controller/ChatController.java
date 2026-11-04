@@ -146,6 +146,19 @@ public class ChatController {
                 requestDto.getQuestion().trim()
         );
 
+        // Tự động cập nhật tiêu đề nếu là phiên mới "Cuộc trò chuyện mới"
+        if (response.getSessionId() != null) {
+            ChatSession sessionEntity = chatSessionRepository.findById(response.getSessionId()).orElse(null);
+            if (sessionEntity != null && "Cuộc trò chuyện mới".equals(sessionEntity.getTitle())) {
+                String autoTitle = requestDto.getQuestion().trim();
+                if (autoTitle.length() > 40) {
+                    autoTitle = autoTitle.substring(0, 37) + "...";
+                }
+                sessionEntity.setTitle(autoTitle);
+                chatSessionRepository.save(sessionEntity);
+            }
+        }
+
         // Nếu thành công -> Tăng biến đếm và lưu DB nếu user tồn tại
         if (response.isSuccess()) {
             currentUser.setDailyRagCount(dailyCount + 1);
@@ -215,6 +228,19 @@ public class ChatController {
                 question.trim()
         );
 
+        // Tự động cập nhật tiêu đề nếu là phiên mới "Cuộc trò chuyện mới"
+        if (response.getSessionId() != null) {
+            ChatSession sessionEntity = chatSessionRepository.findById(response.getSessionId()).orElse(null);
+            if (sessionEntity != null && "Cuộc trò chuyện mới".equals(sessionEntity.getTitle())) {
+                String autoTitle = question.trim();
+                if (autoTitle.length() > 40) {
+                    autoTitle = autoTitle.substring(0, 37) + "...";
+                }
+                sessionEntity.setTitle(autoTitle);
+                chatSessionRepository.save(sessionEntity);
+            }
+        }
+
         if (response.isSuccess()) {
             currentUser.setDailyRagCount(dailyCount + 1);
             if (currentUser.getId() != null && userRepository.existsById(currentUser.getId())) {
@@ -263,7 +289,15 @@ public class ChatController {
      */
     @GetMapping("/chat/new")
     public String startNewChat(@PathVariable Long courseId) {
-        return "redirect:/courses/" + courseId + "/chat";
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
+
+        ChatSession newSession = chatSessionRepository.save(ChatSession.builder()
+                .course(course)
+                .title("Cuộc trò chuyện mới")
+                .build());
+
+        return "redirect:/courses/" + courseId + "/chat?sessionId=" + newSession.getId();
     }
 
     /**

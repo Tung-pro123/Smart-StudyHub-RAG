@@ -182,16 +182,16 @@ Dự án **Smart StudyHub RAG** của Group 2 khớp **100% tất cả các tiê
 ---
 
 ### 2️⃣ BẠN NGUYỄN VĂN GIA BÌNH (KIỂM THỬ LUỒNG RAG & CHUNKING — SLIDE 9 ➔ 11)
-* [ ] **Test Luồng 1 (Bóc tách PDF & Phân mảnh Chunks — BẮT BUỘC TEST KỸ)**:
+* [x] **Test Luồng 1 (Bóc tách PDF & Phân mảnh Chunks — BẮT BUỘC TEST KỸ)**:
   * Vào một môn học bất kỳ (ví dụ: `PRJ301` hoặc `LAB211`), truy cập mục **"Tài Liệu & Giáo Trình"** (`/courses/{id}/documents`).
   * Thực hiện upload 1 file giáo trình PDF thực tế (dung lượng từ 5 - 20 trang).
   * **Kiểm tra kết quả trích xuất**: Xác nhận thanh tiến trình hoàn tất, hệ thống sử dụng Apache PDFBox bóc tách văn bản thành công, bảng danh sách các đoạn Chunks hiển thị đầy đủ số trang, độ dài từ (300 - 500 từ) và nội dung đoạn trích.
-* [ ] **Test Luồng 2 (Hỏi đáp RAG & Citation Cards)**:
+* [x] **Test Luồng 2 (Hỏi đáp RAG & Citation Cards)**:
   * Vào phòng chat RAG (`/courses/{id}/chat`), bấm nút **"+ Cuộc Trò Chuyện Mới"**.
   * Đặt câu hỏi trực tiếp vào nội dung có trong file PDF vừa nạp (VD: *"Hãy tóm tắt các tính năng chính trong giáo trình vừa tải lên"*).
   * Kiểm tra câu trả lời của AI: Câu trả lời bám sát 100% nội dung tài liệu (Zero Hallucination).
   * **Kiểm tra thẻ trích dẫn Citation Cards**: Thẻ hiển thị rõ ràng: `📄 [Tên_file.pdf, Trang: X]` để đối chứng lật sách.
-* [ ] **Test Luồng 3 (Đa phiên hội thoại & Kiểm soát Quota)**:
+* [x] **Test Luồng 3 (Đa phiên hội thoại & Kiểm soát Quota)**:
   * Tạo thêm một phiên chat mới, kiểm tra danh sách lịch sử hội thoại ở cột bên trái có lưu trữ độc lập theo từng phiên không.
   * Kiểm tra bộ đếm hạn ngạch: Đặt câu hỏi và kiểm tra số lượt RAG còn lại trong ngày (giảm từ 50 xuống 49...).
 * 📸 **Bộ ảnh cần chụp đưa vào Slide**: Ảnh danh sách Chunks có phân trang và số trang đối chứng, ảnh bong bóng chat AI có Citation Card chi tiết, ảnh cấu hình bóc tách text bằng PDFBox trong IDE.

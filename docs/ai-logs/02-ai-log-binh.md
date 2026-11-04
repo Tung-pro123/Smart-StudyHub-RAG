@@ -261,6 +261,36 @@
 
 ---
 
+### 🔹 GIAI ĐOẠN 7: SỬA LỖI P0 PHÂN HỆ RAG CHATBOT & TÍCH HỢP MARKED.JS (04/11)
+
+* **Mục tiêu**:
+  - Khắc phục triệt để 3 lỗi mức độ P0 do Team Lead Lê Thanh Tùng chỉ ra trước thềm bảo vệ đề tài:
+    1. Sửa lỗi nút Header *"Quản Lý Giáo Trình & Chunks"* và các badge trạng thái bị tàng hình/mờ chói trên nền sáng.
+    2. Sửa lỗi nút `+ Cuộc Trò Chuyện Mới` bị liệt: Cập nhật `ChatController.java` để tạo mới một `ChatSession` với tiêu đề ban đầu là *"Cuộc trò chuyện mới"* và redirect chính xác vào session đó; tự động cập nhật tiêu đề theo câu hỏi đầu tiên (cắt 40 ký tự).
+    3. Tích hợp thư viện `marked.js` render Markdown Table chuyên nghiệp (có kẻ ô, sọc xen kẽ zebra, code blocks) cho câu trả lời của AI.
+  - Viết bổ sung Unit Tests kiểm tra tính năng tạo phiên mới và cập nhật tiêu đề tự động, đảm bảo 100% kiểm thử hệ thống đạt **329/329 tests PASS**.
+
+* **Câu Prompt thực tế**:
+  ```text
+  Tôi cần sửa 3 lỗi P0 trong phân hệ RAG Chatbot:
+  1. Header Bar trong chat.html: Đổi nút Quản Lý Giáo Trình sang White Card (bg-white border-slate-200 text-slate-700 font-bold), đổi các badge sang tone màu Light Card rõ nét.
+  2. Nút Cuộc Trò Chuyện Mới trong ChatController.java: Hàm startNewChat() tạo mới ChatSession và redirect đúng ?sessionId=...; khi gửi câu hỏi đầu tiên thì tự động cập nhật tiêu đề theo câu hỏi.
+  3. Bổ sung thư viện marked.js và CSS table để AI render bảng Markdown kẻ ô đẹp mắt thay vì text thô.
+  4. Viết bổ sung Unit Test trong ChatControllerQuotaTest kiểm tra các luồng trên.
+  ```
+
+* **AI đã giúp bạn như thế nào?**:
+  - Đề xuất chính xác cơ chế cập nhật tiêu đề thông minh: Khi phát hiện session có tiêu đề mặc định *"Cuộc trò chuyện mới"*, câu hỏi đầu tiên của người dùng sẽ lập tức được dùng làm tiêu đề hiển thị trên thanh lịch sử, nâng cao trải nghiệm người dùng.
+  - Tích hợp `marked.js` với cấu hình `{ gfm: true, breaks: true }` kết hợp CSS scoped trong `.markdown-body table`, xử lý mượt mà cả tin nhắn render từ server lẫn tin nhắn bất đồng bộ qua Fetch API.
+  - Hỗ trợ viết 2 test case mới nâng tổng số test của `ChatControllerQuotaTest` lên 5/5 ca kiểm thử bao phủ toàn diện.
+
+* **Đánh giá & Kết quả nghiệm thu của bản thân**:
+  - Toàn bộ 3 lỗi P0 đã được giải quyết dứt điểm.
+  - Chạy `mvn clean test` đạt **329/329 tests PASS 100%**.
+  - Khởi động dự án trơn tru, sẵn sàng cho buổi thuyết trình bảo vệ đề tài.
+
+---
+
 ## 💡 ĐÚC KẾT KINH NGHIỆM KHI DÙNG AI
 * **AI đã giúp ích nhiều nhất cho bạn ở khâu nào?**: 
   - Khâu thiết kế kiến trúc Multi-Key Rotator kết hợp Cooldown Map và quy trình làm rõ yêu cầu qua `/grill-me`. AI đã phân tích từng nhánh thiết kế, đề xuất giải pháp nội bộ nhẹ gọn không cần cài thêm service ngoài mà vẫn giải quyết triệt để bài toán nghẽn hạn ngạch (Rate Limit 15 RPM của Gemini Free).

@@ -8,6 +8,8 @@ import com.group2.assignment.core.repository.CourseRepository;
 import com.group2.assignment.rag.controller.ChatController;
 import com.group2.assignment.rag.dto.ChatRequestDto;
 import com.group2.assignment.rag.dto.ChatResponseDto;
+import com.group2.assignment.rag.entity.ChatSession;
+import com.group2.assignment.rag.repository.ChatSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,9 @@ class ChatControllerQuotaTest {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private ChatSessionRepository chatSessionRepository;
 
     private Course sampleCourse;
 
@@ -98,7 +103,6 @@ class ChatControllerQuotaTest {
         ResponseEntity<ChatResponseDto> res = chatController.sendChatMessageJson(sampleCourse.getId(), req, session);
 
         assertNotNull(res.getBody());
-        // User phải được reset lastRagResetDate thành hôm nay và dailyRagCount được reset
         User updatedUser = userRepository.findById(yesterdayUser.getId()).orElseThrow();
         assertEquals(LocalDate.now(), updatedUser.getLastRagResetDate());
         assertNotEquals(50, updatedUser.getDailyRagCount(), "Bộ đếm phải được reset");
@@ -128,8 +132,59 @@ class ChatControllerQuotaTest {
 
         assertNotNull(res.getBody());
         ChatResponseDto body = res.getBody();
-        // Không bị chặn bởi quota (remainingQuota = -1)
         assertEquals(-1, body.getRemainingQuota());
     }
-}
 
+    @Test
+    @DisplayName("Bấm nút + Cuộc Trò Chuyện Mới tạo phiên mới và redirect đúng sessionId")
+    void testStartNewChatCreatesSessionAndRedirects() {
+        String redirectUrl = chatController.startNewChat(sampleCourse.getId());
+        assertNotNull(redirectUrl);
+        assertTrue(redirectUrl.startsWith("redirect:/courses/" + sampleCourse.getId() + "/chat?sessionId="));
+
+        String sessionIdStr = redirectUrl.substring(redirectUrl.lastIndexOf("=") + 1);
+        Long newSessionId = Long.parseLong(sessionIdStr);
+
+        ChatSession sessionInDb = chatSessionRepository.findById(newSessionId).orElse(null);
+        assertNotNull(sessionInDb);
+        assertEquals("Cuộc trò chuyện mới", sessionInDb.getTitle());
+        assertEquals(sampleCourse.getId(), sessionInDb.getCourse().getId());
+    }
+
+    @Test
+    @DisplayName("Câu hỏi đầu tiên gửi vào phiên mới tự động cập nhật tiêu đề theo câu hỏi")
+    void testFirstQuestionAutoUpdatesSessionTitle() {
+        // Tạo phiên mới
+        ChatSession newSession = chatSessionRepository.save(ChatSession.builder()
+                .course(sampleCourse)
+                .title("Cuộc trò chuyện mới")
+                .build());
+
+        User testUser = userRepository.save(User.builder()
+                .username("test_auto_title_user")
+                .email("test_auto_title@fpt.edu.vn")
+                .password("123456")
+                .fullName("Sinh Viên Test Title")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .dailyRagCount(0)
+                .lastRagResetDate(LocalDate.now())
+                .build());
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute(AuthController.SESSION_USER, testUser);
+
+        String question = "Khái niệm Entity lifecycle trong Spring Data JPA là gì?";
+        ChatRequestDto req = new ChatRequestDto();
+        req.setSessionId(newSession.getId());
+        req.setQuestion(question);
+
+        ResponseEntity<ChatResponseDto> res = chatController.sendChatMessageJson(sampleCourse.getId(), req, session);
+        assertNotNull(res.getBody());
+
+        // Kiểm tra tiêu đề phiên chat trong CSDL đã tự động được đổi
+        ChatSession updatedSession = chatSessionRepository.findById(newSession.getId()).orElseThrow();
+        assertNotEquals("Cuộc trò chuyện mới", updatedSession.getTitle());
+        assertTrue(updatedSession.getTitle().contains("Entity lifecycle") || updatedSession.getTitle().contains("Spring Data JPA"));
+    }
+}
