@@ -29,6 +29,9 @@ public class CourseCardDto {
     private String ownerUsername;
     private String ownerFullName;
 
+    // Squad Hub
+    private boolean squadShared; // true = môn học chia sẻ của Squad
+
     public boolean isOwnedBy(Long userId) {
         return ownerId != null && ownerId.equals(userId);
     }
@@ -52,6 +55,7 @@ public class CourseCardDto {
                 .ownerId(course.getUser() != null ? course.getUser().getId() : null)
                 .ownerUsername(course.getUser() != null ? course.getUser().getUsername() : null)
                 .ownerFullName(course.getUser() != null ? course.getUser().getFullName() : null)
+                .squadShared(Boolean.TRUE.equals(course.getSquadShared()))
                 .build();
     }
 }

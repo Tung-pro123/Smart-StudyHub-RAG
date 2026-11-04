@@ -49,6 +49,20 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             @Param("semester") String semester,
             @Param("includeShared") boolean includeShared);
 
+    /**
+     * Lấy môn học Squad dùng chung của tất cả thành viên trong nhóm (theo squadLeaderUsername).
+     * Dùng để hiển thị môn học nhóm cho mọi thành viên Squad.
+     */
+    @Query("SELECT c FROM Course c WHERE c.squadShared = true " +
+           "AND (c.user.squadLeaderUsername = :leaderUsername OR c.user.username = :leaderUsername) " +
+           "AND (:semester IS NULL OR :semester = 'ALL' OR LOWER(c.semester) = LOWER(:semester)) " +
+           "AND (:keyword IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "     OR LOWER(c.code) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<Course> searchSquadSharedCourses(
+            @Param("leaderUsername") String leaderUsername,
+            @Param("keyword") String keyword,
+            @Param("semester") String semester);
+
     @Query("SELECT c FROM Course c WHERE (:semester IS NULL OR :semester = 'ALL' OR LOWER(c.semester) = LOWER(:semester)) " +
            "AND (:keyword IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
            "     OR LOWER(c.code) LIKE LOWER(CONCAT('%', :keyword, '%')))")

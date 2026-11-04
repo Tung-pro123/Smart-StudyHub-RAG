@@ -134,4 +134,57 @@ class DocumentControllerTest {
                 .andExpect(jsonPath("$.answer").exists())
                 .andExpect(jsonPath("$.sessionId").exists());
     }
+
+    @Test
+    @DisplayName("Study Squad: Thành viên thường không được xóa tài liệu của Môn Học Nhóm")
+    void testSquadMemberCannotDeleteDocumentInSquadSharedCourse() throws Exception {
+        User leader = userRepository.save(User.builder()
+                .username("doc_leader")
+                .email("doc_leader@fpt.edu.vn")
+                .fullName("Doc Leader")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("SQUAD")
+                .squadLeaderUsername("doc_leader")
+                .build());
+
+        User member = userRepository.save(User.builder()
+                .username("doc_member")
+                .email("doc_member@fpt.edu.vn")
+                .fullName("Doc Member")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("SQUAD")
+                .squadLeaderUsername("doc_leader")
+                .squadStatus("ACTIVE")
+                .build());
+
+        Course sharedCourse = courseRepository.save(Course.builder()
+                .code("EXE_DOC_TEST")
+                .name("EXE Document Test")
+                .user(leader)
+                .squadShared(true)
+                .build());
+
+        Document doc = documentRepository.save(Document.builder()
+                .course(sharedCourse)
+                .fileName("squad_slide.pdf")
+                .status("INDEXED")
+                .uploadedBy(leader)
+                .build());
+
+        // Thành viên thường gọi endpoint xóa -> Bị chặn, chuyển hướng kèm errorMessage
+        mockMvc.perform(post("/courses/" + sharedCourse.getId() + "/documents/" + doc.getId() + "/delete")
+                        .sessionAttr(AuthController.SESSION_USER, member))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/courses/" + sharedCourse.getId() + "/documents"))
+                .andExpect(flash().attributeExists("errorMessage"));
+
+        // Trưởng nhóm gọi endpoint xóa -> Thành công kèm successMessage
+        mockMvc.perform(post("/courses/" + sharedCourse.getId() + "/documents/" + doc.getId() + "/delete")
+                        .sessionAttr(AuthController.SESSION_USER, leader))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/courses/" + sharedCourse.getId() + "/documents"))
+                .andExpect(flash().attributeExists("successMessage"));
+    }
 }

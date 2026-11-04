@@ -49,6 +49,9 @@
                 <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="px-3 py-1 rounded-lg bg-white/10 text-white border border-white/20 font-black text-xs" th:text="${course.code}">HSF302</span>
+                        <span th:if="${course.squadShared}" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold tracking-wide shadow-md inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-users text-[11px]"></i> MÔN NHÓM SQUAD
+                        </span>
                         <span class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold" th:text="${course.semester}">Fall 2026</span>
                         <span class="px-2.5 py-0.5 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold" th:text="${course.credits} + ' Tín chỉ'">3 Tín chỉ</span>
                         <span th:if="${course.chunkCount > 0}" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold">
@@ -68,7 +71,8 @@
             </div>
 
             <!-- Header Action Buttons -->
-            <div class="flex flex-wrap md:flex-col gap-2 flex-shrink-0">
+            <div class="flex flex-wrap md:flex-col gap-2 flex-shrink-0"
+                 th:if="${currentUser != null and (currentUser.admin or (!course.squadShared ? course.isOwnedBy(currentUser.id) : currentUser.squadLeader))}">
                 <button onclick="document.getElementById('modal-edit-course-detail').showModal()" class="btn btn-sm btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl font-bold">
                     <i class="fa-solid fa-pen-to-square text-amber-400 mr-1"></i> Chỉnh Sửa
                 </button>

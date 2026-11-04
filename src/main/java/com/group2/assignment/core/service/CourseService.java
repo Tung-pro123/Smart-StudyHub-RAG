@@ -41,7 +41,23 @@ public class CourseService {
         if (currentUser != null && currentUser.isAdmin()) {
             courses = courseRepository.searchAll(kw, sem);
         } else if (currentUser != null && currentUser.getId() != null) {
-            courses = courseRepository.searchCoursesByUser(currentUser.getId(), kw, sem, false);
+            // Lấy môn học cá nhân của user
+            List<Course> personalCourses = courseRepository.searchCoursesByUser(currentUser.getId(), kw, sem, false);
+            // Nếu user thuộc Squad → merge thêm môn Squad dùng chung của cả nhóm (cho cả Leader và Thành viên)
+            if (currentUser.isSquad() && currentUser.getEffectiveSquadLeader() != null) {
+                List<Course> squadCourses = courseRepository.searchSquadSharedCourses(
+                        currentUser.getEffectiveSquadLeader(), kw, sem);
+                // Merge không trùng (theo id)
+                java.util.Set<Long> seen = personalCourses.stream()
+                        .map(Course::getId).collect(java.util.stream.Collectors.toSet());
+                java.util.List<Course> merged = new java.util.ArrayList<>(personalCourses);
+                for (Course sc : squadCourses) {
+                    if (seen.add(sc.getId())) merged.add(sc);
+                }
+                courses = merged;
+            } else {
+                courses = personalCourses;
+            }
         } else {
             courses = courseRepository.searchAll(kw, sem);
         }
@@ -212,6 +228,13 @@ public class CourseService {
         if (user != null && !user.isAdmin()) {
             if (existing.getUser() != null && !existing.getUser().getId().equals(user.getId())) {
                 throw new SecurityException("Bạn không có quyền xóa môn học của người khác!");
+            }
+        }
+
+        // Môn học Squad dùng chung: chỉ Trưởng Nhóm và Admin mới được xóa
+        if (Boolean.TRUE.equals(existing.getSquadShared()) && user != null && !user.isAdmin()) {
+            if (!user.isSquadLeader()) {
+                throw new SecurityException("Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa Môn Học Squad dùng chung!");
             }
         }
 

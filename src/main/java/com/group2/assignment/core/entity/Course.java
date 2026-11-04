@@ -50,6 +50,10 @@ public class Course {
     @Builder.Default
     private Integer credits = 3; // Số tín chỉ
 
+    @Column(name = "squad_shared")
+    @Builder.Default
+    private Boolean squadShared = false; // true = môn học chia sẻ chung cho cả nhóm Squad
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -67,6 +71,9 @@ public class Course {
         }
         if (this.semester == null || this.semester.isBlank()) {
             this.semester = "Fall 2026";
+        }
+        if (this.squadShared == null) {
+            this.squadShared = false;
         }
         if (this.credits == null) {
             this.credits = 3;

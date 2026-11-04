@@ -55,6 +55,14 @@ public class DocumentController {
         model.addAttribute("maxDocsFree", maxDocsFree);
         model.addAttribute("isDocLimitReached", isDocLimitReached);
 
+        boolean canDeleteDocs = (currentUser != null) && (
+                currentUser.isAdmin()
+                || (Boolean.TRUE.equals(course.getSquadShared())
+                        ? currentUser.isSquadLeader()
+                        : (course.getUser() == null || (currentUser.getId() != null && currentUser.getId().equals(course.getUser().getId()))))
+        );
+        model.addAttribute("canDeleteDocs", canDeleteDocs);
+
         return "rag/documents";
     }
 
@@ -84,7 +92,23 @@ public class DocumentController {
     @PostMapping("/documents/{docId}/delete")
     public String deleteDocument(@PathVariable Long courseId,
                                  @PathVariable Long docId,
+                                 HttpSession session,
                                  RedirectAttributes redirectAttributes) {
+        User currentUser = getCurrentUser(session);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập!");
+            return "redirect:/login";
+        }
+
+        com.group2.assignment.core.entity.Course course = courseRepository.findById(courseId).orElse(null);
+        if (course != null && Boolean.TRUE.equals(course.getSquadShared())) {
+            if (!currentUser.isAdmin() && !currentUser.isSquadLeader()) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "⛔ Chỉ Trưởng nhóm và Quản trị viên mới có quyền xóa tài liệu của nhóm!");
+                return "redirect:/courses/" + courseId + "/documents";
+            }
+        }
+
         try {
             pdfChunkingService.deleteDocument(docId);
             redirectAttributes.addFlashAttribute("successMessage", "Đã xóa tài liệu và các đoạn chunks thành công!");

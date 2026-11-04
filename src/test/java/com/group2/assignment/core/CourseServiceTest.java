@@ -279,4 +279,104 @@ class CourseServiceTest {
         // Chủ sở hữu xóa môn của chính mình -> Thành công
         assertDoesNotThrow(() -> courseService.deleteCourse(saved.getId(), owner));
     }
+
+    @Test
+    @DisplayName("Study Squad: Thành viên nhóm nhìn thấy môn học dùng chung của Leader")
+    void testSquadMemberCanSeeLeaderSquadSharedCourse() {
+        // 1. Tạo Trưởng nhóm Squad
+        User leader = userRepository.save(User.builder()
+                .username("hub_leader")
+                .email("hub_leader@fpt.edu.vn")
+                .fullName("Hub Leader")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("SQUAD")
+                .squadLeaderUsername("hub_leader")
+                .build());
+
+        // 2. Tạo Thành viên nhóm thuộc squad của leader
+        User member = userRepository.save(User.builder()
+                .username("hub_member")
+                .email("hub_member@fpt.edu.vn")
+                .fullName("Hub Member")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("SQUAD")
+                .squadLeaderUsername("hub_leader")
+                .squadStatus("ACTIVE")
+                .build());
+
+        // 3. Tạo User Free bên ngoài nhóm
+        User outsider = userRepository.save(User.builder()
+                .username("hub_outsider")
+                .email("hub_outsider@fpt.edu.vn")
+                .fullName("Hub Outsider")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("FREE")
+                .build());
+
+        // 4. Leader tạo 1 môn học cá nhân và 1 môn học Squad dùng chung
+        Course personalCourse = courseService.saveCourse(Course.builder()
+                .code("LEAD_PRIV")
+                .name("Leader Private Course")
+                .squadShared(false)
+                .build(), leader);
+
+        Course sharedCourse = courseService.saveCourse(Course.builder()
+                .code("SQUAD_EXE")
+                .name("Squad Startup Project")
+                .squadShared(true)
+                .build(), leader);
+
+        // Member truy vấn: PHẢI nhìn thấy môn SQUAD_EXE nhưng KHÔNG nhìn thấy LEAD_PRIV
+        List<CourseCardDto> memberCourses = courseService.getAllCoursesWithStats(null, null, member);
+        boolean seesShared = memberCourses.stream().anyMatch(c -> c.getCode().equals("SQUAD_EXE"));
+        boolean seesPrivate = memberCourses.stream().anyMatch(c -> c.getCode().equals("LEAD_PRIV"));
+        assertTrue(seesShared, "Thành viên Squad phải nhìn thấy môn dùng chung của nhóm");
+        assertFalse(seesPrivate, "Thành viên Squad không được nhìn thấy môn cá nhân của Leader");
+
+        // Outsider truy vấn: KHÔNG nhìn thấy môn SQUAD_EXE
+        List<CourseCardDto> outsiderCourses = courseService.getAllCoursesWithStats(null, null, outsider);
+        boolean outsiderSeesShared = outsiderCourses.stream().anyMatch(c -> c.getCode().equals("SQUAD_EXE"));
+        assertFalse(outsiderSeesShared, "Người ngoài nhóm Free không được nhìn thấy môn dùng chung của Squad");
+    }
+
+    @Test
+    @DisplayName("Study Squad: Chỉ Trưởng nhóm hoặc Admin mới có quyền xóa Môn học dùng chung")
+    void testSquadSharedCourseDeleteOnlyLeaderOrAdminCanDelete() {
+        User leader = userRepository.save(User.builder()
+                .username("del_leader")
+                .email("del_leader@fpt.edu.vn")
+                .fullName("Del Leader")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("SQUAD")
+                .squadLeaderUsername("del_leader")
+                .build());
+
+        User member = userRepository.save(User.builder()
+                .username("del_member")
+                .email("del_member@fpt.edu.vn")
+                .fullName("Del Member")
+                .password("123456")
+                .role("ROLE_STUDENT")
+                .subscriptionTier("SQUAD")
+                .squadLeaderUsername("del_leader")
+                .squadStatus("ACTIVE")
+                .build());
+
+        Course sharedCourse = courseService.saveCourse(Course.builder()
+                .code("SWP_DEL")
+                .name("SWP Shared Delete Test")
+                .squadShared(true)
+                .build(), leader);
+
+        // Thành viên thường cố xóa môn nhóm -> Bị chặn SecurityException
+        assertThrows(SecurityException.class, () ->
+                courseService.deleteCourse(sharedCourse.getId(), member));
+
+        // Trưởng nhóm xóa -> Thành công
+        assertDoesNotThrow(() -> courseService.deleteCourse(sharedCourse.getId(), leader));
+    }
 }

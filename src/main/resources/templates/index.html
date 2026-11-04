@@ -259,6 +259,9 @@
                             </div>
                             <div>
                                 <span class="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 text-xs font-black tracking-wide" th:text="${course.code}">HSF302</span>
+                                <span th:if="${course.squadShared}" class="ml-1.5 px-2 py-0.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold tracking-wide shadow-xs inline-flex items-center gap-1" title="Môn Học Dùng Chung Của Study Squad">
+                                    <i class="fa-solid fa-users text-[9px]"></i> SQUAD
+                                </span>
                                 <span class="text-[11px] block text-slate-500 font-semibold mt-1" th:text="${course.semester} + ' • ' + ${course.credits} + ' tín chỉ'">Fall 2026 • 3 tín chỉ</span>
                             </div>
                         </div>
@@ -280,7 +283,7 @@
                                         <i class="fa-solid fa-pen-to-square text-amber-500"></i> Chỉnh Sửa
                                     </button>
                                 </li>
-                                <li class="border-t border-slate-100 mt-1 pt-1">
+                                <li class="border-t border-slate-100 mt-1 pt-1" th:if="${currentUser != null and (currentUser.admin or (!course.squadShared ? course.isOwnedBy(currentUser.id) : currentUser.squadLeader))}">
                                     <a th:href="@{'/courses/delete/' + ${course.id}}"
                                        onclick="return confirm('Bạn có chắc chắn muốn xóa môn học này không? Toàn bộ tài liệu PDF và dữ liệu liên quan sẽ bị xóa vĩnh viễn!')"
                                        class="text-rose-600 hover:bg-rose-50">
@@ -401,6 +404,22 @@
                         <option value="fa-brain">Trí Tuệ Nhân Tạo (AI / RAG)</option>
                         <option value="fa-database">Cơ Sở Dữ Liệu (SQL / DB)</option>
                     </select>
+                </div>
+
+                <!-- Tùy chọn Môn Học Nhóm Squad (chỉ hiển thị cho thành viên gói Study Squad hoặc Admin) -->
+                <div th:if="${currentUser != null and (currentUser.squad or currentUser.admin)}" 
+                     class="p-3.5 rounded-2xl bg-purple-50/80 border border-purple-200/80">
+                    <label class="label cursor-pointer p-0 flex items-start gap-3">
+                        <input type="checkbox" name="squadShared" value="true" class="checkbox checkbox-sm checkbox-primary rounded-lg mt-0.5" />
+                        <div>
+                            <span class="label-text font-bold text-xs text-purple-950 flex items-center gap-1.5">
+                                <i class="fa-solid fa-users text-purple-600"></i> Chia sẻ làm Môn Học Nhóm Study Squad
+                            </span>
+                            <span class="text-[11px] block text-purple-700/80 mt-0.5 leading-relaxed">
+                                Cho phép tất cả thành viên trong nhóm cùng xem môn, cùng nạp tài liệu và cùng làm bài tập.
+                            </span>
+                        </div>
+                    </label>
                 </div>
 
                 <div class="modal-action mt-6">

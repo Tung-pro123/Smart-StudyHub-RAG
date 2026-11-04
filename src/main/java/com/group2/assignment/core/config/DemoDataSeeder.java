@@ -83,21 +83,23 @@ public class DemoDataSeeder implements CommandLineRunner {
                     "from-teal-600 to-cyan-700", "fa-scale-balanced", "Fall 2026", 3, proStudent);
         }
 
-        // 3. Tạo 2 môn học cho squad_leader (Gói Study Squad)
+        // 3. Tạo 2 môn học cho squad_leader (Gói Study Squad) — đều là môn Nhóm dùng chung (squadShared=true)
         Course exe101 = null;
+        Course lab211 = null;
         if (squadLeader != null) {
             exe101 = assignOrCreateCourse("EXE101", "Experiential Entrepreneurship",
                     "Dự án khởi nghiệp đổi mới sáng tạo, nghiên cứu thị trường và pitching dự án nhóm.",
-                    "from-rose-500 to-pink-600", "fa-lightbulb", "Fall 2026", 3, squadLeader);
+                    "from-rose-500 to-pink-600", "fa-lightbulb", "Fall 2026", 3, squadLeader, true);
 
-            assignOrCreateCourse("LAB211", "OOP Java Programming Lab",
+            lab211 = assignOrCreateCourse("LAB211", "OOP Java Programming Lab",
                     "Thực hành lập trình hướng đối tượng Java thuần, thiết kế mẫu Design Pattern và tối ưu mã nguồn.",
-                    "from-sky-600 to-indigo-700", "fa-diagram-project", "Fall 2026", 3, squadLeader);
+                    "from-sky-600 to-indigo-700", "fa-diagram-project", "Fall 2026", 3, squadLeader, true);
         }
 
-        // 4. Seed tài liệu PDF giáo trình mẫu cho HSF302 và EXE101
+        // 4. Seed tài liệu PDF giáo trình mẫu cho HSF302, EXE101, LAB211
         seedDocumentForCourse(hsf302, "Slide_HSF302_Spring_JPA.pdf", "HSF302 - JPA and Spring Boot Architecture Guide");
         seedDocumentForCourse(exe101, "Slide_EXE101_Startup_Project.pdf", "EXE101 - Experiential Entrepreneurship Guide");
+        seedDocumentForCourse(lab211, "Slide_LAB211_OOP_Java.pdf", "LAB211 - OOP Java Design Patterns");
 
         // 5. Seed dữ liệu đề thi và lượt thi Squad Leaderboard cho EXE101
         seedSquadQuizAndAttempts(exe101, squadLeader, squadMember1);
@@ -107,11 +109,22 @@ public class DemoDataSeeder implements CommandLineRunner {
 
     private Course assignOrCreateCourse(String code, String name, String desc, String color, String icon,
                                         String semester, int credits, User owner) {
+        return assignOrCreateCourse(code, name, desc, color, icon, semester, credits, owner, false);
+    }
+
+    private Course assignOrCreateCourse(String code, String name, String desc, String color, String icon,
+                                        String semester, int credits, User owner, boolean squadShared) {
         Course existing = courseRepository.findByCodeIgnoreCase(code).orElse(null);
         if (existing != null) {
             if (existing.getUser() == null) {
                 existing.setUser(owner);
+                existing.setSquadShared(squadShared);
                 return courseRepository.save(existing);
+            }
+            // Nếu đã tồn tại, cập nhật squadShared nếu cần
+            if (existing.getSquadShared() == null || existing.getSquadShared() != squadShared) {
+                existing.setSquadShared(squadShared);
+                courseRepository.save(existing);
             }
             return existing;
         } else {
@@ -124,6 +137,7 @@ public class DemoDataSeeder implements CommandLineRunner {
                     .semester(semester)
                     .credits(credits)
                     .user(owner)
+                    .squadShared(squadShared)
                     .createdAt(LocalDateTime.now())
                     .build());
         }
@@ -146,6 +160,7 @@ public class DemoDataSeeder implements CommandLineRunner {
 
         documentRepository.save(Document.builder()
                 .course(course)
+                .uploadedBy(course != null ? course.getUser() : null)
                 .fileName(fileName)
                 .filePath(targetPath.toString())
                 .fileType("application/pdf")

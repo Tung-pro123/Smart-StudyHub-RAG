@@ -255,6 +255,7 @@
                         <thead class="bg-slate-50 text-slate-600 font-bold uppercase text-[11px] border-b border-slate-200">
                             <tr>
                                 <th class="py-3 px-4">Tên File</th>
+                                <th class="py-3 px-4">Người Tải</th>
                                 <th class="py-3 px-4">Dung Lượng</th>
                                 <th class="py-3 px-4">Số Trang</th>
                                 <th class="py-3 px-4">Số Chunks</th>
@@ -270,6 +271,13 @@
                                         <i class="fa-solid fa-file-pdf text-rose-500 text-base"></i>
                                         <span class="truncate font-semibold text-slate-800" th:text="${doc.fileName}" th:title="${doc.fileName}">file.pdf</span>
                                     </div>
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold"
+                                          th:classappend="${doc.uploadedBy != null and doc.uploadedBy.squadLeader} ? 'bg-purple-100 text-purple-800 border border-purple-200' : 'bg-slate-100 text-slate-700 border border-slate-200'">
+                                        <i class="fa-solid" th:classappend="${doc.uploadedBy != null and doc.uploadedBy.squadLeader} ? 'fa-crown text-purple-600' : 'fa-user text-slate-500'"></i>
+                                        <span th:text="${doc.uploadedBy != null ? '@' + doc.uploadedBy.username : 'Hệ thống'}">@squad_leader</span>
+                                    </span>
                                 </td>
                                 <td class="py-3.5 px-4 text-slate-600 font-mono" th:text="${#numbers.formatDecimal(doc.fileSize / 1024.0, 1, 1)} + ' KB'">120 KB</td>
                                 <td class="py-3.5 px-4">
@@ -291,12 +299,15 @@
                                 </td>
                                 <td class="py-3.5 px-4 text-slate-500 font-mono text-[11px]" th:text="${#temporals.format(doc.uploadedAt, 'dd/MM/yyyy HH:mm')}">31/10/2026</td>
                                 <td class="py-3.5 px-4 text-center">
-                                    <form th:action="@{/courses/{cId}/documents/{dId}/delete(cId=${course.id}, dId=${doc.id})}" method="post"
+                                    <form th:if="${canDeleteDocs}" th:action="@{/courses/{cId}/documents/{dId}/delete(cId=${course.id}, dId=${doc.id})}" method="post"
                                           onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài liệu này cùng toàn bộ các Chunks liên quan?');">
                                         <button type="submit" class="btn btn-ghost btn-circle btn-xs text-rose-500 hover:bg-rose-50" title="Xóa tài liệu">
-                                            <i class="fa-solid fa-trash-can text-sm"></i>
+                                            <i class="fa-solid fa-trash-can"></i>
                                         </button>
                                     </form>
+                                    <span th:unless="${canDeleteDocs}" class="inline-flex items-center gap-1 text-[11px] text-slate-400 italic" title="Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa tài liệu của nhóm">
+                                        <i class="fa-solid fa-lock text-slate-400"></i> Khóa
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>

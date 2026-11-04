@@ -61,14 +61,16 @@ public class CourseController {
      * Màn hình chi tiết / Hub điều phối của Môn học (Yêu cầu đăng nhập)
      */
     @GetMapping("/{id}")
-    public String viewCourseDetail(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String viewCourseDetail(@PathVariable("id") Long id, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         try {
+            User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
             CourseCardDto courseDto = courseService.getCourseWithStats(id);
             List<Chunk> chunks = chunkRepository.findAllByCourseId(id);
 
             model.addAttribute("course", courseDto);
             model.addAttribute("chunks", chunks);
             model.addAttribute("editCourse", courseService.getCourseById(id).orElse(new Course()));
+            model.addAttribute("currentUser", currentUser);
             return "courses/detail";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -77,11 +79,13 @@ public class CourseController {
     }
 
     /**
-     * Xử lý tạo môn học mới (kèm kiểm tra hạn ngạch gói cước và gán người sở hữu)
+     * Xử lý tạo môn học mới (kèm kiểm tra hạn ngạch gói cước và gán người sở hữu).
+     * Tham số squadShared: chỉ Trưởng Nhóm Squad mới được tạo môn Squad dùng chung.
      */
     @PostMapping({"/create", ""})
     public String createCourse(
             @ModelAttribute("newCourse") Course course,
+            @RequestParam(value = "squadShared", required = false, defaultValue = "false") boolean squadShared,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
@@ -90,10 +94,19 @@ public class CourseController {
             return "redirect:/login";
         }
 
+        // Môn học Squad dùng chung: thành viên hoặc trưởng nhóm thuộc gói Squad/Admin
+        if (squadShared && !currentUser.isSquad() && !currentUser.isAdmin()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "⛔ Bạn cần thuộc Gói Study Squad hoặc là Quản trị viên để tạo Môn Học Nhóm!");
+            return "redirect:/courses";
+        }
+        course.setSquadShared(squadShared && (currentUser.isSquad() || currentUser.isAdmin()));
+
         try {
             courseService.saveCourse(course, currentUser);
+            String suffix = Boolean.TRUE.equals(course.getSquadShared()) ? " [👥 Môn Nhóm Squad]" : "";
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Tạo thành công môn học: " + course.getCode() + " - " + course.getName() + "!");
+                    "Tạo thành công môn học: " + course.getCode() + " - " + course.getName() + suffix + "!");
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("showUpgradeModal", true);

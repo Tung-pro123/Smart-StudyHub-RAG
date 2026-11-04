@@ -81,6 +81,7 @@ public class PdfChunkingService {
         // 2. Tạo bản ghi Document trạng thái CHUNKING
         Document document = Document.builder()
                 .course(course)
+                .uploadedBy(currentUser)
                 .fileName(originalFilename)
                 .filePath(destinationPath.toAbsolutePath().toString())
                 .fileType("application/pdf")

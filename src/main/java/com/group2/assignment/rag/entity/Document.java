@@ -1,5 +1,6 @@
 package com.group2.assignment.rag.entity;
 
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Course;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,12 @@ public class Document {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Course course;
+
+    /** Người tải lên tài liệu này (null = seeder/hệ thống) */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "uploaded_by_user_id")
+    @ToString.Exclude
+    private User uploadedBy;
 
     @Column(nullable = false, length = 255)
     private String fileName; // Tên file gốc: e.g. Slide_Chapter1.pdf
