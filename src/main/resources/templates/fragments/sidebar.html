@@ -86,7 +86,7 @@
                                 <span>Bảng Giá Gói Cước</span>
                             </button>
                         </li>
-                        <li>
+                        <li th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
                             <a th:href="@{/h2-console}" target="_blank" class="py-2.5 px-3 rounded-xl hover:bg-slate-100 hover:text-slate-900 transition-all flex items-center gap-3">
                                 <i class="fa-solid fa-database text-slate-400 text-sm w-5 text-center"></i>
                                 <span>H2 Database Console</span>
