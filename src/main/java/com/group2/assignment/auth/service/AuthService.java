@@ -220,7 +220,66 @@ public class AuthService {
     public static final int MAX_SQUAD_MEMBERS = 5; // 1 nhóm trưởng + tối đa 4 bạn
 
     /**
-     * Lấy danh sách thành viên trong nhóm học tập (gồm cả nhóm trưởng)
+     * Tìm kiếm người dùng bằng Username, Email hoặc Member Tag (#STU-XXXX)
+     */
+    public Optional<User> findUserByIdentifier(String input) {
+        if (input == null || input.isBlank()) {
+            return Optional.empty();
+        }
+        String cleaned = input.trim();
+        // 1. Kiểm tra Member Tag: #STU-0002 hoặc STU-0002
+        if (cleaned.toUpperCase().startsWith("#STU-") || cleaned.toUpperCase().startsWith("STU-")) {
+            String idStr = cleaned.replace("#", "").replace("STU-", "").replace("stu-", "").trim();
+            try {
+                Long id = Long.parseLong(idStr);
+                return userRepository.findById(id);
+            } catch (NumberFormatException ignored) {}
+        }
+        // 2. Kiểm tra Email
+        if (cleaned.contains("@")) {
+            return userRepository.findByEmailIgnoreCase(cleaned);
+        }
+        // 3. Kiểm tra Username
+        Optional<User> byUsername = userRepository.findByUsernameIgnoreCase(cleaned);
+        if (byUsername.isPresent()) {
+            return byUsername;
+        }
+        // 4. Fallback nếu gõ ID số thuần túy
+        try {
+            Long id = Long.parseLong(cleaned);
+            return userRepository.findById(id);
+        } catch (NumberFormatException ignored) {}
+
+        return Optional.empty();
+    }
+
+    /**
+     * Tìm Nhóm trưởng dựa vào Mã Mời Nhóm (SQ-XXXX)
+     */
+    public User findLeaderByInviteCode(String inviteCode) {
+        if (inviteCode == null || inviteCode.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập mã mời nhóm!");
+        }
+        String cleaned = inviteCode.trim().toUpperCase();
+        if (cleaned.startsWith("SQ-")) {
+            String idPart = cleaned.substring(3).trim();
+            try {
+                Long id = Long.parseLong(idPart);
+                User leader = userRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy Nhóm trưởng ứng với mã mời: " + inviteCode));
+                if (!leader.isSquadLeader()) {
+                    throw new IllegalArgumentException("Mã mời không thuộc về Nhóm trưởng gói Study Squad hợp lệ!");
+                }
+                return leader;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Mã mời không hợp lệ (Ví dụ mã đúng: SQ-0003)");
+            }
+        }
+        throw new IllegalArgumentException("Định dạng mã mời không hợp lệ. Mã mời chuẩn có dạng SQ-XXXX (ví dụ: SQ-0003)");
+    }
+
+    /**
+     * Lấy danh sách thành viên CHÍNH THỨC trong nhóm học tập (gồm cả nhóm trưởng)
      */
     public List<User> getSquadMembers(String leaderUsername) {
         if (leaderUsername == null || leaderUsername.isBlank()) {
@@ -244,7 +303,7 @@ public class AuthService {
         userRepository.findByUsernameIgnoreCase(actualLeader).ifPresent(members::add);
         List<User> subMembers = userRepository.findAllBySquadLeaderUsernameIgnoreCase(actualLeader);
         for (User m : subMembers) {
-            if (!m.getUsername().equalsIgnoreCase(actualLeader)) {
+            if (!m.getUsername().equalsIgnoreCase(actualLeader) && !"PENDING".equalsIgnoreCase(m.getSquadStatus())) {
                 members.add(m);
             }
         }
@@ -252,11 +311,29 @@ public class AuthService {
     }
 
     /**
-     * Thêm thành viên vào nhóm học tập (Study Squad: tối đa 5 người)
+     * Lấy danh sách yêu cầu CHỜ PHÊ DUYỆT của nhóm
      */
-    public User addMemberToSquad(String leaderUsername, String memberUsername) {
-        if (memberUsername == null || memberUsername.isBlank()) {
-            throw new IllegalArgumentException("Vui lòng nhập username của thành viên cần thêm!");
+    public List<User> getPendingSquadRequests(String leaderUsername) {
+        if (leaderUsername == null || leaderUsername.isBlank()) {
+            return List.of();
+        }
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername).orElse(null);
+        if (leader == null || !leader.isSquadLeader()) {
+            return List.of();
+        }
+        String actualLeader = (leader.getSquadLeaderUsername() != null && !leader.getSquadLeaderUsername().isBlank())
+                ? leader.getSquadLeaderUsername()
+                : leader.getUsername();
+        return userRepository.findAllBySquadLeaderUsernameIgnoreCaseAndSquadStatusIgnoreCase(actualLeader, "PENDING");
+    }
+
+    /**
+     * Thêm thành viên vào nhóm học tập (Hỗ trợ Username, Email, hoặc Member Tag #STU-XXXX)
+     * Thêm trực tiếp bởi Trưởng nhóm -> Trạng thái ACTIVE ngay
+     */
+    public User addMemberToSquad(String leaderUsername, String memberIdentifier) {
+        if (memberIdentifier == null || memberIdentifier.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập Username, Gmail hoặc Member Tag (#STU-XXXX) của bạn bè!");
         }
         User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin nhóm trưởng: " + leaderUsername));
@@ -272,14 +349,14 @@ public class AuthService {
             throw new IllegalStateException("Chỉ Nhóm trưởng mới có quyền thêm thành viên vào nhóm!");
         }
 
-        if (actualLeaderUsername.equalsIgnoreCase(memberUsername.trim())) {
+        User member = findUserByIdentifier(memberIdentifier.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng ứng với: " + memberIdentifier.trim()));
+
+        if (actualLeaderUsername.equalsIgnoreCase(member.getUsername())) {
             throw new IllegalArgumentException("Bạn đã là Nhóm trưởng của nhóm này!");
         }
 
-        User member = userRepository.findByUsernameIgnoreCase(memberUsername.trim())
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng có username: " + memberUsername));
-
-        if ("SQUAD".equalsIgnoreCase(member.getSubscriptionTier())) {
+        if ("SQUAD".equalsIgnoreCase(member.getSubscriptionTier()) && !"PENDING".equalsIgnoreCase(member.getSquadStatus())) {
             if (actualLeaderUsername.equalsIgnoreCase(member.getSquadLeaderUsername())) {
                 throw new IllegalArgumentException("Thành viên @" + member.getUsername() + " đã có trong nhóm của bạn!");
             } else {
@@ -289,11 +366,126 @@ public class AuthService {
 
         List<User> currentSquad = getSquadMembers(actualLeaderUsername);
         if (currentSquad.size() >= MAX_SQUAD_MEMBERS) {
-            throw new IllegalStateException("Nhóm đã đủ tối đa 5 thành viên!");
+            throw new IllegalStateException("Nhóm học tập của bạn đã đạt giới hạn tối đa 5/5 thành viên!");
         }
 
         member.setSubscriptionTier("SQUAD");
         member.setSquadLeaderUsername(actualLeaderUsername);
+        member.setSquadStatus("ACTIVE");
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Thành viên tự gửi yêu cầu gia nhập bằng Mã Mời (SQ-XXXX) -> Trạng thái PENDING chờ duyệt
+     */
+    public User requestJoinSquadByCode(String memberUsername, String inviteCode) {
+        if (inviteCode == null || inviteCode.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập mã mời nhóm (ví dụ: SQ-0003)!");
+        }
+        User leader = findLeaderByInviteCode(inviteCode);
+        String actualLeaderUsername = leader.getUsername();
+
+        List<User> currentSquad = getSquadMembers(actualLeaderUsername);
+        if (currentSquad.size() >= MAX_SQUAD_MEMBERS) {
+            throw new IllegalStateException("Rất tiếc! Nhóm học tập này đã đủ tối đa 5/5 thành viên. Mã mời hiện đã tạm khóa!");
+        }
+
+        User member = userRepository.findByUsernameIgnoreCase(memberUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản người dùng của bạn!"));
+
+        if (actualLeaderUsername.equalsIgnoreCase(member.getUsername())) {
+            throw new IllegalArgumentException("Bạn là Nhóm trưởng của nhóm này, không cần gửi yêu cầu!");
+        }
+
+        if (member.isSquad()) {
+            if (actualLeaderUsername.equalsIgnoreCase(member.getSquadLeaderUsername())) {
+                throw new IllegalArgumentException("Bạn đã là thành viên chính thức của nhóm này rồi!");
+            } else {
+                throw new IllegalStateException("Bạn đang tham gia nhóm học tập khác! Vui lòng rời nhóm cũ trước khi gia nhập nhóm mới.");
+            }
+        }
+
+        if (member.isSquadPending()) {
+            if (actualLeaderUsername.equalsIgnoreCase(member.getSquadLeaderUsername())) {
+                throw new IllegalArgumentException("Bạn đã gửi yêu cầu gia nhập nhóm này rồi. Vui lòng chờ Nhóm trưởng phê duyệt!");
+            } else {
+                throw new IllegalStateException("Bạn đang có một yêu cầu chờ duyệt ở nhóm khác! Vui lòng hủy yêu cầu cũ trước.");
+            }
+        }
+
+        member.setSquadLeaderUsername(actualLeaderUsername);
+        member.setSquadStatus("PENDING");
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Trưởng nhóm PHÊ DUYỆT yêu cầu xin vào nhóm
+     */
+    public User approveSquadRequest(String leaderUsername, String requesterIdentifier) {
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin nhóm trưởng!"));
+
+        if (!leader.isSquadLeader()) {
+            throw new IllegalStateException("Chỉ Nhóm trưởng mới có quyền phê duyệt thành viên!");
+        }
+
+        List<User> currentSquad = getSquadMembers(leader.getUsername());
+        if (currentSquad.size() >= MAX_SQUAD_MEMBERS) {
+            throw new IllegalStateException("Nhóm học tập của bạn đã đạt giới hạn tối đa 5/5 thành viên! Vui lòng xóa bớt thành viên cũ nếu muốn duyệt thêm.");
+        }
+
+        User member = findUserByIdentifier(requesterIdentifier.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng có yêu cầu: " + requesterIdentifier));
+
+        if (!leader.getUsername().equalsIgnoreCase(member.getSquadLeaderUsername()) || !"PENDING".equalsIgnoreCase(member.getSquadStatus())) {
+            throw new IllegalArgumentException("Không tìm thấy yêu cầu chờ duyệt hợp lệ từ người dùng này!");
+        }
+
+        member.setSubscriptionTier("SQUAD");
+        member.setSquadStatus("ACTIVE");
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Trưởng nhóm TỪ CHỐI yêu cầu xin vào nhóm
+     */
+    public User rejectSquadRequest(String leaderUsername, String requesterIdentifier) {
+        User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin nhóm trưởng!"));
+
+        if (!leader.isSquadLeader()) {
+            throw new IllegalStateException("Chỉ Nhóm trưởng mới có quyền từ chối yêu cầu!");
+        }
+
+        User member = findUserByIdentifier(requesterIdentifier.trim())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy người dùng có yêu cầu: " + requesterIdentifier));
+
+        if (!leader.getUsername().equalsIgnoreCase(member.getSquadLeaderUsername()) || !"PENDING".equalsIgnoreCase(member.getSquadStatus())) {
+            throw new IllegalArgumentException("Không tìm thấy yêu cầu chờ duyệt hợp lệ từ người dùng này!");
+        }
+
+        member.setSquadStatus(null);
+        member.setSquadLeaderUsername(null);
+        member.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(member);
+    }
+
+    /**
+     * Thành viên tự HỦY yêu cầu chờ duyệt của mình
+     */
+    public User cancelSquadRequest(String memberUsername) {
+        User member = userRepository.findByUsernameIgnoreCase(memberUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản người dùng!"));
+
+        if (!member.isSquadPending()) {
+            throw new IllegalArgumentException("Bạn hiện không có yêu cầu gia nhập nhóm nào đang chờ duyệt!");
+        }
+
+        member.setSquadStatus(null);
+        member.setSquadLeaderUsername(null);
         member.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(member);
     }
@@ -303,7 +495,7 @@ public class AuthService {
      */
     public User removeMemberFromSquad(String leaderUsername, String memberUsername) {
         if (memberUsername == null || memberUsername.isBlank()) {
-            throw new IllegalArgumentException("Vui lòng nhập username của thành viên cần xóa!");
+            throw new IllegalArgumentException("Vui lòng nhập thông tin thành viên cần xóa!");
         }
         User leader = userRepository.findByUsernameIgnoreCase(leaderUsername)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy nhóm trưởng: " + leaderUsername));
@@ -312,7 +504,7 @@ public class AuthService {
             throw new IllegalArgumentException("Nhóm trưởng không thể tự xóa chính mình khỏi nhóm!");
         }
 
-        User member = userRepository.findByUsernameIgnoreCase(memberUsername.trim())
+        User member = findUserByIdentifier(memberUsername.trim())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thành viên: " + memberUsername));
 
         if (!leader.getUsername().equalsIgnoreCase(member.getSquadLeaderUsername())) {
@@ -321,6 +513,7 @@ public class AuthService {
 
         member.setSubscriptionTier("FREE");
         member.setSquadLeaderUsername(null);
+        member.setSquadStatus(null);
         member.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(member);
     }

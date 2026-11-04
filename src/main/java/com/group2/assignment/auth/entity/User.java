@@ -45,6 +45,10 @@ public class User {
     @Column(length = 50)
     private String squadLeaderUsername; // Username của nhóm trưởng sở hữu gói SQUAD
 
+    @Column(length = 20)
+    @Builder.Default
+    private String squadStatus = "ACTIVE"; // "ACTIVE", "PENDING", null
+
     @Builder.Default
     private Integer dailyRagCount = 0; // Đếm số câu chat RAG trong ngày
 
@@ -68,24 +72,8 @@ public class User {
         if (this.createdAt == null) {
             this.createdAt = LocalDateTime.now();
         }
-        this.updatedAt = LocalDateTime.now();
-        if (this.role == null || this.role.isBlank()) {
-            this.role = "ROLE_STUDENT";
-        }
-        if (this.subscriptionTier == null || this.subscriptionTier.isBlank()) {
-            this.subscriptionTier = "FREE";
-        }
-        if (this.dailyRagCount == null) {
-            this.dailyRagCount = 0;
-        }
-        if (this.lastRagResetDate == null) {
-            this.lastRagResetDate = LocalDate.now();
-        }
-        if (this.provider == null || this.provider.isBlank()) {
-            this.provider = "local";
-        }
-        if (this.avatar == null || this.avatar.isBlank()) {
-            this.avatar = "https://api.dicebear.com/7.x/bottts/svg?seed=" + (this.username != null ? this.username : "student");
+        if (this.updatedAt == null) {
+            this.updatedAt = LocalDateTime.now();
         }
     }
 
@@ -94,7 +82,11 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * Helper methods cho Subscription Tier
+     */
     public boolean isPro() {
+        // Hạng SQUAD hoặc CAMPUS được hưởng toàn bộ tính năng như PRO
         return "ROLE_ADMIN".equalsIgnoreCase(this.role)
                 || "PRO".equalsIgnoreCase(this.subscriptionTier)
                 || "CAMPUS".equalsIgnoreCase(this.subscriptionTier)
@@ -102,8 +94,17 @@ public class User {
     }
 
     public boolean isSquad() {
+        if ("PENDING".equalsIgnoreCase(this.squadStatus)) {
+            return false;
+        }
         return "SQUAD".equalsIgnoreCase(this.subscriptionTier)
                 || (this.squadLeaderUsername != null && !this.squadLeaderUsername.isBlank());
+    }
+
+    public boolean isSquadPending() {
+        return "PENDING".equalsIgnoreCase(this.squadStatus)
+                && this.squadLeaderUsername != null
+                && !this.squadLeaderUsername.isBlank();
     }
 
     public boolean isSquadLeader() {
@@ -124,5 +125,25 @@ public class User {
             return this.squadLeaderUsername.trim();
         }
         return this.username;
+    }
+
+    /**
+     * Mã định danh cá nhân độc nhất: #STU-0002
+     */
+    public String getMemberTag() {
+        if (this.id == null) {
+            return "#STU-0000";
+        }
+        return String.format("#STU-%04d", this.id);
+    }
+
+    /**
+     * Mã mời nhóm học tập (chỉ dành cho Nhóm trưởng sở hữu gói SQUAD): SQ-0003
+     */
+    public String getSquadInviteCode() {
+        if (!isSquadLeader() || this.id == null) {
+            return null;
+        }
+        return String.format("SQ-%04d", this.id);
     }
 }

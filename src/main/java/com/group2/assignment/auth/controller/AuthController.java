@@ -150,6 +150,11 @@ public class AuthController {
         model.addAttribute("squadMembers", squadMembers);
         model.addAttribute("isSquadLeader", user.isSquadLeader());
         model.addAttribute("maxSquadMembers", AuthService.MAX_SQUAD_MEMBERS);
+        model.addAttribute("pendingSquadRequests", authService.getPendingSquadRequests(user.getUsername()));
+        model.addAttribute("isSquadPending", user.isSquadPending());
+        model.addAttribute("pendingSquadLeader", user.getSquadLeaderUsername());
+        model.addAttribute("squadInviteCode", user.getSquadInviteCode());
+        model.addAttribute("memberTag", user.getMemberTag());
 
         if (!model.containsAttribute("updateProfileDto")) {
             model.addAttribute("updateProfileDto", UpdateProfileDto.builder()
@@ -288,6 +293,98 @@ public class AuthController {
             authService.removeMemberFromSquad(currentUser.getUsername(), targetUsername);
             redirectAttributes.addFlashAttribute("successMessage",
                     "Đã xóa thành viên @" + targetUsername.trim() + " khỏi Nhóm Học Tập!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
+    /**
+     * Thành viên tự tham gia nhóm bằng Mã Mời (SQ-XXXX) -> Gửi yêu cầu chờ duyệt
+     */
+    @PostMapping("/auth/squad/join-by-code")
+    public String joinSquadByCode(
+            @RequestParam("inviteCode") String inviteCode,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+        try {
+            User updated = authService.requestJoinSquadByCode(currentUser.getUsername(), inviteCode);
+            session.setAttribute(SESSION_USER, updated);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "⏳ Đã gửi yêu cầu tham gia nhóm tới Nhóm trưởng! Vui lòng chờ Nhóm trưởng phê duyệt.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
+    /**
+     * Trưởng nhóm PHÊ DUYỆT yêu cầu gia nhập
+     */
+    @PostMapping("/auth/squad/approve-member")
+    public String approveSquadMember(
+            @RequestParam("targetUsername") String targetUsername,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+        try {
+            authService.approveSquadRequest(currentUser.getUsername(), targetUsername);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "🎉 Đã phê duyệt thành viên @" + targetUsername.trim() + " vào Nhóm Học Tập!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
+    /**
+     * Trưởng nhóm TỪ CHỐI yêu cầu gia nhập
+     */
+    @PostMapping("/auth/squad/reject-member")
+    public String rejectSquadMember(
+            @RequestParam("targetUsername") String targetUsername,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+        try {
+            authService.rejectSquadRequest(currentUser.getUsername(), targetUsername);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đã từ chối yêu cầu gia nhập của @" + targetUsername.trim() + "!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
+    /**
+     * Thành viên tự HỦY yêu cầu chờ duyệt
+     */
+    @PostMapping("/auth/squad/cancel-request")
+    public String cancelSquadRequest(
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute(SESSION_USER);
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng đăng nhập để thực hiện thao tác này!");
+            return "redirect:/login";
+        }
+        try {
+            User updated = authService.cancelSquadRequest(currentUser.getUsername());
+            session.setAttribute(SESSION_USER, updated);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã hủy yêu cầu gia nhập nhóm học tập.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

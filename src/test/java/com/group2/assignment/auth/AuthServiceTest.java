@@ -271,4 +271,122 @@ class AuthServiceTest {
         assertEquals("FREE", removed.getSubscriptionTier());
         assertNull(removed.getSquadLeaderUsername());
     }
+    @Test
+    @DisplayName("Nhóm trưởng thêm thành viên bằng Member Tag (#STU-XXXX) thành công")
+    void testAddMemberToSquad_UsingMemberTag_Success() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        User student = userRepository.findByUsernameIgnoreCase("student").orElseThrow();
+        String memberTag = student.getMemberTag();
+        assertNotNull(memberTag);
+
+        User member = authService.addMemberToSquad("truong", memberTag);
+        assertEquals("SQUAD", member.getSubscriptionTier());
+        assertEquals("truong", member.getSquadLeaderUsername());
+        assertEquals("ACTIVE", member.getSquadStatus());
+        assertTrue(member.isSquad());
+    }
+
+    @Test
+    @DisplayName("Nhóm trưởng thêm thành viên bằng Gmail thành công")
+    void testAddMemberToSquad_UsingEmail_Success() {
+        authService.upgradeSubscriptionTier("truong", "SQUAD");
+        User student = userRepository.findByUsernameIgnoreCase("student").orElseThrow();
+
+        User member = authService.addMemberToSquad("truong", student.getEmail());
+        assertEquals("SQUAD", member.getSubscriptionTier());
+        assertEquals("truong", member.getSquadLeaderUsername());
+        assertEquals("ACTIVE", member.getSquadStatus());
+    }
+
+    @Test
+    @DisplayName("Thành viên gửi yêu cầu tham gia bằng Mã Mời (SQ-XXXX) chuyển sang trạng thái PENDING")
+    void testRequestJoinSquadByCode_Success_BecomesPending() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        String inviteCode = leader.getSquadInviteCode();
+        assertNotNull(inviteCode);
+
+        User pendingStudent = authService.requestJoinSquadByCode("student", inviteCode);
+        assertTrue(pendingStudent.isSquadPending());
+        assertEquals("PENDING", pendingStudent.getSquadStatus());
+        assertEquals("truong", pendingStudent.getSquadLeaderUsername());
+        assertFalse(pendingStudent.isSquad(), "Chưa được duyệt thì chưa được tính là SQUAD active");
+
+        // Leader thấy trong danh sách chờ duyệt, nhưng chưa tính vào sĩ số nhóm active
+        var pendingList = authService.getPendingSquadRequests("truong");
+        assertEquals(1, pendingList.size());
+        assertEquals("student", pendingList.get(0).getUsername());
+
+        var squadMembers = authService.getSquadMembers("truong");
+        assertEquals(1, squadMembers.size(), "Chỉ có leader trong danh sách active");
+    }
+
+    @Test
+    @DisplayName("Nhóm trưởng phê duyệt yêu cầu kích hoạt thành công gói SQUAD cho thành viên")
+    void testApproveSquadRequest_Success() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        authService.requestJoinSquadByCode("student", leader.getSquadInviteCode());
+
+        // Phê duyệt
+        User approved = authService.approveSquadRequest("truong", "student");
+        assertEquals("SQUAD", approved.getSubscriptionTier());
+        assertEquals("ACTIVE", approved.getSquadStatus());
+        assertTrue(approved.isSquad());
+        assertTrue(approved.isPro());
+
+        // Danh sách chờ đã hết
+        var pendingList = authService.getPendingSquadRequests("truong");
+        assertTrue(pendingList.isEmpty());
+
+        // Sĩ số nhóm active tăng lên 2
+        var squadMembers = authService.getSquadMembers("truong");
+        assertEquals(2, squadMembers.size());
+    }
+
+    @Test
+    @DisplayName("Nhóm trưởng từ chối yêu cầu gia nhập nhóm xóa sạch trạng thái PENDING")
+    void testRejectSquadRequest_Success() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        authService.requestJoinSquadByCode("student", leader.getSquadInviteCode());
+
+        User rejected = authService.rejectSquadRequest("truong", "student");
+        assertNull(rejected.getSquadStatus());
+        assertNull(rejected.getSquadLeaderUsername());
+        assertEquals("FREE", rejected.getSubscriptionTier());
+        assertFalse(rejected.isSquadPending());
+    }
+
+    @Test
+    @DisplayName("Thành viên tự hủy yêu cầu chờ duyệt thành công")
+    void testCancelSquadRequest_Success() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        authService.requestJoinSquadByCode("student", leader.getSquadInviteCode());
+
+        User cancelled = authService.cancelSquadRequest("student");
+        assertNull(cancelled.getSquadStatus());
+        assertNull(cancelled.getSquadLeaderUsername());
+        assertFalse(cancelled.isSquadPending());
+    }
+
+    @Test
+    @DisplayName("Gia nhập nhóm bằng mã mời khi nhóm đã đủ 5 người ném lỗi")
+    void testRequestJoinSquadByCode_WhenSquadFull_Throws() {
+        User leader = authService.upgradeSubscriptionTier("truong", "SQUAD");
+        for (int i = 1; i <= 4; i++) {
+            String u = "member_full_" + i;
+            if (!userRepository.existsByUsernameIgnoreCase(u)) {
+                userRepository.save(User.builder()
+                        .username(u)
+                        .email(u + "@fpt.edu.vn")
+                        .fullName("Thành viên " + i)
+                        .password("123456")
+                        .build());
+            }
+            authService.addMemberToSquad("truong", u);
+        }
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () ->
+                authService.requestJoinSquadByCode("student", leader.getSquadInviteCode())
+        );
+        assertTrue(ex.getMessage().contains("tối đa 5/5"));
+    }
 }

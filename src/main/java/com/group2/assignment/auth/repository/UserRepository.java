@@ -34,5 +34,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsernameIgnoreCase(String username);
     boolean existsByEmailIgnoreCase(String email);
     List<User> findAllBySquadLeaderUsernameIgnoreCase(String squadLeaderUsername);
+    List<User> findAllBySquadLeaderUsernameIgnoreCaseAndSquadStatusIgnoreCase(String squadLeaderUsername, String squadStatus);
     long countBySquadLeaderUsernameIgnoreCase(String squadLeaderUsername);
 }
