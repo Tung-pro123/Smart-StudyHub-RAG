@@ -89,8 +89,8 @@ Tất cả các trang khi làm mới phải tuân theo đúng bảng mã màu v�
   - `src/main/resources/templates/layout/*` & `fragments/*` *(Độc quyền kiểm soát)*
 * **Kế hoạch nhiệm vụ chi tiết**:
   - [x] **TASK-TUNG-01**: Cải tạo `courses/detail.html` sang White-Card Palette (4 cards phân hệ, kho chunks accordion trắng, gradient tím hồng).
-  - [ ] **TASK-TUNG-02**: Đóng băng và duy trì tính ổn định của navbar, sidebar và footer.
-  - [ ] **TASK-TUNG-03**: Điều phối nhánh Git, giải quyết các thắc mắc kiến trúc và hỗ trợ thành viên khi có issue phát sinh.
+  - [x] **TASK-TUNG-02**: Đóng băng và duy trì tính ổn định của navbar, sidebar và footer (chuẩn hóa Admin không còn link tạo môn / học tập).
+  - [x] **TASK-TUNG-03**: Điều phối nhánh Git, giải quyết các thắc mắc kiến trúc, hỗ trợ thành viên và nghiệm thu bộ minh chứng 03/11.
 
 ---
 
