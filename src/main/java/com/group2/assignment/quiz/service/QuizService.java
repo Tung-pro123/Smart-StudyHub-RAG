@@ -156,6 +156,30 @@ public class QuizService {
 
     @Transactional
     public void deleteQuiz(Long id) {
+        deleteQuiz(id, null);
+    }
+
+    @Transactional
+    public void deleteQuiz(Long id, User currentUser) {
+        Quiz quiz = quizRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đề thi với ID: " + id));
+
+        // Kiểm tra phân quyền bảo vệ đề thi theo mô hình Shared Squad Hub
+        if (currentUser != null && !currentUser.isAdmin()) {
+            Course course = quiz.getCourse();
+            if (course != null && Boolean.TRUE.equals(course.getSquadShared())) {
+                // Môn học nhóm Squad: CHỈ Trưởng Nhóm hoặc Admin mới có quyền xóa đề thi
+                if (!currentUser.isSquadLeader()) {
+                    throw new SecurityException("Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa đề thi của nhóm!");
+                }
+            } else if (course != null && course.getUser() != null) {
+                // Môn học cá nhân: chỉ chủ sở hữu môn học mới được xóa
+                if (!course.getUser().getId().equals(currentUser.getId())) {
+                    throw new SecurityException("Bạn không có quyền xóa đề thi của người khác!");
+                }
+            }
+        }
+
         quizQuestionRepository.deleteAllByQuizId(id);
         quizAttemptRepository.deleteAllByQuizId(id);
         quizRepository.deleteById(id);
@@ -167,6 +191,11 @@ public class QuizService {
 
     @Transactional
     public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage) throws IOException {
+        return createQuizFromPdf(courseId, file, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, null);
+    }
+
+    @Transactional
+    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
@@ -180,6 +209,7 @@ public class QuizService {
 
         Quiz quiz = Quiz.builder()
                 .course(course)
+                .createdBy(currentUser)
                 .title(defaultTitle)
                 .chapterTopic(chapterTopic != null && !chapterTopic.isBlank() ? chapterTopic.trim() : "Toàn bộ tài liệu")
                 .difficulty(difficulty != null ? difficulty : "MEDIUM")
@@ -201,6 +231,11 @@ public class QuizService {
 
     @Transactional
     public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage) throws IOException {
+        return createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, null);
+    }
+
+    @Transactional
+    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
@@ -226,6 +261,7 @@ public class QuizService {
 
         Quiz quiz = Quiz.builder()
                 .course(course)
+                .createdBy(currentUser)
                 .title(defaultTitle)
                 .chapterTopic(chapterTopic != null && !chapterTopic.isBlank() ? chapterTopic.trim() : doc.getFileName())
                 .difficulty(difficulty != null ? difficulty : "MEDIUM")

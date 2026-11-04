@@ -1,5 +1,6 @@
 package com.group2.assignment.quiz.entity;
 
+import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Course;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,12 @@ public class Quiz {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private Course course;
+
+    /** Người tạo/sinh đề thi (null = hệ thống/seeder) */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_user_id")
+    @ToString.Exclude
+    private User createdBy;
 
     @Column(nullable = false, length = 255)
     private String title; // Tên đề thi

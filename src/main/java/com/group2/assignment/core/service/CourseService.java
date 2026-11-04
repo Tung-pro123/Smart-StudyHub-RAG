@@ -24,6 +24,31 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final ChunkRepository chunkRepository;
 
+        /**
+     * Lấy danh sách thực thể Course mà người dùng có quyền truy cập (Data Isolation):
+     * - Admin: Toàn bộ môn học trong hệ thống
+     * - Sinh viên: Môn học cá nhân + Môn học nhóm Squad dùng chung (nếu thuộc Squad)
+     */
+    public List<Course> getAccessibleCourses(User currentUser) {
+        if (currentUser != null && currentUser.isAdmin()) {
+            return courseRepository.findAll();
+        } else if (currentUser != null && currentUser.getId() != null) {
+            List<Course> personal = courseRepository.searchCoursesByUser(currentUser.getId(), null, null, false);
+            if (currentUser.isSquad() && currentUser.getEffectiveSquadLeader() != null) {
+                List<Course> squadCourses = courseRepository.searchSquadSharedCourses(
+                        currentUser.getEffectiveSquadLeader(), null, null);
+                java.util.Set<Long> seen = personal.stream().map(Course::getId).collect(Collectors.toSet());
+                List<Course> merged = new java.util.ArrayList<>(personal);
+                for (Course sc : squadCourses) {
+                    if (seen.add(sc.getId())) merged.add(sc);
+                }
+                return merged;
+            }
+            return personal;
+        }
+        return courseRepository.findAll();
+    }
+
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }

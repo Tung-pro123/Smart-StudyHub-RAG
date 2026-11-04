@@ -44,7 +44,7 @@
                 <select name="courseId" onchange="this.form.submit()" class="select select-sm select-bordered rounded-xl text-xs font-semibold bg-white border-slate-300">
                     <option th:each="c : ${courses}"
                             th:value="${c.id}"
-                            th:text="${c.code + ' - ' + c.name}"
+                            th:text="${(c.squadShared ? '👥 [SQUAD] ' : '') + c.code + ' - ' + c.name}"
                             th:selected="${selectedCourse != null && selectedCourse.id == c.id}">
                     </option>
                 </select>
@@ -97,6 +97,9 @@
                 <i class="fa-solid fa-list-check text-indigo-500"></i>
                 <span>Bộ Đề Thi Trắc Nghiệm Môn: </span>
                 <span class="badge badge-primary font-bold" th:text="${selectedCourse != null ? selectedCourse.code : 'Chưa chọn'}">HSF302</span>
+                <span th:if="${selectedCourse != null && selectedCourse.squadShared}" class="badge bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-[10px] gap-1">
+                    <i class="fa-solid fa-users text-[9px]"></i> SQUAD
+                </span>
             </h2>
             <span class="text-xs text-slate-400 font-semibold" th:text="'Tổng cộng: ' + ${#lists.size(quizzes)} + ' đề thi'"></span>
         </div>
@@ -134,21 +137,32 @@
 
                         <div class="flex items-center gap-2">
                             <span class="text-[11px] text-slate-400 font-medium" th:text="${#temporals.format(q.createdAt, 'dd/MM/yyyy HH:mm')}">19/10/2026</span>
-                            <!-- Button Xóa Đề Thi -->
-                            <button th:onclick="'document.getElementById(\'modal-delete-' + ${q.id} + '\').showModal()'"
+                            <!-- Button Xóa Đề Thi (Kiểm soát RBAC) -->
+                            <button th:if="${canDeleteQuiz}"
+                                    th:onclick="'document.getElementById(\'modal-delete-' + ${q.id} + '\').showModal()'"
                                     class="btn btn-ghost btn-circle btn-xs text-slate-300 hover:text-rose-500"
                                     title="Xóa đề thi này">
                                 <i class="fa-regular fa-trash-can"></i>
                             </button>
+                            <span th:unless="${canDeleteQuiz}" class="text-slate-300 text-xs px-1" title="Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa đề thi của nhóm">
+                                <i class="fa-solid fa-lock text-[11px]"></i>
+                            </span>
                         </div>
                     </div>
 
                     <div>
                         <h3 class="font-bold text-slate-800 text-base leading-snug line-clamp-2" th:text="${q.title}">Đề thi trắc nghiệm chương 1</h3>
-                        <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
-                            <i class="fa-regular fa-bookmark text-amber-500"></i>
-                            <span th:text="${q.chapterTopic}">Tổng hợp kiến thức</span>
-                        </p>
+                        <div class="flex items-center justify-between text-xs text-slate-500 mt-1.5">
+                            <p class="flex items-center gap-1.5 truncate">
+                                <i class="fa-regular fa-bookmark text-amber-500"></i>
+                                <span th:text="${q.chapterTopic}">Tổng hợp kiến thức</span>
+                            </p>
+                            <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 flex-shrink-0"
+                                  th:classappend="${q.createdBy != null and q.createdBy.squadLeader} ? 'text-purple-600' : ''">
+                                <i class="fa-solid" th:classappend="${q.createdBy != null and q.createdBy.squadLeader} ? 'fa-crown text-purple-600' : 'fa-user-pen text-slate-400'"></i>
+                                <span th:text="${q.createdBy != null ? '@' + q.createdBy.username : 'Hệ thống'}">@squad_leader</span>
+                            </span>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
@@ -255,6 +269,7 @@
             </div>
             <span class="badge badge-primary font-bold text-xs gap-1.5 py-3 px-3">
                 <i class="fa-solid fa-users"></i> SQUAD LEADERBOARD
+                <span th:if="${selectedCourse != null && selectedCourse.squadShared}" class="ml-1 text-[10px] text-purple-200">| MÔN NHÓM</span>
             </span>
         </div>
 

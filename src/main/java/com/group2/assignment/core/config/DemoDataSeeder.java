@@ -218,6 +218,7 @@ public class DemoDataSeeder implements CommandLineRunner {
         if (existingQuizzes.isEmpty()) {
             squadQuiz = quizRepository.save(Quiz.builder()
                     .course(course)
+                    .createdBy(squadLeader)
                     .title("Đề Thi Squad: Dự Án Khởi Nghiệp Đổi Mới Sáng Tạo EXE101")
                     .chapterTopic("Chương 1 & 2: Nghiên cứu thị trường và Lean Canvas")
                     .difficulty("MEDIUM")

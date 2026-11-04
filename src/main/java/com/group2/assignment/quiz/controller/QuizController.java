@@ -4,6 +4,7 @@ import com.group2.assignment.auth.controller.AuthController;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.CourseRepository;
+import com.group2.assignment.core.service.CourseService;
 import com.group2.assignment.quiz.dto.QuizResultDto;
 import com.group2.assignment.quiz.dto.QuizSubmissionDto;
 import com.group2.assignment.quiz.entity.Quiz;
@@ -36,16 +37,19 @@ public class QuizController {
     private final CourseRepository courseRepository;
     private final com.group2.assignment.rag.repository.DocumentRepository documentRepository;
     private final QuizPdfExportService quizPdfExportService;
+    private final CourseService courseService;
 
     public QuizController(
             QuizService quizService,
             CourseRepository courseRepository,
             com.group2.assignment.rag.repository.DocumentRepository documentRepository,
-            QuizPdfExportService quizPdfExportService) {
+            QuizPdfExportService quizPdfExportService,
+            CourseService courseService) {
         this.quizService = quizService;
         this.courseRepository = courseRepository;
         this.documentRepository = documentRepository;
         this.quizPdfExportService = quizPdfExportService;
+        this.courseService = courseService;
     }
 
     @GetMapping
@@ -54,7 +58,8 @@ public class QuizController {
             @RequestParam(value = "difficulty", required = false, defaultValue = "ALL") String difficulty,
             HttpSession session,
             Model model) {
-        List<Course> courses = courseRepository.findAll();
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
+        List<Course> courses = courseService.getAccessibleCourses(currentUser);
         Course selectedCourse = null;
 
         if (courseId != null) {
@@ -78,7 +83,6 @@ public class QuizController {
                 ? quizService.getRecentAttemptsByCourse(selectedCourse.getId())
                 : List.of();
 
-        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
         boolean isPro = currentUser != null && currentUser.isPro();
         boolean isSquad = currentUser != null && currentUser.isSquad();
 
@@ -100,6 +104,17 @@ public class QuizController {
         model.addAttribute("isSquad", isSquad);
         model.addAttribute("squadLeaderboard", squadLeaderboard);
 
+        // Quyền xóa đề thi: Admin hoặc (nếu môn squad -> squadLeader, nếu môn cá nhân -> chủ môn)
+        boolean canDeleteQuiz = (currentUser != null) && (
+                currentUser.isAdmin()
+                || (selectedCourse != null && (
+                        Boolean.TRUE.equals(selectedCourse.getSquadShared())
+                                ? currentUser.isSquadLeader()
+                                : (selectedCourse.getUser() == null || (currentUser.getId() != null && currentUser.getId().equals(selectedCourse.getUser().getId())))
+                ))
+        );
+        model.addAttribute("canDeleteQuiz", canDeleteQuiz);
+
         return "quiz/index";
     }
 
@@ -107,10 +122,15 @@ public class QuizController {
     public String deleteQuiz(
             @PathVariable("id") Long id,
             @RequestParam("courseId") Long courseId,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+        User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
         try {
-            quizService.deleteQuiz(id);
+            quizService.deleteQuiz(id, currentUser);
             redirectAttributes.addFlashAttribute("successMessage", "Đã xóa đề thi thành công!");
+        } catch (SecurityException e) {
+            log.warn("Cảnh báo phân quyền khi xóa đề thi {}: {}", id, e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "⛔ " + e.getMessage());
         } catch (Exception e) {
             log.error("Lỗi khi xóa đề thi ID " + id, e);
             redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa đề thi: " + e.getMessage());
@@ -167,9 +187,9 @@ public class QuizController {
         try {
             Quiz quiz;
             if (documentId != null && documentId > 0) {
-                quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage);
+                quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser);
             } else {
-                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage);
+                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser);
             }
 
             redirectAttributes.addFlashAttribute("successMessage", "Sinh đề trắc nghiệm thành công với " + quiz.getTotalQuestions() + " câu hỏi!");
