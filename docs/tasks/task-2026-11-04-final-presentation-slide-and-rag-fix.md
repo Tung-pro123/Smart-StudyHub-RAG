@@ -2,7 +2,7 @@
 > **Ngày lập kế hoạch**: 04/11/2026  
 > **Người phân công**: Lê Thanh Tùng (Team Lead - Group 2)  
 > **Môn học**: HSF302 (Java & Spring Framework)  
-> **Đặc thù dự án Group 2**: **Làm gộp cả Assignment (UI Toolkit + AI Agent) và Project Cuối kỳ (RAG AI StudyHub + OAuth2 + VietQR)** trong cùng một sản phẩm hoàn chỉnh duy nhất.
+> **Đặc thù dự án Group 2**: **Làm gộp cả Assignment (UI Toolkit + AI Agent) và Project Cuối kỳ (RAG AI StudyHub + Google OAuth2 + Shared Squad Hub + Quản lý 3 gói cước)** trong cùng một sản phẩm hoàn chỉnh duy nhất.
 
 ---
 
@@ -19,139 +19,247 @@ Dự án **Smart StudyHub RAG** của Group 2 khớp **100% tất cả các tiê
 │                                                                                                  │
 │ 2. PROJECT CUỐI KỲ (ĐÁP ỨNG CẢ 2 NHÁNH ĐỀ BÀI):                                                  │
 │    ✓ Nhánh 1: Chat với AI (RAG Giáo trình PDF) + Cấu hình Centralized Gemini API Key             │
-│    ✓ Nhánh 2: Login Google OAuth2 bên ngoài + Thanh toán Online VietQR Code tự động              │
-│    ✓ Topping: Trích xuất & xử lý cấu trúc PDF thông minh (Apache PDFBox)                        │
+│    ✓ Nhánh 2: Login Google OAuth2 bên ngoài + Phân hệ Quản trị 3 gói cước (Feature Gating)       │
+│    ✓ Topping: Trích xuất & xử lý cấu trúc PDF thông minh (Apache PDFBox) + Shared Squad Hub      │
 └──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 👥 PHẦN II: PHÂN CHIA NHÂN SỰ & NỘI DUNG THUYẾT TRÌNH SLIDE (6 THÀNH VIÊN)
+## 👥 PHẦN II: PHÂN CHIA NHÂN SỰ & NỘI DUNG THUYẾT TRÌNH (KHỐI LIÊN TỤC - NÓI 1 LẦN DỨT ĐIỂM)
 
-| STT | Thành viên | Vai trò | Phụ trách Slide | Nội dung thuyết trình chính | Thời lượng dự kiến |
+> **Nguyên tắc tổ chức thuyết trình**:
+> * **Mỗi thành viên chỉ lên nói ĐÚNG 1 LẦN duy nhất theo một khối slide liên tục (Contiguous Block)**, không nói xen kẽ nhảy qua nhảy lại để giữ nhịp thuyết trình mạch lạc, tự nhiên và không bị ngắt quãng.
+> * Người trước trình bày xong toàn bộ phần của mình sẽ giới thiệu và chuyển mic dứt điểm cho người tiếp theo.
+
+| STT | Họ và Tên | Vai trò | Khối Slide phụ trách | Nội dung thuyết trình chính | Thời lượng |
 | :---: | :--- | :--- | :---: | :--- | :---: |
-| **1** | **Lê Thanh Tùng** | **Team Lead** | Slide 1, 2, 5, 17, 18, 22 | Mở đầu, bối cảnh bài toán, kiến trúc 3 gói cước, Shared Squad Hub (Môn học nhóm, Invite Code, Leaderboard), Thanh toán VietQR & Tổng kết Q&A. | 4 - 5 phút |
-| **2** | **Võ Quốc Trường** | Dev (Auth & UI) | Slide 3, 4, 6, 7 | Phần Assignment: Sử dụng Tailwind CSS/DaisyUI trong Thymeleaf, quy trình Prompting với AI Agent trong IDE; Login Google OAuth2 & Session Security. | 3 phút |
-| **3** | **Nguyễn Thái Bình** | Dev (RAG Engine) | Slide 8, 9, 10 | Phân hệ RAG AI Chatbot: Trích xuất Chunks PDF (Apache PDFBox), Gemini Vector Grounding, Citation Cards (số trang đối chứng), Multi-Session Chat. | 3 phút |
-| **4** | **Lê Hoàng Nhật** | Dev (Quiz Engine) | Slide 11, 12 | Phân hệ AI Quiz Generator: Sinh trắc nghiệm A/B/C/D theo chương, thi bấm giờ, chấm điểm tự động, xuất đề thi PDF chuẩn in ấn. | 2.5 phút |
-| **5** | **Nguyễn Đức Thắng**| Dev (Study Planner)| Slide 13, 14 | Phân hệ AI Study Planner: Tự động xếp lịch ôn tập theo tuần bằng Gemini Flash Lite, phân chia Task học tập vừa sức không bị ngợp. | 2.5 phút |
-| **6** | **Võ Hoài Ân** | Dev (Admin & QA) | Slide 15, 16, 19, 20 | Phân hệ Admin Command Center: Thống kê KPI, Quản trị 3 gói cước, Cấu hình Masking API Key, Đo Latency Ping; Báo cáo chất lượng 327/327 tests. | 3 phút |
+| **1** | **Lê Thanh Tùng** | **Team Lead** | **Slide 1 ➔ Slide 4** *(4 slides liên tiếp)* | **Mở đầu & Bức tranh lớn**: Bối cảnh bài toán, giải pháp StudyHub RAG, Kiến trúc 3 gói cước (Free/Pro/Squad), Cơ chế Feature Gating, Shared Squad Hub (Môn học nhóm, Invite Code, Leaderboard & Đề thi Solo riêng tư). | **4 phút** |
+| **2** | **Ngô Nhật Trường** | **Dev (Auth & UI)** | **Slide 5 ➔ Slide 8** *(4 slides liên tiếp)* | **Assignment & Xác thực bảo mật**: Ứng dụng Tailwind CSS + DaisyUI trong Thymeleaf; Quy trình Prompting với AI Agent trong IDE; Login Google OAuth2 & Session Security BCrypt, Hồ sơ cá nhân (Profile). | **3 phút** |
+| **3** | **Nguyễn Văn Gia Bình** | **Dev (RAG Engine)** | **Slide 9 ➔ Slide 11** *(3 slides liên tiếp)* | **Phân hệ RAG AI Chatbot**: Trích xuất PDF & phân mảnh Chunks (Apache PDFBox); Cơ chế Gemini Context Grounding triệt tiêu ảo giác; Thẻ trích dẫn (Citation Cards) số trang đối chứng & Multi-session Chat. | **3 phút** |
+| **4** | **Huỳnh Nhật** | **Dev (Quiz Engine)** | **Slide 12 ➔ Slide 14** *(3 slides liên tiếp)* | **Phân hệ AI Quiz Generator**: Sinh trắc nghiệm tự động A/B/C/D 3 mức độ từ giáo trình; Phòng thi bấm giờ Countdown & chấm điểm tự động; Tính năng Pro xuất đề thi PDF chuẩn in ấn. | **2.5 phút** |
+| **5** | **Lê Nguyễn Minh Thắng** | **Dev (Study Planner)** | **Slide 15 ➔ Slide 17** *(3 slides liên tiếp)* | **Phân hệ AI Study Planner**: Thuật toán phân tích ngày thi & xếp lịch ôn tập theo tuần bằng Gemini Flash Lite; Phân chia Study Tasks vừa sức chống ngợp; Interactive Checklist & Progress Bar. | **2.5 phút** |
+| **6** | **Ngô Ân** | **Dev (Admin & QA)** | **Slide 18 ➔ Slide 22** *(5 slides liên tiếp)* | **Vận hành, Chất lượng & Setup**: Admin Command Center (KPI, quản trị 3 gói cước, Masking System Key, Ping Latency); Báo cáo QA 327/327 tests PASS; Hướng dẫn cài đặt (User Guide); Tổng kết & mở Q&A. | **3.5 phút** |
 
 ---
 
-## 📑 PHẦN III: DÀN TRANG CHI TIẾT BỘ SLIDE THUYẾT TRÌNH (22 SLIDES CHUẨN MỰC)
+## 📑 PHẦN III: DÀN TRANG CHI TIẾT 22 SLIDES THUYẾT TRÌNH (CHUẨN 1 LƯỢT / THÀNH VIÊN)
 
-### 🟢 MỞ ĐẦU & TỔNG QUAN (Slide 1 - 2) — [TÙNG TRÌNH BÀY]
+### 🎙️ KHỐI 1: LÊ THANH TÙNG (TEAM LEAD) — Slide 1 đến Slide 4 [~4 phút]
 * **Slide 1: Title Slide (Trang bìa)**
   * Tên đề tài: **SMART STUDYHUB RAG** — Nền Tảng Học Tập Đa Môn & Luyện Thi A+ Ứng Dụng RAG AI.
-  * Nhóm: Group 2 — Lớp HSF302.
-  * Danh sách thành viên kèm chức danh rõ ràng (Team Lead & 5 Developers).
-* **Slide 2: Bối Cảnh & Đặt Vấn Đề (Problem Statement)**
-  * Nỗi đau: Sinh viên mùa thi bị ngợp trước hàng trăm trang PDF giáo trình; ChatGPT thuần thường bị "bịa đặt" (hallucination) và không có trang đối chứng; tự học dễ nản.
-  * Giải pháp: Hệ thống RAG AI đối chứng giáo trình 100% + Cơ chế học nhóm Study Squad đua top có thưởng.
+  * Thông tin: Nhóm 2 — Môn HSF302 — FPT University.
+  * Giới thiệu danh sách 6 thành viên kèm phân công chức danh rõ ràng (Team Lead & 5 Developers).
+* **Slide 2: Bối Cảnh, Đặt Vấn Đề & Giải Pháp (Problem Statement & Solution)**
+  * Nỗi đau của sinh viên: Mùa thi bị ngợp trước hàng trăm trang PDF giáo trình; dùng ChatGPT thông thường bị "bịa đặt" (hallucination) không có số trang đối chiếu; tự học cá nhân dễ nản lòng.
+  * Giải pháp Smart StudyHub: RAG AI đối chứng giáo trình 100% không ảo giác + Cơ chế học nhóm Study Squad đua top có thưởng.
+* **Slide 3: Kiến Trúc Công Nghệ & Mô Hình 3 Gói Cước (Tech Stack & Business Model)**
+  * Tech Stack: Spring Boot 3.3.4, Java 17, Spring Data JPA, Hibernate 6, H2 File Database, Tailwind CSS/DaisyUI, Apache PDFBox, Gemini 1.5 Flash.
+  * Mô hình 3 Gói Cước:
+    1. `FREE` ($0): Tối đa 3 môn học, 50 câu RAG/ngày, Quiz trắc nghiệm 10 câu.
+    2. `PRO` ($2/tháng - 49k): Vô hạn môn học, RAG không giới hạn, mở khóa AI Study Planner & Xuất đề thi PDF in ấn.
+    3. `SQUAD` ($5/tháng nhóm 5 bạn): Dùng chung kho tài liệu, môn học nhóm `[SQUAD]`, đua top Squad Leaderboard.
+* **Slide 4: Không Gian Học Nhóm Shared Squad Hub & Cơ Chế Nâng Cấp Gói Cước**
+  * Shared Squad Hub: Tạo mã mời (Invite Code 6 ký tự), Trưởng nhóm phê duyệt thành viên; Kho giáo trình và môn học dùng chung; Đấu trường Quiz nhóm & Squad Leaderboard (có tùy chọn đề thi cá nhân Solo riêng tư).
+  * Kiểm soát quyền năng theo gói (Feature Gating): Gói Free bị chặn khi tạo quá 3 môn hoặc khi vào Study Planner / Xuất PDF; Tự động kích hoạt Modal Bảng Giá 3 Gói Cước SaaS sang trọng.
+  * Cơ chế nâng cấp tức thì: Xử lý 1-click nâng cấp qua `/auth/upgrade-pro` và `/auth/upgrade-squad` mượt mà, phản hồi ngay lập tức trong phiên.
+  *(Tùng kết thúc phần trình bày của mình và trân trọng chuyển mic cho bạn Ngô Nhật Trường phụ trách phần Assignment và Authentication).*
 
 ---
 
-### 🎨 PHẦN ASSIGNMENT: UI TOOLKIT & AGENTIC AI (Slide 3 - 4) — [TRƯỜNG TRÌNH BÀY]
-* **Slide 3: Tích Hợp UI Toolkit trong Thymeleaf (Đáp ứng Yêu cầu I)**
+### 🎙️ KHỐI 2: NGÔ NHẬT TRƯỜNG (DEV: AUTH & UI) — Slide 5 đến Slide 8 [~3 phút]
+* **Slide 5: Tích Hợp UI Toolkit trong Thymeleaf (Đáp ứng Yêu cầu Assignment)**
   * Lựa chọn: **Tailwind CSS (JIT Engine) + DaisyUI + FontAwesome 6**.
-  * Kỹ thuật thực hiện trong Thymeleaf: Kế thừa bố cục Layout Fragment (`layout/main.html`), thiết kế White-Card Palette đồng bộ.
-  * Lý do chọn thay vì Bootstrap: Tùy biến linh hoạt, hỗ trợ Glassmorphism/White-card sang trọng, tối ưu tải trang cực nhanh.
-* **Slide 4: Quy Trình Code với AI Agent trong IDE (Đáp ứng Yêu cầu I)**
+  * Kỹ thuật thực hiện trong Thymeleaf: Kế thừa bố cục Layout Fragment (`layout/main.html`, `navbar.html`, `sidebar.html`), thiết kế White-Card Palette đồng bộ.
+  * Lý do chọn thay vì Bootstrap: Khả năng tùy biến sâu, hỗ trợ Glassmorphism/White-card sang trọng, tối ưu dung lượng và tốc độ tải trang.
+* **Slide 6: Quy Trình Code với AI Agent trong IDE (Đáp ứng Yêu cầu Assignment)**
   * Công cụ: **Google Antigravity IDE** kết hợp mô hình AI **Gemini 2.5 Flash & Claude 3.5 Sonnet**.
-  * Quy trình thực tế:
+  * Quy trình phát triển thực tế 3 bước:
     1. Spec-Driven & Prompt Engineering (`docs/06-prompt-engineering-guide.md`).
     2. Test-Driven Development (TDD): AI sinh test case kiểm thử trước khi viết service.
     3. Pair-Debugging: AI phát hiện và xử lý lỗi đồng thời (Concurrency Quota, Data Isolation).
-
----
-
-### 🏗️ KIẾN TRÚC & PHÂN BỔ 3 GÓI CƯỚC (Slide 5) — [TÙNG TRÌNH BÀY]
-* **Slide 5: Kiến Trúc Công Nghệ & Mô Hình 3 Gói Cước**
-  * Tech Stack: Spring Boot 3.3.4, Java 17, Spring Data JPA, Hibernate 6, H2 Database nhúng lưu file đĩa, Apache PDFBox.
-  * 3 Gói Cước:
-    1. `FREE` ($0): Tối đa 3 môn học, 50 câu RAG/ngày, Quiz 10 câu.
-    2. `PRO` ($2/tháng - 49k): Không giới hạn môn, RAG vô hạn, mở khóa AI Study Planner & Xuất PDF.
-    3. `SQUAD` ($5/tháng nhóm 5 bạn): Dùng chung tài liệu, môn nhóm `[SQUAD]`, đua top Leaderboard.
-
----
-
-### 🚀 PHẦN PROJECT CUỐI KỲ: CHI TIẾT CÁC PHÂN HỆ (Slide 6 - 18)
-
-#### 1. Module Authentication & Google OAuth2 — [TRƯỜNG] (Slide 6 - 7)
-* **Slide 6: Đăng Nhập Đa Kênh (Google OAuth2 & Local Account)**
+* **Slide 7: Phân Hệ Authentication — Đăng Nhập Đa Kênh (Google OAuth2 & Local Account)**
   * Đăng nhập 1 chạm với Google (OpenID Connect OAuth2).
-  * Đăng ký/đăng nhập Form thường với mã hóa mật khẩu một chiều BCrypt.
-* **Slide 7: Quản Trị Phiên & Phân Quyền Vai Trò (RBAC)**
+  * Đăng ký & đăng nhập Form thường với mã hóa mật khẩu một chiều BCrypt an toàn.
+* **Slide 8: Quản Trị Phiên, Phân Quyền Vai Trò (RBAC) & Hồ Sơ Sinh Viên (Profile)**
   * Bảo mật Session Security, tự động điều hướng đúng quyền (`ROLE_STUDENT` vào Courses, `ROLE_ADMIN` vào Admin Hub).
-  * Trang Hồ Sơ Cá Nhân (Profile): Quản lý avatar, hạn ngạch gói cước, thông tin cá nhân.
-
-#### 2. Module RAG AI Chatbot & Chunking Engine — [BÌNH] (Slide 8 - 10)
-* **Slide 8: Kiến Trúc Xử Lý Tài Liệu PDF & Chunking (Apache PDFBox)**
-  * Đọc file PDF tải lên bằng `PDFTextStripper`, cắt đoạn thông minh 300 - 500 từ kèm Metadata số trang.
-  * Lưu trữ vào `ChunkRepository` phân tách theo từng môn học.
-* **Slide 9: Cơ Chế Vector Context Grounding & Gemini Chat**
-  * Thuật toán RAG: Trích xuất các đoạn Chunks liên quan nhất ghép vào Prompt của Google Gemini Flash.
-  * Đảm bảo tính xác thực: **0% ảo giác** vì AI chỉ được trả lời dựa trên giáo trình.
-* **Slide 10: Citation Cards Đối Chứng & Multi-Session Chat**
-  * Thẻ trích dẫn (Citations) hiển thị rõ tên tài liệu và số trang cụ thể để sinh viên lật sách đối chiếu.
-  * Quản lý đa phiên hội thoại (Multi-Session), tự động lưu vết lịch sử chat và kiểm soát quota 50 câu/ngày.
-
-#### 3. Module AI Quiz Generator & Xuất Đề PDF — [NHẬT] (Slide 11 - 12)
-* **Slide 11: Sinh Đề Thi Trắc Nghiệm Tự Động & Làm Bài Bấm Giờ**
-  * AI quét giáo trình sinh đề 4 lựa chọn A/B/C/D theo độ khó (EASY, MEDIUM, HARD).
-  * Màn hình làm bài thi bấm giờ (Countdown Timer), tự động nộp bài khi hết giờ, chấm điểm thang 10.
-* **Slide 12: Xuất Đề Thi PDF Chuẩn In Ấn (Apache PDFBox Export Service)**
-  * Tính năng đặc quyền gói Pro: Xuất đề thi ra file PDF in ấn có header, footer, checkbox A/B/C/D chuẩn FPT.
-  * Hỗ trợ 2 chế độ: Đề thi trắng làm bài hoặc Đề thi kèm đáp án & lời giải chi tiết.
-
-#### 4. Module AI Study Planner — [THẮNG] (Slide 13 - 14)
-* **Slide 13: Lập Kế Hoạch Ôn Thi Thông Minh Theo Tuần**
-  * Sinh viên nhập mục tiêu và ngày thi deadline $\rightarrow$ Gemini Flash Lite tính toán phân bổ lộ trình học theo tuần.
-  * Tự động chia nhỏ khối lượng bài học vừa sức, tránh học dồn trước ngày thi.
-* **Slide 14: Quản Lý Study Tasks & Theo Dõi Tiến Độ**
-  * Checkbox đánh dấu hoàn thành từng đầu việc học tập.
-  * Thanh tiến độ học tập (Progress Bar) trực quan, tiếp thêm động lực học mỗi ngày.
-
-#### 5. Module Admin Command Center & Quản Trị Hệ Thống — [ÂN] (Slide 15 - 16)
-* **Slide 15: Admin Dashboard & Thống Kê KPI Thời Gian Thực**
-  * Theo dõi tổng sinh viên, số lượng môn học, tổng số đoạn Chunks, số câu hỏi RAG trong ngày.
-  * Quản lý danh sách sinh viên: Reset hạn ngạch RAG, nâng cấp gói cước hỗ trợ sinh viên.
-* **Slide 16: Quản Trị Centralized System Key & Bảo Mật Masking**
-  * Tính năng Centralized AI Key: Quản trị viên nhập System Key, hệ thống tự chia sẻ an toàn cho toàn bộ tính năng AI.
-  * **API Key Masking (`AIzaSy...****`)**: Cơ chế che mờ khóa nhạy cảm, chống lộ thông tin khi demo.
-  * Đo độ trễ mạng thực tế (Latency Ping ms) trực tiếp tới Google AI.
-
-#### 6. Phân Hệ Đột Phá: Shared Squad Hub & Thanh Toán VietQR — [TÙNG] (Slide 17 - 18)
-* **Slide 17: Shared Squad Hub (Không Gian Học Nhóm Dùng Chung)**
-  * Cơ chế Mã mời nhóm (Invite Code 6 ký tự) & Trưởng nhóm phê duyệt thành viên (Pending / Active).
-  * Kho tài liệu giáo trình dùng chung & Môn học nhóm dùng chung (`[SQUAD] EXE101`).
-  * Đấu trường Quiz nhóm & Squad Leaderboard theo môn học, có tùy chọn **Đề thi cá nhân (Solo)** riêng tư.
-* **Slide 18: Cổng Thanh Toán VietQR Tự Động (Online Payment)**
-  * Tạo mã QR thanh toán ngân hàng động chuẩn NAPAS 24/7 theo từng mã giao dịch.
-  * Sinh viên quét app ngân hàng thanh toán tự động nâng cấp gói Pro/Squad không cần chờ duyệt thủ công.
+  * Trang Hồ Sơ Cá Nhân (Profile): Quản lý avatar, hạn ngạch gói cước, thông tin nhóm Squad.
+  *(Trường kết thúc phần trình bày và chuyển mic cho bạn Nguyễn Văn Gia Bình trình bày phân hệ RAG AI Chatbot).*
 
 ---
 
-### 🛡️ KIỂM THỬ, SETUP & KẾT LUẬN (Slide 19 - 22) — [ÂN & TÙNG TRÌNH BÀY]
-* **Slide 19: Đảm Bảo Chất Lượng & Kiểm Thử Toàn Diện (QA)**
-  * **327 / 327 Unit & Integration Tests PASS (100%)**.
-  * Kiểm thử chịu tải đồng thời (Quota Concurrency), kiểm thử cách ly dữ liệu môn học (Data Isolation), kiểm thử bảo mật RBAC.
-* **Slide 20: Hướng Dẫn Cài Đặt & Chạy Dự Án (User Guide)**
-  * Clone mã nguồn: `git clone https://github.com/Tung-pro123/Smart-StudyHub-RAG.git`
-  * Cấu hình biến môi trường [`.env`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/.env): `GOOGLE_CLIENT_ID`, `GEMINI_API_KEY`.
-  * Khởi chạy ứng dụng: `mvn spring-boot:run` $\rightarrow$ Truy cập `http://localhost:8080`.
-* **Slide 21: Kết Quả Đạt Được & Hướng Phát Triển Tương Lai**
-  * Đạt được: Ứng dụng AI thực chiến không ảo giác, hỗ trợ học tập cá nhân lẫn làm việc nhóm hiệu quả.
-  * Tương lai: Tích hợp giọng nói AI Audio RAG, app di động Flutter.
-* **Slide 22: Q&A (Hỏi Đáp Với Hội Đồng Giảng Viên)**
-  * Lời cảm ơn Thầy/Cô.
-  * Danh sách các câu hỏi vấn đáp trọng tâm đã chuẩn bị sẵn câu trả lời.
+### 🎙️ KHỐI 3: NGUYỄN VĂN GIA BÌNH (DEV: RAG ENGINE) — Slide 9 đến Slide 11 [~3 phút]
+* **Slide 9: Kiến Trúc Xử Lý Tài Liệu PDF & Phân Mảnh Chunks (Apache PDFBox)**
+  * Đọc file PDF giáo trình tải lên bằng `PDFTextStripper`.
+  * Thuật toán phân đoạn thông minh: Cắt đoạn 300 - 500 từ theo ranh giới câu/đoạn, lưu kèm Metadata số trang và mã môn học vào `ChunkRepository`.
+* **Slide 10: Cơ Chế Vector Context Grounding & Gemini Chat**
+  * Thuật toán RAG: Tìm kiếm các đoạn Chunks liên quan nhất ghép vào Prompt của Google Gemini Flash.
+  * Đảm bảo tính trung thực tuyệt đối: **0% ảo giác (Zero Hallucination)** vì AI chỉ được suy luận và trả lời dựa trên giáo trình được nạp.
+* **Slide 11: Thẻ Trích Dẫn Đối Chứng (Citation Cards) & Đa Phiên Hội Thoại (Multi-Session)**
+  * Thẻ trích dẫn (Citations): Hiển thị rõ tên file PDF và số trang cụ thể để sinh viên lật sách đối chiếu ngay lập tức.
+  * Quản lý đa phiên hội thoại (Multi-Session): Lưu vết lịch sử chat độc lập theo từng môn học, tự động kiểm soát quota 50 câu/ngày cho gói Free.
+  *(Bình kết thúc phần trình bày và chuyển mic cho bạn Huỳnh Nhật trình bày phân hệ AI Quiz Generator).*
 
 ---
 
-## 🛠️ PHẦN IV: CHECKLIST GIAO TASK NGÀY 04/11 CHO BÌNH (RAG FIX)
+### 🎙️ KHỐI 4: HUỲNH NHẬT (DEV: QUIZ ENGINE) — Slide 12 đến Slide 14 [~2.5 phút]
+* **Slide 12: Phân Hệ AI Quiz Generator — Sinh Đề Trắc Nghiệm Tự Động**
+  * Cơ chế AI quét Chunks giáo trình để sinh bộ câu hỏi 4 lựa chọn A/B/C/D theo từng chương và độ khó (Dễ, Trung bình, Khó).
+  * Phân tách đề thi theo môn học, đảm bảo câu hỏi bám sát kiến thức thực tế.
+* **Slide 13: Trải Nghiệm Phòng Thi Bấm Giờ & Chấm Điểm Tự Động**
+  * Giao diện phòng thi trực quan, đồng hồ đếm ngược (Countdown Timer) thời gian thực.
+  * Tự động thu bài khi hết giờ, chấm điểm thang 10 tức thì kèm bảng giải thích chi tiết từng câu.
+* **Slide 14: Tính Năng Độc Quyền: Xuất Đề Thi PDF Chuẩn In Ấn (PDFBox Export Service)**
+  * Đặc quyền gói Pro: Xuất đề thi ra định dạng PDF chuẩn đẹp (Header, Watermark, Checkbox A/B/C/D chuẩn FPT).
+  * Cung cấp 2 bản xuất: Đề thi trắng để in ấn phát cho lớp/nhóm làm bài, và Bản đáp án có Answer Key & lời giải chi tiết.
+  *(Nhật kết thúc phần trình bày và chuyển mic cho bạn Lê Nguyễn Minh Thắng trình bày phân hệ AI Study Planner).*
+
+---
+
+### 🎙️ KHỐI 5: LÊ NGUYỄN MINH THẮNG (DEV: STUDY PLANNER) — Slide 15 đến Slide 17 [~2.5 phút]
+* **Slide 15: Phân Hệ AI Study Planner — Thuật Toán Xếp Lịch Ôn Thi Theo Tuần**
+  * Sinh viên nhập mục tiêu điểm số và ngày thi deadline $\rightarrow$ Gemini Flash Lite tính toán phân bổ lộ trình ôn tập khoa học theo từng tuần.
+  * Tự động chia nhỏ khối lượng bài học vừa sức, tránh tình trạng học dồn sát ngày thi.
+* **Slide 16: Phân Chia Nhiệm Vụ Học Tập Vừa Sức & Cách Ly Dữ Liệu**
+  * Tự động phân rã giáo trình thành các Study Tasks cụ thể gắn liền với từng chương.
+  * Đảm bảo tính riêng tư và bảo mật dữ liệu IDOR theo từng sinh viên.
+* **Slide 17: Quản Lý Study Tasks & Theo Dõi Tiến Độ Trực Quan (Interactive Checklist)**
+  * Checkbox đánh dấu hoàn thành từng đầu việc học tập với tương tác mượt mà.
+  * Thanh tiến độ học tập (Progress Bar) phần trăm trực quan, tiếp thêm động lực học mỗi ngày.
+  *(Thắng kết thúc phần trình bày và chuyển mic cho bạn Ngô Ân phụ trách phân hệ Admin, QA và Hướng dẫn cài đặt).*
+
+---
+
+### 🎙️ KHỐI 6: NGÔ ÂN (DEV: ADMIN COMMAND CENTER, QA & USER GUIDE) — Slide 18 đến Slide 22 [~3.5 phút]
+* **Slide 18: Admin Command Center — Giám Sát KPI Hệ Thống & Quản Trị Gói Cước**
+  * Dashboard theo dõi thời gian thực: Tổng sinh viên, số môn học, số Chunks, tổng lượt gọi AI RAG.
+  * Quản trị tài khoản sinh viên: Nâng/hạ 3 gói cước linh hoạt, reset hạn ngạch RAG hỗ trợ sinh viên.
+* **Slide 19: Centralized AI Key, Bảo Mật Masking & Đo Latency Ping**
+  * Cơ chế Centralized System Key: Admin cấu hình 1 lần, an toàn toàn hệ thống, không sợ lộ key.
+  * API Key Masking (`AIzaSy...****`): Che giấu khóa nhạy cảm trên giao diện khi demo/trình chiếu.
+  * Tính năng đo độ trễ mạng thực tế (Latency Ping ms) trực tiếp tới Google AI API.
+* **Slide 20: Báo Cáo Đảm Bảo Chất Lượng Toàn Diện (QA Report)**
+  * Nghiệm thu **327 / 327 Unit & Integration Tests PASS (100%)**.
+  * Kiểm thử chịu tải đồng thời (Quota Concurrency), Kiểm thử cách ly dữ liệu (Data Isolation), Kiểm thử phân quyền RBAC và bảo vệ gian lận Leaderboard.
+* **Slide 21: Hướng Dẫn Cài Đặt & Chạy Dự Án (User Guide — Setup & Code)**
+  * Yêu cầu môi trường: Java 17, Maven 3.8+, H2 Database file tự tạo.
+  * Cấu hình file [`.env`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/.env): `GOOGLE_CLIENT_ID`, `GEMINI_API_KEY`.
+  * Khởi chạy một lệnh duy nhất: `mvn spring-boot:run` $\rightarrow$ Mở trình duyệt tại `http://localhost:8080`.
+* **Slide 22: Kết Luận, Lời Cảm Ơn & Mời Hội Đồng Bước Vào Q&A**
+  * Đạt được trọn vẹn mục tiêu của cả Assignment và Project cuối kỳ trong một sản phẩm hoàn chỉnh, sẵn sàng ứng dụng thực tế.
+  * Lời cảm ơn Thầy/Cô và mời Hội đồng Giảng viên bước vào phần Hỏi - Đáp (Q&A) cùng toàn thể 6 thành viên Nhóm 2.
+
+---
+
+## 🔬 PHẦN IV: QUY TRÌNH TÁI KIỂM THỬ THỰC TẾ (HANDS-ON RE-RUN PROTOCOL) TRƯỚC KHI SOẠN SLIDE
+
+> **YÊU CẦU BẮT BUỘC TỪ TEAM LEAD LÊ THANH TÙNG**:
+> * **Không thành viên nào được phép làm slide "chay" hoặc dùng ảnh vẽ mockup giả định**.
+> * **Từng bạn phải tự mình chạy lại (re-run) toàn bộ luồng chức năng thực tế của phân hệ mình phụ trách trên hệ thống đang chạy (`http://localhost:8080`)** để:
+>   1. Đảm bảo tính năng hoạt động trơn tru 100%, không phát sinh bất kỳ lỗi runtime, lỗi 500 hay vỡ layout nào.
+>   2. Hiểu sâu sắc từng bước thao tác thực tế để tự tin trả lời vấn đáp khi Hội đồng Giảng viên hỏi sâu.
+>   3. Chụp lại ảnh màn hình thực tế (ảnh sắc nét, dữ liệu thật của đề tài) để chèn trực tiếp vào các slide của mình làm minh chứng thuyết phục nhất.
+
+---
+
+### 1️⃣ BẠN NGÔ NHẬT TRƯỜNG (KIỂM THỬ LUỒNG AUTH & UI — SLIDE 5 ➔ 8)
+* [ ] **Test Luồng 1 (1-Click & Local Login)**:
+  * Truy cập `http://localhost:8080/login`.
+  * Bấm thử các nút **"1-Click Đăng Nhập Nhanh"** (Gói Free: `student1`, Pro: `student_pro`, Squad: `squad_leader`) xem có tự động điền form và đăng nhập thành công vào Dashboard không.
+  * Đăng xuất, thử nhập sai mật khẩu để kiểm tra thông báo lỗi tiếng Việt hiển thị đẹp mắt.
+* [ ] **Test Luồng 2 (Google OAuth2 Login)**:
+  * Bấm nút "Đăng nhập với Google" để kiểm chứng quy trình chuyển hướng xác thực OpenID Connect OAuth2 với tài khoản FPT/Gmail cá nhân.
+* [ ] **Test Luồng 3 (Profile & Session Security)**:
+  * Vào `http://localhost:8080/profile`, kiểm tra hiển thị đúng avatar, tên sinh viên, huy hiệu gói cước và hạn ngạch RAG.
+  * Thử đổi avatar và cập nhật thông tin cá nhân.
+* [ ] **Test Luồng 4 (Kiểm thử Phân quyền RBAC)**:
+  * Khi đang đăng nhập tài khoản sinh viên thường (`student1`), thử gõ trực tiếp URL `/admin/dashboard` hoặc `/h2-console` trên thanh trình duyệt $\rightarrow$ Xác nhận hệ thống chặn lại và điều hướng an toàn (không bị lộ dữ liệu quản trị).
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Ảnh trang Login chuẩn 50/50, ảnh Popup Google OAuth2, ảnh Profile White-card có huy hiệu gói cước, ảnh code cấu hình Tailwind/DaisyUI trong IDE.
+
+---
+
+### 2️⃣ BẠN NGUYỄN VĂN GIA BÌNH (KIỂM THỬ LUỒNG RAG & CHUNKING — SLIDE 9 ➔ 11)
+* [ ] **Test Luồng 1 (Bóc tách PDF & Phân mảnh Chunks — BẮT BUỘC TEST KỸ)**:
+  * Vào một môn học bất kỳ (ví dụ: `PRJ301` hoặc `LAB211`), truy cập mục **"Tài Liệu & Giáo Trình"** (`/courses/{id}/documents`).
+  * Thực hiện upload 1 file giáo trình PDF thực tế (dung lượng từ 5 - 20 trang).
+  * **Kiểm tra kết quả trích xuất**: Xác nhận thanh tiến trình hoàn tất, hệ thống sử dụng Apache PDFBox bóc tách văn bản thành công, bảng danh sách các đoạn Chunks hiển thị đầy đủ số trang, độ dài từ (300 - 500 từ) và nội dung đoạn trích.
+* [ ] **Test Luồng 2 (Hỏi đáp RAG & Citation Cards)**:
+  * Vào phòng chat RAG (`/courses/{id}/chat`), bấm nút **"+ Cuộc Trò Chuyện Mới"**.
+  * Đặt câu hỏi trực tiếp vào nội dung có trong file PDF vừa nạp (VD: *"Hãy tóm tắt các tính năng chính trong giáo trình vừa tải lên"*).
+  * Kiểm tra câu trả lời của AI: Câu trả lời bám sát 100% nội dung tài liệu (Zero Hallucination).
+  * **Kiểm tra thẻ trích dẫn Citation Cards**: Thẻ hiển thị rõ ràng: `📄 [Tên_file.pdf, Trang: X]` để đối chứng lật sách.
+* [ ] **Test Luồng 3 (Đa phiên hội thoại & Kiểm soát Quota)**:
+  * Tạo thêm một phiên chat mới, kiểm tra danh sách lịch sử hội thoại ở cột bên trái có lưu trữ độc lập theo từng phiên không.
+  * Kiểm tra bộ đếm hạn ngạch: Đặt câu hỏi và kiểm tra số lượt RAG còn lại trong ngày (giảm từ 50 xuống 49...).
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Ảnh danh sách Chunks có phân trang và số trang đối chứng, ảnh bong bóng chat AI có Citation Card chi tiết, ảnh cấu hình bóc tách text bằng PDFBox trong IDE.
+
+---
+
+### 3️⃣ BẠN HUỲNH NHẬT (KIỂM THỬ LUỒNG QUIZ & PDF EXPORT — SLIDE 12 ➔ 14)
+* [ ] **Test Luồng 1 (AI Sinh Đề Thi Trắc Nghiệm)**:
+  * Vào môn học, truy cập mục **"Luyện Đề Trắc Nghiệm"** (`/courses/{id}/quizzes`).
+  * Bấm nút "Tạo Đề Thi Bằng AI" $\rightarrow$ Chọn mức độ (EASY / MEDIUM / HARD) và số lượng câu hỏi từ tài liệu đã bóc tách Chunks.
+  * Xác nhận đề thi sinh ra có đầy đủ 4 đáp án A/B/C/D hợp lý, câu hỏi chuẩn kiến thức giáo trình.
+* [ ] **Test Luồng 2 (Trải Nghiệm Phòng Thi Bấm Giờ & Chấm Điểm)**:
+  * Bấm vào làm bài thi (`takeQuiz`): Kiểm tra đồng hồ đếm ngược (Countdown Timer) chạy lùi chuẩn từng giây.
+  * Chọn các phương án A/B/C/D và bấm "Nộp bài thi" $\rightarrow$ Kiểm tra màn hình kết quả: Chấm điểm thang 10 tức thì, hiển thị huy hiệu Đạt/Chưa đạt, bảng thống kê câu đúng/sai và lời giải thích chi tiết cho từng câu.
+* [ ] **Test Luồng 3 (Xuất Đề Thi PDF Chuẩn In Ấn — Gói Pro)**:
+  * Với tài khoản Pro/Admin, bấm nút **"Xuất Đề Thi Ra PDF"**.
+  * Tải file `.pdf` về máy, mở bằng trình đọc PDF (Chrome / Adobe Reader): Kiểm tra tiêu đề header, thông tin môn học, watermark trường, ô vuông checkbox A/B/C/D không bị lỗi font tiếng Việt Unicode.
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Modal AI sinh đề, giao diện phòng thi đang chạy đồng hồ bấm giờ, màn hình kết quả thi chi tiết, ảnh chụp trang PDF đề thi mở thực tế trên máy tính.
+
+---
+
+### 4️⃣ BẠN LÊ NGUYỄN MINH THẮNG (KIỂM THỬ LUỒNG STUDY PLANNER — SLIDE 15 ➔ 17)
+* [ ] **Test Luồng 1 (Tạo Lộ Trình Ôn Thi AI)**:
+  * Đăng nhập tài khoản Pro/Admin, vào mục **"Lịch Học Vừa Sức"** (`/planner`).
+  * Nhập mục tiêu (Ví dụ: *"Ôn thi PE và Final đạt điểm 9+"*), chọn ngày thi deadline (cách hiện tại 2 - 3 tuần) và số giờ rảnh mỗi ngày $\rightarrow$ Bấm nút "Sinh Lộ Trình Ôn Tập AI".
+  * Kiểm tra bảng lộ trình sinh ra: Chia khoa học theo các tuần (Week 1: Nền tảng, Week 2: Chuyên sâu, Week 3: Luyện đề tổng hợp).
+* [ ] **Test Luồng 2 (Quản Lý Nhiệm Vụ & Progress Bar)**:
+  * Kiểm tra từng nhiệm vụ (Study Task) có gắn nhãn chương và khối lượng vừa sức không.
+  * Thử click vào các checkbox đánh dấu hoàn thành nhiệm vụ $\rightarrow$ Kiểm tra thanh tiến độ (Progress Bar) có tự động tăng tỷ lệ phần trăm (%) tương ứng không.
+* [ ] **Test Luồng 3 (Bảo Mật Dữ Liệu IDOR)**:
+  * Đăng xuất và đăng nhập bằng một tài khoản sinh viên khác $\rightarrow$ Đảm bảo sinh viên này không nhìn thấy lộ trình học cá nhân của sinh viên ban đầu.
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Form nhập deadline và mục tiêu điểm số, giao diện bảng lộ trình chia theo tuần của AI, thanh Progress Bar hiển thị % tiến độ học tập.
+
+---
+
+### 5️⃣ BẠN NGÔ ÂN (KIỂM THỬ LUỒNG ADMIN COMMAND CENTER & QA — SLIDE 18 ➔ 22)
+* [ ] **Test Luồng 1 (Admin Dashboard & Thống Kê KPI)**:
+  * Đăng nhập tài khoản Admin (`admin` / `password123`) $\rightarrow$ Truy cập `/admin/dashboard`.
+  * Kiểm tra các chỉ số KPI: Tổng số sinh viên, Tổng số môn học, Tổng số Chunks tài liệu, Tổng số câu hỏi RAG hôm nay có phản ánh đúng dữ liệu thực tế không.
+* [ ] **Test Luồng 2 (Quản Lý Sinh Viên & Nâng/Hạ Gói Cước)**:
+  * Vào trang Quản trị sinh viên (`/admin/users`).
+  * Thử thao tác nâng cấp gói cước cho 1 sinh viên (từ `FREE` lên `PRO` hoặc `SQUAD`), thử bấm nút "Reset Quota RAG" $\rightarrow$ Xác nhận thông báo thành công và dữ liệu cập nhật tức thì.
+* [ ] **Test Luồng 3 (Centralized System Key & Bảo Mật Masking)**:
+  * Vào trang Cài đặt hệ thống (`/admin/settings`).
+  * Kiểm tra ô hiển thị khóa API Key có được che mờ an toàn dạng Masking (`AIzaSy...****`) chống lộ thông tin khi demo không.
+  * Bấm nút **"Kiểm Tra Kết Nối (Ping Test)"** $\rightarrow$ Ghi nhận thời gian phản hồi thực tế (độ trễ ms) từ máy chủ Google Gemini.
+* [ ] **Test Luồng 4 (Nghiệm Thu Toàn Bộ 327 Tests)**:
+  * Mở Terminal chạy lệnh: `mvn test` trên máy local.
+  * Chụp ảnh màn hình kết quả: **Tests run: 327, Failures: 0, Errors: 0, Skipped: 0** để đưa vào Slide QA chứng minh chất lượng code không có bất kỳ lỗi nào.
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Dashboard KPI thời gian thực, bảng quản lý tài khoản Users, modal Ping Key có số mili-giây (ms), màn hình Terminal mvn test xanh 100%.
+
+---
+
+### 6️⃣ TEAM LEAD LÊ THANH TÙNG (KIỂM THỬ SQUAD HUB & FEATURE GATING — SLIDE 1 ➔ 4)
+* [ ] **Test Luồng 1 (Shared Squad Hub & Invite Code)**:
+  * Đăng nhập tài khoản Trưởng nhóm Squad (`squad_leader` / `password123`) $\rightarrow$ Kiểm tra mã mời 6 ký tự tại trang nhóm.
+  * Dùng tài khoản thành viên thứ hai nhập mã mời xin gia nhập $\rightarrow$ Trưởng nhóm bấm phê duyệt thành viên.
+  * Kiểm tra kho tài liệu và môn học dùng chung `[SQUAD]` xuất hiện đồng bộ ở cả hai tài khoản.
+* [ ] **Test Luồng 2 (Squad Leaderboard & Đề Thi Solo)**:
+  * Làm 1 đề thi nhóm $\rightarrow$ Kiểm tra điểm số hiển thị trên bảng vinh danh Squad Leaderboard.
+  * Tạo 1 đề thi cá nhân (Solo riêng tư) $\rightarrow$ Xác nhận đề thi chỉ người tạo thấy và điểm thi không bị đẩy lên bảng xếp hạng chung.
+* [ ] **Test Luồng 3 (Feature Gating & Modal Bảng Giá 3 Gói Cước)**:
+  * Đăng nhập tài khoản Free (`student1` / `password123`), khi đã có 3 môn học thử bấm nút "Tạo Môn Mới" hoặc truy cập `/planner` $\rightarrow$ Kiểm tra Modal Bảng Giá 3 Gói Cước SaaS (`modal-pricing-upgrade`) tự động bật lên.
+  * Bấm nút "Nâng Cấp Gói Pro" $\rightarrow$ Kiểm tra hệ thống gọi `/auth/upgrade-pro`, cập nhật ngay gói PRO và thông báo thành công.
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Giao diện Quản lý Squad có Invite Code, Bảng xếp hạng Leaderboard môn nhóm, Modal Bảng Giá 3 Gói Cước với ribbon badge PRO nổi bật.
+
+---
+
+## 🛠️ PHẦN V: CHECKLIST SỬA GIAO DIỆN & TÍNH NĂNG RAG (BÌNH - 04/11)
 Trước khi bước vào chụp ảnh slide thuyết trình, bạn Bình cần hoàn thành gấp 3 task sau:
 1. [ ] **Fix chữ tàng hình Header Bar**: Chuyển nút `Quản Lý Giáo Trình & Chunks` sang White-Card `bg-white border-slate-200 text-slate-700`.
 2. [ ] **Sửa nút "+ Cuộc Trò Chuyện Mới"**: Trong `ChatController.startNewChat()`, tạo `ChatSession` mới trong CSDL và redirect vào `sessionId` mới đó.
 3. [ ] **Tích hợp `marked.js`**: Tự động render Markdown Table và format chữ đậm, bullet list trong bong bóng chat AI.
+
