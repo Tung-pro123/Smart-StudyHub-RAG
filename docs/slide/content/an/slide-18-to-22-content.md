@@ -1,58 +1,49 @@
-# 📑 SLIDE CONTENT: SLIDE 18 ➔ SLIDE 22 (NGÔ ÂN - ADMIN COMMAND CENTER, QA & SETUP)
-> **Khối trình bày**: Khối 6 — Admin Dashboard, Masking System Key, Báo cáo QA 327 tests, User Guide & Q&A  
-> **Thời lượng**: 3.5 phút  
+# Nội dung slide 18–22 — Ngô Ân
 
----
+Khối 6, nói liên tục trong 3 phút 30 giây. Nguồn: main@2404431 và báo cáo nghiệm thu ngày 04/11/2026.
 
-### SLIDE 18: ADMIN COMMAND CENTER — GIÁM SÁT KPI & QUẢN TRỊ 3 GÓI CƯỚC
-* **Bảng điều khiển trung tâm (Real-time Dashboard)**:
-  * Theo dõi tức thời sức khỏe hệ thống qua 4 chỉ số KPI cốt lõi: **Tổng sinh viên, Tổng môn học, Tổng số Chunks tài liệu, Tổng số lượt gọi AI RAG trong ngày**.
-  * Biểu đồ phân bổ tỷ lệ người dùng giữa 3 gói cước: Free vs Pro vs Squad.
-* **Quản trị người dùng & Hỗ trợ kỹ thuật (`/admin/users`)**:
-  * Nâng cấp hoặc hạ cấp gói cước linh hoạt (hỗ trợ sinh viên kích hoạt gói nhanh).
-  * Nút **"Reset Quota RAG"**: Khôi phục lại 50 câu hỏi/ngày cho sinh viên khi cần hỗ trợ đột xuất.
+## Slide 18 — Quản trị hệ thống và gói cước
 
----
+- Dashboard: sinh viên theo gói, môn học, chunks và lượt RAG hôm nay (GMT+7).
+- Số liệu cập nhật khi tải trang hoặc bấm Làm mới; không tự cập nhật liên tục.
+- Tìm kiếm, lọc và phân trang 15 sinh viên; quản lý FREE / PRO / SQUAD.
+- Reset quota về 0 lượt đã dùng; đổi gói có hiệu lực từ request tiếp theo.
 
-### SLIDE 19: CENTRALIZED AI KEY, BẢO MẬT MASKING & ĐO LATENCY PING
-* **Cơ chế Centralized System Key**:
-  * Quản trị viên chỉ cần cấu hình Gemini API Key một lần duy nhất tại trang Quản trị (`/admin/settings`).
-  * Toàn bộ hệ thống tự động chia sẻ key an toàn cho các phân hệ AI (Chatbot RAG, Quiz Generator, Study Planner) mà sinh viên không cần phải tự tạo hay nhập key cá nhân.
-* **Bảo mật API Key Masking (`AIzaSy...****`)**:
-  * Tự động che giấu các ký tự nhạy cảm của khóa API trên giao diện web, triệt tiêu nguy cơ bị lộ key khi trình chiếu slide hoặc quay video demo.
-* **Đo độ trễ mạng thực tế (Latency Ping Test)**:
-  * Nút bấm Ping trực tiếp tới máy chủ Google AI API, đo chính xác thời gian đáp ứng (mili-giây ms), đảm bảo đường truyền sẵn sàng phục vụ sinh viên.
+Ảnh thật tại `docs/evidence/2026-11-04-final-presentation/an/`: `dashboard_an.png`, `upgrade-pro_an.png`, `upgrade-squad_an.png`, `downgrade-free_an.png`, `reset-quota_an.png`.
+Dữ liệu mẫu do ứng dụng seed trên database QA, không phải số liệu vận hành thực. Cấp gói thủ công không thu tiền hoặc tự gia hạn.
 
----
+## Slide 19 — Khóa Gemini tập trung và kiểm tra kết nối
 
-### SLIDE 20: BÁO CÁO ĐẢM BẢO CHẤT LƯỢNG TOÀN DIỆN (QA REPORT)
-* **Kết quả kiểm thử tự động (Automated Regression Suite)**:
-  * **327 / 327 Unit & Integration Tests PASS (100%)** không một lỗi nào.
-* **Các kịch bản kiểm thử trọng yếu đã vượt qua**:
-  * **Quota Concurrency Test**: Kiểm thử chịu tải đồng thời, chống gian lận vượt quá 50 câu RAG/ngày.
-  * **Data Isolation Test**: Kiểm thử cách ly môn học cá nhân và đề thi Solo trong môn nhóm `[SQUAD]`.
-  * **RBAC Security Test**: Chặn 100% sinh viên thường truy cập `/admin/*` và `/h2-console`.
-  * **Leaderboard Guard Test**: Đề thi Solo tuyệt đối không rò rỉ điểm số lên Squad Leaderboard.
+- Admin cấu hình System Key; giao diện che khóa dạng `AIzaSy...****`.
+- Khóa nhập trên Admin Settings chỉ nằm trong bộ nhớ, không lưu database và mất khi khởi động lại.
+- Cấu hình lâu dài qua `GEMINI_API_KEY` trong môi trường hoặc `.env` cục bộ.
+- Ping gửi yêu cầu sinh nội dung ngắn; latency gồm cả mạng và xử lý của nhà cung cấp.
 
----
+**Ping Gemini thật ngày 04/11/2026: thành công, 1206 ms.** Ảnh `docs/evidence/2026-11-04-final-presentation/an/ping-success_an.png`, chụp trên ứng dụng cổng 6969 sau khi người dùng tự cấu hình khóa. Khóa hiển thị đã che, ô nhập trống sau request. `ping-missing-key_an.png` lưu riêng nhánh lỗi trước khi cấu hình. Masking giảm nguy cơ lộ khóa trên giao diện, không bảo đảm bảo mật tuyệt đối.
 
-### SLIDE 21: HƯỚNG DẪN CÀI ĐẶT & CHẠY DỰ ÁN (USER GUIDE — SETUP & CODE)
-* **Yêu cầu môi trường chuẩn**:
-  * Java Development Kit: **JDK 17 LTS**.
-  * Quản lý gói: **Apache Maven 3.8+**.
-  * Cơ sở dữ liệu: **H2 Database** tự tạo file cục bộ (không cần cài đặt MySQL/PostgreSQL phức tạp).
-* **Quy trình triển khai 3 bước siêu tốc**:
-  1. Clone mã nguồn: `git clone https://github.com/Tung-pro123/Smart-StudyHub-RAG.git`
-  2. Cấu hình biến môi trường file `.env`: Điền `GOOGLE_CLIENT_ID` và `GEMINI_API_KEY`.
-  3. Khởi chạy với 1 lệnh duy nhất: `mvn spring-boot:run` $\rightarrow$ Ứng dụng sẵn sàng tại `http://localhost:8080`.
+## Slide 20 — Báo cáo kiểm thử ngày 04/11/2026
 
----
+- **329 tests — 0 failures — 0 errors — 0 skipped — BUILD SUCCESS.**
+- Riêng `AdminHubTest`: **40/40 PASS**.
+- Phạm vi: phân quyền/CSRF; đổi gói/reset; phân trang; cách ly dữ liệu; đề Solo và bảng xếp hạng.
+- Test tranh chấp quota ở service không phải benchmark tải toàn hệ thống.
 
-### SLIDE 22: KẾT LUẬN, LỜI CẢM ƠN & MỜI HỘI ĐỒNG BƯỚC VÀO PHẦN Q&A
-* **Tổng kết giá trị dự án Group 2 đạt được**:
-  * Đáp ứng trọn vẹn 100% các tiêu chí khắt khe của cả đề bài Assignment (Thymeleaf UI Toolkit + AI Agent) lẫn Project cuối kỳ (RAG AI không ảo giác + Google OAuth2 + Shared Squad Hub + PDFBox).
-  * Sản phẩm hoàn thiện thực chiến, giao diện thẩm mỹ cao, mã nguồn kiểm thử tự động 100%.
-* **Lời cảm ơn**:
-  * Trân trọng cảm ơn Thầy/Cô trong Hội đồng Giảng viên đã lắng nghe và hướng dẫn nhóm trong suốt học kỳ vừa qua.
-  * Nhóm 2 xin trân trọng kính mời quý Thầy/Cô bước vào phần Hỏi - Đáp (Q&A).
+Nguồn: `docs/evidence/2026-11-04-final-presentation/an/test-summary.txt`. Số 327 trong kế hoạch là số cũ. Không suy diễn PASS tự động thành mọi luồng thực tế đã nghiệm thu hoặc hệ thống không còn bug.
 
+## Slide 21 — Cài đặt và chạy
+
+- Java 17 theo cấu hình dự án; Maven 3.8+; H2 tự tạo file dữ liệu.
+- Clone repository, chuyển vào thư mục dự án, sao chép `.env.example` thành `.env`.
+- Điền `GEMINI_API_KEY`. Google OAuth cần cả `GOOGLE_CLIENT_ID` **và** `GOOGLE_CLIENT_SECRET`, cùng redirect URI `http://localhost:6969/login/oauth2/code/google`.
+- Chạy `mvn spring-boot:run`, mở `http://localhost:6969` (cổng mặc định hiện tại; có thể ghi đè bằng `--server.port=8080`).
+- Database mới: tài khoản demo `admin / 123456`; database cũ có thể khác.
+
+Lần QA này dùng JDK 25.0.4, Maven 3.9.16, Spring Boot 3.3.4, database riêng `target/admin-final-20261104`; chưa kiểm chứng lại JDK 17. PowerShell/JDK 25 chạy test bằng `mvn -B '-Dnet.bytebuddy.experimental=true' test`. Không đưa `.env` hay khóa thật lên Git.
+
+## Slide 22 — Tổng kết và hỏi đáp
+
+- Sản phẩm tích hợp UI Toolkit/AI Agent, RAG, OAuth2, Quiz, Planner và Squad.
+- Minh chứng bằng thao tác thực tế và kết quả kiểm thử phiên bản tổng duyệt.
+- Cảm ơn Thầy/Cô; mời Hội đồng đặt câu hỏi cho toàn nhóm.
+
+Không tuyên bố “0% ảo giác”, “không còn bug” hoặc “đạt 100% rubric” từ số test PASS. Bộ nội dung này dùng để ghép vào deck chung 22 slide; không thêm trang bìa riêng cho khối của Ân.
