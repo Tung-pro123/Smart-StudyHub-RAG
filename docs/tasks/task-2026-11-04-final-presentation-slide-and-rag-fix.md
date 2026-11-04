@@ -2,7 +2,10 @@
 > **Ngày lập kế hoạch**: 04/11/2026  
 > **Người phân công**: Lê Thanh Tùng (Team Lead - Group 2)  
 > **Môn học**: HSF302 (Java & Spring Framework)  
-> **Đặc thù dự án Group 2**: **Làm gộp cả Assignment (UI Toolkit + AI Agent) và Project Cuối kỳ (RAG AI StudyHub + Google OAuth2 + Shared Squad Hub + Quản lý 3 gói cước)** trong cùng một sản phẩm hoàn chỉnh duy nhất.
+> **Đặc thù dự án Group 2**: **Làm gộp cả Assignment (UI Toolkit + AI Agent) và Project Cuối kỳ (RAG AI StudyHub + Google OAuth2 + Shared Squad Hub + Quản lý 3 gói cước)** trong cùng một sản phẩm hoàn chỉnh duy nhất.  
+> 
+> 🚨 **TASK CODE GẤP TRONG NGÀY 04/11 CHO NGUYỄN VĂN GIA BÌNH (RAG FIX)**:  
+> *(Sửa triệt để 3 lỗi P0: Nút "Cuộc trò chuyện mới" bị liệt, Chữ tàng hình Header Bar, và Thiếu bộ render Markdown Table trong bong bóng chat AI — Xem toàn bộ hướng dẫn kỹ thuật & code mẫu tại [Phần V bên dưới](#-phần-v-kế-hoạch-giao-task-phân-hệ-rag-ai-chatbot-cho-bình---sửa-gấp-trước-2030)).*
 
 ---
 
@@ -257,9 +260,187 @@ Dự án **Smart StudyHub RAG** của Group 2 khớp **100% tất cả các tiê
 
 ---
 
-## 🛠️ PHẦN V: CHECKLIST SỬA GIAO DIỆN & TÍNH NĂNG RAG (BÌNH - 04/11)
-Trước khi bước vào chụp ảnh slide thuyết trình, bạn Bình cần hoàn thành gấp 3 task sau:
-1. [ ] **Fix chữ tàng hình Header Bar**: Chuyển nút `Quản Lý Giáo Trình & Chunks` sang White-Card `bg-white border-slate-200 text-slate-700`.
-2. [ ] **Sửa nút "+ Cuộc Trò Chuyện Mới"**: Trong `ChatController.startNewChat()`, tạo `ChatSession` mới trong CSDL và redirect vào `sessionId` mới đó.
-3. [ ] **Tích hợp `marked.js`**: Tự động render Markdown Table và format chữ đậm, bullet list trong bong bóng chat AI.
+## 🛠️ PHẦN V: KẾ HOẠCH GIAO TASK PHÂN HỆ RAG AI CHATBOT CHO BÌNH - SỬA GẤP TRƯỚC 20:30
+
+> **Người giao việc**: Lê Thanh Tùng (Team Lead - Group 2)  
+> **Người thực hiện**: Nguyễn Văn Gia Bình (Phụ trách Phân hệ RAG Engine & AI Chatbot)  
+> **Mục tiêu**: Xử lý triệt để 3 lỗi nghiêm trọng được Team Lead chỉ ra ngày 04/11 trên giao diện `/courses/{courseId}/chat`: Nút "Cuộc trò chuyện mới" bị liệt, Lỗi tàng hình chữ trên Header Bar, và Thiếu bộ render Markdown Table/Format trong bong bóng Chatbot.  
+> **Hạn chót hoàn thành**: Trước 20:30 tối nay (để kịp tổng duyệt demo).
+
+## 📸 1. TỔNG HỢP CÁC LỖI THỰC TẾ CẦN BÌNH SỬA GẤP
+
+| STT | Vấn đề / Lỗi | Hiện trạng thực tế | Yêu cầu kết quả đạt được (DoD) | Mức độ |
+| :---: | :--- | :--- | :--- | :---: |
+| **1** | **Chữ nút Header bị tàng hình** | Nút **"Quản Lý Giáo Trình & Chunks"** dùng class `text-white border-white/30` trên nền canvas trắng $\rightarrow$ Chữ hoàn toàn vô hình, chỉ trơ trọi icon PDF màu đỏ. | Chuyển sang White-Card: Nền trắng, viền xám nhạt `border-slate-200`, chữ xám đậm `text-slate-700 font-bold`. Nhìn rõ ràng, sắc nét. | 🔴 **Nghiêm trọng (P0)** |
+| **2** | **Badge trạng thái Header bị mờ chói** | Các badge `AI Multi-Key Engine` và `GÓI PRO` dùng màu pastel của Dark Mode (`text-emerald-300`, `text-amber-300`) trên nền trắng rất khó đọc. | Chuyển sang mã màu Light Card: `bg-emerald-50 text-emerald-700 border-emerald-200` và `bg-amber-50 text-amber-800 border-amber-300`. | 🟡 **Ưu tiên (P1)** |
+| **3** | **Nút "+ Cuộc Trò Chuyện Mới" không hoạt động** | Khi bấm nút, URL redirect về `/chat`, hàm `showChatPage` lại tự động load lại phiên chat cũ nhất `sessions.get(0)`. Người dùng không thể tạo phiên chat trắng mới. | Bấm nút phải khởi tạo ngay 1 `ChatSession` mới (hoặc mở khung chat trắng tinh). Tin nhắn đầu tiên gửi đi sẽ tự động đặt tiêu đề cho phiên chat đó. | 🔴 **Nghiêm trọng (P0)** |
+| **4** | **Không render Bảng & Cú pháp Markdown** | Khi AI trả lời bằng bảng Markdown (`\|:---\|:---\|`), giao diện hiển thị text thô `\| Khả năng \| PON \|...` rất xấu, không format thành HTML table, chữ đậm `**` không in đậm. | Tích hợp thư viện `marked.js` để tự động render toàn bộ bảng biểu, tiêu đề, chữ đậm, code blocks, trích dẫn chuẩn DaisyUI Table. | 🔴 **Nghiêm trọng (P0)** |
+
+---
+
+## 🛠️ 2. HƯỚNG DẪN KỸ THUẬT CHI TIẾT DÀNH CHO BÌNH
+
+### Task 1: Sửa lỗi hiển thị trên Header Bar (`src/main/resources/templates/rag/chat.html`)
+* **Vị trí**: Dòng 35 - 56 trong `chat.html`.
+* **Code hiện tại bị lỗi**:
+  ```html
+  <!-- LỖI: text-white trên nền trắng -->
+  <a th:href="@{/courses/{id}/documents(id=${course.id})}" class="btn btn-sm h-10 px-4 btn-outline border-white/30 text-white hover:bg-white/10 rounded-xl font-bold gap-2">
+      <i class="fa-solid fa-file-pdf text-rose-400"></i>
+      <span>Quản Lý Giáo Trình & Chunks</span>
+  </a>
+  ```
+* **Bình thay thế bằng chuẩn White-Card Palette**:
+  ```html
+  <!-- ĐÃ SỬA: Chuẩn White Card, chữ rõ ràng 100% -->
+  <a th:href="@{/courses/{id}/documents(id=${course.id})}" 
+     class="btn btn-sm h-10 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 shadow-sm rounded-xl font-bold gap-2 transition-all">
+      <i class="fa-solid fa-file-pdf text-rose-500"></i>
+      <span>Quản Lý Giáo Trình & Chunks</span>
+  </a>
+  ```
+* **Sửa lại màu 2 Badge trạng thái cho rõ nét**:
+  ```html
+  <div th:if="${hasSystemKey}" class="inline-flex items-center gap-2 py-1.5 px-3.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold shadow-xs">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span>AI Multi-Key Engine: Đã Sẵn Sàng</span>
+  </div>
+
+  <div th:if="${isPro}" class="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 text-amber-800 text-xs font-black shadow-xs">
+      <i class="fa-solid fa-crown text-amber-500"></i>
+      <span>GÓI PRO: VÔ HẠN RAG</span>
+  </div>
+  ```
+
+---
+
+### Task 2: Triển khai hoàn chỉnh tính năng "Cuộc Trò Chuyện Mới"
+* **File cần sửa**: `ChatController.java` (`com.group2.assignment.rag.controller`).
+* **Vị trí**: Hàm `startNewChat()` (dòng 264) và `showChatPage()` (dòng 52).
+
+#### A. Trong `ChatController.java`:
+```java
+/**
+ * Khởi tạo phiên trò chuyện mới: Tạo một ChatSession mới trong DB và redirect vào đúng phiên đó
+ */
+@GetMapping("/chat/new")
+public String startNewChat(@PathVariable Long courseId, HttpSession session) {
+    Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
+
+    User currentUser = getCurrentUser(session);
+    
+    // Tạo phiên chat mới với tiêu đề mặc định
+    ChatSession newSession = chatSessionRepository.save(ChatSession.builder()
+            .course(course)
+            .user(currentUser)
+            .title("Cuộc trò chuyện mới")
+            .build());
+
+    return "redirect:/courses/" + courseId + "/chat?sessionId=" + newSession.getId();
+}
+```
+
+#### B. Trong `ChatController.sendChatMessageJson()`:
+Khi người dùng gửi câu hỏi đầu tiên vào phiên vừa tạo có tên là `"Cuộc trò chuyện mới"`, tự động cập nhật tiêu đề thành nội dung câu hỏi đầu tiên (cắt tối đa 40 ký tự) để sidebar hiển thị lịch sử thông minh:
+```java
+if ("Cuộc trò chuyện mới".equals(sessionEntity.getTitle())) {
+    String autoTitle = requestDto.getQuestion().trim();
+    if (autoTitle.length() > 40) {
+        autoTitle = autoTitle.substring(0, 37) + "...";
+    }
+    sessionEntity.setTitle(autoTitle);
+    chatSessionRepository.save(sessionEntity);
+}
+```
+
+---
+
+### Task 3: Tích hợp thư viện `marked.js` render Markdown Table & Cú pháp AI
+* **File cần sửa**: `src/main/resources/templates/rag/chat.html`.
+
+#### A. Thêm thư viện `marked.js` vào thẻ `<head>` hoặc cuối trang:
+```html
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+```
+
+#### B. Thêm cấu hình CSS cho bảng Markdown trong `chat.html`:
+```html
+<style>
+    /* Styling bảng Markdown do AI sinh ra */
+    .markdown-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.75rem 0;
+        font-size: 0.8125rem;
+    }
+    .markdown-body th {
+        background-color: #f1f5f9;
+        color: #1e293b;
+        font-weight: 700;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        text-align: left;
+    }
+    .markdown-body td {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e2e8f0;
+        color: #334155;
+    }
+    .markdown-body tr:nth-child(even) td {
+        background-color: #f8fafc;
+    }
+    .markdown-body ul {
+        list-style-type: disc;
+        margin-left: 1.25rem;
+        margin-top: 0.25rem;
+    }
+    .markdown-body ol {
+        list-style-type: decimal;
+        margin-left: 1.25rem;
+        margin-top: 0.25rem;
+    }
+    .markdown-body code {
+        font-family: monospace;
+        background-color: #e2e8f0;
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        color: #7c3aed;
+        font-size: 0.8em;
+    }
+</style>
+```
+
+#### C. Cập nhật script render tin nhắn AI:
+```javascript
+function renderMarkdownContent(text) {
+    if (!text) return '';
+    try {
+        if (typeof marked !== 'undefined') {
+            return marked.parse(text);
+        }
+    } catch (e) {
+        console.warn('Lỗi parse marked:', e);
+    }
+    return escapeHtml(text);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Render tất cả tin nhắn markdown có sẵn từ server
+    document.querySelectorAll('.ai-markdown-content').forEach(function (el) {
+        const rawContent = el.getAttribute('data-raw');
+        if (rawContent) {
+            el.innerHTML = renderMarkdownContent(rawContent);
+        }
+    });
+});
+```
+
+---
+
+## ✅ 3. CRITERIA NGHIỆM THU (ACCEPTANCE CRITERIA)
+1. **Header Bar**: Nhìn thấy rõ 100% chữ `"Quản Lý Giáo Trình & Chunks"` màu xám đậm nổi bật trên nền trắng, không bị tàng hình.
+2. **New Chat Session**: Bấm `+ Cuộc Trò Chuyện Mới` $\rightarrow$ Màn hình chat chuyển sang phiên trắng mới, danh sách lịch sử bên trái xuất hiện phiên mới. Khi gửi tin nhắn đầu tiên, tiêu đề tự động cập nhật theo câu hỏi.
+3. **Table Markdown**: Khi chatbot trả lời có bảng biểu $\rightarrow$ Bảng hiển thị dạng kẻ ô (border), có sọc xen kẽ (zebra), chữ in đậm và bullet list hiển thị đẹp mắt.
+4. **Kiểm thử tự động**: Chạy `mvn test -Dtest=ChatControllerQuotaTest` và `mvn test` $\rightarrow$ Toàn bộ test cases đều **PASS 100%**.
 
