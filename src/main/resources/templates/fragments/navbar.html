@@ -31,7 +31,7 @@
         <!-- Nút Tạo Môn Học Nhanh -->
         <button th:if="${(canCreateCourse == null or canCreateCourse) and (session.currentUser == null or session.currentUser.role != 'ROLE_ADMIN')}" 
                 onclick="const m = document.getElementById('modal-create-course'); if(m) m.showModal(); else window.location.href='/courses';" 
-                class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border-none rounded-xl text-xs font-bold shadow-sm shadow-purple-500/20 hidden sm:inline-flex gap-1.5">
+                class="btn btn-sm bg-slate-900 hover:bg-indigo-600 text-white border-none rounded-xl text-xs font-semibold shadow-xs hidden sm:inline-flex gap-1.5">
             <i class="fa-solid fa-plus text-[11px]"></i> Tạo Môn Mới
         </button>
 

@@ -1,5 +1,7 @@
 package com.group2.assignment.rag;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
+
 import com.group2.assignment.auth.controller.AuthController;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.auth.repository.UserRepository;
@@ -186,5 +188,21 @@ class ChatControllerQuotaTest {
         ChatSession updatedSession = chatSessionRepository.findById(newSession.getId()).orElseThrow();
         assertNotEquals("Cuộc trò chuyện mới", updatedSession.getTitle());
         assertTrue(updatedSession.getTitle().contains("Entity lifecycle") || updatedSession.getTitle().contains("Spring Data JPA"));
+    }
+
+    @Test
+    @DisplayName("Nút làm sạch đoạn chat (clearChatSession) xóa sạch tin nhắn và phiên mà không lỗi Transaction")
+    void testClearChatSessionDeletesMessagesAndSession() {
+        ChatSession sessionToClear = chatSessionRepository.save(ChatSession.builder()
+                .course(sampleCourse)
+                .title("Phiên cần làm sạch")
+                .build());
+
+        RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+        String result = chatController.clearChatSession(sampleCourse.getId(), sessionToClear.getId(), redirectAttributes);
+
+        assertEquals("redirect:/courses/" + sampleCourse.getId() + "/chat", result);
+        assertFalse(chatSessionRepository.existsById(sessionToClear.getId()));
+        assertEquals("Đã xóa lịch sử phiên trò chuyện!", redirectAttributes.getFlashAttributes().get("successMessage"));
     }
 }

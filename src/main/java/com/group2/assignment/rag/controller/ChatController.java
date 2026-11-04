@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -272,13 +273,16 @@ public class ChatController {
     /**
      * Dọn dẹp tin nhắn và xóa phiên chat
      */
+    @Transactional
     @PostMapping("/chat/clear")
     public String clearChatSession(@PathVariable Long courseId,
                                   @RequestParam(value = "sessionId", required = false) Long sessionId,
                                   RedirectAttributes redirectAttributes) {
         if (sessionId != null) {
             chatMessageRepository.deleteAllBySessionId(sessionId);
-            chatSessionRepository.deleteById(sessionId);
+            if (chatSessionRepository.existsById(sessionId)) {
+                chatSessionRepository.deleteById(sessionId);
+            }
             redirectAttributes.addFlashAttribute("successMessage", "Đã xóa lịch sử phiên trò chuyện!");
         }
         return "redirect:/courses/" + courseId + "/chat";
