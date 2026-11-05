@@ -17,6 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtAuthInterceptor)
                 // Các tuyến đường yêu cầu bắt buộc phải đăng nhập (Bảo vệ toàn bộ không gian môn học & học tập)
                 .addPathPatterns(
+                        "/pricing",
                         "/courses",
                         "/courses/**",
                         "/profile",

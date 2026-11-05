@@ -83,6 +83,38 @@ class HomeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
                 .andExpect(model().attributeExists("courses"))
-                .andExpect(model().attributeExists("totalCourses"));
+                .andExpect(model().attributeExists("totalCourses"))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("href=\"/pricing\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("modal-pricing-upgrade"))));
+    }
+
+    @Test
+    void pricingRequiresLogin() throws Exception {
+        mockMvc.perform(get("/pricing"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error=unauthorized"));
+    }
+
+    @Test
+    void pricingRendersForStudentsAndAdmin() throws Exception {
+        for (String role : new String[]{"ROLE_STUDENT", "ROLE_ADMIN"}) {
+            for (String tier : new String[]{"FREE", "PRO", "SQUAD"}) {
+                MockHttpSession session = new MockHttpSession();
+                User user = User.builder().username("pricing-user").fullName("Pricing User")
+                        .role(role).subscriptionTier(tier).build();
+                session.setAttribute(AuthController.SESSION_USER, user);
+                mockMvc.perform(get("/pricing").session(session))
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("pricing"))
+                        .andExpect(model().attribute("isProUser", user.isPro()))
+                        .andExpect(content().string(org.hamcrest.Matchers.not(
+                                org.hamcrest.Matchers.containsString("← Quản Lý Môn Học"))))
+                        .andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"pricing\"")))
+                        .andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"card-squad-price\"")))
+                        .andExpect(content().string(org.hamcrest.Matchers.not(
+                                org.hamcrest.Matchers.containsString("modal-pricing-upgrade"))));
+            }
+        }
     }
 }
