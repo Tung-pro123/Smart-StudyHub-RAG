@@ -5,12 +5,16 @@
 
 ---
 
-### [SLIDE 18 — ADMIN DASHBOARD & KPI] (~45 giây)
-"Em xin cảm ơn bạn Thắng. Kính chào quý Thầy Cô trong Hội đồng Giảng viên và toàn thể các bạn, em là **Ngô Ân**, đảm nhiệm vai trò Quản trị hệ thống Admin và Đảm bảo chất lượng QA của Nhóm 2.
+### [SLIDE 18 — ADMIN DASHBOARD, DOANH THU VNPAY & ĐỐI SOÁT ĐƠN HÀNG] (~50 giây)
+"Em xin cảm ơn bạn Thắng. Kính chào quý Thầy Cô trong Hội đồng Giảng viên và toàn thể các bạn, em là **Ngô Ân**, đảm nhiệm vai trò Quản trị hệ thống Admin, Phân hệ Doanh thu VNPay và Đảm bảo chất lượng QA của Nhóm 2.
 
-Để một nền tảng hỗ trợ học tập phục vụ hàng trăm sinh viên vận hành trơn tru, vai trò của người quản trị viên là vô cùng quan trọng. Em đã xây dựng **Trung tâm điều hành Admin Command Center**. 
-Tại đây, quản trị viên có thể theo dõi tức thời sức khỏe hệ thống qua 4 chỉ số KPI cốt lõi: tổng số sinh viên, số môn học, số lượng Chunks tài liệu đã bóc tách và tổng số câu hỏi RAG được thực hiện trong ngày. 
-Bên cạnh đó, trang quản trị tài khoản cho phép chúng em linh hoạt nâng cấp gói dịch vụ Free, Pro hoặc Squad cho sinh viên, đồng thời có nút bấm khôi phục hạn ngạch RAG tức thì để hỗ trợ người dùng khi gặp sự cố."
+Để một nền tảng hỗ trợ học tập SaaS phục vụ hàng trăm sinh viên vận hành chuyên nghiệp, vai trò của người quản trị viên là vô cùng quan trọng. Em đã xây dựng **Trung tâm điều hành Admin Command Center**. 
+Tại đây, bên cạnh việc theo dõi sức khỏe hệ thống qua các chỉ số sinh viên, tài liệu hay lượt gọi AI RAG, em đã phát triển trọn vẹn **Phân hệ Quản trị Doanh thu & Cổng Thanh toán Trực Tuyến VNPay Sandbox**.
+Hệ thống kết nối trực tiếp với cổng VNPay Sandbox qua mã định danh chính thức:
+- Thẻ KPI Doanh thu tự động nhảy số theo thời gian thực, bóc tách doanh thu gói Pro 49.000đ, gói Squad 129.000đ và tổng thu trong ngày.
+- Bảng Lịch sử đơn hàng lưu vết đầy đủ từng mã đơn hàng, tài khoản sinh viên, ngân hàng và mã giao dịch VNPay.
+- Em đã trang bị nút bấm **Xuất Báo Cáo Tài Chính CSV** chuẩn UTF-8 BOM để kế toán mở trực tiếp trên Excel không lỗi font tiếng Việt, cùng liên kết đối chiếu 1-1 với **Cổng Quản Trị VNPay Merchant Portal** để chứng minh giao dịch thật 100%.
+- Bên cạnh đó, trang quản trị còn hỗ trợ linh hoạt nâng/hạ gói cước và khôi phục hạn ngạch RAG tức thì cho sinh viên."
 
 ---
 
@@ -22,11 +26,12 @@ Nhóm em đã triển khai cơ chế **Centralized System Key**: Quản trị vi
 
 ---
 
-### [SLIDE 20 — BÁO CÁO QA 327 TESTS PASS] (~45 giây)
+### [SLIDE 20 — BÁO CÁO QA 333 TESTS PASS & VẬN HÀNH THỰC CHIẾN] (~45 giây)
 "Về mặt chất lượng mã nguồn, nhóm em cam kết mang tới một sản phẩm không chỉ đẹp về giao diện mà còn vững chắc về kiến trúc Backend. 
 
-Hệ thống sở hữu bộ kiểm thử tự động toàn diện với **327 trên 327 Unit và Integration Tests PASS tuyệt đối 100%**. 
+Hệ thống sở hữu bộ kiểm thử tự động toàn diện với **333 trên 333 Unit và Integration Tests PASS tuyệt đối 100%**, bao gồm toàn bộ các bài test kiểm thử tích hợp luồng thanh toán VNPay và tính toán doanh thu. 
 Chúng em đã kiểm thử kỹ lưỡng các bài toán thực tế hóc búa nhất:
+- Kiểm thử toàn vẹn thanh toán VNPay: Sinh URL mã hóa HMAC-SHA512, xác thực phản hồi, tính toán doanh thu và tự động gia hạn cộng dồn 30 ngày cho sinh viên.
 - Kiểm thử chịu tải đồng thời chống gian lận vượt quá 50 câu RAG/ngày.
 - Kiểm thử cách ly môn học cá nhân và đề thi Solo trong môn nhóm Study Squad.
 - Kiểm thử phân quyền RBAC chặn triệt để sinh viên truy cập trái phép vào trang quản trị.

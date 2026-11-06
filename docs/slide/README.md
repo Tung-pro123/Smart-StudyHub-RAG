@@ -15,20 +15,20 @@ docs/slide/
 ├── README.md                          <-- Tài liệu hướng dẫn & quy chuẩn chung
 │
 ├── content/                           <-- NỘI DUNG CHỮ & DANH MỤC ẢNH TRÊN SLIDE (Bullet points, Diagram, Ảnh thật)
-│   ├── tung/                          <-- Slide 1 ➔ 4 (Lê Thanh Tùng - 4 phút)
-│   ├── truong/                        <-- Slide 5 ➔ 8 (Ngô Nhật Trường - 3 phút)
-│   ├── binh/                          <-- Slide 9 ➔ 11 (Nguyễn Văn Gia Bình - 3 phút)
-│   ├── nhat/                          <-- Slide 12 ➔ 14 (Huỳnh Nhật - 2.5 phút)
-│   ├── thang/                         <-- Slide 15 ➔ 17 (Lê Nguyễn Minh Thắng - 2.5 phút)
-│   └── an/                            <-- Slide 18 ➔ 22 (Ngô Ân - 3.5 phút)
+│   ├── truong/                        <-- Khối 1: Slide 1 ➔ 4 (Ngô Nhật Trường - 4 phút) [Mở màn, Bối cảnh & Cổng vào Auth/UI]
+│   ├── tung/                          <-- Khối 2: Slide 5 ➔ 8 (Lê Thanh Tùng - 4 phút) [Kiến trúc Tech Stack, 3 Gói Cước & Squad Hub]
+│   ├── binh/                          <-- Khối 3: Slide 9 ➔ 11 (Nguyễn Văn Gia Bình - 3 phút) [RAG Engine & PDF Chunking]
+│   ├── nhat/                          <-- Khối 4: Slide 12 ➔ 14 (Huỳnh Nhật - 2.5 phút) [Quiz Generator & Xuất PDF]
+│   ├── thang/                         <-- Khối 5: Slide 15 ➔ 17 (Lê Nguyễn Minh Thắng - 2.5 phút) [Study Planner & Tasks]
+│   └── an/                            <-- Khối 6: Slide 18 ➔ 22 (Ngô Ân - 4 phút) [Admin, Doanh Thu VNPay, QA 333 tests & Setup]
 │
 └── script/                            <-- KỊCH BẢN LỜI THOẠI NÓI THỰC TẾ (Word-by-word, câu chào, câu chốt chuyển mic)
-    ├── tung/                          <-- Lời thoại mở đầu, bối cảnh, 3 gói cước, Squad Hub & Feature Gating
-    ├── truong/                        <-- Lời thoại Assignment UI Toolkit, AI Agent IDE & OAuth2
-    ├── binh/                          <-- Lời thoại Apache PDFBox Chunking, Context Grounding & Citations
-    ├── nhat/                          <-- Lời thoại AI Quiz Generator, Countdown Timer & Xuất PDF
-    ├── thang/                         <-- Lời thoại AI Study Planner theo tuần & Quản lý Task
-    └── an/                            <-- Lời thoại Admin Dashboard, Masking Key, QA 327 tests, User Guide & Q&A
+    ├── truong/                        <-- Lời thoại mở màn, Bối cảnh sinh viên mùa thi, Assignment UI Toolkit, AI Agent IDE, OAuth2 & Logout
+    ├── tung/                          <-- Lời thoại kiến trúc Enterprise Tech Stack, 3 gói cước SaaS, Shared Squad Hub & Feature Gating
+    ├── binh/                          <-- Lời thoại Apache PDFBox Chunking, Context Grounding & Citations đối chứng
+    ├── nhat/                          <-- Lời thoại AI Quiz Generator, Countdown Timer & Xuất đề thi PDF in ấn
+    ├── thang/                         <-- Lời thoại AI Study Planner theo tuần, Checklist & Progress Bar
+    └── an/                            <-- Lời thoại Admin Dashboard, Doanh thu VNPay & Đối soát Merchant, QA 333 tests & Q&A
 ```
 
 ---

@@ -4,10 +4,15 @@
 
 ---
 
-### SLIDE 18: ADMIN COMMAND CENTER — GIÁM SÁT KPI & QUẢN TRỊ 3 GÓI CƯỚC
+### SLIDE 18: ADMIN COMMAND CENTER — GIÁM SÁT KPI, DOANH THU VNPAY & ĐỐI SOÁT ĐƠN HÀNG
 * **Bảng điều khiển trung tâm (Real-time Dashboard)**:
-  * Theo dõi tức thời sức khỏe hệ thống qua 4 chỉ số KPI cốt lõi: **Tổng sinh viên, Tổng môn học, Tổng số Chunks tài liệu, Tổng số lượt gọi AI RAG trong ngày**.
+  * Theo dõi tức thời sức khỏe hệ thống qua các chỉ số cốt lõi: Tổng sinh viên, Tổng môn học, Tổng số Chunks tài liệu, Tổng lượt gọi AI RAG trong ngày.
   * Biểu đồ phân bổ tỷ lệ người dùng giữa 3 gói cước: Free vs Pro vs Squad.
+* **Phân hệ Báo cáo Doanh thu & Cổng Thanh toán VNPay Sandbox**:
+  * **Thẻ KPI Doanh thu nhảy số thời gian thực**: Tổng thu (VNĐ), phân tách chi tiết gói PRO (49.000đ) vs gói SQUAD (129.000đ), doanh thu hôm nay và số đơn thành công.
+  * **Bảng Lưu vết Đơn hàng & Lịch sử Giao dịch**: Theo dõi mã đơn hàng `TxnRef`, tài khoản sinh viên, số tiền, ngân hàng (NCB/Visa), mã giao dịch VNPay `vnpayTransactionNo`, trạng thái `THÀNH CÔNG`.
+  * **Xuất Báo cáo Tài chính CSV**: Nút tải file CSV chuẩn UTF-8 BOM mở bằng Microsoft Excel hiển thị tiếng Việt có dấu trọn vẹn để kế toán đối soát.
+  * **Đối soát 1-1 với VNPay Merchant Portal**: Minh chứng đối chiếu trực tiếp trên cổng `sandbox.vnpayment.vn/merchantv2` khớp 100% từng mã giao dịch.
 * **Quản trị người dùng & Hỗ trợ kỹ thuật (`/admin/users`)**:
   * Nâng cấp hoặc hạ cấp gói cước linh hoạt (hỗ trợ sinh viên kích hoạt gói nhanh).
   * Nút **"Reset Quota RAG"**: Khôi phục lại 50 câu hỏi/ngày cho sinh viên khi cần hỗ trợ đột xuất.
@@ -27,8 +32,9 @@
 
 ### SLIDE 20: BÁO CÁO ĐẢM BẢO CHẤT LƯỢNG TOÀN DIỆN (QA REPORT)
 * **Kết quả kiểm thử tự động (Automated Regression Suite)**:
-  * **327 / 327 Unit & Integration Tests PASS (100%)** không một lỗi nào.
+  * **333 / 333 Unit & Integration Tests PASS (100%)** không một lỗi nào (bao gồm 6 bài test kiểm thử tích hợp thanh toán VNPay Sandbox & tính toán doanh thu).
 * **Các kịch bản kiểm thử trọng yếu đã vượt qua**:
+  * **VNPay Integrity & Revenue Test**: Kiểm thử tạo URL thanh toán HMAC-SHA512, xác thực phản hồi Sandbox, tính toán tổng doanh thu và logic cộng dồn 30 ngày hạn dùng gói cước.
   * **Quota Concurrency Test**: Kiểm thử chịu tải đồng thời, chống gian lận vượt quá 50 câu RAG/ngày.
   * **Data Isolation Test**: Kiểm thử cách ly môn học cá nhân và đề thi Solo trong môn nhóm `[SQUAD]`.
   * **RBAC Security Test**: Chặn 100% sinh viên thường truy cập `/admin/*` và `/h2-console`.

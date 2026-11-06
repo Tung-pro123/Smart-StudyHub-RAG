@@ -306,16 +306,44 @@
                 </li>
             </ul>
 
-            <div class="relative z-10 mt-7 flex flex-col gap-2">
-                <form th:action="@{/auth/upgrade-pro}" method="post">
+            <div class="relative z-10 mt-7 flex flex-col gap-2.5">
+                <form th:action="@{/payment/create-vnpay}" method="post">
+                    <input type="hidden" name="tier" value="PRO">
+                    <input type="hidden" name="bankCode" value="NCB">
                     <button type="submit"
-                            class="btn rounded-xl w-full bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black border-none shadow-lg shadow-purple-500/40">
-                        <i class="fa-solid fa-crown text-amber-300 mr-1"></i> Nâng cấp Gói Pro ngay
+                            class="btn rounded-xl w-full bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black border-none shadow-lg shadow-purple-500/40 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-credit-card text-amber-300"></i> Thanh toán VNPay ATM NCB · 49k
                     </button>
                 </form>
-                <a th:href="@{/courses}" class="btn btn-sm btn-ghost text-slate-400 hover:text-white">
-                    Xem bảng giá đầy đủ 3 gói
-                </a>
+                <form th:action="@{/payment/create-vnpay}" method="post">
+                    <input type="hidden" name="tier" value="PRO">
+                    <input type="hidden" name="bankCode" value="VISA">
+                    <button type="submit"
+                            class="btn rounded-xl w-full bg-slate-900 hover:bg-slate-800 text-white font-bold border border-slate-700 shadow-sm flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-cc-visa text-amber-400 text-lg"></i> Thanh toán VNPay Thẻ Visa · 49k
+                    </button>
+                </form>
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-purple-500/30 text-xs space-y-1.5 text-left">
+                    <div class="flex items-center justify-between font-bold text-amber-300 text-[11px]">
+                        <span>Thẻ Test VNPay (NCB): 9704198526191432198</span>
+                        <span class="badge badge-ghost badge-xs text-white">OTP: 123456</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] text-slate-400">
+                        <span>Tên: NGUYEN VAN A</span>
+                        <span>Ngày PH: 07/15</span>
+                        <button type="button" onclick="navigator.clipboard.writeText('9704198526191432198'); alert('Đã chép số thẻ ATM NCB!')" class="text-purple-400 hover:text-purple-300 underline font-bold">Chép thẻ</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <form th:action="@{/auth/upgrade-pro}" method="post">
+                        <button type="submit" class="text-[11px] text-slate-400 hover:text-purple-300 underline font-medium">
+                            Kích hoạt nhanh (Demo)
+                        </button>
+                    </form>
+                    <a th:href="@{/courses}" class="text-[11px] text-slate-400 hover:text-white underline">
+                        Bảng giá 3 gói đầy đủ
+                    </a>
+                </div>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop">

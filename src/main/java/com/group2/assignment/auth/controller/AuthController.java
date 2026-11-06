@@ -10,6 +10,8 @@ import com.group2.assignment.auth.repository.UserRepository;
 import com.group2.assignment.core.repository.CourseRepository;
 import com.group2.assignment.auth.service.AuthService;
 import com.group2.assignment.auth.service.JwtService;
+import com.group2.assignment.payment.entity.PaymentTransaction;
+import com.group2.assignment.payment.repository.PaymentTransactionRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +34,7 @@ public class AuthController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
+    private final PaymentTransactionRepository paymentTransactionRepository;
 
     public static final String AUTH_COOKIE_NAME = "STUDYHUB_JWT";
     public static final String SESSION_USER = "currentUser";
@@ -144,6 +147,10 @@ public class AuthController {
         // Đếm số môn học cá nhân do sinh viên sở hữu
         long myCourseCount = (user.getId() != null) ? courseRepository.countByUserId(user.getId()) : 0;
         model.addAttribute("myCourseCount", myCourseCount);
+
+        // Lịch sử thanh toán & hóa đơn VNPay của sinh viên
+        List<PaymentTransaction> userTransactions = paymentTransactionRepository.findTop10ByUsernameOrderByCreatedAtDesc(user.getUsername());
+        model.addAttribute("userTransactions", userTransactions);
 
         // Nạp danh sách thành viên nhóm học tập Study Squad (chỉ khi là SQUAD hoặc ADMIN)
         List<User> squadMembers = authService.getSquadMembers(user.getUsername());

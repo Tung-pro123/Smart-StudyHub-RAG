@@ -5,7 +5,13 @@
 > **Đặc thù dự án Group 2**: **Làm gộp cả Assignment (UI Toolkit + AI Agent) và Project Cuối kỳ (RAG AI StudyHub + Google OAuth2 + Shared Squad Hub + Quản lý 3 gói cước)** trong cùng một sản phẩm hoàn chỉnh duy nhất.  
 > 
 > 🚨 **TASK CODE GẤP TRONG NGÀY 04/11 CHO NGUYỄN VĂN GIA BÌNH (RAG FIX)**:  
-> *(Sửa triệt để 3 lỗi P0: Nút "Cuộc trò chuyện mới" bị liệt, Chữ tàng hình Header Bar, và Thiếu bộ render Markdown Table trong bong bóng chat AI — Xem toàn bộ hướng dẫn kỹ thuật & code mẫu tại [Phần V bên dưới](#-phần-v-kế-hoạch-giao-task-phân-hệ-rag-ai-chatbot-cho-bình---sửa-gấp-trước-2030)).*
+> *(Sửa triệt để 3 lỗi P0: Nút "Cuộc trò chuyện mới" bị liệt, Chữ tàng hình Header Bar, và Thiếu bộ render Markdown Table trong bong bóng chat AI — Xem toàn bộ hướng dẫn kỹ thuật & code mẫu tại [Phần V bên dưới](#-phần-v-kế-hoạch-giao-task-phân-hệ-rag-ai-chatbot-cho-bình---sửa-gấp-trước-2030)).*  
+>  
+> 💳 **TASK CODE & VẬN HÀNH CHO NGÔ ÂN (VNPAY REVENUE & RECONCILIATION)**:  
+> *(Triển khai và làm chủ phân hệ Quản trị Doanh thu VNPay Sandbox, Lịch thanh toán & Hạn gói cước, Bảng đơn hàng thời gian thực, Xuất báo cáo CSV đối soát và Đối chiếu 1-1 với VNPay Merchant Portal — Xem hướng dẫn kỹ thuật chi tiết tại [Phần VI bên dưới](#-phần-vi-kế-hoạch-giao-task-phân-hệ-quản-trị-doanh-thu--đối-soát-đơn-hàng-vnpay-cho-ân)).*  
+>  
+> 🚀 **KẾ HOẠCH MỚI NHẤT (07/11/2026)**:  
+> *(Xem toàn bộ kế hoạch rà soát lỗi giao diện & chức năng theo cuộc họp 04/11, tái cấu trúc thứ tự thuyết trình "Từ ngoài vào trong" [Trường ➔ Tùng ➔ Bình ➔ Nhật ➔ Thắng ➔ Ân] tại [task-2026-11-07-final-sprint-ui-audit-and-presentation-restructure.md](task-2026-11-07-final-sprint-ui-audit-and-presentation-restructure.md)).*
 
 ---
 
@@ -37,12 +43,12 @@ Dự án **Smart StudyHub RAG** của Group 2 khớp **100% tất cả các tiê
 
 | STT | Họ và Tên | Vai trò | Khối Slide phụ trách | Nội dung thuyết trình chính | Thời lượng |
 | :---: | :--- | :--- | :---: | :--- | :---: |
-| **1** | **Lê Thanh Tùng** | **Team Lead** | **Slide 1 ➔ Slide 4** *(4 slides liên tiếp)* | **Mở đầu & Bức tranh lớn**: Bối cảnh bài toán, giải pháp StudyHub RAG, Kiến trúc 3 gói cước (Free/Pro/Squad), Cơ chế Feature Gating, Shared Squad Hub (Môn học nhóm, Invite Code, Leaderboard & Đề thi Solo riêng tư). | **4 phút** |
-| **2** | **Ngô Nhật Trường** | **Dev (Auth & UI)** | **Slide 5 ➔ Slide 8** *(4 slides liên tiếp)* | **Assignment & Xác thực bảo mật**: Ứng dụng Tailwind CSS + DaisyUI trong Thymeleaf; Quy trình Prompting với AI Agent trong IDE; Login Google OAuth2 & Session Security BCrypt, Hồ sơ cá nhân (Profile). | **3 phút** |
+| **1** | **Ngô Nhật Trường** | **Dev (Auth & UI)** | **Slide 1 ➔ Slide 4** *(4 slides liên tiếp)* | **Mở màn & Cổng vào hệ thống**: Giới thiệu Nhóm 2 & Đề tài; Assignment 1: Ứng dụng UI Toolkit Tailwind CSS + DaisyUI White-Card trong Thymeleaf; Assignment 2: Quy trình Prompting với AI Agent trong IDE; Authentication đa kênh (Google OAuth2, Form BCrypt, 1-Click Login, Profile cá nhân, Đăng xuất Logout). | **3.5 phút** |
+| **2** | **Lê Thanh Tùng** | **Team Lead** | **Slide 5 ➔ Slide 8** *(4 slides liên tiếp)* | **Bức tranh lớn & Kiến trúc lõi**: Bối cảnh & Nỗi đau sinh viên mùa thi; Giải pháp Smart StudyHub RAG; Mô hình 3 gói cước (FREE/PRO/SQUAD) & Cơ chế Feature Gating; Không gian học nhóm Shared Squad Hub (Invite Code, Duyệt thành viên, Môn nhóm dùng chung, Đấu trường Leaderboard & Đề thi Solo riêng tư). | **4 phút** |
 | **3** | **Nguyễn Văn Gia Bình** | **Dev (RAG Engine)** | **Slide 9 ➔ Slide 11** *(3 slides liên tiếp)* | **Phân hệ RAG AI Chatbot**: Trích xuất PDF & phân mảnh Chunks (Apache PDFBox); Cơ chế Gemini Context Grounding triệt tiêu ảo giác; Thẻ trích dẫn (Citation Cards) số trang đối chứng & Multi-session Chat. | **3 phút** |
 | **4** | **Huỳnh Nhật** | **Dev (Quiz Engine)** | **Slide 12 ➔ Slide 14** *(3 slides liên tiếp)* | **Phân hệ AI Quiz Generator**: Sinh trắc nghiệm tự động A/B/C/D 3 mức độ từ giáo trình; Phòng thi bấm giờ Countdown & chấm điểm tự động; Tính năng Pro xuất đề thi PDF chuẩn in ấn. | **2.5 phút** |
 | **5** | **Lê Nguyễn Minh Thắng** | **Dev (Study Planner)** | **Slide 15 ➔ Slide 17** *(3 slides liên tiếp)* | **Phân hệ AI Study Planner**: Thuật toán phân tích ngày thi & xếp lịch ôn tập theo tuần bằng Gemini Flash Lite; Phân chia Study Tasks vừa sức chống ngợp; Interactive Checklist & Progress Bar. | **2.5 phút** |
-| **6** | **Ngô Ân** | **Dev (Admin & QA)** | **Slide 18 ➔ Slide 22** *(5 slides liên tiếp)* | **Vận hành, Chất lượng & Setup**: Admin Command Center (KPI, quản trị 3 gói cước, Masking System Key, Ping Latency); Báo cáo QA 327/327 tests PASS; Hướng dẫn cài đặt (User Guide); Tổng kết & mở Q&A. | **3.5 phút** |
+| **6** | **Ngô Ân** | **Dev (Admin, Doanh Thu VNPay & QA)** | **Slide 18 ➔ Slide 22** *(5 slides liên tiếp)* | **Vận hành, Doanh thu VNPay & QA**: Admin Command Center (KPI, Quản trị 3 gói cước, Báo cáo Doanh thu VNPay Sandbox, Lịch sử đơn hàng, Xuất CSV đối soát tài chính, Masking System Key, Ping Latency); Báo cáo QA 333/333 tests PASS; Hướng dẫn cài đặt (User Guide); Tổng kết & mở Q&A. | **4 phút** |
 
 ---
 
@@ -134,16 +140,20 @@ Dự án **Smart StudyHub RAG** của Group 2 khớp **100% tất cả các tiê
 ---
 
 ### 🎙️ KHỐI 6: NGÔ ÂN (DEV: ADMIN COMMAND CENTER, QA & USER GUIDE) — Slide 18 đến Slide 22 [~3.5 phút]
-* **Slide 18: Admin Command Center — Giám Sát KPI Hệ Thống & Quản Trị Gói Cước**
+* **Slide 18: Admin Command Center — Giám Sát KPI, Doanh Thu VNPay & Quản Trị Gói Cước**
   * Dashboard theo dõi thời gian thực: Tổng sinh viên, số môn học, số Chunks, tổng lượt gọi AI RAG.
+  * **Phân hệ Báo cáo Doanh thu VNPay Sandbox**: Thống kê Tổng doanh thu (VNĐ), Doanh thu gói PRO (49.000đ), Doanh thu gói SQUAD (129.000đ), Doanh thu hôm nay, Số lượng đơn hàng thành công.
+  * **Bảng Lưu vết Đơn hàng & Lịch sử Giao dịch**: Theo dõi mã đơn hàng `txnRef`, tài khoản sinh viên, số tiền, phương thức ngân hàng (NCB/VISA), mã giao dịch VNPay `vnpayTransactionNo`, trạng thái `SUCCESS`.
+  * **Nút xuất báo cáo tài chính CSV** (`/admin/revenue/export-csv`) UTF-8 BOM cho Excel và nút liên kết trực tiếp tới Cổng đối soát **VNPay Merchant Portal** (`merchantv2`).
   * Quản trị tài khoản sinh viên: Nâng/hạ 3 gói cước linh hoạt, reset hạn ngạch RAG hỗ trợ sinh viên.
 * **Slide 19: Centralized AI Key, Bảo Mật Masking & Đo Latency Ping**
   * Cơ chế Centralized System Key: Admin cấu hình 1 lần, an toàn toàn hệ thống, không sợ lộ key.
   * API Key Masking (`AIzaSy...****`): Che giấu khóa nhạy cảm trên giao diện khi demo/trình chiếu.
   * Tính năng đo độ trễ mạng thực tế (Latency Ping ms) trực tiếp tới Google AI API.
 * **Slide 20: Báo Cáo Đảm Bảo Chất Lượng Toàn Diện (QA Report)**
-  * Nghiệm thu **327 / 327 Unit & Integration Tests PASS (100%)**.
+  * Nghiệm thu **333 / 333 Unit & Integration Tests PASS (100%)** bao gồm 6 test cases phân hệ VNPay Payment & Revenue (`VnPayPaymentAndRevenueTest`).
   * Kiểm thử chịu tải đồng thời (Quota Concurrency), Kiểm thử cách ly dữ liệu (Data Isolation), Kiểm thử phân quyền RBAC và bảo vệ gian lận Leaderboard.
+  * Kiểm thử toàn vẹn dữ liệu thanh toán: Tạo URL thanh toán VNPay chuẩn checksum HMAC-SHA512, xử lý IPN/Return, cộng dồn 30 ngày hạn dùng gói cước và xuất file CSV đối soát.
 * **Slide 21: Hướng Dẫn Cài Đặt & Chạy Dự Án (User Guide — Setup & Code)**
   * Yêu cầu môi trường: Java 17, Maven 3.8+, H2 Database file tự tạo.
   * Cấu hình file [`.env`](file:///d:/Ki5_Fall_2026/HSF302/Assignment/Assignment/.env): `GOOGLE_CLIENT_ID`, `GEMINI_API_KEY`.
@@ -227,21 +237,26 @@ Dự án **Smart StudyHub RAG** của Group 2 khớp **100% tất cả các tiê
 
 ---
 
-### 5️⃣ BẠN NGÔ ÂN (KIỂM THỬ LUỒNG ADMIN COMMAND CENTER & QA — SLIDE 18 ➔ 22)
-* [ ] **Test Luồng 1 (Admin Dashboard & Thống Kê KPI)**:
+### 5️⃣ BẠN NGÔ ÂN (KIỂM THỬ LUỒNG ADMIN COMMAND CENTER, VNPAY REVENUE & QA — SLIDE 18 ➔ 22)
+* [ ] **Test Luồng 1 (Admin Dashboard & Thống Kê Doanh Thu VNPay)**:
   * Đăng nhập tài khoản Admin (`admin` / `password123`) $\rightarrow$ Truy cập `/admin/dashboard`.
-  * Kiểm tra các chỉ số KPI: Tổng số sinh viên, Tổng số môn học, Tổng số Chunks tài liệu, Tổng số câu hỏi RAG hôm nay có phản ánh đúng dữ liệu thực tế không.
-* [ ] **Test Luồng 2 (Quản Lý Sinh Viên & Nâng/Hạ Gói Cước)**:
-  * Vào trang Quản trị sinh viên (`/admin/users`).
-  * Thử thao tác nâng cấp gói cước cho 1 sinh viên (từ `FREE` lên `PRO` hoặc `SQUAD`), thử bấm nút "Reset Quota RAG" $\rightarrow$ Xác nhận thông báo thành công và dữ liệu cập nhật tức thì.
-* [ ] **Test Luồng 3 (Centralized System Key & Bảo Mật Masking)**:
-  * Vào trang Cài đặt hệ thống (`/admin/settings`).
-  * Kiểm tra ô hiển thị khóa API Key có được che mờ an toàn dạng Masking (`AIzaSy...****`) chống lộ thông tin khi demo không.
-  * Bấm nút **"Kiểm Tra Kết Nối (Ping Test)"** $\rightarrow$ Ghi nhận thời gian phản hồi thực tế (độ trễ ms) từ máy chủ Google Gemini.
-* [ ] **Test Luồng 4 (Nghiệm Thu Toàn Bộ 327 Tests)**:
+  * Kiểm tra thẻ KPI **"Doanh thu VNPay"**: Hiển thị tổng thu (VNĐ), số lượng giao dịch thành công.
+  * Kiểm tra Bảng **"Lịch Sử Đơn Hàng & Doanh Thu VNPay Sandbox"**: Hiển thị danh sách các đơn hàng thực tế kèm mã đơn hàng `txnRef`, sinh viên, gói cước, số tiền, ngân hàng, mã GD VNPay và trạng thái `THÀNH CÔNG`.
+* [ ] **Test Luồng 2 (Kiểm Thử Thanh Toán Sandbox Thực Tế & Nhảy Số Doanh Thu Tức Thì)**:
+  * Mở trình duyệt ẩn danh hoặc dùng tài khoản sinh viên `student1`, bấm nút thanh toán gói PRO (49.000đ) qua cổng VNPay NCB.
+  * Nhập thẻ test NCB: Số thẻ `9704198526191432198`, Tên `NGUYEN VAN A`, Ngày phát hành `07/15`, OTP `123456`.
+  * Thanh toán thành công $\rightarrow$ Hệ thống điều hướng về `/courses` hoặc `/profile`, tài khoản được tự động nâng cấp PRO và gia hạn thêm 30 ngày.
+  * Đăng nhập lại Admin (`/admin/dashboard`): Kiểm tra doanh thu tự động cộng thêm 49.000đ, bảng đơn hàng xuất hiện thêm dòng giao dịch mới mà không cần can thiệp DB!
+* [ ] **Test Luồng 3 (Xuất Báo Cáo CSV & Đối Soát 1-1 Với Cổng Merchant Portal VNPay)**:
+  * Tại `/admin/dashboard`, bấm nút **"Xuất CSV Đối Soát"** $\rightarrow$ Tải file `vnpay-transactions-report.csv`. Mở file bằng Excel kiểm tra tiếng Việt Unicode UTF-8 BOM hiển thị chuẩn đẹp, dữ liệu đầy đủ 8 cột.
+  * Bấm nút **"Portal VNPay"** (hoặc truy cập `https://sandbox.vnpayment.vn/merchantv2/` đăng nhập `thanhtung22012006@gmail.com`) $\rightarrow$ Vào mục tra cứu giao dịch: So sánh mã GD VNPay (`vnpayTransactionNo`) trên hệ thống StudyHub khớp chính xác 1-1 với máy chủ VNPay Sandbox!
+* [ ] **Test Luồng 4 (Quản Lý Sinh Viên, Centralized Key & Latency Ping)**:
+  * Vào `/admin/users`: Kiểm tra phân loại gói cước, tính năng reset hạn ngạch RAG.
+  * Vào `/admin/settings`: Kiểm tra API Key Masking (`AIzaSy...****`) và bấm nút **"Ping Test"** kiểm tra độ trễ ms tới Gemini API.
+* [ ] **Test Luồng 5 (Nghiệm Thu Toàn Bộ 333 Tests)**:
   * Mở Terminal chạy lệnh: `mvn test` trên máy local.
-  * Chụp ảnh màn hình kết quả: **Tests run: 327, Failures: 0, Errors: 0, Skipped: 0** để đưa vào Slide QA chứng minh chất lượng code không có bất kỳ lỗi nào.
-* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Dashboard KPI thời gian thực, bảng quản lý tài khoản Users, modal Ping Key có số mili-giây (ms), màn hình Terminal mvn test xanh 100%.
+  * Chụp ảnh màn hình kết quả: **Tests run: 333, Failures: 0, Errors: 0, Skipped: 0** để đưa vào Slide QA chứng minh chất lượng code không có bất kỳ lỗi nào.
+* 📸 **Bộ ảnh cần chụp đưa vào Slide**: Thẻ KPI Doanh thu VNPay & Bảng đơn hàng thời gian thực, File Excel xuất CSV tiếng Việt có dấu, Ảnh đối soát giao dịch trên VNPay Merchant Portal, Màn hình Terminal `mvn test` xanh 100%.
 
 ---
 
@@ -444,3 +459,165 @@ document.addEventListener('DOMContentLoaded', function () {
 3. **Table Markdown**: Khi chatbot trả lời có bảng biểu $\rightarrow$ Bảng hiển thị dạng kẻ ô (border), có sọc xen kẽ (zebra), chữ in đậm và bullet list hiển thị đẹp mắt.
 4. **Kiểm thử tự động**: Chạy `mvn test -Dtest=ChatControllerQuotaTest` và `mvn test` $\rightarrow$ Toàn bộ test cases đều **PASS 100%**.
 
+
+
+---
+
+## 💳 PHẦN VI: KẾ HOẠCH GIAO TASK PHÂN HỆ QUẢN TRỊ DOANH THU & ĐỐI SOÁT ĐƠN HÀNG VNPAY CHO ÂN
+
+> **Người giao việc**: Lê Thanh Tùng (Team Lead - Group 2)  
+> **Người thực hiện**: Ngô Ân (Phụ trách Admin Command Center, Phân hệ Doanh thu VNPay & QA)  
+> **Mục tiêu**: Nắm vững toàn bộ kiến trúc, cơ chế vận hành của cổng thanh toán trực tuyến **VNPay Sandbox**, phân hệ tính toán doanh thu tự động, quản lý lịch thanh toán & hạn gói cước của sinh viên, xuất file báo cáo tài chính CSV và thực hiện đối soát 1-1 với Cổng quản trị VNPay Merchant Portal (`merchantv2`).  
+> **Thời điểm nghiệm thu & tổng duyệt demo**: Tối nay 04/11/2026.
+
+---
+
+### 🌐 1. TỔNG HỢP CÁC TÍNH NĂNG NGHIỆP VỤ LIÊN ĐỚI ĐÃ TRIỂN KHAI
+
+Khi tích hợp cổng thanh toán trực tuyến thực tế **VNPay Sandbox**, hệ thống StudyHub hình thành một chu trình khép kín giữa Người dùng - Cổng thanh toán - Quản trị viên:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 CHU TRÌNH THANH TOÁN & ĐỐI SOÁT DOANH THU                              │
+├────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. SINH VIÊN (Student Client):                                                                         │
+│    - Chọn gói PRO (49.000đ) hoặc SQUAD (129.000đ) tại Trang Chủ / Bảng Giá.                           │
+│    - Chọn phương thức: "Thanh toán VNPay ATM NCB" hoặc "Thẻ Quốc Tế Visa".                             │
+│    - Sử dụng thông tin thẻ test NCB để xác thực OTP "123456" trên cổng sandbox.vnpayment.vn.          │
+│                                                                                                        │
+│ 2. CỔNG THANH TOÁN VNPAY SANDBOX (Gateway):                                                            │
+│    - Kiểm tra chữ ký số Checksum HMAC-SHA512 với `vnp_HashSecret`.                                     │
+│    - Xác nhận trừ tiền giả lập thành công (Mã phản hồi: `vnp_ResponseCode = 00`).                      │
+│    - Chuyển hướng trình duyệt về `PaymentReturnUrl`: `/payment/vnpay-return`.                          │
+│                                                                                                        │
+│ 3. HỆ THỐNG XỬ LÝ BACKEND (PaymentService & Subscription Lifecycle):                                   │
+│    - Kiểm tra bảo mật Checksum dữ liệu trả về từ VNPay.                                                │
+│    - Lưu vết giao dịch vào Database: `PaymentTransaction` (Trạng thái: `SUCCESS`).                      │
+│    - Tự động nâng cấp gói cước (`PRO` hoặc `SQUAD`) và cộng dồn 30 ngày hạn dùng (`tierExpiresAt`).    │
+│                                                                                                        │
+│ 4. TRANG CÁ NHÂN SINH VIÊN (/profile):                                                                 │
+│    - Hiển thị ngày hết hạn gói cước rõ ràng (VD: 30 ngày kể từ ngày thanh toán).                       │
+│    - Bảng lịch sử biên lai điện tử: Mã đơn hàng, Gói cước, Số tiền, Ngân hàng, Mã GD VNPay.           │
+│                                                                                                        │
+│ 5. TRUNG TÂM ĐIỀU HÀNH ADMIN DASHBOARD (/admin/dashboard):                                             │
+│    - Thẻ KPI "Doanh thu VNPay" tự động nhảy số theo thời gian thực (Real-time).                        │
+│    - Phân tách doanh thu theo gói PRO vs SQUAD, doanh thu hôm nay và tổng số đơn thành công.          │
+│    - Bảng Lịch sử Đơn hàng Sandbox lưu vết đầy đủ từng giao dịch.                                      │
+│    - Nút bấm "Xuất CSV Đối Soát": Tải file UTF-8 BOM mở bằng Excel không lỗi font.                    │
+│    - Nút bấm "Portal VNPay": Mở cổng `sandbox.vnpayment.vn/merchantv2` đối soát 1-1 mã giao dịch.      │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 🛠️ 2. HƯỚNG DẪN KỸ THUẬT & KIẾN TRÚC CODE DÀNH CHO ÂN
+
+#### A. Cấu trúc dữ liệu & Thuật toán tính toán doanh thu (`PaymentTransactionRepository.java`):
+Ân cần nắm vững các câu lệnh truy vấn JPQL tổng hợp doanh thu phục vụ báo cáo:
+```java
+// 1. Tổng doanh thu toàn hệ thống từ các đơn hàng thành công
+@Query("SELECT COALESCE(SUM(p.amount), 0) FROM PaymentTransaction p WHERE p.status = 'SUCCESS'")
+Long getTotalRevenue();
+
+// 2. Doanh thu phân rã theo từng gói cước (PRO hoặc SQUAD)
+@Query("SELECT COALESCE(SUM(p.amount), 0) FROM PaymentTransaction p WHERE p.status = 'SUCCESS' AND p.targetTier = :tier")
+Long getRevenueByTier(@Param("tier") String tier);
+
+// 3. Doanh thu phát sinh trong ngày hôm nay (từ 00:00:00 đến hiện tại)
+@Query("SELECT COALESCE(SUM(p.amount), 0) FROM PaymentTransaction p WHERE p.status = 'SUCCESS' AND p.createdAt >= :since")
+Long getRevenueSince(@Param("since") LocalDateTime since);
+
+// 4. Lịch sử giao dịch cá nhân của một sinh viên (hiển thị tại trang Profile)
+List<PaymentTransaction> findTop10ByUsernameOrderByCreatedAtDesc(String username);
+```
+
+#### B. Cơ chế Subscription Lifecycle & Gia hạn cộng dồn (`PaymentService.java`):
+Khi sinh viên thanh toán thành công, hệ thống không ghi đè ngày hạn dùng mà **tự động cộng dồn 30 ngày**:
+```java
+// Logic cộng dồn hạn dùng gói cước thông minh
+LocalDateTime now = LocalDateTime.now();
+LocalDateTime base = (user.getTierExpiresAt() != null && user.getTierExpiresAt().isAfter(now))
+        ? user.getTierExpiresAt() // Nếu còn hạn cũ, lấy mốc hết hạn cũ để cộng tiếp
+        : now;                    // Nếu đã hết hạn hoặc lần đầu mua, lấy mốc hiện tại
+user.setTierExpiresAt(base.plusDays(30)); // Gia hạn thêm đúng 30 ngày
+userRepository.save(user);
+```
+
+#### C. Chức năng Xuất Báo Cáo Tài Chính CSV Đối Soát (`AdminController.java`):
+Xuất dữ liệu chuẩn quốc tế kèm ký tự **UTF-8 BOM (`﻿`)** để Microsoft Excel trên Windows tự động nhận diện tiếng Việt có dấu mà không bị lỗi font:
+```java
+@GetMapping(value = "/revenue/export-csv")
+@ResponseBody
+public ResponseEntity<String> exportRevenueCsv() {
+    StringBuilder csv = new StringBuilder();
+    csv.append('\ufeff'); // UTF-8 BOM cho Excel tiếng Việt
+    csv.append("Mã Đơn Hàng (TxnRef),Sinh Viên,Gói Cước,Số Tiền (VNĐ),Ngân Hàng,Mã GD VNPay,Trạng Thái,Thời Gian\n");
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    for (PaymentTransaction tx : paymentTransactionRepository.findAllByOrderByCreatedAtDesc()) {
+        csv.append('"').append(tx.getTxnRef()).append("",")
+           .append('"').append(tx.getUsername()).append("",")
+           .append('"').append(tx.getTargetTier()).append("",")
+           .append(tx.getAmount()).append(',')
+           .append('"').append(tx.getBankCode()).append("",")
+           .append('"').append(tx.getVnpayTransactionNo()).append("",")
+           .append('"').append(tx.getStatus()).append("",")
+           .append('"').append(tx.getCreatedAt().format(dtf)).append(""\n");
+    }
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"vnpay-transactions-report.csv\"")
+            .header(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
+            .body(csv.toString());
+}
+```
+
+---
+
+### 💳 3. BẢNG THÔNG TIN CẤU HÌNH & THẺ TEST VNPAY SANDBOX
+
+Ân sử dụng bộ thông tin chính thức đã được đăng ký thành công trên cổng Sandbox VNPay:
+
+| Mục cấu hình | Giá trị môi trường Sandbox | Ghi chú kỹ thuật |
+| :--- | :--- | :--- |
+| **Mã Website (`vnp_TmnCode`)** | `AYM70LAS` | Terminal ID định danh ứng dụng StudyHub trên cổng VNPay |
+| **Chuỗi bí mật (`vnp_HashSecret`)** | `NDJFXTYRTNJRRTHQNDDBUVGDXPTYPFMY` | Khóa bí mật tạo chữ ký số HMAC-SHA512 chống giả mạo dữ liệu |
+| **Payment Gateway URL** | `https://sandbox.vnpayment.vn/paymentv2/vpcpay.html` | Cổng thanh toán môi trường thử nghiệm |
+| **Return URL** | `http://localhost:8080/payment/vnpay-return` | Đường dẫn máy chủ tiếp nhận kết quả thanh toán |
+| **Cổng Quản trị Merchant Portal** | `https://sandbox.vnpayment.vn/merchantv2/` | Trang đối soát dành cho Merchant |
+| **Tài khoản Merchant Admin** | `thanhtung22012006@gmail.com` | Email quản trị viên đăng ký với VNPay |
+
+#### 💳 Thông tin thẻ test phục vụ Demo:
+* **Thẻ ATM Nội Địa (Ngân hàng NCB)**:
+  * Ngân hàng: **NCB**
+  * Số thẻ: `9704198526191432198`
+  * Tên chủ thẻ: `NGUYEN VAN A`
+  * Ngày phát hành: `07/15`
+  * Mật khẩu OTP: `123456`
+* **Thẻ Quốc Tế (Visa Test)**:
+  * Số thẻ: `4456530000001005`
+  * Hạn dùng: `12/26`
+  * CVV: `123`
+
+---
+
+### 🎙️ 4. KỊCH BẢN THUYẾT TRÌNH & DEMO TRỰC TIẾP DÀNH CHO ÂN (SLIDE 18)
+
+> **Hướng dẫn tác phong**: Khi Tùng chuyển mic cho Ân hoặc trong phần demo live của nhóm, Ân sẽ trực tiếp mở màn hình Admin Dashboard (`/admin/dashboard`) và trình bày dõng dạc theo kịch bản:
+
+*"Thưa quý Thầy Cô, bên cạnh việc giám sát các chỉ số kỹ thuật như số Chunks tài liệu hay lượt gọi AI RAG, một sản phẩm SaaS thương mại hoàn chỉnh bắt buộc phải có phân hệ **Quản trị Tài chính và Cổng Thanh Toán Trực Tuyến**.*
+
+*Nhóm 2 chúng em đã tích hợp thành công cổng thanh toán **VNPay Sandbox 2.1.0** với mã định danh kết nối chính thức `AYM70LAS`. Ngay trên màn hình **Admin Command Center**, quý Thầy Cô có thể thấy:*
+1. *Thẻ KPI **Doanh thu VNPay** tổng hợp tức thời: Hiện tại hệ thống ghi nhận tổng doanh thu, tự động phân tách theo gói Pro 49.000đ và gói Squad 129.000đ, cùng doanh thu phát sinh trong ngày hôm nay.*
+2. *Bảng **Lịch Sử Đơn Hàng & Doanh Thu**: Lưu vết minh bạch từng giao dịch, bao gồm mã đơn hàng nội bộ `TxnRef`, tài khoản sinh viên, số tiền, ngân hàng thanh toán và đặc biệt là **Mã giao dịch đối soát của VNPay**.*
+3. *Em cũng tích hợp tính năng **Xuất Báo Cáo Doanh Thu ra file CSV** chuẩn định dạng UTF-8 BOM, giúp kế toán hoặc người quản trị tải về và mở ngay trên Microsoft Excel mà không hề bị lỗi font tiếng Việt.*
+4. *Để chứng minh tính minh bạch tuyệt đối, em xin phép mở **Cổng Quản Trị VNPay Merchant Portal** tại địa chỉ `sandbox.vnpayment.vn/merchantv2` — toàn bộ mã giao dịch trên StudyHub đều khớp chính xác 1-1 với máy chủ thanh toán của VNPay!*
+
+*Tiếp theo, về mặt chất lượng mã nguồn, toàn bộ phân hệ thanh toán và hệ thống đã vượt qua trọn vẹn **333 bài kiểm thử tự động**, sẵn sàng vận hành thực chiến!"*
+
+---
+
+### ✅ 5. CRITERIA NGHIỆM THU DÀNH CHO ÂN (ACCEPTANCE CRITERIA)
+1. **Thanh toán mượt mà**: Thao tác thanh toán gói Pro hoặc Squad bằng thẻ test NCB thành công 100%, không phát sinh lỗi 72 hay lỗi kết nối.
+2. **Nhảy số thời gian thực**: Khi đơn hàng thanh toán thành công, thẻ KPI Doanh thu trên `/admin/dashboard` tự động cộng dồn số tiền tương ứng, danh sách đơn hàng cập nhật ngay lập tức.
+3. **Quản lý hạn gói sinh viên**: Trang `/profile` của sinh viên hiển thị chính xác ngày hết hạn gói cước (`tierExpiresAt`) và hiển thị đầy đủ bảng lịch sử hóa đơn thanh toán cá nhân.
+4. **Xuất file CSV chuẩn đẹp**: Bấm nút "Xuất CSV Đối Soát" tải về file `.csv`, mở bằng Excel thấy đầy đủ dấu tiếng Việt, không bị mã hóa ký tự lạ.
+5. **Đối soát 1-1**: Mã giao dịch `vnpayTransactionNo` hiển thị trên bảng khớp hoàn toàn với mã giao dịch tra cứu trên cổng `sandbox.vnpayment.vn/merchantv2`.

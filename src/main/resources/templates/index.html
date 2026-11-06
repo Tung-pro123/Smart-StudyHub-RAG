@@ -650,10 +650,24 @@
                                 <i class="fa-solid fa-crown text-amber-300"></i> Đang Kích Hoạt Gói PRO
                             </button>
                         </div>
-                        <div th:unless="${isProUser}">
-                            <form th:action="@{/auth/upgrade-pro}" method="post">
-                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-black border-none shadow-md shadow-purple-500/25">
-                                    <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Gói Pro
+                        <div th:unless="${isProUser}" class="space-y-2">
+                            <form th:action="@{/payment/create-vnpay}" method="post">
+                                <input type="hidden" name="tier" value="PRO">
+                                <input type="hidden" name="bankCode" value="NCB">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-black border-none shadow-md shadow-purple-500/25 flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-credit-card"></i> VNPay ATM NCB · 49k
+                                </button>
+                            </form>
+                            <form th:action="@{/payment/create-vnpay}" method="post">
+                                <input type="hidden" name="tier" value="PRO">
+                                <input type="hidden" name="bankCode" value="VISA">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-slate-900 hover:bg-slate-800 text-white font-bold border-none shadow-sm flex items-center justify-center gap-1.5">
+                                    <i class="fa-brands fa-cc-visa text-amber-400"></i> VNPay Thẻ Visa · 49k
+                                </button>
+                            </form>
+                            <form th:action="@{/auth/upgrade-pro}" method="post" class="text-center pt-1">
+                                <button type="submit" class="text-[11px] text-slate-400 hover:text-purple-600 underline font-medium">
+                                    Kích hoạt nhanh không qua cổng (Demo)
                                 </button>
                             </form>
                         </div>
@@ -708,16 +722,83 @@
                                 <i class="fa-solid fa-users text-cyan-200"></i> Đang Kích Hoạt Gói Nhóm
                             </button>
                         </div>
-                        <div th:unless="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}">
-                            <form th:action="@{/auth/upgrade-squad}" method="post">
-                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:opacity-95 text-white font-bold border-none shadow-md shadow-cyan-500/20">
-                                    <i class="fa-solid fa-user-group mr-1"></i> Kích Hoạt Gói Nhóm
+                        <div th:unless="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}" class="space-y-2">
+                            <form th:action="@{/payment/create-vnpay}" method="post">
+                                <input type="hidden" name="tier" value="SQUAD">
+                                <input type="hidden" name="bankCode" value="NCB">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:opacity-95 text-white font-black border-none shadow-md shadow-cyan-500/20 flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-credit-card"></i> VNPay ATM NCB · 129k
+                                </button>
+                            </form>
+                            <form th:action="@{/payment/create-vnpay}" method="post">
+                                <input type="hidden" name="tier" value="SQUAD">
+                                <input type="hidden" name="bankCode" value="VISA">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-slate-900 hover:bg-slate-800 text-white font-bold border-none shadow-sm flex items-center justify-center gap-1.5">
+                                    <i class="fa-brands fa-cc-visa text-cyan-300"></i> VNPay Thẻ Visa · 129k
+                                </button>
+                            </form>
+                            <form th:action="@{/auth/upgrade-squad}" method="post" class="text-center pt-1">
+                                <button type="submit" class="text-[11px] text-slate-400 hover:text-cyan-600 underline font-medium">
+                                    Kích hoạt nhanh không qua cổng (Demo)
                                 </button>
                             </form>
                         </div>
                     </div>
                 </div>
 
+            </div>
+
+            <!-- BẢNG THÔNG TIN THẺ TEST VNPAY SANDBOX (COPY 1-CLICK PHỤC VỤ THUYẾT TRÌNH DEMO) -->
+            <div class="mt-8 p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-slate-800 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="badge badge-warning badge-sm font-bold text-amber-950 bg-amber-200 border-none">SANDBOX DEMO</span>
+                        <span class="font-extrabold text-sm text-amber-950">Thông tin thẻ Test VNPay phục vụ chấm điểm &amp; Demo</span>
+                    </div>
+                    <span class="text-[11px] text-amber-800 font-medium">Sao chép nhanh bằng 1 click</span>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-3 text-xs">
+                    <!-- Thẻ ATM NCB -->
+                    <div class="p-3 rounded-xl bg-white border border-amber-200/80 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-900 flex items-center gap-1.5">
+                                <i class="fa-solid fa-building-columns text-indigo-600"></i> Thẻ ATM Nội Địa NCB
+                            </span>
+                            <span class="badge badge-ghost badge-xs font-mono font-semibold">OTP: 123456</span>
+                        </div>
+                        <div class="space-y-1 font-mono text-[11px] text-slate-600">
+                            <div class="flex items-center justify-between bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-200">
+                                <span>Số thẻ: <strong class="text-slate-900 select-all">9704198526191432198</strong></span>
+                                <button type="button" onclick="navigator.clipboard.writeText('9704198526191432198'); alert('Đã chép số thẻ ATM NCB: 9704198526191432198')" class="btn btn-ghost btn-xs text-indigo-600 hover:bg-indigo-50 font-sans font-bold">Chép</button>
+                            </div>
+                            <div class="flex items-center justify-between px-1 text-[11px]">
+                                <span>Tên: <strong class="text-slate-800">NGUYEN VAN A</strong></span>
+                                <span>Ngày PH: <strong class="text-slate-800">07/15</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thẻ VISA Quốc Tế -->
+                    <div class="p-3 rounded-xl bg-white border border-amber-200/80 shadow-sm space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-900 flex items-center gap-1.5">
+                                <i class="fa-brands fa-cc-visa text-blue-600 text-sm"></i> Thẻ Quốc Tế Visa
+                            </span>
+                            <span class="badge badge-ghost badge-xs font-mono font-semibold">OTP: 123456</span>
+                        </div>
+                        <div class="space-y-1 font-mono text-[11px] text-slate-600">
+                            <div class="flex items-center justify-between bg-slate-50 px-2 py-1.5 rounded-lg border border-slate-200">
+                                <span>Số thẻ: <strong class="text-slate-900 select-all">4456530000001005</strong></span>
+                                <button type="button" onclick="navigator.clipboard.writeText('4456530000001005'); alert('Đã chép số thẻ Visa: 4456530000001005')" class="btn btn-ghost btn-xs text-blue-600 hover:bg-blue-50 font-sans font-bold">Chép</button>
+                            </div>
+                            <div class="flex items-center justify-between px-1 text-[11px]">
+                                <span>Hết hạn: <strong class="text-slate-800">12/26</strong></span>
+                                <span>CVV: <strong class="text-slate-800">123</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Footer Note -->

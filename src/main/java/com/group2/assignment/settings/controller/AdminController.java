@@ -3,6 +3,7 @@ package com.group2.assignment.settings.controller;
 import com.group2.assignment.auth.controller.AuthController;
 import com.group2.assignment.auth.entity.User;
 import com.group2.assignment.auth.repository.UserRepository;
+import com.group2.assignment.payment.repository.PaymentTransactionRepository;
 import com.group2.assignment.settings.SettingsConstants;
 import com.group2.assignment.settings.dto.PingResponseDto;
 import com.group2.assignment.settings.service.*;
@@ -18,6 +19,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import com.group2.assignment.payment.entity.PaymentTransaction;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,6 +36,7 @@ public class AdminController {
     private final AdminAnalyticsService analytics;
     private final SubscriptionQuotaService quota;
     private final SystemAiKeyService systemKey;
+    private final PaymentTransactionRepository paymentTransactionRepository;
     @org.springframework.beans.factory.annotation.Value("${settings.gemini.model:${studyhub.ai.model:gemini-2.5-flash}}")
     private String geminiModel;
 
@@ -70,6 +79,18 @@ public class AdminController {
         model.addAttribute("recentCourses", analytics.getRecentCourses());
         model.addAttribute("ping", systemKey.getLastPing());
         model.addAttribute("geminiModel", geminiModel);
+        Long totalRevenue = paymentTransactionRepository.getTotalRevenue();
+        Long totalPaidOrders = paymentTransactionRepository.countByStatus("SUCCESS");
+        Long proRevenue = paymentTransactionRepository.getRevenueByTier("PRO");
+        Long squadRevenue = paymentTransactionRepository.getRevenueByTier("SQUAD");
+        LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).atStartOfDay();
+        Long todayRevenue = paymentTransactionRepository.getRevenueSince(startOfDay);
+        model.addAttribute("totalRevenue", totalRevenue != null ? totalRevenue : 0L);
+        model.addAttribute("totalPaidOrders", totalPaidOrders != null ? totalPaidOrders : 0L);
+        model.addAttribute("proRevenue", proRevenue != null ? proRevenue : 0L);
+        model.addAttribute("squadRevenue", squadRevenue != null ? squadRevenue : 0L);
+        model.addAttribute("todayRevenue", todayRevenue != null ? todayRevenue : 0L);
+        model.addAttribute("recentTransactions", paymentTransactionRepository.findTop20ByOrderByCreatedAtDesc());
         return "admin/dashboard";
     }
 
@@ -170,5 +191,31 @@ public class AdminController {
         PingResponseDto ping = systemKey.testPing();
         redirect.addFlashAttribute(ping.success() ? "successMessage" : "errorMessage", ping.message());
         return "redirect:/admin/settings";
+    }
+
+    /**
+     * Xuất toàn bộ lịch sử giao dịch VNPay ra file CSV để đối soát tài chính
+     */
+    @GetMapping(value = "/revenue/export-csv")
+    @ResponseBody
+    public ResponseEntity<String> exportRevenueCsv() {
+        StringBuilder csv = new StringBuilder();
+        csv.append('\ufeff'); // UTF-8 BOM cho Excel tiếng Việt
+        csv.append("Mã Đơn Hàng (TxnRef),Sinh Viên,Gói Cước,Số Tiền (VNĐ),Ngân Hàng,Mã GD VNPay,Trạng Thái,Thời Gian\n");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        for (PaymentTransaction tx : paymentTransactionRepository.findAllByOrderByCreatedAtDesc()) {
+            csv.append('"').append(tx.getTxnRef() != null ? tx.getTxnRef() : "").append("\",")
+               .append('"').append(tx.getUsername() != null ? tx.getUsername() : "").append("\",")
+               .append('"').append(tx.getTargetTier() != null ? tx.getTargetTier() : "").append("\",")
+               .append(tx.getAmount() != null ? tx.getAmount() : 0).append(',')
+               .append('"').append(tx.getBankCode() != null ? tx.getBankCode() : "VNPay").append("\",")
+               .append('"').append(tx.getVnpayTransactionNo() != null ? tx.getVnpayTransactionNo() : "").append("\",")
+               .append('"').append(tx.getStatus() != null ? tx.getStatus() : "").append("\",")
+               .append('"').append(tx.getCreatedAt() != null ? tx.getCreatedAt().format(dtf) : "").append("\"\n");
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"vnpay-transactions-report.csv\"")
+                .header(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
+                .body(csv.toString());
     }
 }

@@ -6,7 +6,7 @@
 ---
 
 ### [SLIDE 9 — BÓC TÁCH PDF & PHÂN MẢNH CHUNKS] (~60 giây)
-"Em xin cảm ơn bạn Trường. Kính chào Thầy Cô và các bạn, em là **Nguyễn Văn Gia Bình**, phụ trách bộ máy RAG AI và xử lý tài liệu PDF.
+"Em xin cảm ơn anh Tùng. Kính chào Thầy Cô và các bạn, em là **Nguyễn Văn Gia Bình**, phụ trách bộ máy RAG AI và xử lý tài liệu PDF.
 
 Để xây dựng một trợ lý AI học tập thực sự hữu ích, bài toán đầu tiên là làm sao đưa được toàn bộ kiến thức từ hàng trăm trang giáo trình vào hệ thống. Nhóm em đã sử dụng thư viện **Apache PDFBox 3.0.3** để đọc và trích xuất từng trang văn bản từ file PDF mà sinh viên tải lên.
 
