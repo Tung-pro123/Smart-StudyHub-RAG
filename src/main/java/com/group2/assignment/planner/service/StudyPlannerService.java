@@ -95,7 +95,12 @@ public class StudyPlannerService {
         List<Chunk> chunks = chunkRepository.findAllByCourseId(dto.getCourseId());
         String contextText = chunks.stream()
                 .map(Chunk::getContent)
+                .filter(content -> content != null && !content.isBlank())
                 .collect(Collectors.joining("\n\n"));
+
+        if (contextText.isBlank()) {
+            throw new StudySourceMissingException();
+        }
 
         // 4. Gọi Gemini API để sinh Timeline
         List<Map<String, Object>> timelineData;

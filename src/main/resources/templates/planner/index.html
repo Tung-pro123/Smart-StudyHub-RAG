@@ -21,6 +21,11 @@
     <div th:if="${error}" class="alert alert-error rounded-2xl border border-rose-200 bg-rose-50 text-rose-700 shadow-sm">
         <i class="fa-solid fa-circle-exclamation"></i>
         <span th:text="${error}">Lỗi!</span>
+        <a th:if="${missingSourceCourseId != null}"
+           th:href="@{/courses/{courseId}/documents(courseId=${missingSourceCourseId})}"
+           class="btn btn-sm ml-auto rounded-xl border-rose-300 bg-white text-rose-700 hover:bg-rose-100">
+            Thêm tài liệu môn học
+        </a>
     </div>
 
     <!-- Main Content: 2 Columns -->
