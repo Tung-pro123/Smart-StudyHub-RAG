@@ -58,7 +58,7 @@
                         Quản Lý Tài Liệu &amp; Cắt Chunks Giáo Trình
                     </h1>
                     <p class="text-xs text-slate-500 mt-1 max-w-xl leading-relaxed">
-                        Nạp slide bài giảng và sách giáo trình PDF để tự động chia tách đoạn tri thức cho RAG AI.
+                        Tải slide bài giảng, giáo trình PDF lên để hệ thống tách thành các đoạn nội dung phục vụ hỏi đáp.
                     </p>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                     <div class="flex items-baseline gap-1.5 mt-0.5">
                         <p class="text-2xl font-black" th:classappend="${isDocLimitReached} ? 'text-rose-600' : 'text-slate-900'" th:text="${totalDocuments}">0</p>
                         <span th:if="${!isPro}" class="text-xs font-medium text-slate-400" th:text="'/ ' + ${maxDocsFree} + ' file'">/ 3 file</span>
-                        <span th:if="${isPro}" class="text-xs font-bold text-indigo-600">/ Vô hạn</span>
+                        <span th:if="${isPro}" class="text-xs font-bold text-indigo-600">/ Không giới hạn</span>
                     </div>
                 </div>
                 <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm">
@@ -106,7 +106,7 @@
     <!-- Main Grid: Upload Zone (Left) & Document Management (Right) -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
 
-        <!-- Column 1: Drag & Drop Upload Zone (White-Card Palette) -->
+        <!-- Column 1: Upload Zone -->
         <div class="lg:col-span-1 space-y-6">
             <div class="rounded-3xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
                 <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
@@ -146,7 +146,7 @@
                         <i class="fa-solid fa-crown text-amber-500 text-sm"></i>
                         <span class="text-xs font-bold text-slate-800">Gói PRO / SQUAD</span>
                     </div>
-                    <span class="px-2.5 py-0.5 rounded-md bg-indigo-600 text-white text-[10px] font-black uppercase tracking-wider">TẢI VÔ HẠN</span>
+                    <span class="px-2.5 py-0.5 rounded-md bg-indigo-600 text-white text-[10px] font-black uppercase tracking-wider">KHÔNG GIỚI HẠN</span>
                 </div>
 
                 <!-- Warning when Limit Reached on Free Tier -->
@@ -156,7 +156,7 @@
                     </div>
                     <h3 class="text-xs font-black text-rose-700 uppercase tracking-wider">Đã Đạt Giới Hạn 3 Tài Liệu</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">
-                        Gói Free giới hạn tối đa 3 file PDF / môn. Vui lòng xóa bớt tài liệu cũ hoặc nâng cấp lên gói Pro để tải trọn bộ giáo trình không giới hạn!
+                        Gói Free giới hạn tối đa 3 file PDF / môn. Vui lòng xóa bớt tài liệu cũ hoặc nâng cấp lên gói Pro để tải thêm tài liệu.
                     </p>
                     <a th:href="@{/courses}" class="btn btn-sm w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-xs gap-2">
                         <i class="fa-solid fa-bolt text-amber-300"></i>
@@ -201,12 +201,12 @@
                 <!-- Processing Tips Note -->
                 <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-xs text-slate-500 flex items-start gap-2">
                     <i class="fa-solid fa-circle-info text-indigo-500 mt-0.5 text-xs"></i>
-                    <span>Tự động phân đoạn văn bản thông minh (300 - 500 từ/chunk) gắn kèm số trang đối chứng.</span>
+                    <span>Tự động chia tách đoạn văn bản (300 - 500 từ/chunk) gắn kèm số trang đối chứng.</span>
                 </div>
             </div>
         </div>
 
-        <!-- Column 2 & 3: Document Table & Chunk Visualizer (White-Card Palette) -->
+        <!-- Column 2 & 3: Document Table & Chunk Visualizer -->
         <div class="lg:col-span-2 space-y-6">
 
             <!-- Documents Table Card -->

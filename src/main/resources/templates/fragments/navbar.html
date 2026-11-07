@@ -2,14 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="navbar" class="navbar bg-white/80 backdrop-blur-md sticky top-0 z-40 px-4 md:px-8 border-b border-slate-200/80 shadow-sm">
-    <!-- Mobile Drawer Open Button -->
     <div class="flex-none lg:hidden">
         <label for="main-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost text-slate-700">
             <i class="fa-solid fa-bars text-xl"></i>
         </label>
     </div>
 
-    <!-- Mobile Brand Logo (Chỉ hiển thị trên mobile khi sidebar ẩn) -->
     <div class="flex-1 lg:hidden items-center gap-2">
         <a th:href="@{/}" class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
@@ -19,29 +17,15 @@
         </a>
     </div>
 
-    <!-- Desktop Title / Breadcrumb (Bên trái của Topbar trên desktop) -->
-    <div class="flex-1 hidden lg:flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Hệ Thống Học Tập</span>
-        <span class="text-slate-300">/</span>
-        <h2 class="font-extrabold text-sm text-slate-800">StudyHub AI Dashboard</h2>
-    </div>
+    <div class="flex-1 hidden lg:flex"></div>
 
-    <!-- Quick Action Buttons (Bên phải Topbar) -->
     <div class="flex-none flex items-center gap-2.5">
-        <!-- Nút Tạo Môn Học Nhanh -->
         <button th:if="${(canCreateCourse == null or canCreateCourse) and (session.currentUser == null or session.currentUser.role != 'ROLE_ADMIN')}" 
                 onclick="const m = document.getElementById('modal-create-course'); if(m) m.showModal(); else window.location.href='/courses';" 
                 class="btn btn-sm bg-slate-900 hover:bg-indigo-600 text-white border-none rounded-xl text-xs font-semibold shadow-xs hidden sm:inline-flex gap-1.5">
             <i class="fa-solid fa-plus text-[11px]"></i> Tạo Môn Mới
         </button>
 
-        <!-- Nút Bảng Giá Nhanh -->
-        <a th:href="@{/pricing}" th:if="${session.currentUser == null or session.currentUser.role != 'ROLE_ADMIN'}"
-                class="btn btn-sm btn-ghost text-slate-600 hover:text-indigo-600 rounded-xl text-xs font-bold hidden md:inline-flex gap-1.5">
-            <i class="fa-solid fa-gem text-amber-500 text-[11px]"></i> Gói Cước
-        </a>
-
-        <!-- Theme Controller (DaisyUI) -->
         <div class="flex-none ml-1">
             <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm text-slate-600">
                 <input type="checkbox" class="theme-controller" value="synthwave" />
@@ -50,7 +34,6 @@
             </label>
         </div>
 
-        <!-- User Profile Dropdown -->
         <div class="flex-none ml-1">
             <div th:if="${session.currentUser != null}" class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar ring-2 ring-indigo-500/30">
@@ -64,7 +47,7 @@
                         <div class="flex items-center justify-between">
                             <span class="font-extrabold text-slate-900 text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
                             <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge badge-info badge-xs text-[9px] font-bold">SQUAD</span>
-                            <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.subscriptionTier != 'SQUAD' and session.currentUser.subscriptionTier != 'CAMPUS'}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
+                            <span th:if="${session.currentUser.subscriptionTier == 'PRO'}" class="badge badge-secondary badge-xs text-[9px] font-bold">PRO</span>
                             <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
                         </div>
                         <span class="text-[10px] text-slate-400 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>

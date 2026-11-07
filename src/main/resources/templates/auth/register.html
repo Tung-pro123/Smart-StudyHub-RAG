@@ -5,103 +5,69 @@
 
 <div class="min-h-screen w-full flex flex-col lg:flex-row">
 
-    <!-- 1. CỘT TRÁI (HERO BRAND PANEL - 50% DESKTOP): ĐỒNG BỘ 100% VỚI NỀN TỐI & MÀU SẮC LANDING PAGE -->
+    <!-- Cột trái (Banner) -->
     <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#030712] via-[#090d16] to-[#0f172a] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
-        <!-- Hiệu ứng ánh sáng đa chiều Cyber Cyan & Violet (Đồng bộ Landing Page) -->
         <div class="absolute -top-32 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- Header: Logo & Tên Hệ Thống (Đồng bộ Navbar Landing Page) -->
+        <!-- Header: Logo -->
         <div class="relative z-10">
             <a th:href="@{/}" class="inline-flex items-center gap-3 group">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-purple-500/30 group-hover:scale-105 transition-transform">
                     <i class="fa-solid fa-graduation-cap text-lg"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-extrabold text-xl text-white tracking-tight">StudyHub AI</span>
-                        <span class="badge badge-xs bg-purple-500/20 text-purple-300 border border-purple-400/30 text-[9px] font-mono">v2.4</span>
-                    </div>
-                    <p class="text-[11px] text-gray-400 font-semibold tracking-wide">Smart Multi-Course Hub &amp; RAG AI</p>
+                    <span class="font-extrabold text-xl text-white tracking-tight">StudyHub AI</span>
+                    <p class="text-[11px] text-gray-400 font-semibold tracking-wide">Nền tảng học tập theo giáo trình</p>
                 </div>
             </a>
         </div>
 
-        <!-- Center: Nội Dung Trọng Tâm & Lợi Ích Thành Viên -->
+        <!-- Center: Nội dung giới thiệu -->
         <div class="relative z-10 space-y-8 my-auto py-8">
             <div class="space-y-3 max-w-lg">
                 <h1 class="text-3xl xl:text-4xl font-black text-white leading-tight tracking-tight">
-                    Khởi tạo không gian<br />
-                    Tự học <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">Thông Minh &amp; Đột Phá.</span>
+                    Tạo tài khoản<br />
+                    <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">StudyHub AI.</span>
                 </h1>
                 <p class="text-sm text-gray-300 leading-relaxed font-normal">
-                    Đăng ký tài khoản miễn phí để nạp tài liệu PDF, quản lý môn học linh hoạt và kích hoạt trợ lý AI đồng hành ôn thi triệt tiêu hoàn toàn ảo giác.
+                    Gói miễn phí gồm tối đa 3 môn học, 3 tài liệu PDF mỗi môn và 50 câu hỏi AI mỗi ngày.
                 </p>
             </div>
 
-            <!-- Thẻ Lợi Ích Gói Tự Học Free -->
-            <div class="rounded-2xl p-5 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl space-y-3 max-w-md">
-                <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300">
-                            <i class="fa-solid fa-gift text-sm"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-xs font-bold text-white">Gói Tự Học Miễn Phí (Free Tier)</h4>
-                            <p class="text-[10px] text-gray-400">Kích hoạt tức thì ngay sau đăng ký</p>
-                        </div>
+            <!-- Danh sách tính năng chính -->
+            <div class="space-y-4 max-w-md pt-2">
+                <div class="flex items-center gap-3 text-sm text-gray-200">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-purple-300 shrink-0">
+                        <i class="fa-solid fa-book-bookmark text-xs"></i>
                     </div>
-                    <span class="badge badge-xs bg-purple-500/20 text-purple-300 font-black text-[9px] border border-purple-500/30 px-2 py-1">FREE FOREVER</span>
+                    <span>Quản lý môn học và tải lên slide PDF</span>
                 </div>
-                
-                <ul class="space-y-2 text-xs text-gray-200 font-medium">
-                    <li class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-400 text-xs shrink-0"></i>
-                        <span>Quản lý tối đa <strong>3 môn học</strong> tùy biến linh hoạt</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-400 text-xs shrink-0"></i>
-                        <span>Tự nạp slide PDF và cắt đoạn thông minh (Chunks)</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="fa-solid fa-check text-emerald-400 text-xs shrink-0"></i>
-                        <span>Hỏi đáp AI giáo trình <strong>50 câu hỏi/ngày</strong> có trích dẫn số trang</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- 3 Badges Tiện Ích Chuẩn -->
-            <div class="grid grid-cols-3 gap-3 max-w-md">
-                <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
-                    <p class="text-xs font-bold text-white">100% Miễn Phí</p>
-                    <p class="text-[10px] text-gray-400">Không cần thẻ tín dụng</p>
+                <div class="flex items-center gap-3 text-sm text-gray-200">
+                    <div class="w-8 h-8 rounded-lg bg-pink-500/20 border border-pink-400/30 flex items-center justify-center text-pink-300 shrink-0">
+                        <i class="fa-solid fa-comments text-xs"></i>
+                    </div>
+                    <span>Hỏi đáp với AI, câu trả lời kèm số trang trích dẫn</span>
                 </div>
-                <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
-                    <p class="text-xs font-bold text-white">Riêng Tư</p>
-                    <p class="text-[10px] text-gray-400">Dữ liệu phân lập tuyệt đối</p>
-                </div>
-                <div class="p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-center space-y-1">
-                    <p class="text-xs font-bold text-white">Nhanh Chóng</p>
-                    <p class="text-[10px] text-gray-400">Kích hoạt trong 30 giây</p>
+                <div class="flex items-center gap-3 text-sm text-gray-200">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-400/30 flex items-center justify-center text-cyan-300 shrink-0">
+                        <i class="fa-solid fa-calendar-check text-xs"></i>
+                    </div>
+                    <span>Lập lịch học và luyện đề trắc nghiệm</span>
                 </div>
             </div>
         </div>
 
-        <!-- Footer Cột Trái -->
-        <div class="relative z-10 flex items-center justify-between text-[11px] text-gray-400 pt-4 border-t border-white/10">
-            <span>Chính sách bảo mật • Điều khoản học tập</span>
-            <span>HSF302 - Fall 2026</span>
-        </div>
+        <div></div>
     </div>
 
-    <!-- 2. CỘT PHẢI (REGISTER FORM PANEL - 50% DESKTOP): NỀN TRẮNG TINH KHIẾT -->
+    <!-- Cột phải (Form) -->
     <div class="w-full lg:w-1/2 bg-white flex flex-col justify-between p-6 sm:p-12 xl:p-16 overflow-y-auto">
         <!-- Nút Quay Lại Trang Chủ -->
         <div class="flex items-center justify-between">
             <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-purple-600 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay lại Trang Chủ
             </a>
-            <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Hỗ trợ sinh viên 24/7</span>
         </div>
 
         <!-- Hộp Form Đăng Ký Căn Giữa -->
@@ -109,7 +75,7 @@
             <!-- Tiêu đề Form -->
             <div class="space-y-1.5">
                 <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Đăng ký tài khoản</h2>
-                <p class="text-xs text-slate-500">Tạo tài khoản học tập cá nhân của bạn trên StudyHub AI.</p>
+                <p class="text-xs text-slate-500">Nhập thông tin để tạo tài khoản.</p>
             </div>
 
             <!-- Flash Thông Báo Lỗi -->
@@ -148,7 +114,7 @@
                     <label class="label p-0"><span class="label-text font-bold text-xs text-slate-700">Địa Chỉ Email *</span></label>
                     <div class="relative">
                         <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="email" th:field="*{email}" required placeholder="student@fpt.edu.vn hoặc cá nhân" 
+                        <input type="email" th:field="*{email}" required placeholder="student@fpt.edu.vn" 
                                class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-purple-600 focus:ring-1 focus:ring-purple-600 transition" />
                     </div>
                 </div>
@@ -182,17 +148,16 @@
                     </div>
                 </div>
 
-                <!-- Nút Đăng Ký Chính: Gradient Tím-Hồng ĐỒNG BỘ 100% VỚI NÚT LANDING PAGE -->
+                <!-- Nút Đăng Ký Chính -->
                 <button type="submit" class="btn h-11 bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl border-none shadow-lg shadow-purple-500/25 text-xs transition-all w-full flex items-center justify-center gap-2 mt-3">
-                    <span>Hoàn Tất Đăng Ký Tài Khoản</span>
-                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                    <span>Đăng Ký</span>
                 </button>
             </form>
 
-            <!-- Divider: Hoặc đăng ký nhanh -->
+            <!-- Divider: Hoặc -->
             <div class="flex items-center gap-3 my-4">
                 <div class="flex-1 h-px bg-slate-200"></div>
-                <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Hoặc đăng ký nhanh với</span>
+                <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Hoặc</span>
                 <div class="flex-1 h-px bg-slate-200"></div>
             </div>
 
@@ -206,21 +171,18 @@
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                     </svg>
-                    <span>Đăng ký nhanh bằng Google</span>
+                    <span>Đăng ký bằng Google</span>
                 </a>
             </div>
 
             <!-- Chuyển Sang Đăng Nhập -->
             <div class="text-center text-xs text-slate-500 pt-2">
                 Đã có tài khoản? 
-                <a th:href="@{/login}" class="font-bold text-purple-600 hover:text-pink-600 hover:underline ml-1">Đăng nhập tại đây &gt;</a>
+                <a th:href="@{/login}" class="font-bold text-purple-600 hover:text-pink-600 hover:underline ml-1">Đăng nhập</a>
             </div>
         </div>
 
-        <!-- Footer Cột Phải -->
-        <div class="text-center text-[11px] text-slate-400 pt-4">
-            Smart Multi-Course Study Hub &amp; RAG AI • Assignment HSF302
-        </div>
+        <div></div>
     </div>
 
 </div>

@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-black text-slate-800 tracking-tight">AI Quiz Generator & Thi Thử</h1>
-                    <p class="text-xs text-slate-500 mt-0.5">Tự động sinh đề trắc nghiệm chuẩn A/B/C/D từ file PDF giáo trình bằng Google Gemini & PDFBox</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Tự động sinh đề trắc nghiệm A/B/C/D từ tài liệu PDF của môn học.</p>
                 </div>
             </div>
         </div>
@@ -284,7 +284,7 @@
 
         <div class="bg-white rounded-3xl border border-purple-100 shadow-sm overflow-hidden">
             <div th:if="${#lists.isEmpty(squadLeaderboard)}" class="p-8 text-center text-slate-400 text-xs">
-                Chưa có thành viên nào trong nhóm làm bài thi môn này. Hãy là người đầu tiên bứt phá điểm số!
+                Chưa có thành viên nào trong nhóm làm bài thi môn này. Hãy là người đầu tiên làm bài.
             </div>
             <div th:unless="${#lists.isEmpty(squadLeaderboard)}" class="overflow-x-auto">
                 <table class="table text-xs w-full">
@@ -402,7 +402,7 @@
                 <div class="space-y-1">
                     <h4 class="font-extrabold text-sm text-amber-900">Môn học này chưa có tài liệu giáo trình!</h4>
                     <p class="text-xs text-amber-700 max-w-sm mx-auto leading-relaxed">
-                        Để đảm bảo dữ liệu học tập đồng bộ, bạn cần tải tài liệu PDF lên Kho tài liệu của môn học trước khi sử dụng tính năng tạo đề trắc nghiệm.
+                        Bạn cần tải tài liệu PDF lên môn học trước khi tạo đề.
                     </p>
                 </div>
                 <div class="pt-2 flex justify-center gap-2">
