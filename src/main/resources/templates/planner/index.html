@@ -168,12 +168,11 @@
                     <p class="text-xs text-slate-500 max-w-xs leading-relaxed">
                         Phân bổ lộ trình ôn thi theo tuần chỉ dành cho Gói Pro. Nâng cấp để AI tự động xếp lịch học vừa sức với bạn.
                     </p>
-                    <button type="button"
-                            onclick="document.getElementById('modal-pricing-upgrade').showModal()"
+                    <a th:href="@{/pricing}"
                             class="btn btn-sm h-10 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black border-none shadow-lg shadow-purple-500/30">
                         <i class="fa-solid fa-bolt mr-1"></i>
                         Nâng cấp Gói Pro chỉ 49k/tháng
-                    </button>
+                    </a>
                     <p class="text-[11px] text-slate-400">Bao gồm RAG không giới hạn, Flashcards &amp; không giới hạn môn học</p>
                 </div>
             </div>
@@ -273,90 +272,7 @@
         </div>
     </div>
 
-    <!-- Modal nâng cấp gói Pro -->
-    <dialog id="modal-pricing-upgrade" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box max-w-lg p-6 sm:p-8 rounded-3xl bg-slate-950 text-slate-100 border border-purple-500/30 shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
-
-            <button type="button" onclick="document.getElementById('modal-pricing-upgrade').close()"
-                    class="btn btn-sm btn-circle btn-ghost text-slate-400 hover:text-white absolute right-4 top-4 z-20">✕</button>
-
-            <div class="relative z-10 text-center space-y-3">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold">
-                    <i class="fa-solid fa-bolt text-amber-400"></i> NÂNG CẤP GÓI PRO
-                </div>
-                <h3 class="text-2xl font-black text-white">Mở khóa AI Study Planner</h3>
-                <p class="text-sm text-slate-400">
-                    Chỉ <span class="text-white font-bold">49.000đ/tháng</span> (~$2) để AI tự động phân bổ lộ trình ôn thi theo đúng lịch rảnh của bạn.
-                </p>
-            </div>
-
-            <ul class="relative z-10 mt-6 space-y-3 text-sm text-slate-200">
-                <li class="flex items-start gap-2.5">
-                    <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
-                    <span>AI Study Planner: Timeline học tập cá nhân hóa theo tuần/ngày</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
-                    <span>Chat RAG với giáo trình không giới hạn 50 câu/ngày</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <i class="fa-solid fa-circle-check text-pink-400 mt-0.5"></i>
-                    <span>Không giới hạn số môn học &amp; mở khóa Flashcards</span>
-                </li>
-            </ul>
-
-            <div class="relative z-10 mt-7 flex flex-col gap-2.5">
-                <form th:action="@{/payment/create-vnpay}" method="post">
-                    <input type="hidden" name="tier" value="PRO">
-                    <input type="hidden" name="bankCode" value="NCB">
-                    <button type="submit"
-                            class="btn rounded-xl w-full bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black border-none shadow-lg shadow-purple-500/40 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-credit-card text-amber-300"></i> Thanh toán VNPay ATM NCB · 49k
-                    </button>
-                </form>
-                <form th:action="@{/payment/create-vnpay}" method="post">
-                    <input type="hidden" name="tier" value="PRO">
-                    <input type="hidden" name="bankCode" value="VISA">
-                    <button type="submit"
-                            class="btn rounded-xl w-full bg-slate-900 hover:bg-slate-800 text-white font-bold border border-slate-700 shadow-sm flex items-center justify-center gap-2">
-                        <i class="fa-brands fa-cc-visa text-amber-400 text-lg"></i> Thanh toán VNPay Thẻ Visa · 49k
-                    </button>
-                </form>
-                <div class="p-3 rounded-xl bg-slate-900/80 border border-purple-500/30 text-xs space-y-1.5 text-left">
-                    <div class="flex items-center justify-between font-bold text-amber-300 text-[11px]">
-                        <span>Thẻ Test VNPay (NCB): 9704198526191432198</span>
-                        <span class="badge badge-ghost badge-xs text-white">OTP: 123456</span>
-                    </div>
-                    <div class="flex items-center justify-between text-[11px] text-slate-400">
-                        <span>Tên: NGUYEN VAN A</span>
-                        <span>Ngày PH: 07/15</span>
-                        <button type="button" onclick="navigator.clipboard.writeText('9704198526191432198'); alert('Đã chép số thẻ ATM NCB!')" class="text-purple-400 hover:text-purple-300 underline font-bold">Chép thẻ</button>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between pt-1">
-                    <form th:action="@{/auth/upgrade-pro}" method="post">
-                        <button type="submit" class="text-[11px] text-slate-400 hover:text-purple-300 underline font-medium">
-                            Kích hoạt nhanh (Demo)
-                        </button>
-                    </form>
-                    <a th:href="@{/courses}" class="text-[11px] text-slate-400 hover:text-white underline">
-                        Bảng giá 3 gói đầy đủ
-                    </a>
-                </div>
-            </div>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-            <button>close</button>
-        </form>
-    </dialog>
-
-    <script th:if="${showUpgradeModal}">
-        window.addEventListener('DOMContentLoaded', function () {
-            var modal = document.getElementById('modal-pricing-upgrade');
-            if (modal) modal.showModal();
-        });
-    </script>
+    <a th:if="${showUpgradeModal}" th:href="@{/pricing}" class="btn btn-warning rounded-xl">Xem gói cước để mở khóa AI Study Planner</a>
 </section>
 </body>
 </html>

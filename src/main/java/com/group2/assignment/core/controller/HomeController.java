@@ -5,6 +5,7 @@ import com.group2.assignment.auth.entity.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -36,5 +37,12 @@ public class HomeController {
             return "redirect:/admin/dashboard";
         }
         return "redirect:/courses";
+    }
+
+    @GetMapping("/pricing")
+    public String pricing(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute(AuthController.SESSION_USER);
+        model.addAttribute("isProUser", currentUser != null && currentUser.isPro());
+        return "pricing";
     }
 }
