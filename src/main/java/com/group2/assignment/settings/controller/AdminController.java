@@ -37,7 +37,7 @@ public class AdminController {
     private final SubscriptionQuotaService quota;
     private final SystemAiKeyService systemKey;
     private final PaymentTransactionRepository paymentTransactionRepository;
-    @org.springframework.beans.factory.annotation.Value("${settings.gemini.model:${studyhub.ai.model:gemini-2.5-flash}}")
+    @org.springframework.beans.factory.annotation.Value("${settings.gemini.model:${studyhub.ai.model:gemini-3.5-flash-lite}}")
     private String geminiModel;
 
     @ModelAttribute
