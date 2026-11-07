@@ -2,6 +2,7 @@ package com.group2.assignment.planner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.group2.assignment.auth.entity.User;
+import com.group2.assignment.core.entity.Chunk;
 import com.group2.assignment.core.entity.Course;
 import com.group2.assignment.core.repository.ChunkRepository;
 import com.group2.assignment.core.repository.CourseRepository;
@@ -81,7 +82,9 @@ class StudyPlannerServiceSquadTest {
                 .build();
 
         when(courseRepository.findById(10L)).thenReturn(Optional.of(course));
-        when(chunkRepository.findAllByCourseId(10L)).thenReturn(List.of());
+        when(chunkRepository.findAllByCourseId(10L)).thenReturn(List.of(
+                Chunk.builder().content("JPA and Spring Framework course material").build()
+        ));
         when(systemAiKeyService.getApiKey()).thenReturn(null);
         when(studyPlanRepository.save(any(StudyPlan.class))).thenAnswer(invocation -> {
             StudyPlan plan = invocation.getArgument(0);
