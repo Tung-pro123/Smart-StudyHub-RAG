@@ -7,7 +7,7 @@
 - Giao diện Modern Glassmorphism (Tailwind CSS + DaisyUI) cho trang quản lý tài liệu, Drag & Drop Upload, Chunk Visualizer (`documents.html`) và màn hình Chatbot giáo trình bất đồng bộ (`chat.html`).  
 - Bộ điều hướng Spring MVC & REST API (`DocumentController.java`, `ChatController.java`).  
 - Bộ kiểm thử tự động toàn diện (`PdfChunkingServiceTest.java`, `RagEngineServiceTest.java`, `DocumentControllerTest.java`).  
-**Công cụ AI sử dụng**: Google Antigravity / Gemini 1.5 Pro / Claude 3.5 Sonnet
+**Công cụ AI sử dụng**: Google Antigravity
 
 ---
 

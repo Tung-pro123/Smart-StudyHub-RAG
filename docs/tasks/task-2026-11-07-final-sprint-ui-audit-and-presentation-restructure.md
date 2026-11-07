@@ -95,7 +95,7 @@ Chúng ta đang bước vào giai đoạn quyết định cuối cùng trước 
   * Thuật toán phân đoạn thông minh: Cắt đoạn 300 - 500 từ theo ranh giới câu, lưu Metadata số trang và môn học vào `ChunkRepository`.
 * **Slide 10: Cơ Chế Vector Context Grounding & Gemini Flash Chat**
   * Thuật toán RAG: Tìm kiếm Chunks liên quan ghép vào Prompt của Google Gemini Flash.
-  * Cam kết **0% ảo giác (Zero Hallucination)**: AI chỉ trả lời dựa trên giáo trình được nạp.
+  * Cam kết **giảm ảo giác (Zero Hallucination)**: AI chỉ trả lời dựa trên giáo trình được nạp.
 * **Slide 11: Thẻ Trích Dẫn Đối Chứng (Citation Cards) & Đa Phiên Hội Thoại (Multi-Session)**
   * Citation Cards: Hiển thị rõ tên file PDF và số trang cụ thể để sinh viên lật sách đối chứng.
   * Quản lý đa phiên chat độc lập theo môn học, tự động kiểm soát quota 50 câu/ngày cho gói Free.

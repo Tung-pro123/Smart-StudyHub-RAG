@@ -334,17 +334,10 @@
                                 <div class="bg-slate-50 border border-slate-200/90 text-slate-800 rounded-2xl rounded-tl-xs p-4 text-xs sm:text-sm leading-relaxed shadow-xs space-y-3 w-full">
                                     <div class="markdown-body ai-markdown-content" th:attr="data-raw=${msg.content}" th:text="${msg.content}">Nội dung câu trả lời AI</div>
 
-                                    <!-- Expandable Citations -->
+                                    <!-- Expandable Citations with Nested Source Toggles -->
                                     <div th:if="${msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
-                                         class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
-                                        <input type="checkbox" /> 
-                                        <div class="collapse-title text-[11px] font-semibold text-indigo-700 flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
-                                            <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
-                                            <span>📚 Ngữ cảnh trích xuất từ tài liệu</span>
-                                        </div>
-                                        <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2"> 
-                                            <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] overflow-x-auto whitespace-pre-wrap leading-relaxed" th:text="${msg.ragContext}">Trích đoạn</pre>
-                                        </div>
+                                         class="chat-citations-wrapper mt-2" 
+                                         th:attr="data-raw-context=${msg.ragContext}">
                                     </div>
                                 </div>
                             </div>
@@ -448,6 +441,17 @@
             const rawContent = el.getAttribute('data-raw');
             if (rawContent) {
                 el.innerHTML = renderMarkdownContent(rawContent);
+            }
+        });
+
+        // Tự động render danh sách Nguồn trích dẫn dạng toggle cho các tin nhắn đã lưu
+        document.querySelectorAll('.chat-citations-wrapper').forEach(function(wrapper) {
+            const rawContext = wrapper.getAttribute('data-raw-context');
+            if (rawContext) {
+                const citations = parseRawContextToCitations(rawContext);
+                if (citations && citations.length > 0) {
+                    wrapper.innerHTML = createCitationsHtml(citations);
+                }
             }
         });
 
@@ -610,30 +614,82 @@
             wrapper.insertBefore(messageDiv, typingIndicator);
         }
 
+        function createCitationsHtml(citations) {
+            if (!citations || citations.length === 0) return '';
+
+            const itemsHtml = citations.map((c, idx) => {
+                const fileName = escapeHtml(c.documentFileName || 'Tài liệu giáo trình');
+                const pageNum = c.pageNumber != null ? c.pageNumber : (idx + 1);
+                const snippet = escapeHtml(c.snippet || '');
+
+                return `
+                    <div class="collapse collapse-arrow bg-slate-50 border border-slate-200/90 rounded-xl text-xs overflow-hidden transition-all duration-200">
+                        <input type="checkbox" />
+                        <div class="collapse-title py-2 px-3 pr-8 min-h-0 text-[11px] flex items-center gap-2 font-medium hover:bg-slate-100/70 cursor-pointer select-none">
+                            <i class="fa-solid fa-file-pdf text-rose-500 text-xs flex-shrink-0"></i>
+                            <span class="font-bold text-slate-800 flex-shrink-0">Nguồn ${idx + 1}:</span>
+                            <span class="text-slate-600 truncate max-w-[170px] sm:max-w-xs" title="${fileName}">${fileName}</span>
+                            <span class="badge badge-xs bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold ml-auto flex-shrink-0">Trang ${pageNum}</span>
+                        </div>
+                        <div class="collapse-content px-3 pb-3 pt-1 border-t border-slate-200/60 bg-white">
+                            <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-64 overflow-y-auto leading-relaxed border border-slate-800">${snippet}</pre>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs shadow-2xs">
+                    <input type="checkbox" /> 
+                    <div class="collapse-title text-[11px] font-bold text-indigo-700 flex items-center gap-2 py-2 px-3 pr-10 min-h-0 cursor-pointer select-none">
+                        <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
+                        <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} nguồn)</span>
+                    </div>
+                    <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2 pb-3 px-3 space-y-2">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function parseRawContextToCitations(rawText) {
+            if (!rawText) return [];
+            try {
+                const parsed = JSON.parse(rawText);
+                if (Array.isArray(parsed)) return parsed;
+            } catch (e) {
+                // Tiếp tục parse định dạng text
+            }
+
+            const blocks = rawText.split(/\n\n?--------------------\n\n?/).map(b => b.trim()).filter(Boolean);
+            const results = [];
+
+            blocks.forEach((block, idx) => {
+                const match = block.match(/^\[#(?:Chunk|Nguồn)\s*(\d+)\s*\|\s*(.*?)\s*-\s*Trang\s*(\d+)\]\s*\n?([\s\S]*)$/i);
+                if (match) {
+                    results.push({
+                        documentFileName: match[2].trim(),
+                        pageNumber: parseInt(match[3]),
+                        snippet: match[4].trim()
+                    });
+                } else if (!block.startsWith('Bạn là Trợ lý Giảng viên AI')) {
+                    results.push({
+                        documentFileName: 'Tài liệu giáo trình',
+                        pageNumber: idx + 1,
+                        snippet: block
+                    });
+                }
+            });
+
+            return results;
+        }
+
         function appendAiMessage(answer, citations) {
             const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const messageDiv = document.createElement('div');
             messageDiv.className = 'flex justify-start gap-3 items-start my-3 animate-fade-in';
 
-            let citationsHtml = '';
-            if (citations && citations.length > 0) {
-                let snippetsHtml = citations.map(c => 
-                    `[#Chunk ${c.chunkIndex} | ${escapeHtml(c.documentFileName || 'Tài liệu')} - Trang ${c.pageNumber}]\n${escapeHtml(c.snippet)}`
-                ).join('\n\n--------------------\n\n');
-
-                citationsHtml = `
-                    <div class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
-                        <input type="checkbox" /> 
-                        <div class="collapse-title text-[11px] font-semibold text-indigo-700 flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
-                            <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
-                            <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} đoạn Chunks)</span>
-                        </div>
-                        <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2">
-                            <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto leading-relaxed">${snippetsHtml}</div>
-                        </div>
-                    </div>
-                `;
-            }
+            const citationsHtml = (citations && citations.length > 0) ? createCitationsHtml(citations) : '';
 
             messageDiv.innerHTML = `
                 <div class="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">

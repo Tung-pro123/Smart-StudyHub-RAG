@@ -141,6 +141,19 @@ class RagEngineServiceTest {
     }
 
     @Test
+    @DisplayName("Dựng Clean RAG Context chỉ lưu dẫn chứng Chunks, không lộ System Prompt")
+    void testBuildCleanRagContext() {
+        List<Chunk> chunks = chunkRepository.findAllByCourseId(sampleCourse.getId());
+        String cleanContext = ragEngineService.buildCleanRagContext(chunks);
+
+        assertNotNull(cleanContext);
+        assertTrue(cleanContext.contains("Spring_In_Action.pdf"));
+        assertTrue(cleanContext.contains("Trang 5"));
+        assertFalse(cleanContext.contains("Bạn là Trợ lý Giảng viên AI chuyên nghiệp"));
+        assertFalse(cleanContext.contains("Quy tắc:"));
+    }
+
+    @Test
     @DisplayName("Dựng danh sách Citations đầy đủ thông tin trang và tên file")
     void testBuildCitations() {
         List<Chunk> chunks = chunkRepository.findAllByCourseId(sampleCourse.getId());
