@@ -1,182 +1,182 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="common-head(title)">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
-    <title th:text="${title} ?: 'Smart Multi-Course Study Hub & RAG AI - FPT University'">Study Hub AI - FPT University</title>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="referrer" content="no-referrer">
+ <title th:text="${title} ?: 'Smart Multi-Course Study Hub & RAG AI - FPT University'">Study Hub AI - FPT University</title>
 
-    <!-- Google Sans Font CDN + Vietnamese Fallback (Be Vietnam Pro) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.cdnfonts.com">
-    <link href="https://fonts.cdnfonts.com/css/google-sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+ <!-- Google Sans Font CDN + Vietnamese Fallback (Be Vietnam Pro) -->
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link rel="preconnect" href="https://fonts.cdnfonts.com">
+ <link href="https://fonts.cdnfonts.com/css/google-sans" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- DaisyUI v4 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+ <!-- DaisyUI v4 CDN -->
+ <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
 
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+ <!-- Tailwind CSS Play CDN -->
+ <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+ <!-- Font Awesome Icons -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Tailwind Configuration: FPT Orange-to-Warm-Amber Theme (#F27123 -> #FF9800 / #FFB03A) -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Google Sans"', '"Be Vietnam Pro"', 'sans-serif'],
-                    },
-                    colors: {
-                        fpt: {
-                            orange: '#F27123',
-                            'orange-light': '#FF8A3D',
-                            'orange-dark': '#D45B12',
-                            'orange-soft': '#FFF4ED',
-                            amber: '#FF9800',
-                            'amber-light': '#FFB03A',
-                            'amber-soft': '#FFF9E6',
-                            green: '#51B748',
-                            'green-light': '#66CA5D',
-                            'green-soft': '#EDF7ED',
-                        },
-                        // Core Primary is FPT Orange (#F27123)
-                        primary: {
-                            DEFAULT: '#F27123',
-                            focus: '#D45B12',
-                            50: '#FFF5EE',
-                            100: '#FEE5D5',
-                            500: '#F27123',
-                            600: '#D45B12',
-                        },
-                        // Secondary is Warm Amber / Gold (#FF9800)
-                        secondary: {
-                            DEFAULT: '#FF9800',
-                            focus: '#E68900',
-                            50: '#FFF8E1',
-                            100: '#FFECB3',
-                            500: '#FF9800',
-                            600: '#E68900',
-                        },
-                        accent: {
-                            DEFAULT: '#51B748',
-                            focus: '#3F9638',
-                            50: '#EDF7ED',
-                            100: '#D5EDD4',
-                            500: '#51B748',
-                            600: '#3F9638',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+ <!-- Tailwind Configuration: FPT Orange-to-Warm-Amber Theme (#F27123 -> #FF9800 / #FFB03A) -->
+ <script>
+ tailwind.config = {
+ theme: {
+ extend: {
+ fontFamily: {
+ sans: ['"Google Sans"', '"Be Vietnam Pro"', 'sans-serif'],
+ },
+ colors: {
+ fpt: {
+ orange: '#F27123',
+ 'orange-light': '#FF8A3D',
+ 'orange-dark': '#D45B12',
+ 'orange-soft': '#FFF4ED',
+ amber: '#FF9800',
+ 'amber-light': '#FFB03A',
+ 'amber-soft': '#FFF9E6',
+ green: '#51B748',
+ 'green-light': '#66CA5D',
+ 'green-soft': '#EDF7ED',
+ },
+ // Core Primary is FPT Orange (#F27123)
+ primary: {
+ DEFAULT: '#F27123',
+ focus: '#D45B12',
+ 50: '#FFF5EE',
+ 100: '#FEE5D5',
+ 500: '#F27123',
+ 600: '#D45B12',
+ },
+ // Secondary is Warm Amber / Gold (#FF9800)
+ secondary: {
+ DEFAULT: '#FF9800',
+ focus: '#E68900',
+ 50: '#FFF8E1',
+ 100: '#FFECB3',
+ 500: '#FF9800',
+ 600: '#E68900',
+ },
+ accent: {
+ DEFAULT: '#51B748',
+ focus: '#3F9638',
+ 50: '#EDF7ED',
+ 100: '#D5EDD4',
+ 500: '#51B748',
+ 600: '#3F9638',
+ }
+ }
+ }
+ }
+ }
+ </script>
 
-    <!-- Custom FPT Brand Glassmorphism & Orange-to-Amber Gradients -->
-    <style>
-        * {
-            font-family: 'Google Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+ <!-- Custom FPT Brand Glassmorphism & Orange-to-Amber Gradients -->
+ <style>
+ * {
+ font-family: 'Google Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+ }
 
-        /* FPT Warm Canvas (No Blue, purely Orange to Warm Amber) */
-        body {
-            font-family: 'Google Sans', 'Be Vietnam Pro', sans-serif;
-            background-color: #FAFAF9;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(242, 113, 35, 0.08) 0px, transparent 45%),
-                radial-gradient(at 100% 0%, rgba(255, 176, 58, 0.09) 0px, transparent 45%),
-                radial-gradient(at 100% 100%, rgba(242, 113, 35, 0.06) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(255, 152, 0, 0.07) 0px, transparent 50%);
-            background-attachment: fixed;
-        }
+ /* FPT Warm Canvas (No Blue, purely Orange to Warm Amber) */
+ body {
+ font-family: 'Google Sans', 'Be Vietnam Pro', sans-serif;
+ background-color: #FAFAF9;
+ background-image: 
+ radial-gradient(at 0% 0%, rgba(242, 113, 35, 0.08) 0px, transparent 45%),
+ radial-gradient(at 100% 0%, rgba(255, 176, 58, 0.09) 0px, transparent 45%),
+ radial-gradient(at 100% 100%, rgba(242, 113, 35, 0.06) 0px, transparent 50%),
+ radial-gradient(at 0% 100%, rgba(255, 152, 0, 0.07) 0px, transparent 50%);
+ background-attachment: fixed;
+ }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(242, 113, 35, 0.15);
-            box-shadow: 0 10px 30px -5px rgba(242, 113, 35, 0.06);
-        }
+ .glass-card {
+ background: rgba(255, 255, 255, 0.88);
+ backdrop-filter: blur(16px);
+ -webkit-backdrop-filter: blur(16px);
+ border: 1px solid rgba(242, 113, 35, 0.15);
+ box-shadow: 0 10px 30px -5px rgba(242, 113, 35, 0.06);
+ }
 
-        .glass-card-hover {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card-hover:hover {
-            transform: translateY(-2px);
-            border-color: rgba(242, 113, 35, 0.4);
-            box-shadow: 0 14px 34px -5px rgba(242, 113, 35, 0.15);
-        }
+ .glass-card-hover {
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+ }
+ .glass-card-hover:hover {
+ transform: translateY(-2px);
+ border-color: rgba(242, 113, 35, 0.4);
+ box-shadow: 0 14px 34px -5px rgba(242, 113, 35, 0.15);
+ }
 
-        /* FPT Core Brand Gradients: Orange -> Warm Golden Amber */
-        .bg-fpt-gradient {
-            background: linear-gradient(135deg, #F27123 0%, #FF8A3D 50%, #FFB03A 100%);
-        }
-        .bg-fpt-gradient-reverse {
-            background: linear-gradient(135deg, #FFB03A 0%, #FF8A3D 50%, #F27123 100%);
-        }
-        .bg-fpt-orange-soft {
-            background: linear-gradient(135deg, #FFF5EE 0%, #FFF8E1 100%);
-        }
+ /* FPT Core Brand Gradients: Orange -> Warm Golden Amber */
+ .bg-fpt-gradient {
+ background: linear-gradient(135deg, #F27123 0%, #FF8A3D 50%, #FFB03A 100%);
+ }
+ .bg-fpt-gradient-reverse {
+ background: linear-gradient(135deg, #FFB03A 0%, #FF8A3D 50%, #F27123 100%);
+ }
+ .bg-fpt-orange-soft {
+ background: linear-gradient(135deg, #FFF5EE 0%, #FFF8E1 100%);
+ }
 
-        .text-fpt-gradient {
-            background: linear-gradient(135deg, #F27123 0%, #FF8A3D 60%, #FFA834 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+ .text-fpt-gradient {
+ background: linear-gradient(135deg, #F27123 0%, #FF8A3D 60%, #FFA834 100%);
+ -webkit-background-clip: text;
+ -webkit-text-fill-color: transparent;
+ }
 
-        /* FPT Core Buttons */
-        .btn-fpt-primary {
-            background: linear-gradient(135deg, #F27123 0%, #FF8A3D 100%);
-            color: #ffffff;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-fpt-primary:hover {
-            background: linear-gradient(135deg, #D45B12 0%, #F27123 100%);
-            box-shadow: 0 4px 16px rgba(242, 113, 35, 0.35);
-        }
+ /* FPT Core Buttons */
+ .btn-fpt-primary {
+ background: linear-gradient(135deg, #F27123 0%, #FF8A3D 100%);
+ color: #ffffff;
+ border: none;
+ transition: all 0.2s ease;
+ }
+ .btn-fpt-primary:hover {
+ background: linear-gradient(135deg, #D45B12 0%, #F27123 100%);
+ box-shadow: 0 4px 16px rgba(242, 113, 35, 0.35);
+ }
 
-        .btn-fpt-secondary {
-            background-color: #FF9800;
-            color: #ffffff;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-fpt-secondary:hover {
-            background-color: #E68900;
-            box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
-        }
+ .btn-fpt-secondary {
+ background-color: #FF9800;
+ color: #ffffff;
+ border: none;
+ transition: all 0.2s ease;
+ }
+ .btn-fpt-secondary:hover {
+ background-color: #E68900;
+ box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
+ }
 
-        .btn-fpt-accent {
-            background-color: #51B748;
-            color: #ffffff;
-            border: none;
-            transition: all 0.2s ease;
-        }
-        .btn-fpt-accent:hover {
-            background-color: #3F9638;
-            box-shadow: 0 4px 14px rgba(81, 183, 72, 0.35);
-        }
+ .btn-fpt-accent {
+ background-color: #51B748;
+ color: #ffffff;
+ border: none;
+ transition: all 0.2s ease;
+ }
+ .btn-fpt-accent:hover {
+ background-color: #3F9638;
+ box-shadow: 0 4px 14px rgba(81, 183, 72, 0.35);
+ }
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FDF8F5;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #FED7AA;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #F27123;
-        }
-    </style>
+ /* Scrollbar Styling */
+ ::-webkit-scrollbar {
+ width: 8px;
+ height: 8px;
+ }
+ ::-webkit-scrollbar-track {
+ background: #FDF8F5;
+ }
+ ::-webkit-scrollbar-thumb {
+ background: #FED7AA;
+ border-radius: 9999px;
+ }
+ ::-webkit-scrollbar-thumb:hover {
+ background: #F27123;
+ }
+ </style>
 </head>
 </html>
 

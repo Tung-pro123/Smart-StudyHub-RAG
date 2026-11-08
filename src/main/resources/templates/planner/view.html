@@ -1,293 +1,293 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/main :: main-layout('Chi tiết kế hoạch - Smart Study Hub', ~{::section})}">
+ th:replace="~{layout/main :: main-layout('Chi tiết kế hoạch - Smart Study Hub', ~{::section})}">
 <body>
 <section class="space-y-8 max-w-5xl mx-auto pb-16">
-    <style>
-        .week-tab[data-active="true"] {
-            background-image: linear-gradient(90deg, #9333ea, #7c3aed, #db2777);
-            color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.25);
-        }
-        .task-toggle[data-completed="true"] {
-            background-color: #d1fae5;
-            color: #047857;
-            border-color: #a7f3d0;
-        }
-        .task-toggle[data-completed="false"] {
-            background-color: #ffffff;
-            color: #475569;
-            border-color: #e2e8f0;
-        }
-        .task-card[data-completed="true"] {
-            background-color: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-        .task-title[data-completed="true"] {
-            text-decoration: line-through;
-            color: #059669;
-        }
-        #plan-status-badge[data-status="COMPLETED"] {
-            background-color: #d1fae5;
-            color: #047857;
-        }
-        #plan-status-badge[data-status="ACTIVE"] {
-            background-color: #e0e7ff;
-            color: #4338ca;
-        }
-        @media print {
-            nav, .no-print { display: none !important; }
-        }
-    </style>
+ <style>
+ .week-tab[data-active="true"] {
+ background-image: linear-gradient(90deg, #9333ea, #7c3aed, #db2777);
+ color: #ffffff;
+ border-color: transparent;
+ box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.25);
+ }
+ .task-toggle[data-completed="true"] {
+ background-color: #d1fae5;
+ color: #047857;
+ border-color: #a7f3d0;
+ }
+ .task-toggle[data-completed="false"] {
+ background-color: #ffffff;
+ color: #475569;
+ border-color: #e2e8f0;
+ }
+ .task-card[data-completed="true"] {
+ background-color: #f0fdf4;
+ border-color: #bbf7d0;
+ }
+ .task-title[data-completed="true"] {
+ text-decoration: line-through;
+ color: #059669;
+ }
+ #plan-status-badge[data-status="COMPLETED"] {
+ background-color: #d1fae5;
+ color: #047857;
+ }
+ #plan-status-badge[data-status="ACTIVE"] {
+ background-color: #e0e7ff;
+ color: #4338ca;
+ }
+ @media print {
+ nav, .no-print { display: none !important; }
+ }
+ </style>
 
-    <!-- Breadcrumb -->
-    <nav class="text-sm">
-        <ul class="flex items-center gap-2">
-            <li><a th:href="@{/planner}" class="text-[#51B748] hover:underline"><i class="fa-solid fa-calendar-days mr-1"></i>Study Planner</a></li>
-            <li class="text-slate-300"><i class="fa-solid fa-chevron-right text-xs"></i></li>
-            <li class="text-slate-500">Chi tiết kế hoạch</li>
-        </ul>
-    </nav>
+ <!-- Breadcrumb -->
+ <nav class="text-sm">
+ <ul class="flex items-center gap-2">
+ <li><a th:href="@{/planner}" class="text-[#51B748] hover:underline"><i class="fa-solid fa-calendar-days mr-1"></i>Study Planner</a></li>
+ <li class="text-slate-300"><i class="fa-solid fa-chevron-right text-xs"></i></li>
+ <li class="text-slate-500">Chi tiết kế hoạch</li>
+ </ul>
+ </nav>
 
-    <div th:if="${success}" class="alert alert-success rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm">
-        <i class="fa-solid fa-check-circle"></i>
-        <span th:text="${success}">Thành công!</span>
-    </div>
-    <div th:if="${error}" class="alert alert-error rounded-2xl border border-rose-200 bg-rose-50 text-rose-700 shadow-sm">
-        <i class="fa-solid fa-circle-exclamation"></i>
-        <span th:text="${error}">Lỗi!</span>
-    </div>
+ <div th:if="${success}" class="alert alert-success rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm">
+ <i class="fa-solid fa-check-circle"></i>
+ <span th:text="${success}">Thành công!</span>
+ </div>
+ <div th:if="${error}" class="alert alert-error rounded-lg border border-rose-200 bg-rose-50 text-rose-700 shadow-sm">
+ <i class="fa-solid fa-circle-exclamation"></i>
+ <span th:text="${error}">Lỗi!</span>
+ </div>
 
-    <!-- Plan Header Card -->
-    <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-2xl p-5">
-        <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-            <div class="min-w-0">
-                <h1 class="font-black text-slate-900 tracking-tight text-xl md:text-2xl break-words" th:text="${plan.title}">
-                    Kế hoạch ôn thi HSF302
-                </h1>
-                <div class="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
-                    <span th:if="${plan.course != null}">
-                        <i class="fa-solid fa-book mr-1 text-[#F27123]"></i>
-                        <span th:text="${plan.course.name}">Tên môn</span>
-                        (<span th:text="${plan.course.code}">Mã</span>)
-                    </span>
-                    <span>
-                        <i class="fa-solid fa-clock mr-1 text-[#F27123]"></i>
-                        <span th:text="${plan.hoursPerWeek}">6</span> giờ/tuần
-                    </span>
-                    <span th:if="${plan.examDate != null}">
-                        <i class="fa-solid fa-calendar-check mr-1 text-[#F27123]"></i>
-                        Thi: <span th:text="${#temporals.format(plan.examDate, 'dd/MM/yyyy')}">20/12/2024</span>
-                    </span>
-                    <span th:if="${plan.targetGrade != null}">
-                        <i class="fa-solid fa-bullseye mr-1 text-pink-500"></i>
-                        Mục tiêu điểm: <span class="font-bold text-slate-700" th:text="${plan.targetGrade}">A</span>
-                    </span>
-                </div>
-                <p th:if="${plan.goal != null and !#strings.isEmpty(plan.goal)}" class="mt-3 text-xs text-slate-600 leading-relaxed">
-                    <i class="fa-solid fa-bullseye mr-2 text-[#51B748]"></i>
-                    <span th:text="${plan.goal}">Mục tiêu điểm 8+</span>
-                </p>
-            </div>
+ <!-- Plan Header Card -->
+ <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-lg p-5">
+ <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+ <div class="min-w-0">
+ <h1 class="font-black text-slate-900 tracking-tight text-xl md:text-2xl break-words" th:text="${plan.title}">
+ Kế hoạch ôn thi HSF302
+ </h1>
+ <div class="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
+ <span th:if="${plan.course != null}">
+ <i class="fa-solid fa-book mr-1 text-[#F27123]"></i>
+ <span th:text="${plan.course.name}">Tên môn</span>
+ (<span th:text="${plan.course.code}">Mã</span>)
+ </span>
+ <span>
+ <i class="fa-solid fa-clock mr-1 text-[#F27123]"></i>
+ <span th:text="${plan.hoursPerWeek}">6</span> giờ/tuần
+ </span>
+ <span th:if="${plan.examDate != null}">
+ <i class="fa-solid fa-calendar-check mr-1 text-[#F27123]"></i>
+ Thi: <span th:text="${#temporals.format(plan.examDate, 'dd/MM/yyyy')}">20/12/2024</span>
+ </span>
+ <span th:if="${plan.targetGrade != null}">
+ <i class="fa-solid fa-bullseye mr-1 text-pink-500"></i>
+ Mục tiêu điểm: <span class="font-bold text-slate-700" th:text="${plan.targetGrade}">A</span>
+ </span>
+ </div>
+ <p th:if="${plan.goal != null and !#strings.isEmpty(plan.goal)}" class="mt-3 text-xs text-slate-600 leading-relaxed">
+ <i class="fa-solid fa-bullseye mr-2 text-[#51B748]"></i>
+ <span th:text="${plan.goal}">Mục tiêu điểm 8+</span>
+ </p>
+ </div>
 
-            <div class="flex flex-col items-start md:items-end gap-2 shrink-0">
-                <span id="plan-status-badge" class="badge badge-sm font-bold border-none px-3"
-                      th:attr="data-status=${plan.status}"
-                      th:text="${plan.status}">ACTIVE</span>
-                <div class="text-left md:text-right">
-                    <div class="text-2xl font-black text-[#51B748]" id="plan-progress-text" th:text="${plan.progressPercent + '%'}">0%</div>
-                    <div class="text-[11px] text-slate-400">tiến độ</div>
-                </div>
-            </div>
-        </div>
+ <div class="flex flex-col items-start md:items-end gap-2 shrink-0">
+ <span id="plan-status-badge" class="badge badge-sm font-bold border-none px-3"
+ th:attr="data-status=${plan.status}"
+ th:text="${plan.status}">ACTIVE</span>
+ <div class="text-left md:text-right">
+ <div class="text-2xl font-black text-[#51B748]" id="plan-progress-text" th:text="${plan.progressPercent + '%'}">0%</div>
+ <div class="text-[11px] text-slate-400">tiến độ</div>
+ </div>
+ </div>
+ </div>
 
-        <!-- Progress Bar -->
-        <div class="mt-4 h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
-            <div id="plan-progress-bar"
-                 class="h-full rounded-full bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748] transition-all duration-500"
-                 th:style="|width:${plan.progressPercent}%|"></div>
-        </div>
+ <!-- Progress Bar -->
+ <div class="mt-4 h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
+ <div id="plan-progress-bar"
+ class="h-full rounded-full bg-[#F27123] hover:bg-[#D45B12] transition-all duration-500"
+ th:style="|width:${plan.progressPercent}%|"></div>
+ </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap gap-2 mt-4 no-print">
-            <a th:href="@{/planner}" class="btn btn-sm h-10 px-4 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 rounded-xl font-semibold transition-all">
-                <i class="fa-solid fa-arrow-left mr-1"></i>Quay lại
-            </a>
-            <button class="btn btn-sm h-10 px-4 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 rounded-xl font-semibold transition-all" onclick="window.print()">
-                <i class="fa-solid fa-print mr-1"></i>In kế hoạch
-            </button>
-        </div>
-    </div>
+ <!-- Action Buttons -->
+ <div class="flex flex-wrap gap-2 mt-4 no-print">
+ <a th:href="@{/planner}" class="btn btn-sm h-10 px-4 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 rounded-xl font-semibold transition-all">
+ <i class="fa-solid fa-arrow-left mr-1"></i>Quay lại
+ </a>
+ <button class="btn btn-sm h-10 px-4 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 rounded-xl font-semibold transition-all" onclick="window.print()">
+ <i class="fa-solid fa-print mr-1"></i>In kế hoạch
+ </button>
+ </div>
+ </div>
 
-    <!-- Weekly Plan Section -->
-    <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-2xl p-5">
-        <h2 class="font-black text-slate-900 tracking-tight text-lg mb-4 flex items-center">
-            <i class="fa-solid fa-list-check mr-2 text-[#51B748]"></i>
-            Lộ trình học tập theo tuần
-        </h2>
+ <!-- Weekly Plan Section -->
+ <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-lg p-5">
+ <h2 class="font-black text-slate-900 tracking-tight text-lg mb-4 flex items-center">
+ <i class="fa-solid fa-list-check mr-2 text-[#51B748]"></i>
+ Lộ trình học tập theo tuần
+ </h2>
 
-        <div th:if="${tasks == null or #lists.isEmpty(tasks)}" class="text-center py-12 text-slate-400">
-            <i class="fa-regular fa-calendar-xmark text-5xl mb-4"></i>
-            <p class="text-lg font-semibold">Chưa có nhiệm vụ nào</p>
-        </div>
+ <div th:if="${tasks == null or #lists.isEmpty(tasks)}" class="text-center py-12 text-slate-400">
+ <i class="fa-regular fa-calendar-xmark text-5xl mb-4"></i>
+ <p class="text-lg font-semibold">Chưa có nhiệm vụ nào</p>
+ </div>
 
-        <div th:unless="${tasks == null or #lists.isEmpty(tasks)}">
-            <!-- Week Tabs -->
-            <div class="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Chọn tuần học">
-                <button th:each="entry, stat : ${tasksByWeek}"
-                        type="button"
-                        class="week-tab btn btn-sm h-10 px-4 rounded-xl font-bold border border-slate-200 bg-slate-100 text-slate-600 transition-all"
-                        role="tab"
-                        th:data-week="${entry.key}"
-                        th:attr="data-active=${stat.index == 0},aria-selected=${stat.index == 0}">
-                    Tuần <span th:text="${entry.key}">1</span>
-                    <span class="ml-1 text-[10px] font-semibold opacity-70" th:text="${#lists.size(entry.value)} + ' việc'">0 việc</span>
-                </button>
-            </div>
+ <div th:unless="${tasks == null or #lists.isEmpty(tasks)}">
+ <!-- Week Tabs -->
+ <div class="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Chọn tuần học">
+ <button th:each="entry, stat : ${tasksByWeek}"
+ type="button"
+ class="week-tab btn btn-sm h-10 px-4 rounded-xl font-bold border border-slate-200 bg-slate-100 text-slate-600 transition-all"
+ role="tab"
+ th:data-week="${entry.key}"
+ th:attr="data-active=${stat.index == 0},aria-selected=${stat.index == 0}">
+ Tuần <span th:text="${entry.key}">1</span>
+ <span class="ml-1 text-[10px] font-semibold opacity-70" th:text="${#lists.size(entry.value)} + ' việc'">0 việc</span>
+ </button>
+ </div>
 
-            <!-- Week Panels -->
-            <div th:each="entry, stat : ${tasksByWeek}"
-                 class="week-panel space-y-3"
-                 th:data-week="${entry.key}"
-                 th:style="${stat.index == 0} ? '' : 'display:none'"
-                 role="tabpanel">
-                <div th:each="task : ${entry.value}"
-                     class="task-card rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-sm transition-all"
-                     th:data-task-card="${task.id}"
-                     th:attr="data-completed=${task.isCompleted}">
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="min-w-0">
-                            <h3 class="task-title font-bold text-sm text-slate-800"
-                                th:data-task-title="${task.id}"
-                                th:attr="data-completed=${task.isCompleted}"
-                                th:text="${task.taskTitle}">Ôn tập Spring Core</h3>
-                            <p class="text-xs text-slate-500 mt-1 leading-relaxed" th:text="${task.taskDescription}">
-                                Tìm hiểu @Component, @Autowired
-                            </p>
-                        </div>
-                        <button type="button"
-                                class="task-toggle toggle-task btn btn-sm h-9 px-3 rounded-xl border font-bold shrink-0 transition-all"
-                                th:data-task-id="${task.id}"
-                                th:attr="data-completed=${task.isCompleted}"
-                                th:classappend="${task.isCompleted} ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-white text-slate-600 border-slate-200'">
-                            <i class="fa-solid mr-1.5" th:classappend="${task.isCompleted} ? 'fa-circle-check' : 'fa-circle'"></i>
-                            <span th:text="${task.isCompleted} ? 'Hoàn thành' : 'Chưa xong'">Chưa xong</span>
-                        </button>
-                    </div>
+ <!-- Week Panels -->
+ <div th:each="entry, stat : ${tasksByWeek}"
+ class="week-panel space-y-3"
+ th:data-week="${entry.key}"
+ th:style="${stat.index == 0} ? '' : 'display:none'"
+ role="tabpanel">
+ <div th:each="task : ${entry.value}"
+ class="task-card rounded-lg border border-slate-200/80 bg-white/95 p-4 shadow-sm transition-all"
+ th:data-task-card="${task.id}"
+ th:attr="data-completed=${task.isCompleted}">
+ <div class="flex items-start justify-between gap-3">
+ <div class="min-w-0">
+ <h3 class="task-title font-bold text-sm text-slate-800"
+ th:data-task-title="${task.id}"
+ th:attr="data-completed=${task.isCompleted}"
+ th:text="${task.taskTitle}">Ôn tập Spring Core</h3>
+ <p class="text-xs text-slate-500 mt-1 leading-relaxed" th:text="${task.taskDescription}">
+ Tìm hiểu @Component, @Autowired
+ </p>
+ </div>
+ <button type="button"
+ class="task-toggle toggle-task btn btn-sm h-9 px-3 rounded-xl border font-bold shrink-0 transition-all"
+ th:data-task-id="${task.id}"
+ th:attr="data-completed=${task.isCompleted}"
+ th:classappend="${task.isCompleted} ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-white text-slate-600 border-slate-200'">
+ <i class="fa-solid mr-1.5" th:classappend="${task.isCompleted} ? 'fa-circle-check' : 'fa-circle'"></i>
+ <span th:text="${task.isCompleted} ? 'Hoàn thành' : 'Chưa xong'">Chưa xong</span>
+ </button>
+ </div>
 
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] text-slate-500">
-                        <span th:if="${task.assignee != null and !#strings.isEmpty(task.assignee)}">
-                            <i class="fa-solid fa-user-check mr-1 text-[#F27123]"></i>
-                            Phụ trách:
-                            <span class="font-semibold text-[#F27123]" th:text="${task.assignee}">Minh</span>
-                        </span>
-                        <span>
-                            <i class="fa-regular fa-clock mr-1"></i>
-                            <span th:text="${task.durationMinutes}">120</span> phút
-                        </span>
-                        <span>
-                            <i class="fa-regular fa-calendar mr-1"></i>
-                            <span th:text="${task.dayOfWeek}">Thứ 3</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+ <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] text-slate-500">
+ <span th:if="${task.assignee != null and !#strings.isEmpty(task.assignee)}">
+ <i class="fa-solid fa-user-check mr-1 text-[#F27123]"></i>
+ Phụ trách:
+ <span class="font-semibold text-[#F27123]" th:text="${task.assignee}">Minh</span>
+ </span>
+ <span>
+ <i class="fa-regular fa-clock mr-1"></i>
+ <span th:text="${task.durationMinutes}">120</span> phút
+ </span>
+ <span>
+ <i class="fa-regular fa-calendar mr-1"></i>
+ <span th:text="${task.dayOfWeek}">Thứ 3</span>
+ </span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-    <!-- JavaScript: tabs + realtime toggle -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var tabs = document.querySelectorAll('.week-tab');
-            var panels = document.querySelectorAll('.week-panel');
+ <!-- JavaScript: tabs + realtime toggle -->
+ <script>
+ document.addEventListener('DOMContentLoaded', function () {
+ var tabs = document.querySelectorAll('.week-tab');
+ var panels = document.querySelectorAll('.week-panel');
 
-            function activateWeek(week) {
-                tabs.forEach(function (tab) {
-                    var active = tab.getAttribute('data-week') === week;
-                    tab.setAttribute('data-active', active ? 'true' : 'false');
-                    tab.setAttribute('aria-selected', active ? 'true' : 'false');
-                });
-                panels.forEach(function (panel) {
-                    panel.style.display = panel.getAttribute('data-week') === week ? '' : 'none';
-                });
-            }
+ function activateWeek(week) {
+ tabs.forEach(function (tab) {
+ var active = tab.getAttribute('data-week') === week;
+ tab.setAttribute('data-active', active ? 'true' : 'false');
+ tab.setAttribute('aria-selected', active ? 'true' : 'false');
+ });
+ panels.forEach(function (panel) {
+ panel.style.display = panel.getAttribute('data-week') === week ? '' : 'none';
+ });
+ }
 
-            tabs.forEach(function (tab) {
-                tab.addEventListener('click', function () {
-                    activateWeek(tab.getAttribute('data-week'));
-                });
-            });
+ tabs.forEach(function (tab) {
+ tab.addEventListener('click', function () {
+ activateWeek(tab.getAttribute('data-week'));
+ });
+ });
 
-            function updateTaskButtons(taskId, completed) {
-                document.querySelectorAll('.toggle-task[data-task-id="' + taskId + '"]').forEach(function (button) {
-                    button.setAttribute('data-completed', completed ? 'true' : 'false');
-                    button.classList.toggle('bg-emerald-100', completed);
-                    button.classList.toggle('text-emerald-700', completed);
-                    button.classList.toggle('border-emerald-200', completed);
-                    button.classList.toggle('bg-white', !completed);
-                    button.classList.toggle('text-slate-600', !completed);
-                    button.classList.toggle('border-slate-200', !completed);
-                    var icon = button.querySelector('i');
-                    if (icon) {
-                        icon.classList.toggle('fa-circle-check', completed);
-                        icon.classList.toggle('fa-circle', !completed);
-                    }
-                    var label = button.querySelector('span');
-                    if (label) {
-                        label.textContent = completed ? 'Hoàn thành' : 'Chưa xong';
-                    }
-                });
+ function updateTaskButtons(taskId, completed) {
+ document.querySelectorAll('.toggle-task[data-task-id="' + taskId + '"]').forEach(function (button) {
+ button.setAttribute('data-completed', completed ? 'true' : 'false');
+ button.classList.toggle('bg-emerald-100', completed);
+ button.classList.toggle('text-emerald-700', completed);
+ button.classList.toggle('border-emerald-200', completed);
+ button.classList.toggle('bg-white', !completed);
+ button.classList.toggle('text-slate-600', !completed);
+ button.classList.toggle('border-slate-200', !completed);
+ var icon = button.querySelector('i');
+ if (icon) {
+ icon.classList.toggle('fa-circle-check', completed);
+ icon.classList.toggle('fa-circle', !completed);
+ }
+ var label = button.querySelector('span');
+ if (label) {
+ label.textContent = completed ? 'Hoàn thành' : 'Chưa xong';
+ }
+ });
 
-                var card = document.querySelector('[data-task-card="' + taskId + '"]');
-                if (card) card.setAttribute('data-completed', completed ? 'true' : 'false');
+ var card = document.querySelector('[data-task-card="' + taskId + '"]');
+ if (card) card.setAttribute('data-completed', completed ? 'true' : 'false');
 
-                var title = document.querySelector('[data-task-title="' + taskId + '"]');
-                if (title) title.setAttribute('data-completed', completed ? 'true' : 'false');
-            }
+ var title = document.querySelector('[data-task-title="' + taskId + '"]');
+ if (title) title.setAttribute('data-completed', completed ? 'true' : 'false');
+ }
 
-            function updatePlanProgress(progressPercent, planStatus) {
-                var bar = document.getElementById('plan-progress-bar');
-                if (bar) bar.style.width = progressPercent + '%';
+ function updatePlanProgress(progressPercent, planStatus) {
+ var bar = document.getElementById('plan-progress-bar');
+ if (bar) bar.style.width = progressPercent + '%';
 
-                var text = document.getElementById('plan-progress-text');
-                if (text) text.textContent = progressPercent + '%';
+ var text = document.getElementById('plan-progress-text');
+ if (text) text.textContent = progressPercent + '%';
 
-                var badge = document.getElementById('plan-status-badge');
-                if (badge) {
-                    badge.textContent = planStatus;
-                    badge.setAttribute('data-status', planStatus);
-                }
-            }
+ var badge = document.getElementById('plan-status-badge');
+ if (badge) {
+ badge.textContent = planStatus;
+ badge.setAttribute('data-status', planStatus);
+ }
+ }
 
-            document.querySelectorAll('.toggle-task').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    var taskId = button.getAttribute('data-task-id');
-                    var buttons = document.querySelectorAll('.toggle-task[data-task-id="' + taskId + '"]');
-                    buttons.forEach(function (item) { item.disabled = true; });
+ document.querySelectorAll('.toggle-task').forEach(function (button) {
+ button.addEventListener('click', function () {
+ var taskId = button.getAttribute('data-task-id');
+ var buttons = document.querySelectorAll('.toggle-task[data-task-id="' + taskId + '"]');
+ buttons.forEach(function (item) { item.disabled = true; });
 
-                    fetch('/planner/tasks/' + taskId + '/toggle', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                    })
-                        .then(function (response) {
-                            if (!response.ok) throw new Error('HTTP ' + response.status);
-                            return response.json();
-                        })
-                        .then(function (data) {
-                            buttons.forEach(function (item) { item.disabled = false; });
-                            updateTaskButtons(taskId, data.completed);
-                            updatePlanProgress(data.progressPercent, data.planStatus);
-                        })
-                        .catch(function (error) {
-                            console.error('Toggle task failed:', error);
-                            buttons.forEach(function (item) { item.disabled = false; });
-                            alert('Có lỗi xảy ra! Vui lòng thử lại.');
-                        });
-                });
-            });
-        });
-    </script>
+ fetch('/planner/tasks/' + taskId + '/toggle', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+ })
+ .then(function (response) {
+ if (!response.ok) throw new Error('HTTP ' + response.status);
+ return response.json();
+ })
+ .then(function (data) {
+ buttons.forEach(function (item) { item.disabled = false; });
+ updateTaskButtons(taskId, data.completed);
+ updatePlanProgress(data.progressPercent, data.planStatus);
+ })
+ .catch(function (error) {
+ console.error('Toggle task failed:', error);
+ buttons.forEach(function (item) { item.disabled = false; });
+ alert('Có lỗi xảy ra! Vui lòng thử lại.');
+ });
+ });
+ });
+ });
+ </script>
 </section>
 </body>
 </html>

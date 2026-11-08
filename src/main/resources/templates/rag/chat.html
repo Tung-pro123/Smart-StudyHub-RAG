@@ -1,667 +1,667 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/main :: main-layout(
-        'AI Chatbot Giáo Trình - ' + ${course.code},
-        ~{::section}
-      )}">
+ th:replace="~{layout/main :: main-layout(
+ 'AI Chatbot Giáo Trình - ' + ${course.code},
+ ~{::section}
+ )}">
 <body>
 <section id="chatWorkspaceRoot" class="flex flex-col h-full w-full min-h-0 bg-white">
 
-    <!-- CSS Styling: Viewport Lock (ChatGPT App-Shell) & Custom Scrollbar & Markdown -->
-    <style>
-        /* Lock Chat Workspace to Exact Viewport Height (Zero Page Scroll) */
-        html:has(#chatWorkspaceRoot),
-        body:has(#chatWorkspaceRoot),
-        body.chat-app-shell {
-            height: 100vh;
-            height: 100dvh;
-            max-height: 100vh;
-            max-height: 100dvh;
-            overflow: hidden !important;
-        }
+ <!-- CSS Styling: Viewport Lock (ChatGPT App-Shell) & Custom Scrollbar & Markdown -->
+ <style>
+ /* Lock Chat Workspace to Exact Viewport Height (Zero Page Scroll) */
+ html:has(#chatWorkspaceRoot),
+ body:has(#chatWorkspaceRoot),
+ body.chat-app-shell {
+ height: 100vh;
+ height: 100dvh;
+ max-height: 100vh;
+ max-height: 100dvh;
+ overflow: hidden !important;
+ }
 
-        body:has(#chatWorkspaceRoot) .drawer,
-        body:has(#chatWorkspaceRoot) .drawer-content,
-        body.chat-app-shell .drawer,
-        body.chat-app-shell .drawer-content {
-            height: 100vh;
-            height: 100dvh;
-            max-height: 100vh;
-            max-height: 100dvh;
-            overflow: hidden !important;
-            display: flex;
-            flex-direction: column;
-        }
+ body:has(#chatWorkspaceRoot) .drawer,
+ body:has(#chatWorkspaceRoot) .drawer-content,
+ body.chat-app-shell .drawer,
+ body.chat-app-shell .drawer-content {
+ height: 100vh;
+ height: 100dvh;
+ max-height: 100vh;
+ max-height: 100dvh;
+ overflow: hidden !important;
+ display: flex;
+ flex-direction: column;
+ }
 
-        body:has(#chatWorkspaceRoot) .drawer-content > div:first-child,
-        body.chat-app-shell .drawer-content > div:first-child {
-            flex-shrink: 0;
-        }
+ body:has(#chatWorkspaceRoot) .drawer-content > div:first-child,
+ body.chat-app-shell .drawer-content > div:first-child {
+ flex-shrink: 0;
+ }
 
-        body:has(#chatWorkspaceRoot) main,
-        body.chat-app-shell main {
-            padding: 0 !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            flex: 1 1 0% !important;
-            min-height: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            overflow: hidden !important;
-        }
+ body:has(#chatWorkspaceRoot) main,
+ body.chat-app-shell main {
+ padding: 0 !important;
+ max-width: 100% !important;
+ margin: 0 !important;
+ flex: 1 1 0% !important;
+ min-height: 0 !important;
+ display: flex !important;
+ flex-direction: column !important;
+ overflow: hidden !important;
+ }
 
-        body:has(#chatWorkspaceRoot) footer,
-        body.chat-app-shell footer {
-            display: none !important;
-        }
+ body:has(#chatWorkspaceRoot) footer,
+ body.chat-app-shell footer {
+ display: none !important;
+ }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 9999px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background-color: #94a3b8;
-        }
+ .custom-scrollbar::-webkit-scrollbar {
+ width: 5px;
+ height: 5px;
+ }
+ .custom-scrollbar::-webkit-scrollbar-track {
+ background: transparent;
+ }
+ .custom-scrollbar::-webkit-scrollbar-thumb {
+ background-color: #cbd5e1;
+ border-radius: 9999px;
+ }
+ .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+ background-color: #94a3b8;
+ }
 
-        .markdown-body table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0.75rem 0;
-            font-size: 0.8125rem;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-        .markdown-body th {
-            background-color: #f8fafc;
-            color: #0f172a;
-            font-weight: 700;
-            padding: 0.6rem 0.75rem;
-            border: 1px solid #e2e8f0;
-            text-align: left;
-        }
-        .markdown-body td {
-            padding: 0.55rem 0.75rem;
-            border: 1px solid #e2e8f0;
-            color: #334155;
-        }
-        .markdown-body tr:nth-child(even) td {
-            background-color: #f8fafc;
-        }
-        .markdown-body tr:hover td {
-            background-color: #f1f5f9;
-        }
-        .markdown-body ul {
-            list-style-type: disc;
-            margin-left: 1.25rem;
-            margin-top: 0.35rem;
-            margin-bottom: 0.35rem;
-        }
-        .markdown-body ol {
-            list-style-type: decimal;
-            margin-left: 1.25rem;
-            margin-top: 0.35rem;
-            margin-bottom: 0.35rem;
-        }
-        .markdown-body li {
-            margin-bottom: 0.25rem;
-        }
-        .markdown-body code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            background-color: #f1f5f9;
-            padding: 0.125rem 0.375rem;
-            border-radius: 0.375rem;
-            color: #4f46e5;
-            font-weight: 600;
-            font-size: 0.85em;
-        }
-        .markdown-body pre {
-            background-color: #0f172a;
-            color: #f8fafc;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            overflow-x: auto;
-            margin: 0.5rem 0;
-            font-size: 0.8rem;
-            line-height: 1.5;
-        }
-        .markdown-body pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
-            font-weight: normal;
-        }
-        .markdown-body blockquote {
-            border-left: 3px solid #6366f1;
-            padding-left: 0.75rem;
-            margin: 0.5rem 0;
-            color: #475569;
-            font-style: italic;
-        }
-    </style>
+ .markdown-body table {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 0.75rem 0;
+ font-size: 0.8125rem;
+ border-radius: 0.5rem;
+ overflow: hidden;
+ border: 1px solid #e2e8f0;
+ }
+ .markdown-body th {
+ background-color: #f8fafc;
+ color: #0f172a;
+ font-weight: 700;
+ padding: 0.6rem 0.75rem;
+ border: 1px solid #e2e8f0;
+ text-align: left;
+ }
+ .markdown-body td {
+ padding: 0.55rem 0.75rem;
+ border: 1px solid #e2e8f0;
+ color: #334155;
+ }
+ .markdown-body tr:nth-child(even) td {
+ background-color: #f8fafc;
+ }
+ .markdown-body tr:hover td {
+ background-color: #f1f5f9;
+ }
+ .markdown-body ul {
+ list-style-type: disc;
+ margin-left: 1.25rem;
+ margin-top: 0.35rem;
+ margin-bottom: 0.35rem;
+ }
+ .markdown-body ol {
+ list-style-type: decimal;
+ margin-left: 1.25rem;
+ margin-top: 0.35rem;
+ margin-bottom: 0.35rem;
+ }
+ .markdown-body li {
+ margin-bottom: 0.25rem;
+ }
+ .markdown-body code {
+ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+ background-color: #f1f5f9;
+ padding: 0.125rem 0.375rem;
+ border-radius: 0.375rem;
+ color: #4f46e5;
+ font-weight: 600;
+ font-size: 0.85em;
+ }
+ .markdown-body pre {
+ background-color: #0f172a;
+ color: #f8fafc;
+ padding: 0.75rem 1rem;
+ border-radius: 0.75rem;
+ overflow-x: auto;
+ margin: 0.5rem 0;
+ font-size: 0.8rem;
+ line-height: 1.5;
+ }
+ .markdown-body pre code {
+ background-color: transparent;
+ color: inherit;
+ padding: 0;
+ font-weight: normal;
+ }
+ .markdown-body blockquote {
+ border-left: 3px solid #6366f1;
+ padding-left: 0.75rem;
+ margin: 0.5rem 0;
+ color: #475569;
+ font-style: italic;
+ }
+ </style>
 
-    <!-- Top Minimalist Chat Header Bar (Fixed at top) -->
-    <header class="h-12 border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 bg-white z-10">
-        <div class="flex items-center gap-3 min-w-0">
-            <!-- Mobile Sidebar Toggle -->
-            <button type="button" id="btnToggleMobileSidebar" 
-                    onclick="openMobileSidebar()" 
-                    class="xl:hidden btn btn-ghost btn-xs text-slate-600 hover:bg-slate-100 rounded-lg gap-1.5 text-xs">
-                <i class="fa-solid fa-bars text-sm"></i>
-                <span class="hidden sm:inline font-medium">Lịch sử phiên chat</span>
-            </button>
+ <!-- Top Minimalist Chat Header Bar (Fixed at top) -->
+ <header class="h-12 border-b border-slate-200/80 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 bg-white z-10">
+ <div class="flex items-center gap-3 min-w-0">
+ <!-- Mobile Sidebar Toggle -->
+ <button type="button" id="btnToggleMobileSidebar" 
+ onclick="openMobileSidebar()" 
+ class="xl:hidden btn btn-ghost btn-xs text-slate-600 hover:bg-slate-100 rounded-lg gap-1.5 text-xs">
+ <i class="fa-solid fa-bars text-sm"></i>
+ <span class="hidden sm:inline font-medium">Lịch sử phiên chat</span>
+ </button>
 
-            <!-- Breadcrumbs / Chat Title -->
-            <div class="flex items-center gap-2 truncate text-xs text-slate-500">
-                <a th:href="@{/}" class="hover:text-slate-800 transition-colors"><i class="fa-solid fa-house"></i></a>
-                <span>/</span>
-                <a th:href="@{/courses/{id}(id=${course.id})}" class="hover:text-slate-800 font-semibold text-slate-700 transition-colors" th:text="${course.code}">HSF302</a>
-                <span>/</span>
-                <span class="font-medium text-slate-900 truncate" th:text="${currentSession != null} ? ${currentSession.title} : 'Chatbot Giáo Trình'">Chatbot Giáo Trình</span>
-                <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] text-[10px] font-bold border border-orange-200/80">
-                    <i class="fa-solid fa-sparkles text-[#F27123]"></i> RAG AI
-                </span>
-            </div>
-        </div>
+ <!-- Breadcrumbs / Chat Title -->
+ <div class="flex items-center gap-2 truncate text-xs text-slate-500">
+ <a th:href="@{/}" class="hover:text-slate-800 transition-colors"><i class="fa-solid fa-house"></i></a>
+ <span>/</span>
+ <a th:href="@{/courses/{id}(id=${course.id})}" class="hover:text-slate-800 font-semibold text-slate-700 transition-colors" th:text="${course.code}">HSF302</a>
+ <span>/</span>
+ <span class="font-medium text-slate-900 truncate" th:text="${currentSession != null} ? ${currentSession.title} : 'Chatbot Giáo Trình'">Chatbot Giáo Trình</span>
+ <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] text-[10px] font-bold border border-orange-200/80">
+ <i class="fa-solid fa-sparkles text-[#F27123]"></i> RAG AI
+ </span>
+ </div>
+ </div>
 
-        <!-- Right Quick Actions -->
-        <div class="flex items-center gap-2 flex-shrink-0">
-            <a th:href="@{/courses/{id}/documents(id=${course.id})}" 
-               class="btn btn-ghost btn-xs h-8 px-2.5 text-slate-600 hover:text-[#F27123] hover:bg-orange-50 rounded-lg text-xs gap-1.5 font-medium transition-colors">
-                <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
-                <span class="hidden sm:inline">Quản Lý Giáo Trình &amp; Chunks</span>
-            </a>
+ <!-- Right Quick Actions -->
+ <div class="flex items-center gap-2 flex-shrink-0">
+ <a th:href="@{/courses/{id}/documents(id=${course.id})}" 
+ class="btn btn-ghost btn-xs h-8 px-2.5 text-slate-600 hover:text-[#F27123] hover:bg-orange-50 rounded-lg text-xs gap-1.5 font-medium transition-colors">
+ <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
+ <span class="hidden sm:inline">Quản Lý Giáo Trình &amp; Chunks</span>
+ </a>
 
-            <div th:if="${currentSession != null}">
-                <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" onsubmit="return confirm('Xóa toàn bộ tin nhắn trong phiên chat này?');">
-                    <input type="hidden" name="sessionId" th:value="${currentSession.id}" />
-                    <button type="submit" class="btn btn-ghost btn-xs h-8 px-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg text-xs gap-1 font-medium transition-colors" title="Xóa toàn bộ tin nhắn">
-                        <i class="fa-solid fa-trash-can text-xs"></i>
-                        <span class="hidden sm:inline">Làm sạch</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </header>
+ <div th:if="${currentSession != null}">
+ <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" onsubmit="return confirm('Xóa toàn bộ tin nhắn trong phiên chat này?');">
+ <input type="hidden" name="sessionId" th:value="${currentSession.id}" />
+ <button type="submit" class="btn btn-ghost btn-xs h-8 px-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg text-xs gap-1 font-medium transition-colors" title="Xóa toàn bộ tin nhắn">
+ <i class="fa-solid fa-trash-can text-xs"></i>
+ <span class="hidden sm:inline">Làm sạch</span>
+ </button>
+ </form>
+ </div>
+ </div>
+ </header>
 
-    <!-- Main Workspace Container (Sidebar on Left + ChatGPT Canvas on Right) -->
-    <div class="flex flex-1 min-h-0 w-full overflow-hidden relative">
+ <!-- Main Workspace Container (Sidebar on Left + ChatGPT Canvas on Right) -->
+ <div class="flex flex-1 min-h-0 w-full overflow-hidden relative">
 
-        <!-- Mobile Drawer Backdrop Overlay -->
-        <div id="sessionsBackdrop" class="hidden fixed inset-0 bg-slate-900/40 z-30 xl:hidden" onclick="closeMobileSidebar()"></div>
+ <!-- Mobile Drawer Backdrop Overlay -->
+ <div id="sessionsBackdrop" class="hidden fixed inset-0 bg-slate-900/40 z-30 xl:hidden" onclick="closeMobileSidebar()"></div>
 
-        <!-- Left Column: ChatGPT-Style Sessions Sidebar -->
-        <div id="sessionsSidebarCol" 
-             class="hidden xl:flex fixed xl:static inset-y-0 left-0 z-40 w-72 flex-shrink-0 flex-col bg-slate-50 border-r border-slate-200/80 h-full min-h-0 shadow-2xl xl:shadow-none transition-all">
-            
-            <!-- Sidebar Top: New Chat Button -->
-            <div class="p-3 border-b border-slate-200/70 flex-shrink-0 flex items-center justify-between gap-2 bg-slate-50">
-                <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" 
-                   class="btn flex-1 h-9 bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 rounded-xl font-semibold text-xs shadow-2xs gap-2 transition-all justify-between px-3">
-                    <span class="flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-[#F27123] text-xs"></i>
-                        <span>Đoạn chat mới</span>
-                    </span>
-                    <i class="fa-regular fa-pen-to-square text-slate-400 text-xs"></i>
-                </a>
+ <!-- Left Column: ChatGPT-Style Sessions Sidebar -->
+ <div id="sessionsSidebarCol" 
+ class="hidden xl:flex fixed xl:static inset-y-0 left-0 z-40 w-72 flex-shrink-0 flex-col bg-slate-50 border-r border-slate-200/80 h-full min-h-0 shadow-2xl xl:shadow-none transition-all">
+ 
+ <!-- Sidebar Top: New Chat Button -->
+ <div class="p-3 border-b border-slate-200/70 flex-shrink-0 flex items-center justify-between gap-2 bg-slate-50">
+ <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" 
+ class="btn flex-1 h-9 bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 rounded-xl font-semibold text-xs shadow-2xs gap-2 transition-all justify-between px-3">
+ <span class="flex items-center gap-2">
+ <i class="fa-solid fa-plus text-[#F27123] text-xs"></i>
+ <span>Đoạn chat mới</span>
+ </span>
+ <i class="fa-regular fa-pen-to-square text-slate-400 text-xs"></i>
+ </a>
 
-                <!-- Close Sidebar Button on Mobile -->
-                <button type="button" onclick="closeMobileSidebar()" class="xl:hidden btn btn-ghost btn-circle btn-xs text-slate-400 hover:bg-slate-200/60">
-                    ✕
-                </button>
-            </div>
+ <!-- Close Sidebar Button on Mobile -->
+ <button type="button" onclick="closeMobileSidebar()" class="xl:hidden btn btn-ghost btn-circle btn-xs text-slate-400 hover:bg-slate-200/60">
+ ✕
+ </button>
+ </div>
 
-            <!-- Quota Progress Indicator for Free Users -->
-            <div th:if="${!isPro}" id="quotaContainer" class="px-3.5 py-2.5 bg-white border-b border-slate-200/60 flex-shrink-0 space-y-1.5">
-                <div class="flex items-center justify-between text-[11px]">
-                    <span class="font-medium text-slate-600 flex items-center gap-1">
-                        <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i> Hạn ngạch RAG
-                    </span>
-                    <span id="quotaText" class="text-[#F27123] font-bold text-xs" th:text="${remainingQuota} + '/50'">50/50</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                    <div id="quotaProgressBar" class="h-full bg-[#F27123] transition-all duration-500 rounded-full"
-                         th:style="'width: ' + (${remainingQuota} * 2) + '%'"></div>
-                </div>
-            </div>
+ <!-- Quota Progress Indicator for Free Users -->
+ <div th:if="${!isPro}" id="quotaContainer" class="px-3.5 py-2.5 bg-white border-b border-slate-200/60 flex-shrink-0 space-y-1.5">
+ <div class="flex items-center justify-between text-[11px]">
+ <span class="font-medium text-slate-600 flex items-center gap-1">
+ <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i> Hạn ngạch RAG
+ </span>
+ <span id="quotaText" class="text-[#F27123] font-bold text-xs" th:text="${remainingQuota} + '/50'">50/50</span>
+ </div>
+ <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+ <div id="quotaProgressBar" class="h-full bg-[#F27123] transition-all duration-500 rounded-full"
+ th:style="'width: ' + (${remainingQuota} * 2) + '%'"></div>
+ </div>
+ </div>
 
-            <!-- History Section Header -->
-            <div class="px-3.5 pt-3 pb-1.5 flex items-center justify-between text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex-shrink-0">
-                <span>Gần đây</span>
-                <span class="font-normal lowercase" th:text="${#lists.size(sessions)} + ' phiên'">0 phiên</span>
-            </div>
+ <!-- History Section Header -->
+ <div class="px-3.5 pt-3 pb-1.5 flex items-center justify-between text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex-shrink-0">
+ <span>Gần đây</span>
+ <span class="font-normal lowercase" th:text="${#lists.size(sessions)} + ' phiên'">0 phiên</span>
+ </div>
 
-            <!-- Sessions List (Only this list scrolls inside the sidebar) -->
-            <div id="sessionsList" class="flex-1 min-h-0 overflow-y-auto px-2 space-y-0.5 custom-scrollbar">
-                <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-10 px-2 text-slate-400 text-xs">
-                    <i class="fa-regular fa-comments text-2xl mb-2 block opacity-40"></i>
-                    Chưa có cuộc trò chuyện nào.
-                </div>
+ <!-- Sessions List (Only this list scrolls inside the sidebar) -->
+ <div id="sessionsList" class="flex-1 min-h-0 overflow-y-auto px-2 space-y-0.5 custom-scrollbar">
+ <div th:if="${#lists.isEmpty(sessions)}" class="text-center py-10 px-2 text-slate-400 text-xs">
+ <i class="fa-regular fa-comments text-2xl mb-2 block opacity-40"></i>
+ Chưa có cuộc trò chuyện nào.
+ </div>
 
-                <div th:each="sess : ${sessions}"
-                     class="group rounded-xl transition-all border flex items-center justify-between px-2.5 py-2 gap-1.5 text-xs"
-                     th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'bg-white border-slate-200/90 text-slate-900 font-semibold shadow-2xs' : 'bg-transparent border-transparent hover:bg-slate-200/60 text-slate-600'">
-                    <a th:href="@{/courses/{cId}/chat(cId=${course.id}, sessionId=${sess.id})}" class="flex-grow truncate flex items-center gap-2">
-                        <i class="fa-regular fa-message text-[11px] flex-shrink-0" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-[#F27123]' : 'text-slate-400'"></i>
-                        <span class="truncate" th:text="${sess.title}">Tiêu đề cuộc trò chuyện</span>
-                    </a>
+ <div th:each="sess : ${sessions}"
+ class="group rounded-xl transition-all border flex items-center justify-between px-2.5 py-2 gap-1.5 text-xs"
+ th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'bg-white border-slate-200/90 text-slate-900 font-semibold shadow-2xs' : 'bg-transparent border-transparent hover:bg-slate-200/60 text-slate-600'">
+ <a th:href="@{/courses/{cId}/chat(cId=${course.id}, sessionId=${sess.id})}" class="flex-grow truncate flex items-center gap-2">
+ <i class="fa-regular fa-message text-[11px] flex-shrink-0" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-[#F27123]' : 'text-slate-400'"></i>
+ <span class="truncate" th:text="${sess.title}">Tiêu đề cuộc trò chuyện</span>
+ </a>
 
-                    <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" onsubmit="return confirm('Bạn có chắc muốn xóa phiên chat này?');">
-                        <input type="hidden" name="sessionId" th:value="${sess.id}" />
-                        <button type="submit" class="btn btn-ghost btn-circle btn-xs text-slate-400 hover:text-rose-500 hover:bg-rose-50 w-6 h-6 min-h-0" title="Xóa phiên">
-                            <i class="fa-solid fa-trash-can text-[10px]"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+ <form th:action="@{/courses/{cId}/chat/clear(cId=${course.id})}" method="post" class="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" onsubmit="return confirm('Bạn có chắc muốn xóa phiên chat này?');">
+ <input type="hidden" name="sessionId" th:value="${sess.id}" />
+ <button type="submit" class="btn btn-ghost btn-circle btn-xs text-slate-400 hover:text-rose-500 hover:bg-rose-50 w-6 h-6 min-h-0" title="Xóa phiên">
+ <i class="fa-solid fa-trash-can text-[10px]"></i>
+ </button>
+ </form>
+ </div>
+ </div>
 
-            <!-- Course Summary Footer Note -->
-            <div class="p-3 border-t border-slate-200/70 bg-slate-50 flex-shrink-0">
-                <div class="flex items-center gap-2 text-xs text-slate-500 truncate">
-                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0">
-                        <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <div class="truncate">
-                        <p class="font-bold text-slate-800 text-[11px] truncate" th:text="${course.code}">HSF302</p>
-                        <p class="text-[10px] text-slate-400 truncate" th:text="${course.name}">JPA and Spring Framework</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+ <!-- Course Summary Footer Note -->
+ <div class="p-3 border-t border-slate-200/70 bg-slate-50 flex-shrink-0">
+ <div class="flex items-center gap-2 text-xs text-slate-500 truncate">
+ <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0">
+ <i class="fa-solid fa-book-open"></i>
+ </div>
+ <div class="truncate">
+ <p class="font-bold text-slate-800 text-[11px] truncate" th:text="${course.code}">HSF302</p>
+ <p class="text-[10px] text-slate-400 truncate" th:text="${course.name}">JPA and Spring Framework</p>
+ </div>
+ </div>
+ </div>
+ </div>
 
-        <!-- Right Column: ChatGPT Chat Canvas (Full Height, Fixed Floating Input) -->
-        <div class="flex-1 flex flex-col h-full min-h-0 min-w-0 bg-white relative">
+ <!-- Right Column: ChatGPT Chat Canvas (Full Height, Fixed Floating Input) -->
+ <div class="flex-1 flex flex-col h-full min-h-0 min-w-0 bg-white relative">
 
-            <!-- Scrollable Messages Area (This is the ONLY part that scrolls!) -->
-            <div id="chatMessagesContainer" class="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-6 custom-scrollbar">
-                <div id="chatMessagesWrapper" class="max-w-3xl w-full mx-auto space-y-6">
+ <!-- Scrollable Messages Area (This is the ONLY part that scrolls!) -->
+ <div id="chatMessagesContainer" class="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-6 custom-scrollbar">
+ <div id="chatMessagesWrapper" class="max-w-3xl w-full mx-auto space-y-6">
 
-                    <!-- ChatGPT Empty / Welcome Hero -->
-                    <div th:if="${#lists.isEmpty(messages)}" id="welcomeHero" class="py-16 sm:py-24 text-center space-y-5">
-                        <div class="w-16 h-16 rounded-3xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-3xl mx-auto shadow-2xs">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                        </div>
-                        <div class="space-y-1.5">
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Hôm nay bạn cần tra cứu gì?</h2>
-                            <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-                                Trợ lý AI bám sát 100% tài liệu &amp; slide môn học <strong class="text-[#F27123] font-semibold" th:text="${course.code}">HSF302</strong>, cam kết trích dẫn số trang chính xác.
-                            </p>
-                        </div>
+ <!-- ChatGPT Empty / Welcome Hero -->
+ <div th:if="${#lists.isEmpty(messages)}" id="welcomeHero" class="py-16 sm:py-24 text-center space-y-5">
+ <div class="w-16 h-16 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-3xl mx-auto shadow-2xs">
+ <i class="fa-solid fa-graduation-cap"></i>
+ </div>
+ <div class="space-y-1.5">
+ <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Hôm nay bạn cần tra cứu gì?</h2>
+ <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+ Trợ lý AI bám sát 100% tài liệu &amp; slide môn học <strong class="text-[#F27123] font-semibold" th:text="${course.code}">HSF302</strong>, cam kết trích dẫn số trang chính xác.
+ </p>
+ </div>
 
-                        <!-- Quick Prompt Suggestions (ChatGPT Capsule Buttons) -->
-                        <div class="pt-4 flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
-                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Môn học này gồm những nội dung chính nào?">
-                                📌 Nội dung chính môn học?
-                            </button>
-                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
-                                💡 Khái niệm quan trọng nhất?
-                            </button>
-                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
-                                📝 Tóm tắt chương 1 ôn thi?
-                            </button>
-                        </div>
-                    </div>
+ <!-- Quick Prompt Suggestions (ChatGPT Capsule Buttons) -->
+ <div class="pt-4 flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
+ <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-lg font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Môn học này gồm những nội dung chính nào?">
+ 📌 Nội dung chính môn học?
+ </button>
+ <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-lg font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
+ 💡 Khái niệm quan trọng nhất?
+ </button>
+ <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-lg font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
+ 📝 Tóm tắt chương 1 ôn thi?
+ </button>
+ </div>
+ </div>
 
-                    <!-- Messages Stream -->
-                    <div th:each="msg : ${messages}" class="space-y-4">
-                        <!-- User Message -->
-                        <div th:if="${msg.sender == 'USER'}" class="flex justify-end items-end my-2">
-                            <div class="flex flex-col items-end max-w-[85%] sm:max-w-[75%]">
-                                <span class="text-[10px] text-slate-400 mb-1 mr-1">
-                                    <span class="font-medium text-slate-600">Bạn</span> · <span th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</span>
-                                </span>
-                                <div class="bg-[#F27123] text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left"
-                                     th:text="${msg.content}">Câu hỏi người dùng</div>
-                            </div>
-                        </div>
+ <!-- Messages Stream -->
+ <div th:each="msg : ${messages}" class="space-y-4">
+ <!-- User Message -->
+ <div th:if="${msg.sender == 'USER'}" class="flex justify-end items-end my-2">
+ <div class="flex flex-col items-end max-w-[85%] sm:max-w-[75%]">
+ <span class="text-[10px] text-slate-400 mb-1 mr-1">
+ <span class="font-medium text-slate-600">Bạn</span> · <span th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</span>
+ </span>
+ <div class="bg-[#F27123] text-white rounded-lg rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left"
+ th:text="${msg.content}">Câu hỏi người dùng</div>
+ </div>
+ </div>
 
-                        <!-- AI Message -->
-                        <div th:if="${msg.sender == 'AI'}" class="flex justify-start gap-3 items-start my-3">
-                            <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
-                                <i class="fa-solid fa-robot"></i>
-                            </div>
-                            <div class="flex flex-col items-start max-w-[92%] sm:max-w-[88%] w-full">
-                                <span class="text-[10px] text-slate-400 mb-1 ml-1">
-                                    <span class="font-medium text-slate-600">Trợ Lý AI</span> · <span th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</span>
-                                </span>
-                                <div class="bg-slate-50 border border-slate-200/90 text-slate-800 rounded-2xl rounded-tl-xs p-4 text-xs sm:text-sm leading-relaxed shadow-xs space-y-3 w-full">
-                                    <div class="markdown-body ai-markdown-content" th:attr="data-raw=${msg.content}" th:text="${msg.content}">Nội dung câu trả lời AI</div>
+ <!-- AI Message -->
+ <div th:if="${msg.sender == 'AI'}" class="flex justify-start gap-3 items-start my-3">
+ <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
+ <i class="fa-solid fa-robot"></i>
+ </div>
+ <div class="flex flex-col items-start max-w-[92%] sm:max-w-[88%] w-full">
+ <span class="text-[10px] text-slate-400 mb-1 ml-1">
+ <span class="font-medium text-slate-600">Trợ Lý AI</span> · <span th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</span>
+ </span>
+ <div class="bg-slate-50 border border-slate-200/90 text-slate-800 rounded-lg rounded-tl-xs p-4 text-xs sm:text-sm leading-relaxed shadow-xs space-y-3 w-full">
+ <div class="markdown-body ai-markdown-content" th:attr="data-raw=${msg.content}" th:text="${msg.content}">Nội dung câu trả lời AI</div>
 
-                                    <!-- Expandable Citations -->
-                                    <div th:if="${msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
-                                         class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
-                                        <input type="checkbox" /> 
-                                        <div class="collapse-title text-[11px] font-semibold text-[#F27123] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
-                                            <i class="fa-solid fa-book-bookmark text-[#F27123]"></i>
-                                            <span>📚 Ngữ cảnh trích xuất từ tài liệu</span>
-                                        </div>
-                                        <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2"> 
-                                            <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] overflow-x-auto whitespace-pre-wrap leading-relaxed" th:text="${msg.ragContext}">Trích đoạn</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+ <!-- Expandable Citations -->
+ <div th:if="${msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
+ class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
+ <input type="checkbox" /> 
+ <div class="collapse-title text-[11px] font-semibold text-[#F27123] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
+ <i class="fa-solid fa-book-bookmark text-[#F27123]"></i>
+ <span>📚 Ngữ cảnh trích xuất từ tài liệu</span>
+ </div>
+ <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2"> 
+ <pre class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] overflow-x-auto whitespace-pre-wrap leading-relaxed" th:text="${msg.ragContext}">Trích đoạn</pre>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-                    <!-- Live Typing Indicator -->
-                    <div id="typingIndicator" class="hidden flex justify-start gap-3 items-start my-2">
-                        <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                            <i class="fa-solid fa-robot"></i>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-200/80 text-slate-700 py-2.5 px-4 rounded-2xl rounded-tl-xs shadow-2xs flex items-center gap-2">
-                            <span class="loading loading-dots loading-xs text-[#F27123]"></span>
-                            <span class="text-xs text-slate-500">Đang tra cứu giáo trình và soạn câu trả lời...</span>
-                        </div>
-                    </div>
+ <!-- Live Typing Indicator -->
+ <div id="typingIndicator" class="hidden flex justify-start gap-3 items-start my-2">
+ <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+ <i class="fa-solid fa-robot"></i>
+ </div>
+ <div class="bg-slate-50 border border-slate-200/80 text-slate-700 py-2.5 px-4 rounded-lg rounded-tl-xs shadow-2xs flex items-center gap-2">
+ <span class="loading loading-dots loading-xs text-[#F27123]"></span>
+ <span class="text-xs text-slate-500">Đang tra cứu giáo trình và soạn câu trả lời...</span>
+ </div>
+ </div>
 
-                </div>
-            </div>
+ </div>
+ </div>
 
-            <!-- ChatGPT Signature Component: Pinned Floating Input Capsule (Zero Scroll, Always Fixed at Bottom) -->
-            <div class="flex-shrink-0 px-4 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-white via-white/95 to-transparent z-10">
-                <div class="max-w-3xl w-full mx-auto">
-                    <form id="chatForm" 
-                          class="bg-slate-50 hover:bg-slate-100/80 focus-within:bg-white border border-slate-200/90 focus-within:border-[#F27123] focus-within:ring-2 focus-within:ring-blue-100 rounded-3xl p-1.5 pl-4 transition-all shadow-xs flex items-center gap-2"
-                          th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post">
-                        
-                        <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
+ <!-- ChatGPT Signature Component: Pinned Floating Input Capsule (Zero Scroll, Always Fixed at Bottom) -->
+ <div class="flex-shrink-0 px-4 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-white via-white/95 to-transparent z-10">
+ <div class="max-w-3xl w-full mx-auto">
+ <form id="chatForm" 
+ class="bg-slate-50 hover:bg-slate-100/80 focus-within:bg-white border border-slate-200/90 focus-within:border-[#F27123] focus-within:ring-2 focus-within:ring-blue-100 rounded-xl p-1.5 pl-4 transition-all shadow-xs flex items-center gap-2"
+ th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post">
+ 
+ <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
 
-                        <input type="text" id="chatQuestionInput" name="question" 
-                               placeholder="Hỏi bất kỳ điều gì về giáo trình (VD: Entity lifecycle trong JPA)..." 
-                               class="flex-1 bg-transparent border-none focus:outline-none text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 py-1.5"
-                               required autocomplete="off" />
+ <input type="text" id="chatQuestionInput" name="question" 
+ placeholder="Hỏi bất kỳ điều gì về giáo trình (VD: Entity lifecycle trong JPA)..." 
+ class="flex-1 bg-transparent border-none focus:outline-none text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 py-1.5"
+ required autocomplete="off" />
 
-                        <button type="submit" id="sendBtn" 
-                                class="w-9 h-9 rounded-full bg-slate-900 hover:bg-[#F27123] disabled:bg-slate-200 disabled:text-slate-400 text-white flex items-center justify-center transition-all flex-shrink-0 cursor-pointer disabled:cursor-not-allowed shadow-2xs"
-                                title="Gửi câu hỏi">
-                            <i class="fa-solid fa-arrow-up text-xs font-bold"></i>
-                        </button>
-                    </form>
+ <button type="submit" id="sendBtn" 
+ class="w-9 h-9 rounded-full bg-slate-900 hover:bg-[#F27123] disabled:bg-slate-200 disabled:text-slate-400 text-white flex items-center justify-center transition-all flex-shrink-0 cursor-pointer disabled:cursor-not-allowed shadow-2xs"
+ title="Gửi câu hỏi">
+ <i class="fa-solid fa-arrow-up text-xs font-bold"></i>
+ </button>
+ </form>
 
-                    <p class="text-[11px] text-slate-400 text-center mt-2">
-                        StudyHub AI trả lời dựa trên giáo trình PDF đã nạp. Hãy kiểm tra các trích dẫn số trang đối chứng.
-                    </p>
-                </div>
-            </div>
+ <p class="text-[11px] text-slate-400 text-center mt-2">
+ StudyHub AI trả lời dựa trên giáo trình PDF đã nạp. Hãy kiểm tra các trích dẫn số trang đối chứng.
+ </p>
+ </div>
+ </div>
 
-        </div>
+ </div>
 
-    </div>
+ </div>
 
 <!-- CDN marked.js for rich AI Markdown rendering -->
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 
 <!-- Pure Vanilla JS Chat Handler with Async Fetch API & Marked.js -->
 <script th:inline="javascript">
-    function openMobileSidebar() {
-        const sidebar = document.getElementById('sessionsSidebarCol');
-        const backdrop = document.getElementById('sessionsBackdrop');
-        if (sidebar) sidebar.classList.remove('hidden');
-        if (backdrop) backdrop.classList.remove('hidden');
-    }
+ function openMobileSidebar() {
+ const sidebar = document.getElementById('sessionsSidebarCol');
+ const backdrop = document.getElementById('sessionsBackdrop');
+ if (sidebar) sidebar.classList.remove('hidden');
+ if (backdrop) backdrop.classList.remove('hidden');
+ }
 
-    function closeMobileSidebar() {
-        const sidebar = document.getElementById('sessionsSidebarCol');
-        const backdrop = document.getElementById('sessionsBackdrop');
-        if (sidebar) sidebar.classList.add('hidden');
-        if (backdrop) backdrop.classList.add('hidden');
-    }
+ function closeMobileSidebar() {
+ const sidebar = document.getElementById('sessionsSidebarCol');
+ const backdrop = document.getElementById('sessionsBackdrop');
+ if (sidebar) sidebar.classList.add('hidden');
+ if (backdrop) backdrop.classList.add('hidden');
+ }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // Enforce App-Shell layout class on body
-        document.body.classList.add('chat-app-shell');
+ document.addEventListener('DOMContentLoaded', function() {
+ // Enforce App-Shell layout class on body
+ document.body.classList.add('chat-app-shell');
 
-        const courseId = /*[[${course.id}]]*/ 1;
-        const isProUser = /*[[${isPro}]]*/ false;
-        const initialQuota = /*[[${remainingQuota}]]*/ 50;
-        const chatContainer = document.getElementById('chatMessagesContainer');
-        const chatForm = document.getElementById('chatForm');
-        const questionInput = document.getElementById('chatQuestionInput');
-        const sessionIdInput = document.getElementById('chatSessionIdInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const typingIndicator = document.getElementById('typingIndicator');
-        const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
+ const courseId = /*[[${course.id}]]*/ 1;
+ const isProUser = /*[[${isPro}]]*/ false;
+ const initialQuota = /*[[${remainingQuota}]]*/ 50;
+ const chatContainer = document.getElementById('chatMessagesContainer');
+ const chatForm = document.getElementById('chatForm');
+ const questionInput = document.getElementById('chatQuestionInput');
+ const sessionIdInput = document.getElementById('chatSessionIdInput');
+ const sendBtn = document.getElementById('sendBtn');
+ const typingIndicator = document.getElementById('typingIndicator');
+ const quickPromptBtns = document.querySelectorAll('.quick-prompt-btn');
 
-        // Hàm render nội dung Markdown bằng marked.js
-        function renderMarkdownContent(text) {
-            if (!text) return '';
-            try {
-                if (typeof marked !== 'undefined') {
-                    return marked.parse(text, { gfm: true, breaks: true });
-                }
-            } catch (e) {
-                console.warn('Lỗi parse marked:', e);
-            }
-            return escapeHtml(text);
-        }
+ // Hàm render nội dung Markdown bằng marked.js
+ function renderMarkdownContent(text) {
+ if (!text) return '';
+ try {
+ if (typeof marked !== 'undefined') {
+ return marked.parse(text, { gfm: true, breaks: true });
+ }
+ } catch (e) {
+ console.warn('Lỗi parse marked:', e);
+ }
+ return escapeHtml(text);
+ }
 
-        // Tự động render tất cả tin nhắn AI có sẵn từ server khi tải trang
-        document.querySelectorAll('.ai-markdown-content').forEach(function(el) {
-            const rawContent = el.getAttribute('data-raw');
-            if (rawContent) {
-                el.innerHTML = renderMarkdownContent(rawContent);
-            }
-        });
+ // Tự động render tất cả tin nhắn AI có sẵn từ server khi tải trang
+ document.querySelectorAll('.ai-markdown-content').forEach(function(el) {
+ const rawContent = el.getAttribute('data-raw');
+ if (rawContent) {
+ el.innerHTML = renderMarkdownContent(rawContent);
+ }
+ });
 
-        // Khóa input nếu sinh viên Free đã hết hạn ngạch
-        if (!isProUser && initialQuota === 0) {
-            if (questionInput) {
-                questionInput.placeholder = '🛑 Bạn đã sử dụng hết hạn ngạch 50 câu hôm nay.';
-                questionInput.disabled = true;
-            }
-            if (sendBtn) {
-                sendBtn.disabled = true;
-            }
-        }
+ // Khóa input nếu sinh viên Free đã hết hạn ngạch
+ if (!isProUser && initialQuota === 0) {
+ if (questionInput) {
+ questionInput.placeholder = '🛑 Bạn đã sử dụng hết hạn ngạch 50 câu hôm nay.';
+ questionInput.disabled = true;
+ }
+ if (sendBtn) {
+ sendBtn.disabled = true;
+ }
+ }
 
-        // Tự động cuộn xuống đáy
-        function scrollToBottom() {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-        }
-        scrollToBottom();
+ // Tự động cuộn xuống đáy
+ function scrollToBottom() {
+ if (chatContainer) {
+ chatContainer.scrollTop = chatContainer.scrollHeight;
+ }
+ }
+ scrollToBottom();
 
-        // Xử lý nút gợi ý nhanh
-        quickPromptBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const prompt = this.getAttribute('data-prompt');
-                if (questionInput && !questionInput.disabled) {
-                    questionInput.value = prompt;
-                    questionInput.focus();
-                }
-            });
-        });
+ // Xử lý nút gợi ý nhanh
+ quickPromptBtns.forEach(btn => {
+ btn.addEventListener('click', function() {
+ const prompt = this.getAttribute('data-prompt');
+ if (questionInput && !questionInput.disabled) {
+ questionInput.value = prompt;
+ questionInput.focus();
+ }
+ });
+ });
 
-        // Xử lý gửi tin nhắn bất đồng bộ qua Fetch API
-        if (chatForm) {
-            chatForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
+ // Xử lý gửi tin nhắn bất đồng bộ qua Fetch API
+ if (chatForm) {
+ chatForm.addEventListener('submit', async function(e) {
+ e.preventDefault();
 
-                const question = questionInput.value.trim();
-                if (!question) return;
+ const question = questionInput.value.trim();
+ if (!question) return;
 
-                const currentSessionId = sessionIdInput.value ? parseInt(sessionIdInput.value) : null;
+ const currentSessionId = sessionIdInput.value ? parseInt(sessionIdInput.value) : null;
 
-                // 1. Append User Message to UI
-                appendUserMessage(question);
-                questionInput.value = '';
-                questionInput.disabled = true;
-                sendBtn.disabled = true;
+ // 1. Append User Message to UI
+ appendUserMessage(question);
+ questionInput.value = '';
+ questionInput.disabled = true;
+ sendBtn.disabled = true;
 
-                // 2. Show Typing Indicator & Scroll
-                typingIndicator.classList.remove('hidden');
-                scrollToBottom();
+ // 2. Show Typing Indicator & Scroll
+ typingIndicator.classList.remove('hidden');
+ scrollToBottom();
 
-                try {
-                    // 3. Send Fetch API POST to backend
-                    const response = await fetch(`/courses/${courseId}/chat/send`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            question: question,
-                            sessionId: currentSessionId
-                        })
-                    });
+ try {
+ // 3. Send Fetch API POST to backend
+ const response = await fetch(`/courses/${courseId}/chat/send`, {
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json',
+ 'Accept': 'application/json'
+ },
+ body: JSON.stringify({
+ question: question,
+ sessionId: currentSessionId
+ })
+ });
 
-                    if (!response.ok) {
-                        throw new Error(`Mã lỗi máy chủ: ${response.status}`);
-                    }
+ if (!response.ok) {
+ throw new Error(`Mã lỗi máy chủ: ${response.status}`);
+ }
 
-                    const data = await response.json();
+ const data = await response.json();
 
-                    // 4. Update SessionId if a new session was created
-                    if (data.sessionId && (!currentSessionId || currentSessionId !== data.sessionId)) {
-                        sessionIdInput.value = data.sessionId;
-                    }
+ // 4. Update SessionId if a new session was created
+ if (data.sessionId && (!currentSessionId || currentSessionId !== data.sessionId)) {
+ sessionIdInput.value = data.sessionId;
+ }
 
-                    // 5. Cập nhật thanh tiến trình hạn ngạch Realtime
-                    if (data.remainingQuota !== undefined && data.remainingQuota !== null) {
-                        updateQuotaUI(data.remainingQuota);
-                    }
+ // 5. Cập nhật thanh tiến trình hạn ngạch Realtime
+ if (data.remainingQuota !== undefined && data.remainingQuota !== null) {
+ updateQuotaUI(data.remainingQuota);
+ }
 
-                    // 6. Append AI Answer to UI (Rendered by marked.js)
-                    appendAiMessage(data.answer, data.citations);
+ // 6. Append AI Answer to UI (Rendered by marked.js)
+ appendAiMessage(data.answer, data.citations);
 
-                } catch (error) {
-                    console.error('Lỗi khi gửi tin nhắn chat:', error);
-                    appendAiMessage(`❌ **Đã xảy ra lỗi khi gửi câu hỏi:** ${error.message}\n\nVui lòng thử lại hoặc tải lại trang.`);
-                } finally {
-                    typingIndicator.classList.add('hidden');
-                    // Chỉ mở lại input nếu còn quota
-                    const currentQuotaText = document.getElementById('quotaText');
-                    const isExhausted = !isProUser && currentQuotaText && currentQuotaText.innerText.startsWith('0/');
-                    if (!isExhausted) {
-                        questionInput.disabled = false;
-                        sendBtn.disabled = false;
-                        questionInput.focus();
-                    }
-                    scrollToBottom();
-                }
-            });
-        }
+ } catch (error) {
+ console.error('Lỗi khi gửi tin nhắn chat:', error);
+ appendAiMessage(`❌ **Đã xảy ra lỗi khi gửi câu hỏi:** ${error.message}\n\nVui lòng thử lại hoặc tải lại trang.`);
+ } finally {
+ typingIndicator.classList.add('hidden');
+ // Chỉ mở lại input nếu còn quota
+ const currentQuotaText = document.getElementById('quotaText');
+ const isExhausted = !isProUser && currentQuotaText && currentQuotaText.innerText.startsWith('0/');
+ if (!isExhausted) {
+ questionInput.disabled = false;
+ sendBtn.disabled = false;
+ questionInput.focus();
+ }
+ scrollToBottom();
+ }
+ });
+ }
 
-        function updateQuotaUI(remaining) {
-            if (isProUser || remaining === -1) return;
+ function updateQuotaUI(remaining) {
+ if (isProUser || remaining === -1) return;
 
-            const quotaText = document.getElementById('quotaText');
-            const quotaProgressBar = document.getElementById('quotaProgressBar');
+ const quotaText = document.getElementById('quotaText');
+ const quotaProgressBar = document.getElementById('quotaProgressBar');
 
-            if (quotaText) {
-                quotaText.innerText = `${remaining}/50`;
-            }
+ if (quotaText) {
+ quotaText.innerText = `${remaining}/50`;
+ }
 
-            if (quotaProgressBar) {
-                const percent = Math.max(0, Math.min(100, remaining * 2));
-                quotaProgressBar.style.width = `${percent}%`;
+ if (quotaProgressBar) {
+ const percent = Math.max(0, Math.min(100, remaining * 2));
+ quotaProgressBar.style.width = `${percent}%`;
 
-                if (remaining <= 5) {
-                    quotaProgressBar.className = 'h-full bg-rose-500 transition-all duration-500 rounded-full';
-                    if (quotaText) quotaText.className = 'text-rose-600 font-bold text-xs';
-                } else if (remaining <= 20) {
-                    quotaProgressBar.className = 'h-full bg-amber-500 transition-all duration-500 rounded-full';
-                    if (quotaText) quotaText.className = 'text-amber-600 font-bold text-xs';
-                } else {
-                    quotaProgressBar.className = 'h-full bg-[#F27123] transition-all duration-500 rounded-full';
-                    if (quotaText) quotaText.className = 'text-[#F27123] font-bold text-xs';
-                }
-            }
+ if (remaining <= 5) {
+ quotaProgressBar.className = 'h-full bg-rose-500 transition-all duration-500 rounded-full';
+ if (quotaText) quotaText.className = 'text-rose-600 font-bold text-xs';
+ } else if (remaining <= 20) {
+ quotaProgressBar.className = 'h-full bg-amber-500 transition-all duration-500 rounded-full';
+ if (quotaText) quotaText.className = 'text-amber-600 font-bold text-xs';
+ } else {
+ quotaProgressBar.className = 'h-full bg-[#F27123] transition-all duration-500 rounded-full';
+ if (quotaText) quotaText.className = 'text-[#F27123] font-bold text-xs';
+ }
+ }
 
-            if (remaining <= 0) {
-                if (questionInput) {
-                    questionInput.placeholder = '🛑 Bạn đã hết hạn ngạch 50 câu hỏi hôm nay.';
-                    questionInput.disabled = true;
-                }
-                if (sendBtn) {
-                    sendBtn.disabled = true;
-                }
-            }
-        }
+ if (remaining <= 0) {
+ if (questionInput) {
+ questionInput.placeholder = '🛑 Bạn đã hết hạn ngạch 50 câu hỏi hôm nay.';
+ questionInput.disabled = true;
+ }
+ if (sendBtn) {
+ sendBtn.disabled = true;
+ }
+ }
+ }
 
-        function appendUserMessage(text) {
-            const welcomeHero = document.getElementById('welcomeHero');
-            if (welcomeHero) {
-                welcomeHero.remove();
-            }
+ function appendUserMessage(text) {
+ const welcomeHero = document.getElementById('welcomeHero');
+ if (welcomeHero) {
+ welcomeHero.remove();
+ }
 
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'flex justify-end items-end my-2 animate-fade-in';
-            messageDiv.innerHTML = `
-                <div class="flex flex-col items-end max-w-[85%] sm:max-w-[75%]">
-                    <span class="text-[10px] text-slate-400 mb-1 mr-1">
-                        <span class="font-medium text-slate-600">Bạn</span> · <span>${timeStr}</span>
-                    </span>
-                    <div class="bg-[#F27123] text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left">${escapeHtml(text)}</div>
-                </div>
-            `;
-            const wrapper = document.getElementById('chatMessagesWrapper') || typingIndicator.parentElement || chatContainer;
-            wrapper.insertBefore(messageDiv, typingIndicator);
-        }
+ const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+ const messageDiv = document.createElement('div');
+ messageDiv.className = 'flex justify-end items-end my-2 animate-fade-in';
+ messageDiv.innerHTML = `
+ <div class="flex flex-col items-end max-w-[85%] sm:max-w-[75%]">
+ <span class="text-[10px] text-slate-400 mb-1 mr-1">
+ <span class="font-medium text-slate-600">Bạn</span> · <span>${timeStr}</span>
+ </span>
+ <div class="bg-[#F27123] text-white rounded-lg rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left">${escapeHtml(text)}</div>
+ </div>
+ `;
+ const wrapper = document.getElementById('chatMessagesWrapper') || typingIndicator.parentElement || chatContainer;
+ wrapper.insertBefore(messageDiv, typingIndicator);
+ }
 
-        function appendAiMessage(answer, citations) {
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'flex justify-start gap-3 items-start my-3 animate-fade-in';
+ function appendAiMessage(answer, citations) {
+ const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+ const messageDiv = document.createElement('div');
+ messageDiv.className = 'flex justify-start gap-3 items-start my-3 animate-fade-in';
 
-            let citationsHtml = '';
-            if (citations && citations.length > 0) {
-                let snippetsHtml = citations.map(c => 
-                    `[#Chunk ${c.chunkIndex} | ${escapeHtml(c.documentFileName || 'Tài liệu')} - Trang ${c.pageNumber}]\n${escapeHtml(c.snippet)}`
-                ).join('\n\n--------------------\n\n');
+ let citationsHtml = '';
+ if (citations && citations.length > 0) {
+ let snippetsHtml = citations.map(c => 
+ `[#Chunk ${c.chunkIndex} | ${escapeHtml(c.documentFileName || 'Tài liệu')} - Trang ${c.pageNumber}]\n${escapeHtml(c.snippet)}`
+ ).join('\n\n--------------------\n\n');
 
-                citationsHtml = `
-                    <div class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
-                        <input type="checkbox" /> 
-                        <div class="collapse-title text-[11px] font-semibold text-[#F27123] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
-                            <i class="fa-solid fa-book-bookmark text-[#F27123]"></i>
-                            <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} đoạn Chunks)</span>
-                        </div>
-                        <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2">
-                            <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto leading-relaxed">${snippetsHtml}</div>
-                        </div>
-                    </div>
-                `;
-            }
+ citationsHtml = `
+ <div class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
+ <input type="checkbox" /> 
+ <div class="collapse-title text-[11px] font-semibold text-[#F27123] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
+ <i class="fa-solid fa-book-bookmark text-[#F27123]"></i>
+ <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} đoạn Chunks)</span>
+ </div>
+ <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2">
+ <div class="p-3 bg-slate-900 text-slate-100 rounded-lg font-mono text-[10px] whitespace-pre-wrap max-h-48 overflow-y-auto leading-relaxed">${snippetsHtml}</div>
+ </div>
+ </div>
+ `;
+ }
 
-            messageDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
-                    <i class="fa-solid fa-robot"></i>
-                </div>
-                <div class="flex flex-col items-start max-w-[92%] sm:max-w-[88%] w-full">
-                    <span class="text-[10px] text-slate-400 mb-1 ml-1">
-                        <span class="font-medium text-slate-600">Trợ Lý AI</span> · <span>${timeStr}</span>
-                    </span>
-                    <div class="bg-slate-50 border border-slate-200/90 text-slate-800 rounded-2xl rounded-tl-xs p-4 text-xs sm:text-sm leading-relaxed shadow-xs space-y-3 w-full">
-                        <div class="markdown-body ai-markdown-content">${renderMarkdownContent(answer)}</div>
-                        ${citationsHtml}
-                    </div>
-                </div>
-            `;
-            const wrapper = document.getElementById('chatMessagesWrapper') || typingIndicator.parentElement || chatContainer;
-            wrapper.insertBefore(messageDiv, typingIndicator);
-        }
+ messageDiv.innerHTML = `
+ <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
+ <i class="fa-solid fa-robot"></i>
+ </div>
+ <div class="flex flex-col items-start max-w-[92%] sm:max-w-[88%] w-full">
+ <span class="text-[10px] text-slate-400 mb-1 ml-1">
+ <span class="font-medium text-slate-600">Trợ Lý AI</span> · <span>${timeStr}</span>
+ </span>
+ <div class="bg-slate-50 border border-slate-200/90 text-slate-800 rounded-lg rounded-tl-xs p-4 text-xs sm:text-sm leading-relaxed shadow-xs space-y-3 w-full">
+ <div class="markdown-body ai-markdown-content">${renderMarkdownContent(answer)}</div>
+ ${citationsHtml}
+ </div>
+ </div>
+ `;
+ const wrapper = document.getElementById('chatMessagesWrapper') || typingIndicator.parentElement || chatContainer;
+ wrapper.insertBefore(messageDiv, typingIndicator);
+ }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, "&amp;")
-                      .replace(/</g, "&lt;")
-                      .replace(/>/g, "&gt;")
-                      .replace(/"/g, "&quot;")
-                      .replace(/'/g, "&#039;");
-        }
-    });
+ function escapeHtml(str) {
+ if (!str) return '';
+ return str.replace(/&/g, "&amp;")
+ .replace(/</g, "&lt;")
+ .replace(/>/g, "&gt;")
+ .replace(/"/g, "&quot;")
+ .replace(/'/g, "&#039;");
+ }
+ });
 </script>
 
 </section>

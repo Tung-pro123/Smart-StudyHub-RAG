@@ -1,259 +1,259 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" data-theme="light">
 <head th:replace="~{fragments/head :: common-head('Đăng Nhập - StudyHub AI - FPT University')}"></head>
 <body class="min-h-screen font-sans antialiased text-slate-800">
 
 <div class="min-h-screen w-full flex flex-col lg:flex-row">
 
-    <!-- Cột trái (Banner FPT Branding) -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1C0D02] via-[#A84408] to-[#F27123] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#FFA500]/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-[#FF8A3D]/25 rounded-full blur-3xl pointer-events-none"></div>
+ <!-- Cột trái (Banner Nền Tối Sâu Dịu Mắt - Không Chói) -->
+ <div class="hidden lg:flex lg:w-1/2 bg-[#0F141C] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden border-r border-slate-800/80">
+ <!-- Đốm sáng cam vàng mờ nhẹ nhàng ở góc (chỉ 10-12% opacity) -->
+ <div class="absolute -top-32 -left-32 w-80 h-80 bg-[#F27123]/10 rounded-full blur-3xl pointer-events-none"></div>
+ <div class="absolute -bottom-32 -right-32 w-80 h-80 bg-[#FFA500]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- Header: Logo FPT Style -->
-        <div class="relative z-10">
-            <a th:href="@{/}" class="inline-flex items-center gap-3 group">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#F27123] via-[#FF8A3D] to-[#FFB03A] flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-105 transition-transform border border-white/20">
-                    <i class="fa-solid fa-graduation-cap text-xl"></i>
-                </div>
-                <div>
-                    <span class="font-extrabold text-2xl text-white tracking-tight">StudyHub AI</span>
-                    <p class="text-[11px] text-amber-200 font-semibold tracking-wide flex items-center gap-1.5 mt-0.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#51B748]"></span> FPT University Learning Platform
-                    </p>
-                </div>
-            </a>
-        </div>
+ <!-- Header: Logo FPT Style -->
+ <div class="relative z-10">
+ <a th:href="@{/}" class="inline-flex items-center gap-3 group">
+ <div class="w-10 h-10 rounded-lg bg-[#F27123] flex items-center justify-center text-white shadow-md shadow-black/30 group-hover:bg-[#D45B12] transition-colors">
+ <i class="fa-solid fa-graduation-cap text-lg"></i>
+ </div>
+ <div>
+ <span class="font-bold text-xl text-white tracking-tight">StudyHub AI</span>
+ <p class="text-[11px] text-slate-400 font-medium tracking-wide flex items-center gap-1.5 mt-0.5">
+ <span class="w-1.5 h-1.5 rounded-full bg-[#51B748]"></span> FPT University Learning Platform
+ </p>
+ </div>
+ </a>
+ </div>
 
-        <!-- Center: Nội dung giới thiệu -->
-        <div class="relative z-10 space-y-8 my-auto py-8">
-            <div class="space-y-4 max-w-lg">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-semibold text-white">
-                    <span class="w-2 h-2 rounded-full bg-[#F27123] animate-pulse"></span>
-                    <span>Luyện Thi A+ Cùng RAG AI Không Ảo Giác</span>
-                </div>
-                <h1 class="text-3xl xl:text-4xl font-black text-white leading-tight tracking-tight">
-                    Học theo giáo trình<br />
-                    <span class="bg-gradient-to-r from-[#FF8A3D] via-[#F27123] to-[#51B748] bg-clip-text text-transparent">chuẩn Đại học FPT.</span>
-                </h1>
-                <p class="text-sm text-amber-100 leading-relaxed font-normal">
-                    Tải slide PDF lên và hỏi đáp với trợ lý AI bám sát 100% nội dung môn học kèm số trang đối chứng.
-                </p>
-            </div>
+ <!-- Center: Nội dung giới thiệu -->
+ <div class="relative z-10 space-y-6 my-auto py-8">
+ <div class="space-y-3 max-w-lg">
+ <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/5 border border-white/10 text-xs font-semibold text-slate-300">
+ <span class="w-2 h-2 rounded-full bg-[#F27123] animate-pulse"></span>
+ <span>Luyện Thi A+ Cùng RAG AI Không Ảo Giác</span>
+ </div>
+ <h1 class="text-3xl xl:text-4xl font-extrabold text-white leading-tight tracking-tight">
+ Học theo giáo trình<br />
+ <span class="text-[#F27123]">chuẩn Đại học FPT.</span>
+ </h1>
+ <p class="text-sm text-slate-400 leading-relaxed font-normal">
+ Tải slide PDF lên và hỏi đáp với trợ lý AI bám sát 100% nội dung môn học kèm số trang đối chứng.
+ </p>
+ </div>
 
-            <!-- Danh sách tính năng chính -->
-            <div class="space-y-4 max-w-md pt-2">
-                <div class="flex items-center gap-3 text-sm text-amber-50">
-                    <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#F27123] shrink-0 font-bold">
-                        <i class="fa-solid fa-book-bookmark text-sm"></i>
-                    </div>
-                    <span>Quản lý môn học theo kỳ & nạp slide PDF nhanh chóng</span>
-                </div>
-                <div class="flex items-center gap-3 text-sm text-amber-50">
-                    <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#51B748] shrink-0 font-bold">
-                        <i class="fa-solid fa-comments text-sm"></i>
-                    </div>
-                    <span>Hỏi đáp RAG AI kèm Citation Cards số trang minh chứng</span>
-                </div>
-                <div class="flex items-center gap-3 text-sm text-amber-50">
-                    <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#FF8A3D] shrink-0 font-bold">
-                        <i class="fa-solid fa-list-check text-sm"></i>
-                    </div>
-                    <span>Luyện đề trắc nghiệm AI & Lập lịch ôn tập vừa sức</span>
-                </div>
-            </div>
-        </div>
+ <!-- Danh sách tính năng chính -->
+ <div class="space-y-3.5 max-w-md pt-2">
+ <div class="flex items-center gap-3 text-sm text-slate-300">
+ <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[#F27123] shrink-0 font-bold text-xs">
+ <i class="fa-solid fa-book-bookmark"></i>
+ </div>
+ <span>Quản lý môn học theo kỳ & nạp slide PDF nhanh chóng</span>
+ </div>
+ <div class="flex items-center gap-3 text-sm text-slate-300">
+ <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[#51B748] shrink-0 font-bold text-xs">
+ <i class="fa-solid fa-comments"></i>
+ </div>
+ <span>Hỏi đáp RAG AI kèm Citation Cards số trang minh chứng</span>
+ </div>
+ <div class="flex items-center gap-3 text-sm text-slate-300">
+ <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[#FF9800] shrink-0 font-bold text-xs">
+ <i class="fa-solid fa-list-check"></i>
+ </div>
+ <span>Luyện đề trắc nghiệm AI & Lập lịch ôn tập vừa sức</span>
+ </div>
+ </div>
+ </div>
 
-        <div class="relative z-10 flex items-center gap-3 text-xs text-amber-200">
-            <span class="font-bold text-white">Linh vật Cóc FPT</span>
-            <span>•</span>
-            <span>Tự hào công nghệ sinh viên FPT</span>
-        </div>
-    </div>
+ <div class="relative z-10 flex items-center gap-3 text-xs text-slate-500">
+ <span class="font-semibold text-slate-400">Linh vật Cóc FPT</span>
+ <span>•</span>
+ <span>Tự hào công nghệ sinh viên FPT</span>
+ </div>
+ </div>
 
-    <!-- Cột phải (Form Glassmorphism) -->
-    <div class="w-full lg:w-1/2 bg-white/90 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-12 xl:p-16 overflow-y-auto border-l border-slate-200/80">
-        <!-- Nút Quay Lại Trang Chủ -->
-        <div class="flex items-center justify-between">
-            <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-[#F27123] transition flex items-center gap-1.5">
-                <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay lại Trang Chủ
-            </a>
-            <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-[#F27123]"></span>
-                <span class="w-2 h-2 rounded-full bg-[#F27123]"></span>
-                <span class="w-2 h-2 rounded-full bg-[#51B748]"></span>
-            </div>
-        </div>
+ <!-- Cột phải (Form Đăng Nhập) -->
+ <div class="w-full lg:w-1/2 bg-white flex flex-col justify-between p-6 sm:p-12 xl:p-16 overflow-y-auto">
+ <!-- Nút Quay Lại Trang Chủ -->
+ <div class="flex items-center justify-between">
+ <a th:href="@{/}" class="text-xs font-semibold text-slate-500 hover:text-[#F27123] transition flex items-center gap-1.5">
+ <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay lại Trang Chủ
+ </a>
+ <div class="flex items-center gap-1.5">
+ <span class="w-2 h-2 rounded-full bg-[#F27123]"></span>
+ <span class="w-2 h-2 rounded-full bg-[#FF9800]"></span>
+ <span class="w-2 h-2 rounded-full bg-[#51B748]"></span>
+ </div>
+ </div>
 
-        <!-- Hộp Form Đăng Nhập Căn Giữa -->
-        <div class="max-w-md w-full mx-auto my-auto py-8 space-y-6">
-            <!-- Tiêu đề Form -->
-            <div class="space-y-1.5">
-                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Đăng nhập tài khoản</h2>
-                <p class="text-xs text-slate-500">Nhập thông tin tài khoản hoặc sử dụng Google để bắt đầu học tập.</p>
-            </div>
+ <!-- Hộp Form Đăng Nhập Căn Giữa -->
+ <div class="max-w-md w-full mx-auto my-auto py-8 space-y-6">
+ <!-- Tiêu đề Form -->
+ <div class="space-y-1">
+ <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Đăng nhập tài khoản</h2>
+ <p class="text-xs text-slate-500">Nhập thông tin tài khoản hoặc sử dụng Google để bắt đầu học tập.</p>
+ </div>
 
-            <!-- Flash Thông Báo Lỗi / Thành Công -->
-            <div th:if="${successMessage}" class="alert alert-success shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-[#51B748] text-xs py-2.5">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span class="font-bold" th:text="${successMessage}">Thao tác thành công!</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-            </div>
+ <!-- Flash Thông Báo Lỗi / Thành Công -->
+ <div th:if="${successMessage}" class="alert alert-success shadow-xs rounded-lg flex items-center justify-between text-white border-none bg-[#51B748] text-xs py-2.5">
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-circle-check"></i>
+ <span class="font-bold" th:text="${successMessage}">Thao tác thành công!</span>
+ </div>
+ <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+ </div>
 
-            <div th:if="${errorMessage}" class="alert alert-error shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-rose-600 text-xs py-2.5">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span class="font-bold" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-            </div>
+ <div th:if="${errorMessage}" class="alert alert-error shadow-xs rounded-lg flex items-center justify-between text-white border-none bg-rose-600 text-xs py-2.5">
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-triangle-exclamation"></i>
+ <span class="font-bold" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+ </div>
+ <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+ </div>
 
-            <div th:if="${param.error != null and param.error[0] == 'unauthorized'}" class="alert alert-warning shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-[#F27123] text-xs py-2.5">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-lock"></i>
-                    <span class="font-bold">Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-            </div>
+ <div th:if="${param.error != null and param.error[0] == 'unauthorized'}" class="alert alert-warning shadow-xs rounded-lg flex items-center justify-between text-white border-none bg-[#F27123] text-xs py-2.5">
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-lock"></i>
+ <span class="font-bold">Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.</span>
+ </div>
+ <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+ </div>
 
-            <div th:if="${param.error != null and param.error[0] == 'oauth2_failed'}" class="alert alert-error shadow-sm rounded-xl flex items-center justify-between text-white border-none bg-rose-600 text-xs py-2.5">
-                <div class="flex items-center gap-2">
-                    <i class="fa-brands fa-google text-lg"></i>
-                    <span class="font-bold">Đăng nhập Google thất bại. Vui lòng thử lại hoặc đăng nhập bằng tài khoản bên dưới.</span>
-                </div>
-                <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-            </div>
+ <div th:if="${param.error != null and param.error[0] == 'oauth2_failed'}" class="alert alert-error shadow-xs rounded-lg flex items-center justify-between text-white border-none bg-rose-600 text-xs py-2.5">
+ <div class="flex items-center gap-2">
+ <i class="fa-brands fa-google text-lg"></i>
+ <span class="font-bold">Đăng nhập Google thất bại. Vui lòng thử lại hoặc đăng nhập bằng tài khoản bên dưới.</span>
+ </div>
+ <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+ </div>
 
-            <!-- Form Đăng Nhập Chính -->
-            <form th:action="@{/login}" th:object="${loginDto}" method="post" class="space-y-4">
-                <!-- Tên Đăng Nhập -->
-                <div class="form-control space-y-1">
-                    <label class="label p-0"><span class="label-text font-bold text-xs text-slate-700">Tên đăng nhập</span></label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" id="login-username" th:field="*{username}" required placeholder="Tên đăng nhập" 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
-                    </div>
-                </div>
+ <!-- Form Đăng Nhập Chính -->
+ <form th:action="@{/login}" th:object="${loginDto}" method="post" class="space-y-4">
+ <!-- Tên Đăng Nhập -->
+ <div class="form-control space-y-1">
+ <label class="label p-0"><span class="label-text font-semibold text-xs text-slate-700">Tên đăng nhập</span></label>
+ <div class="relative">
+ <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+ <input type="text" id="login-username" th:field="*{username}" required placeholder="Tên đăng nhập" 
+ class="input input-sm h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-lg text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
+ </div>
+ </div>
 
-                <!-- Mật Khẩu -->
-                <div class="form-control space-y-1">
-                    <label class="label p-0"><span class="label-text font-bold text-xs text-slate-700">Mật khẩu</span></label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="password" id="login-password" th:field="*{password}" required placeholder="••••••••" 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-10 w-full rounded-xl text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
-                        <button type="button" onclick="togglePasswordVisibility('login-password', this)" 
-                                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs transition" title="Hiện/ẩn mật khẩu">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
+ <!-- Mật Khẩu -->
+ <div class="form-control space-y-1">
+ <label class="label p-0"><span class="label-text font-semibold text-xs text-slate-700">Mật khẩu</span></label>
+ <div class="relative">
+ <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+ <input type="password" id="login-password" th:field="*{password}" required placeholder="••••••••" 
+ class="input input-sm h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-10 w-full rounded-lg text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
+ <button type="button" onclick="togglePasswordVisibility('login-password', this)" 
+ class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs transition" title="Hiện/ẩn mật khẩu">
+ <i class="fa-solid fa-eye"></i>
+ </button>
+ </div>
+ </div>
 
-                <!-- Nút Đăng Nhập FPT Gradient -->
-                <button type="submit" class="btn h-11 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 text-white font-bold rounded-xl border-none shadow-lg shadow-[#F27123]/25 text-xs transition-all w-full flex items-center justify-center gap-2 mt-2">
-                    <span>Đăng Nhập Ngay</span>
-                    <i class="fa-solid fa-arrow-right text-[11px]"></i>
-                </button>
-            </form>
+ <!-- Nút Đăng Nhập Đơn Sắc Cam FPT -->
+ <button type="submit" class="btn h-10 bg-[#F27123] hover:bg-[#D45B12] text-white font-bold rounded-lg border-none shadow-xs text-xs transition-colors w-full flex items-center justify-center gap-2 mt-2">
+ <span>Đăng Nhập Ngay</span>
+ <i class="fa-solid fa-arrow-right text-[11px]"></i>
+ </button>
+ </form>
 
-            <!-- Đường kẻ có chữ Hoặc -->
-            <div class="flex items-center gap-3 my-4">
-                <div class="flex-1 h-px bg-slate-200"></div>
-                <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Hoặc</span>
-                <div class="flex-1 h-px bg-slate-200"></div>
-            </div>
+ <!-- Đường kẻ có chữ Hoặc -->
+ <div class="flex items-center gap-3 my-4">
+ <div class="flex-1 h-px bg-slate-200"></div>
+ <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Hoặc</span>
+ <div class="flex-1 h-px bg-slate-200"></div>
+ </div>
 
-            <!-- Nút Google OAuth2 -->
-            <div>
-                <a th:href="@{/oauth2/authorization/google}"
-                   class="btn btn-outline w-full border-slate-200 hover:bg-slate-50 hover:border-[#F27123]/40 text-slate-700 rounded-xl text-xs font-bold h-11 flex items-center justify-center gap-2.5 transition">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                    </svg>
-                    <span>Đăng nhập bằng Google</span>
-                </a>
-            </div>
+ <!-- Nút Google OAuth2 -->
+ <div>
+ <a th:href="@{/oauth2/authorization/google}"
+ class="btn btn-outline w-full border-slate-200 hover:bg-slate-50 hover:border-[#F27123] text-slate-700 rounded-lg text-xs font-semibold h-10 flex items-center justify-center gap-2.5 transition">
+ <svg class="w-4 h-4" viewBox="0 0 24 24">
+ <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+ <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+ <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+ <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+ </svg>
+ <span>Đăng nhập bằng Google</span>
+ </a>
+ </div>
 
-            <!-- Khung tài khoản demo 1-Click (FPT Colors) -->
-            <div class="glass-card rounded-2xl p-4 text-xs space-y-2.5">
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-wand-magic-sparkles text-[#F27123]"></i> Tài khoản demo 1-Click
-                    </span>
-                    <span class="text-[10px] text-slate-400 font-mono bg-white px-2 py-0.5 rounded-md border border-slate-200">Mật khẩu: 123456</span>
-                </div>
+ <!-- Khung tài khoản demo 1-Click (Gọn gàng, bo góc nhẹ) -->
+ <div class="rounded-xl p-4 bg-slate-50 border border-slate-200 text-xs space-y-2.5">
+ <div class="flex items-center justify-between">
+ <span class="font-bold text-slate-700 flex items-center gap-1.5">
+ <i class="fa-solid fa-wand-magic-sparkles text-[#F27123]"></i> Tài khoản demo 1-Click
+ </span>
+ <span class="text-[10px] text-slate-500 font-mono bg-white px-2 py-0.5 rounded border border-slate-200">Mật khẩu: 123456</span>
+ </div>
 
-                <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="fillDemo('student')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-[#F27123] hover:bg-orange-50/50 hover:text-[#F27123] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
-                        <span class="badge badge-xs bg-slate-100 text-slate-600 font-mono text-[9px] mr-1.5 border-none">FREE</span>
-                        <span class="font-bold">student</span>
-                    </button>
-                    <button type="button" onclick="fillDemo('pro_student')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-[#F27123] hover:bg-orange-50/50 hover:text-[#F27123] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
-                        <span class="badge badge-xs bg-[#F27123]/10 text-[#F27123] font-mono text-[9px] mr-1.5 border-none font-bold">PRO</span>
-                        <span class="font-bold">pro_student</span>
-                    </button>
-                    <button type="button" onclick="fillDemo('squad_leader')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-[#51B748] hover:bg-green-50/50 hover:text-[#51B748] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
-                        <span class="badge badge-xs bg-[#51B748]/10 text-[#51B748] font-mono text-[9px] mr-1.5 border-none font-bold">SQUAD</span>
-                        <span class="font-bold">squad_leader</span>
-                    </button>
-                    <button type="button" onclick="fillDemo('admin')" 
-                            class="btn btn-xs bg-white border border-slate-200 hover:border-[#F27123] hover:bg-orange-50/50 hover:text-[#F27123] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-xl transition text-slate-700 shadow-2xs">
-                        <span class="badge badge-xs bg-[#F27123]/10 text-[#F27123] font-mono text-[9px] mr-1.5 border-none font-bold">ADMIN</span>
-                        <span class="font-bold">admin</span>
-                    </button>
-                </div>
-            </div>
+ <div class="grid grid-cols-2 gap-2">
+ <button type="button" onclick="fillDemo('student')" 
+ class="btn btn-xs bg-white border border-slate-200 hover:border-[#F27123] hover:bg-orange-50 hover:text-[#F27123] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-lg transition text-slate-700">
+ <span class="badge badge-xs bg-slate-100 text-slate-600 font-mono text-[9px] mr-1.5 border-none">FREE</span>
+ <span class="font-bold">student</span>
+ </button>
+ <button type="button" onclick="fillDemo('pro_student')" 
+ class="btn btn-xs bg-white border border-slate-200 hover:border-[#F27123] hover:bg-orange-50 hover:text-[#F27123] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-lg transition text-slate-700">
+ <span class="badge badge-xs bg-orange-100 text-[#F27123] font-mono text-[9px] mr-1.5 border-none font-bold">PRO</span>
+ <span class="font-bold">pro_student</span>
+ </button>
+ <button type="button" onclick="fillDemo('squad_leader')" 
+ class="btn btn-xs bg-white border border-slate-200 hover:border-[#51B748] hover:bg-green-50 hover:text-[#51B748] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-lg transition text-slate-700">
+ <span class="badge badge-xs bg-green-100 text-[#51B748] font-mono text-[9px] mr-1.5 border-none font-bold">SQUAD</span>
+ <span class="font-bold">squad_leader</span>
+ </button>
+ <button type="button" onclick="fillDemo('admin')" 
+ class="btn btn-xs bg-white border border-slate-200 hover:border-[#F27123] hover:bg-orange-50 hover:text-[#F27123] justify-start normal-case text-[11px] h-auto py-2 px-3 rounded-lg transition text-slate-700">
+ <span class="badge badge-xs bg-orange-100 text-[#F27123] font-mono text-[9px] mr-1.5 border-none font-bold">ADMIN</span>
+ <span class="font-bold">admin</span>
+ </button>
+ </div>
+ </div>
 
-            <!-- Chuyển Sang Đăng Ký -->
-            <div class="text-center text-xs text-slate-500 pt-2">
-                Chưa có tài khoản sinh viên? 
-                <a th:href="@{/register}" class="font-bold text-[#F27123] hover:text-[#F27123] hover:underline ml-1">Đăng ký ngay</a>
-            </div>
-        </div>
+ <!-- Chuyển Sang Đăng Ký -->
+ <div class="text-center text-xs text-slate-500 pt-2">
+ Chưa có tài khoản sinh viên? 
+ <a th:href="@{/register}" class="font-bold text-[#F27123] hover:underline ml-1">Đăng ký ngay</a>
+ </div>
+ </div>
 
-        <div></div>
-    </div>
+ <div></div>
+ </div>
 
 </div>
 
 <!-- JavaScript Xử Lý Form & Con Mắt Xem Mật Khẩu -->
 <script>
-    function fillDemo(username) {
-        const uInput = document.getElementById('login-username');
-        const pInput = document.getElementById('login-password');
-        if (uInput) uInput.value = username;
-        if (pInput) pInput.value = '123456';
-    }
+ function fillDemo(username) {
+ const uInput = document.getElementById('login-username');
+ const pInput = document.getElementById('login-password');
+ if (uInput) uInput.value = username;
+ if (pInput) pInput.value = '123456';
+ }
 
-    function togglePasswordVisibility(inputId, btn) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-        const icon = btn.querySelector('i');
-        if (input.type === 'password') {
-            input.type = 'text';
-            if (icon) {
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            }
-        } else {
-            input.type = 'password';
-            if (icon) {
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-    }
+ function togglePasswordVisibility(inputId, btn) {
+ const input = document.getElementById(inputId);
+ if (!input) return;
+ const icon = btn.querySelector('i');
+ if (input.type === 'password') {
+ input.type = 'text';
+ if (icon) {
+ icon.classList.remove('fa-eye');
+ icon.classList.add('fa-eye-slash');
+ }
+ } else {
+ input.type = 'password';
+ if (icon) {
+ icon.classList.remove('fa-eye-slash');
+ icon.classList.add('fa-eye');
+ }
+ }
+ }
 </script>
 
 </body>
 </html>
-

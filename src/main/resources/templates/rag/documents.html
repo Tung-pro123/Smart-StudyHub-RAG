@@ -1,429 +1,429 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/main :: main-layout(
-        'Tài Liệu & Cắt Chunks - ' + ${course.code},
-        ~{::section}
-      )}">
+ th:replace="~{layout/main :: main-layout(
+ 'Tài Liệu & Cắt Chunks - ' + ${course.code},
+ ~{::section}
+ )}">
 <body>
 <section class="space-y-8 relative max-w-7xl mx-auto">
 
-    
+ 
 
-    <!-- Flash Messages -->
-    <div th:if="${successMessage}" class="alert alert-success shadow-2xl rounded-2xl flex items-center justify-between text-white border-none bg-emerald-600/90 backdrop-blur-md relative z-20">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-xl"></i>
-            <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
+ <!-- Flash Messages -->
+ <div th:if="${successMessage}" class="alert alert-success shadow-2xl rounded-lg flex items-center justify-between text-white border-none bg-emerald-600/90 backdrop-blur-md relative z-20">
+ <div class="flex items-center gap-3">
+ <i class="fa-solid fa-circle-check text-xl"></i>
+ <span class="font-bold text-sm" th:text="${successMessage}">Thao tác thành công!</span>
+ </div>
+ <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+ </div>
 
-    <div th:if="${errorMessage}" class="alert alert-error shadow-2xl rounded-2xl flex items-center justify-between text-white border-none bg-rose-600/90 backdrop-blur-md relative z-20">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-            <span class="font-bold text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
-        </div>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
-    </div>
+ <div th:if="${errorMessage}" class="alert alert-error shadow-2xl rounded-lg flex items-center justify-between text-white border-none bg-rose-600/90 backdrop-blur-md relative z-20">
+ <div class="flex items-center gap-3">
+ <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+ <span class="font-bold text-sm" th:text="${errorMessage}">Đã xảy ra lỗi!</span>
+ </div>
+ <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-circle btn-xs text-white">✕</button>
+ </div>
 
-    <!-- Breadcrumbs Navigation -->
-    <div class="text-xs breadcrumbs text-slate-400 relative z-10">
-        <ul>
-            <li><a th:href="@{/}" class="hover:text-white"><i class="fa-solid fa-house mr-1 text-[#F27123]"></i> Trang Chủ</a></li>
-            <li><a th:href="@{/courses/{id}(id=${course.id})}" class="hover:text-white"><span th:text="${course.code}">HSF302</span></a></li>
-            <li class="font-bold text-[#F27123]">Tài Liệu & Cắt Chunks</li>
-        </ul>
-    </div>
+ <!-- Breadcrumbs Navigation -->
+ <div class="text-xs breadcrumbs text-slate-400 relative z-10">
+ <ul>
+ <li><a th:href="@{/}" class="hover:text-white"><i class="fa-solid fa-house mr-1 text-[#F27123]"></i> Trang Chủ</a></li>
+ <li><a th:href="@{/courses/{id}(id=${course.id})}" class="hover:text-white"><span th:text="${course.code}">HSF302</span></a></li>
+ <li class="font-bold text-[#F27123]">Tài Liệu & Cắt Chunks</li>
+ </ul>
+ </div>
 
-    <!-- Header Banner Thống Kê Môn Học (Clean White Card) -->
-    <div class="rounded-2xl p-6 bg-white border border-slate-200 text-slate-800 shadow-xs relative">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
-            <div class="flex items-start gap-4 sm:gap-5">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-orange-50 border border-orange-200 text-[#F27123] flex items-center justify-center text-2xl sm:text-3xl shadow-2xs flex-shrink-0">
-                    <i class="fa-solid fa-file-pdf text-rose-500"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                        <span class="px-2.5 py-0.5 rounded-lg bg-orange-50 text-[#F27123] border border-orange-200 font-bold text-xs" th:text="${course.code}">HSF302</span>
-                        <span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium" th:text="${course.semester} ?: 'Fall 2026'">Fall 2026</span>
-                        <span th:if="${isPro}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-orange-50 border border-orange-200 text-[#F27123] text-xs font-bold">
-                            <i class="fa-solid fa-crown text-amber-500"></i> PRO
-                        </span>
-                        <span th:unless="${isPro}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium">
-                            <i class="fa-solid fa-layer-group text-slate-500"></i>
-                            <span th:text="'Gói FREE: ' + ${currentDocCount} + '/' + ${maxDocsFree} + ' tài liệu'">Gói FREE: 0/3</span>
-                        </span>
-                    </div>
-                    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" th:text="${course.name}">
-                        Quản Lý Tài Liệu &amp; Cắt Chunks Giáo Trình
-                    </h1>
-                    <p class="text-xs text-slate-500 mt-1 max-w-xl leading-relaxed">
-                        Tải slide bài giảng, giáo trình PDF lên để hệ thống tách thành các đoạn nội dung phục vụ hỏi đáp.
-                    </p>
-                </div>
-            </div>
+ <!-- Header Banner Thống Kê Môn Học (Clean White Card) -->
+ <div class="rounded-lg p-6 bg-white border border-slate-200 text-slate-800 shadow-xs relative">
+ <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
+ <div class="flex items-start gap-4 sm:gap-5">
+ <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-orange-50 border border-orange-200 text-[#F27123] flex items-center justify-center text-2xl sm:text-3xl shadow-2xs flex-shrink-0">
+ <i class="fa-solid fa-file-pdf text-rose-500"></i>
+ </div>
+ <div>
+ <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+ <span class="px-2.5 py-0.5 rounded-lg bg-orange-50 text-[#F27123] border border-orange-200 font-bold text-xs" th:text="${course.code}">HSF302</span>
+ <span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium" th:text="${course.semester} ?: 'Fall 2026'">Fall 2026</span>
+ <span th:if="${isPro}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-orange-50 border border-orange-200 text-[#F27123] text-xs font-bold">
+ <i class="fa-solid fa-crown text-amber-500"></i> PRO
+ </span>
+ <span th:unless="${isPro}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-600 text-xs font-medium">
+ <i class="fa-solid fa-layer-group text-slate-500"></i>
+ <span th:text="'Gói FREE: ' + ${currentDocCount} + '/' + ${maxDocsFree} + ' tài liệu'">Gói FREE: 0/3</span>
+ </span>
+ </div>
+ <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight" th:text="${course.name}">
+ Quản Lý Tài Liệu &amp; Cắt Chunks Giáo Trình
+ </h1>
+ <p class="text-xs text-slate-500 mt-1 max-w-xl leading-relaxed">
+ Tải slide bài giảng, giáo trình PDF lên để hệ thống tách thành các đoạn nội dung phục vụ hỏi đáp.
+ </p>
+ </div>
+ </div>
 
-            <!-- Quick Action Buttons -->
-            <div class="flex items-center gap-2.5 flex-wrap flex-shrink-0">
-                <a th:href="@{/courses/{id}/chat(id=${course.id})}" class="btn btn-sm h-10 px-4 bg-[#F27123] hover:bg-[#D45B12] text-white rounded-xl font-bold shadow-xs text-xs gap-2">
-                    <i class="fa-solid fa-robot"></i>
-                    <span>Khung Chat AI</span>
-                </a>
-                <a th:href="@{/courses/{id}(id=${course.id})}" class="btn btn-sm h-10 px-3.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl font-medium text-xs gap-1.5 shadow-2xs">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span>Chi Tiết</span>
-                </a>
-            </div>
-        </div>
+ <!-- Quick Action Buttons -->
+ <div class="flex items-center gap-2.5 flex-wrap flex-shrink-0">
+ <a th:href="@{/courses/{id}/chat(id=${course.id})}" class="btn btn-sm h-10 px-4 bg-[#F27123] hover:bg-[#D45B12] text-white rounded-xl font-bold shadow-xs text-xs gap-2">
+ <i class="fa-solid fa-robot"></i>
+ <span>Khung Chat AI</span>
+ </a>
+ <a th:href="@{/courses/{id}(id=${course.id})}" class="btn btn-sm h-10 px-3.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl font-medium text-xs gap-1.5 shadow-2xs">
+ <i class="fa-solid fa-arrow-left"></i>
+ <span>Chi Tiết</span>
+ </a>
+ </div>
+ </div>
 
-        <!-- 2 Chỉ Số Thiết Thực: Số Tài Liệu & Số Chunks -->
-        <div class="grid grid-cols-2 gap-3.5 mt-5 pt-4 border-t border-slate-100 relative z-10">
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng số tài liệu</p>
-                    <div class="flex items-baseline gap-1.5 mt-0.5">
-                        <p class="text-2xl font-black" th:classappend="${isDocLimitReached} ? 'text-rose-600' : 'text-slate-900'" th:text="${totalDocuments}">0</p>
-                        <span th:if="${!isPro}" class="text-xs font-medium text-slate-400" th:text="'/ ' + ${maxDocsFree} + ' file'">/ 3 file</span>
-                        <span th:if="${isPro}" class="text-xs font-bold text-[#F27123]">/ Không giới hạn</span>
-                    </div>
-                </div>
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#F27123] flex items-center justify-center text-sm">
-                    <i class="fa-solid fa-file-lines"></i>
-                </div>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng số Chunks tri thức</p>
-                    <p class="text-2xl font-black text-[#F27123] mt-0.5" th:text="${totalChunks}">0</p>
-                </div>
-                <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#F27123] flex items-center justify-center text-sm">
-                    <i class="fa-solid fa-puzzle-piece"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+ <!-- 2 Chỉ Số Thiết Thực: Số Tài Liệu & Số Chunks -->
+ <div class="grid grid-cols-2 gap-3.5 mt-5 pt-4 border-t border-slate-100 relative z-10">
+ <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+ <div>
+ <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng số tài liệu</p>
+ <div class="flex items-baseline gap-1.5 mt-0.5">
+ <p class="text-2xl font-black" th:classappend="${isDocLimitReached} ? 'text-rose-600' : 'text-slate-900'" th:text="${totalDocuments}">0</p>
+ <span th:if="${!isPro}" class="text-xs font-medium text-slate-400" th:text="'/ ' + ${maxDocsFree} + ' file'">/ 3 file</span>
+ <span th:if="${isPro}" class="text-xs font-bold text-[#F27123]">/ Không giới hạn</span>
+ </div>
+ </div>
+ <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#F27123] flex items-center justify-center text-sm">
+ <i class="fa-solid fa-file-lines"></i>
+ </div>
+ </div>
+ <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+ <div>
+ <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng số Chunks tri thức</p>
+ <p class="text-2xl font-black text-[#F27123] mt-0.5" th:text="${totalChunks}">0</p>
+ </div>
+ <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#F27123] flex items-center justify-center text-sm">
+ <i class="fa-solid fa-puzzle-piece"></i>
+ </div>
+ </div>
+ </div>
+ </div>
 
-    <!-- Main Grid: Upload Zone (Left) & Document Management (Right) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+ <!-- Main Grid: Upload Zone (Left) & Document Management (Right) -->
+ <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
 
-        <!-- Column 1: Upload Zone -->
-        <div class="lg:col-span-1 space-y-6">
-            <div class="rounded-3xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
-                <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
-                    <div class="w-11 h-11 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-base font-black text-slate-900">Tải Lên File PDF</h2>
-                        <p class="text-xs text-slate-500">Giáo trình, slide bài giảng (.pdf)</p>
-                    </div>
-                </div>
+ <!-- Column 1: Upload Zone -->
+ <div class="lg:col-span-1 space-y-6">
+ <div class="rounded-xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
+ <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
+ <div class="w-11 h-11 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold">
+ <i class="fa-solid fa-cloud-arrow-up"></i>
+ </div>
+ <div>
+ <h2 class="text-base font-black text-slate-900">Tải Lên File PDF</h2>
+ <p class="text-xs text-slate-500">Giáo trình, slide bài giảng (.pdf)</p>
+ </div>
+ </div>
 
-                <!-- Document Quota Progress Card for Free Users -->
-                <div th:if="${!isPro}" class="p-4 bg-slate-50/90 rounded-2xl border border-slate-200/80 shadow-sm space-y-2.5">
-                    <div class="flex items-center justify-between text-xs font-bold">
-                        <span class="flex items-center gap-1.5 text-slate-700">
-                            <i class="fa-solid fa-file-shield text-amber-500"></i>
-                            Hạn ngạch tài liệu / môn:
-                        </span>
-                        <span class="font-black" th:classappend="${isDocLimitReached} ? 'text-rose-600' : 'text-[#F27123]'"
-                              th:text="${currentDocCount} + '/' + ${maxDocsFree} + ' tài liệu'">0/3 tài liệu</span>
-                    </div>
-                    <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                        <div class="h-full transition-all duration-500 rounded-full"
-                             th:classappend="${isDocLimitReached} ? 'bg-rose-500' : 'bg-[#F27123]'"
-                             th:style="'width: ' + (${currentDocCount} >= ${maxDocsFree} ? 100 : (${currentDocCount} * 100 / ${maxDocsFree})) + '%'"></div>
-                    </div>
-                    <div class="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
-                        <span>Gói Tự Học ($0)</span>
-                        <a th:href="@{/courses}" class="text-[#F27123] font-bold hover:underline">⚡ Nâng cấp PRO (FPT Cóc)</a>
-                    </div>
-                </div>
+ <!-- Document Quota Progress Card for Free Users -->
+ <div th:if="${!isPro}" class="p-4 bg-slate-50/90 rounded-lg border border-slate-200/80 shadow-sm space-y-2.5">
+ <div class="flex items-center justify-between text-xs font-bold">
+ <span class="flex items-center gap-1.5 text-slate-700">
+ <i class="fa-solid fa-file-shield text-amber-500"></i>
+ Hạn ngạch tài liệu / môn:
+ </span>
+ <span class="font-black" th:classappend="${isDocLimitReached} ? 'text-rose-600' : 'text-[#F27123]'"
+ th:text="${currentDocCount} + '/' + ${maxDocsFree} + ' tài liệu'">0/3 tài liệu</span>
+ </div>
+ <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+ <div class="h-full transition-all duration-500 rounded-full"
+ th:classappend="${isDocLimitReached} ? 'bg-rose-500' : 'bg-[#F27123]'"
+ th:style="'width: ' + (${currentDocCount} >= ${maxDocsFree} ? 100 : (${currentDocCount} * 100 / ${maxDocsFree})) + '%'"></div>
+ </div>
+ <div class="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+ <span>Gói Tự Học ($0)</span>
+ <a th:href="@{/courses}" class="text-[#F27123] font-bold hover:underline">⚡ Nâng cấp PRO (FPT Cóc)</a>
+ </div>
+ </div>
 
-                <!-- Pro Badge for Pro Users -->
-                <div th:if="${isPro}" class="p-3.5 bg-orange-50/50 rounded-2xl border border-orange-200 shadow-xs flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-crown text-amber-500 text-sm"></i>
-                        <span class="text-xs font-bold text-slate-800">Gói PRO / SQUAD</span>
-                    </div>
-                    <span class="px-2.5 py-0.5 rounded-md bg-[#F27123] text-white text-[10px] font-black uppercase tracking-wider">KHÔNG GIỚI HẠN</span>
-                </div>
+ <!-- Pro Badge for Pro Users -->
+ <div th:if="${isPro}" class="p-3.5 bg-orange-50/50 rounded-lg border border-orange-200 shadow-xs flex items-center justify-between">
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-crown text-amber-500 text-sm"></i>
+ <span class="text-xs font-bold text-slate-800">Gói PRO / SQUAD</span>
+ </div>
+ <span class="px-2.5 py-0.5 rounded-md bg-[#F27123] text-white text-[10px] font-black uppercase tracking-wider">KHÔNG GIỚI HẠN</span>
+ </div>
 
-                <!-- Warning when Limit Reached on Free Tier -->
-                <div th:if="${isDocLimitReached}" class="p-5 rounded-2xl bg-rose-50 border-2 border-dashed border-rose-200 text-center space-y-3">
-                    <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h3 class="text-xs font-black text-rose-700 uppercase tracking-wider">Đã Đạt Giới Hạn 3 Tài Liệu</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        Gói Free giới hạn tối đa 3 file PDF / môn. Vui lòng xóa bớt tài liệu cũ hoặc nâng cấp lên gói Pro để tải thêm tài liệu.
-                    </p>
-                    <a th:href="@{/courses}" class="btn btn-sm w-full bg-[#F27123] hover:bg-[#D45B12] text-white rounded-xl font-bold shadow-xs gap-2">
-                        <i class="fa-solid fa-bolt text-amber-300"></i>
-                        <span>Nâng Cấp Gói PRO ($2/tháng)</span>
-                    </a>
-                </div>
+ <!-- Warning when Limit Reached on Free Tier -->
+ <div th:if="${isDocLimitReached}" class="p-5 rounded-lg bg-rose-50 border-2 border-dashed border-rose-200 text-center space-y-3">
+ <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl">
+ <i class="fa-solid fa-lock"></i>
+ </div>
+ <h3 class="text-xs font-black text-rose-700 uppercase tracking-wider">Đã Đạt Giới Hạn 3 Tài Liệu</h3>
+ <p class="text-xs text-slate-600 leading-relaxed">
+ Gói Free giới hạn tối đa 3 file PDF / môn. Vui lòng xóa bớt tài liệu cũ hoặc nâng cấp lên gói Pro để tải thêm tài liệu.
+ </p>
+ <a th:href="@{/courses}" class="btn btn-sm w-full bg-[#F27123] hover:bg-[#D45B12] text-white rounded-xl font-bold shadow-xs gap-2">
+ <i class="fa-solid fa-bolt text-amber-300"></i>
+ <span>Nâng Cấp Gói PRO ($2/tháng)</span>
+ </a>
+ </div>
 
-                <!-- Upload Form -->
-                <form th:unless="${isDocLimitReached}" th:action="@{/courses/{id}/documents/upload(id=${course.id})}" method="post" enctype="multipart/form-data" id="uploadForm" class="space-y-4">
-                    <!-- Drop Zone Box -->
-                    <label for="pdfFileInput" id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-[#F27123] rounded-3xl p-6 text-center cursor-pointer transition-all duration-200 hover:bg-orange-50/30 flex flex-col items-center justify-center gap-3 group block bg-slate-50/50">
-                        <div class="w-14 h-14 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-2xs">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </div>
-                        <div>
-                            <p class="font-black text-sm text-slate-800">Kéo thả file PDF vào đây</p>
-                            <p class="text-xs text-slate-500 mt-1">hoặc <span class="text-[#F27123] underline font-bold">chọn từ máy tính</span></p>
-                        </div>
-                        <p class="text-[11px] text-slate-400">Dung lượng tối đa 25MB • Chỉ định dạng .pdf</p>
-                        <input type="file" id="pdfFileInput" name="file" accept=".pdf,application/pdf" class="hidden" required />
-                    </label>
+ <!-- Upload Form -->
+ <form th:unless="${isDocLimitReached}" th:action="@{/courses/{id}/documents/upload(id=${course.id})}" method="post" enctype="multipart/form-data" id="uploadForm" class="space-y-4">
+ <!-- Drop Zone Box -->
+ <label for="pdfFileInput" id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-[#F27123] rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:bg-orange-50/30 flex flex-col items-center justify-center gap-3 group block bg-slate-50/50">
+ <div class="w-14 h-14 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-2xs">
+ <i class="fa-solid fa-file-pdf"></i>
+ </div>
+ <div>
+ <p class="font-black text-sm text-slate-800">Kéo thả file PDF vào đây</p>
+ <p class="text-xs text-slate-500 mt-1">hoặc <span class="text-[#F27123] underline font-bold">chọn từ máy tính</span></p>
+ </div>
+ <p class="text-[11px] text-slate-400">Dung lượng tối đa 25MB • Chỉ định dạng .pdf</p>
+ <input type="file" id="pdfFileInput" name="file" accept=".pdf,application/pdf" class="hidden" required />
+ </label>
 
-                    <!-- Selected File Info (Hidden until chosen) -->
-                    <div id="fileInfoBox" class="hidden p-3.5 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-between">
-                        <div class="flex items-center gap-3 truncate">
-                            <i class="fa-solid fa-file-lines text-[#F27123] text-lg"></i>
-                            <div class="truncate">
-                                <p id="selectedFileName" class="text-xs font-bold text-slate-800 truncate">filename.pdf</p>
-                                <p id="selectedFileSize" class="text-[10px] text-slate-500">0 KB</p>
-                            </div>
-                        </div>
-                        <button type="button" id="removeFileBtn" class="btn btn-ghost btn-circle btn-xs text-rose-500 hover:bg-rose-100">✕</button>
-                    </div>
+ <!-- Selected File Info (Hidden until chosen) -->
+ <div id="fileInfoBox" class="hidden p-3.5 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-between">
+ <div class="flex items-center gap-3 truncate">
+ <i class="fa-solid fa-file-lines text-[#F27123] text-lg"></i>
+ <div class="truncate">
+ <p id="selectedFileName" class="text-xs font-bold text-slate-800 truncate">filename.pdf</p>
+ <p id="selectedFileSize" class="text-[10px] text-slate-500">0 KB</p>
+ </div>
+ </div>
+ <button type="button" id="removeFileBtn" class="btn btn-ghost btn-circle btn-xs text-rose-500 hover:bg-rose-100">✕</button>
+ </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" id="submitUploadBtn" class="btn w-full h-11 rounded-xl font-bold gap-2 transition-all shadow-xs border bg-[#F27123] hover:bg-[#D45B12] text-white border-transparent disabled:!bg-slate-100 disabled:!text-slate-700 disabled:!border-slate-300 disabled:!opacity-100 disabled:cursor-not-allowed" disabled>
-                        <i class="fa-solid fa-scissors"></i>
-                        <span>Tải Lên & Tự Động Cắt Chunks</span>
-                    </button>
-                </form>
+ <!-- Submit Button -->
+ <button type="submit" id="submitUploadBtn" class="btn w-full h-11 rounded-xl font-bold gap-2 transition-all shadow-xs border bg-[#F27123] hover:bg-[#D45B12] text-white border-transparent disabled:!bg-slate-100 disabled:!text-slate-700 disabled:!border-slate-300 disabled:!opacity-100 disabled:cursor-not-allowed" disabled>
+ <i class="fa-solid fa-scissors"></i>
+ <span>Tải Lên & Tự Động Cắt Chunks</span>
+ </button>
+ </form>
 
-                <!-- Processing Tips Note -->
-                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-xs text-slate-500 flex items-start gap-2">
-                    <i class="fa-solid fa-circle-info text-[#F27123] mt-0.5 text-xs"></i>
-                    <span>Tự động chia tách đoạn văn bản (300 - 500 từ/chunk) gắn kèm số trang đối chứng.</span>
-                </div>
-            </div>
-        </div>
+ <!-- Processing Tips Note -->
+ <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-xs text-slate-500 flex items-start gap-2">
+ <i class="fa-solid fa-circle-info text-[#F27123] mt-0.5 text-xs"></i>
+ <span>Tự động chia tách đoạn văn bản (300 - 500 từ/chunk) gắn kèm số trang đối chứng.</span>
+ </div>
+ </div>
+ </div>
 
-        <!-- Column 2 & 3: Document Table & Chunk Visualizer -->
-        <div class="lg:col-span-2 space-y-6">
+ <!-- Column 2 & 3: Document Table & Chunk Visualizer -->
+ <div class="lg:col-span-2 space-y-6">
 
-            <!-- Documents Table Card -->
-            <div class="rounded-3xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
-                    <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold">
-                            <i class="fa-solid fa-folder-open"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-base font-black text-slate-900">Danh Sách Giáo Trình & Tài Liệu Đã Nạp</h2>
-                            <p class="text-xs text-slate-500">Tài liệu được chỉ mục sẵn sàng cho AI Chatbot</p>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 rounded-full bg-orange-50 text-[#F27123] border border-orange-200 font-bold text-xs" th:text="${#lists.size(documents)} + ' Tài liệu'">0 Tài liệu</span>
-                </div>
+ <!-- Documents Table Card -->
+ <div class="rounded-xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
+ <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
+ <div class="flex items-center gap-3">
+ <div class="w-11 h-11 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold">
+ <i class="fa-solid fa-folder-open"></i>
+ </div>
+ <div>
+ <h2 class="text-base font-black text-slate-900">Danh Sách Giáo Trình & Tài Liệu Đã Nạp</h2>
+ <p class="text-xs text-slate-500">Tài liệu được chỉ mục sẵn sàng cho AI Chatbot</p>
+ </div>
+ </div>
+ <span class="px-3 py-1 rounded-full bg-orange-50 text-[#F27123] border border-orange-200 font-bold text-xs" th:text="${#lists.size(documents)} + ' Tài liệu'">0 Tài liệu</span>
+ </div>
 
-                <!-- Empty State -->
-                <div th:if="${#lists.isEmpty(documents)}" class="text-center py-12 px-4 rounded-2xl bg-slate-50/80 border border-dashed border-slate-200">
-                    <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl mb-3">
-                        <i class="fa-solid fa-file-circle-question"></i>
-                    </div>
-                    <p class="font-bold text-sm text-slate-700">Chưa có tài liệu PDF nào được tải lên môn học này</p>
-                    <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                        Hãy kéo thả file PDF giáo trình hoặc slide vào khung bên trái để AI trích xuất nội dung và sẵn sàng hỏi đáp.
-                    </p>
-                </div>
+ <!-- Empty State -->
+ <div th:if="${#lists.isEmpty(documents)}" class="text-center py-12 px-4 rounded-lg bg-slate-50/80 border border-dashed border-slate-200">
+ <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl mb-3">
+ <i class="fa-solid fa-file-circle-question"></i>
+ </div>
+ <p class="font-bold text-sm text-slate-700">Chưa có tài liệu PDF nào được tải lên môn học này</p>
+ <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+ Hãy kéo thả file PDF giáo trình hoặc slide vào khung bên trái để AI trích xuất nội dung và sẵn sàng hỏi đáp.
+ </p>
+ </div>
 
-                <!-- Clean Table Content -->
-                <div th:unless="${#lists.isEmpty(documents)}" class="overflow-x-auto rounded-2xl border border-slate-200/70">
-                    <table class="table table-sm w-full text-xs">
-                        <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] border-b border-slate-200">
-                            <tr>
-                                <th class="py-2.5 px-3">Tài Liệu</th>
-                                <th class="py-2.5 px-3 hidden md:table-cell">Người Tải</th>
-                                <th class="py-2.5 px-3">Số Chunks</th>
-                                <th class="py-2.5 px-3">Trạng Thái</th>
-                                <th class="py-2.5 px-3 text-center">Thao Tác</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr th:each="doc : ${documents}" class="hover:bg-slate-50/70 transition-colors">
-                                <td class="py-3 px-3">
-                                    <div class="flex items-center gap-2.5">
-                                        <i class="fa-solid fa-file-pdf text-rose-500 text-lg flex-shrink-0"></i>
-                                        <div class="min-w-0">
-                                            <p class="truncate font-semibold text-slate-800 text-xs max-w-[220px]" th:text="${doc.fileName}" th:title="${doc.fileName}">file.pdf</p>
-                                            <p class="text-[11px] text-slate-400 font-mono mt-0.5">
-                                                <span th:text="${doc.totalPages} + ' trang'">10 trang</span> · 
-                                                <span th:text="${#numbers.formatDecimal(doc.fileSize / 1024.0, 1, 1)} + ' KB'">120 KB</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-3 hidden md:table-cell">
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600">
-                                        <span th:text="${doc.uploadedBy != null ? '@' + doc.uploadedBy.username : 'Hệ thống'}">@student</span>
-                                    </span>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <span class="px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] font-semibold text-[11px]" th:text="${doc.totalChunks} + ' chunks'">12 chunks</span>
-                                </td>
-                                <td class="py-3 px-3 whitespace-nowrap">
-                                    <span th:if="${doc.status == 'INDEXED'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
-                                        <i class="fa-solid fa-check text-[10px]"></i> INDEXED
-                                    </span>
-                                    <span th:if="${doc.status == 'CHUNKING'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-bold">
-                                        <i class="fa-solid fa-spinner fa-spin text-[10px]"></i> CHUNKING
-                                    </span>
-                                    <span th:if="${doc.status == 'FAILED'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-bold">
-                                        <i class="fa-solid fa-xmark text-[10px]"></i> FAILED
-                                    </span>
-                                </td>
-                                <td class="py-3 px-3 text-center">
-                                    <form th:if="${canDeleteDocs}" th:action="@{/courses/{cId}/documents/{dId}/delete(cId=${course.id}, dId=${doc.id})}" method="post"
-                                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài liệu này cùng toàn bộ các Chunks liên quan?');">
-                                        <button type="submit" class="btn btn-ghost btn-circle btn-xs text-slate-400 hover:text-rose-500 hover:bg-rose-50" title="Xóa tài liệu">
-                                            <i class="fa-solid fa-trash-can text-xs"></i>
-                                        </button>
-                                    </form>
-                                    <span th:unless="${canDeleteDocs}" class="inline-flex items-center gap-1 text-[11px] text-slate-400" title="Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa tài liệu của nhóm">
-                                        <i class="fa-solid fa-lock text-xs text-slate-400"></i>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+ <!-- Clean Table Content -->
+ <div th:unless="${#lists.isEmpty(documents)}" class="overflow-x-auto rounded-lg border border-slate-200/70">
+ <table class="table table-sm w-full text-xs">
+ <thead class="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] border-b border-slate-200">
+ <tr>
+ <th class="py-2.5 px-3">Tài Liệu</th>
+ <th class="py-2.5 px-3 hidden md:table-cell">Người Tải</th>
+ <th class="py-2.5 px-3">Số Chunks</th>
+ <th class="py-2.5 px-3">Trạng Thái</th>
+ <th class="py-2.5 px-3 text-center">Thao Tác</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-slate-100">
+ <tr th:each="doc : ${documents}" class="hover:bg-slate-50/70 transition-colors">
+ <td class="py-3 px-3">
+ <div class="flex items-center gap-2.5">
+ <i class="fa-solid fa-file-pdf text-rose-500 text-lg flex-shrink-0"></i>
+ <div class="min-w-0">
+ <p class="truncate font-semibold text-slate-800 text-xs max-w-[220px]" th:text="${doc.fileName}" th:title="${doc.fileName}">file.pdf</p>
+ <p class="text-[11px] text-slate-400 font-mono mt-0.5">
+ <span th:text="${doc.totalPages} + ' trang'">10 trang</span> · 
+ <span th:text="${#numbers.formatDecimal(doc.fileSize / 1024.0, 1, 1)} + ' KB'">120 KB</span>
+ </p>
+ </div>
+ </div>
+ </td>
+ <td class="py-3 px-3 hidden md:table-cell">
+ <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600">
+ <span th:text="${doc.uploadedBy != null ? '@' + doc.uploadedBy.username : 'Hệ thống'}">@student</span>
+ </span>
+ </td>
+ <td class="py-3 px-3">
+ <span class="px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] font-semibold text-[11px]" th:text="${doc.totalChunks} + ' chunks'">12 chunks</span>
+ </td>
+ <td class="py-3 px-3 whitespace-nowrap">
+ <span th:if="${doc.status == 'INDEXED'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
+ <i class="fa-solid fa-check text-[10px]"></i> INDEXED
+ </span>
+ <span th:if="${doc.status == 'CHUNKING'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-bold">
+ <i class="fa-solid fa-spinner fa-spin text-[10px]"></i> CHUNKING
+ </span>
+ <span th:if="${doc.status == 'FAILED'}" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[11px] font-bold">
+ <i class="fa-solid fa-xmark text-[10px]"></i> FAILED
+ </span>
+ </td>
+ <td class="py-3 px-3 text-center">
+ <form th:if="${canDeleteDocs}" th:action="@{/courses/{cId}/documents/{dId}/delete(cId=${course.id}, dId=${doc.id})}" method="post"
+ onsubmit="return confirm('Bạn có chắc chắn muốn xóa tài liệu này cùng toàn bộ các Chunks liên quan?');">
+ <button type="submit" class="btn btn-ghost btn-circle btn-xs text-slate-400 hover:text-rose-500 hover:bg-rose-50" title="Xóa tài liệu">
+ <i class="fa-solid fa-trash-can text-xs"></i>
+ </button>
+ </form>
+ <span th:unless="${canDeleteDocs}" class="inline-flex items-center gap-1 text-[11px] text-slate-400" title="Chỉ Trưởng Nhóm hoặc Admin mới có quyền xóa tài liệu của nhóm">
+ <i class="fa-solid fa-lock text-xs text-slate-400"></i>
+ </span>
+ </td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-            <!-- Chunk Visualizer Card (Progressive Disclosure - Accordion) -->
-            <div class="rounded-3xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
-                    <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold">
-                            <i class="fa-solid fa-cubes-stacked"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-base font-black text-slate-900">Trực Quan Hóa Các Đoạn Chunks Ngữ Nghĩa</h2>
-                            <p class="text-xs text-slate-500">Dữ liệu văn bản được chia nhỏ phục vụ truy hồi ngữ cảnh RAG</p>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 rounded-full bg-orange-50 text-[#F27123] border border-orange-200 font-bold text-xs" th:text="${#lists.size(chunks)} + ' Chunks'">0 Chunks</span>
-                </div>
+ <!-- Chunk Visualizer Card (Progressive Disclosure - Accordion) -->
+ <div class="rounded-xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
+ <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
+ <div class="flex items-center gap-3">
+ <div class="w-11 h-11 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold">
+ <i class="fa-solid fa-cubes-stacked"></i>
+ </div>
+ <div>
+ <h2 class="text-base font-black text-slate-900">Trực Quan Hóa Các Đoạn Chunks Ngữ Nghĩa</h2>
+ <p class="text-xs text-slate-500">Dữ liệu văn bản được chia nhỏ phục vụ truy hồi ngữ cảnh RAG</p>
+ </div>
+ </div>
+ <span class="px-3 py-1 rounded-full bg-orange-50 text-[#F27123] border border-orange-200 font-bold text-xs" th:text="${#lists.size(chunks)} + ' Chunks'">0 Chunks</span>
+ </div>
 
-                <div th:if="${#lists.isEmpty(chunks)}" class="text-center py-10 px-4 rounded-2xl bg-slate-50/80 border border-dashed border-slate-200">
-                    <p class="text-xs text-slate-500">Chưa có Chunks nào được tạo. Hãy tải tài liệu PDF lên để hệ thống tự động băm nhỏ.</p>
-                </div>
+ <div th:if="${#lists.isEmpty(chunks)}" class="text-center py-10 px-4 rounded-lg bg-slate-50/80 border border-dashed border-slate-200">
+ <p class="text-xs text-slate-500">Chưa có Chunks nào được tạo. Hãy tải tài liệu PDF lên để hệ thống tự động băm nhỏ.</p>
+ </div>
 
-                <!-- Progressive Disclosure: Accordion Chunks View -->
-                <div th:unless="${#lists.isEmpty(chunks)}" class="space-y-2.5 max-h-[550px] overflow-y-auto pr-2 custom-scrollbar">
-                    <div th:each="chunk : ${chunks}" class="collapse collapse-arrow bg-slate-50/80 border border-slate-200/80 rounded-2xl hover:border-indigo-300 transition-all">
-                        <input type="checkbox" />
-                        <div class="collapse-title py-3.5 pl-4 pr-16 text-xs font-semibold flex items-center justify-between gap-3 text-slate-800 min-h-0">
-                            <div class="flex items-center gap-2 truncate min-w-0">
-                                <span class="px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] font-mono text-[10px] font-bold border border-orange-200 flex-shrink-0" th:text="'#Chunk ' + ${chunk.chunkIndex}">#Chunk 0</span>
-                                <span class="px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-700 text-[10px] font-medium flex-shrink-0" th:text="'Trang ' + ${chunk.pageNumber}">Trang 1</span>
-                                <span th:if="${chunk.document != null}" class="text-slate-600 text-[11px] truncate max-w-[140px] sm:max-w-xs font-medium" th:text="${chunk.document.fileName}" th:title="${chunk.document.fileName}">doc.pdf</span>
-                            </div>
-                            <span class="text-slate-400 font-mono text-[10px] whitespace-nowrap flex-shrink-0" th:text="${chunk.wordCount} + ' từ (~' + ${chunk.tokenCount} + ' tokens)'">350 từ</span>
-                        </div>
-                        <div class="collapse-content bg-white p-4 rounded-b-2xl border-t border-slate-100 text-xs text-slate-700 font-mono leading-relaxed whitespace-pre-wrap">
-                            <p th:text="${chunk.content}">Nội dung trích đoạn chunk...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+ <!-- Progressive Disclosure: Accordion Chunks View -->
+ <div th:unless="${#lists.isEmpty(chunks)}" class="space-y-2.5 max-h-[550px] overflow-y-auto pr-2 custom-scrollbar">
+ <div th:each="chunk : ${chunks}" class="collapse collapse-arrow bg-slate-50/80 border border-slate-200/80 rounded-lg hover:border-indigo-300 transition-all">
+ <input type="checkbox" />
+ <div class="collapse-title py-3.5 pl-4 pr-16 text-xs font-semibold flex items-center justify-between gap-3 text-slate-800 min-h-0">
+ <div class="flex items-center gap-2 truncate min-w-0">
+ <span class="px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] font-mono text-[10px] font-bold border border-orange-200 flex-shrink-0" th:text="'#Chunk ' + ${chunk.chunkIndex}">#Chunk 0</span>
+ <span class="px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-700 text-[10px] font-medium flex-shrink-0" th:text="'Trang ' + ${chunk.pageNumber}">Trang 1</span>
+ <span th:if="${chunk.document != null}" class="text-slate-600 text-[11px] truncate max-w-[140px] sm:max-w-xs font-medium" th:text="${chunk.document.fileName}" th:title="${chunk.document.fileName}">doc.pdf</span>
+ </div>
+ <span class="text-slate-400 font-mono text-[10px] whitespace-nowrap flex-shrink-0" th:text="${chunk.wordCount} + ' từ (~' + ${chunk.tokenCount} + ' tokens)'">350 từ</span>
+ </div>
+ <div class="collapse-content bg-white p-4 rounded-b-2xl border-t border-slate-100 text-xs text-slate-700 font-mono leading-relaxed whitespace-pre-wrap">
+ <p th:text="${chunk.content}">Nội dung trích đoạn chunk...</p>
+ </div>
+ </div>
+ </div>
+ </div>
 
-        </div>
+ </div>
 
-    </div>
+ </div>
 
-    <!-- Drag & Drop Client-side JS -->
-    <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            const dropZone = document.getElementById('dropZone');
-            const fileInput = document.getElementById('pdfFileInput');
-            const fileInfoBox = document.getElementById('fileInfoBox');
-            const fileNameEl = document.getElementById('selectedFileName');
-            const fileSizeEl = document.getElementById('selectedFileSize');
-            const submitBtn = document.getElementById('submitUploadBtn');
-            const removeFileBtn = document.getElementById('removeFileBtn');
-            const uploadForm = document.getElementById('uploadForm');
+ <!-- Drag & Drop Client-side JS -->
+ <script th:inline="javascript">
+ document.addEventListener('DOMContentLoaded', () => {
+ const dropZone = document.getElementById('dropZone');
+ const fileInput = document.getElementById('pdfFileInput');
+ const fileInfoBox = document.getElementById('fileInfoBox');
+ const fileNameEl = document.getElementById('selectedFileName');
+ const fileSizeEl = document.getElementById('selectedFileSize');
+ const submitBtn = document.getElementById('submitUploadBtn');
+ const removeFileBtn = document.getElementById('removeFileBtn');
+ const uploadForm = document.getElementById('uploadForm');
 
-            if (!dropZone || !fileInput) return;
+ if (!dropZone || !fileInput) return;
 
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropZone.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZone.classList.add('border-[#F27123]', 'bg-orange-50');
-                }, false);
-            });
+ ['dragenter', 'dragover'].forEach(eventName => {
+ dropZone.addEventListener(eventName, (e) => {
+ e.preventDefault();
+ e.stopPropagation();
+ dropZone.classList.add('border-[#F27123]', 'bg-orange-50');
+ }, false);
+ });
 
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropZone.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZone.classList.remove('border-[#F27123]', 'bg-orange-50');
-                }, false);
-            });
+ ['dragleave', 'drop'].forEach(eventName => {
+ dropZone.addEventListener(eventName, (e) => {
+ e.preventDefault();
+ e.stopPropagation();
+ dropZone.classList.remove('border-[#F27123]', 'bg-orange-50');
+ }, false);
+ });
 
-            dropZone.addEventListener('drop', (e) => {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                if (files && files.length > 0) {
-                    fileInput.files = files;
-                    handleFileSelection(files[0]);
-                }
-            });
+ dropZone.addEventListener('drop', (e) => {
+ const dt = e.dataTransfer;
+ const files = dt.files;
+ if (files && files.length > 0) {
+ fileInput.files = files;
+ handleFileSelection(files[0]);
+ }
+ });
 
-            fileInput.addEventListener('change', () => {
-                if (fileInput.files && fileInput.files.length > 0) {
-                    handleFileSelection(fileInput.files[0]);
-                }
-            });
+ fileInput.addEventListener('change', () => {
+ if (fileInput.files && fileInput.files.length > 0) {
+ handleFileSelection(fileInput.files[0]);
+ }
+ });
 
-            function handleFileSelection(file) {
-                if (!file.name.toLowerCase().endsWith('.pdf')) {
-                    alert('Vui lòng chỉ chọn file định dạng PDF (.pdf)!');
-                    resetFileInput();
-                    return;
-                }
-                if (file.size > 25 * 1024 * 1024) {
-                    alert('Dung lượng file vượt quá 25MB cho phép!');
-                    resetFileInput();
-                    return;
-                }
+ function handleFileSelection(file) {
+ if (!file.name.toLowerCase().endsWith('.pdf')) {
+ alert('Vui lòng chỉ chọn file định dạng PDF (.pdf)!');
+ resetFileInput();
+ return;
+ }
+ if (file.size > 25 * 1024 * 1024) {
+ alert('Dung lượng file vượt quá 25MB cho phép!');
+ resetFileInput();
+ return;
+ }
 
-                fileNameEl.textContent = file.name;
-                fileSizeEl.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
-                fileInfoBox.classList.remove('hidden');
-                submitBtn.removeAttribute('disabled');
-            }
+ fileNameEl.textContent = file.name;
+ fileSizeEl.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+ fileInfoBox.classList.remove('hidden');
+ submitBtn.removeAttribute('disabled');
+ }
 
-            if (removeFileBtn) {
-                removeFileBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    resetFileInput();
-                });
-            }
+ if (removeFileBtn) {
+ removeFileBtn.addEventListener('click', (e) => {
+ e.preventDefault();
+ e.stopPropagation();
+ resetFileInput();
+ });
+ }
 
-            function resetFileInput() {
-                fileInput.value = '';
-                fileInfoBox.classList.add('hidden');
-                submitBtn.setAttribute('disabled', 'true');
-            }
+ function resetFileInput() {
+ fileInput.value = '';
+ fileInfoBox.classList.add('hidden');
+ submitBtn.setAttribute('disabled', 'true');
+ }
 
-            if (uploadForm) {
-                uploadForm.addEventListener('submit', () => {
-                    submitBtn.setAttribute('disabled', 'true');
-                    submitBtn.innerHTML = '<span class="loading loading-spinner loading-xs"></span> Đang tải lên & cắt Chunks...';
-                });
-            }
-        });
-    </script>
+ if (uploadForm) {
+ uploadForm.addEventListener('submit', () => {
+ submitBtn.setAttribute('disabled', 'true');
+ submitBtn.innerHTML = '<span class="loading loading-spinner loading-xs"></span> Đang tải lên & cắt Chunks...';
+ });
+ }
+ });
+ </script>
 
 </section>
 </body>

@@ -2,65 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="navbar" class="navbar bg-white/80 backdrop-blur-md sticky top-0 z-40 px-4 md:px-8 border-b border-slate-200/80 shadow-sm">
-    <div class="flex-none lg:hidden">
-        <label for="main-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost text-slate-700">
-            <i class="fa-solid fa-bars text-xl"></i>
-        </label>
-    </div>
+ <div class="flex-none lg:hidden">
+ <label for="main-drawer" aria-label="open sidebar" class="btn btn-square btn-ghost text-slate-700">
+ <i class="fa-solid fa-bars text-xl"></i>
+ </label>
+ </div>
 
-    <div class="flex-1 lg:hidden items-center gap-2">
-        <a th:href="@{/}" class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F27123] via-[#FF8A3D] to-[#FFB03A] flex items-center justify-center text-white text-xs font-bold shadow-sm">
-                <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-            <span class="font-extrabold text-base tracking-tight bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] bg-clip-text text-transparent">StudyHub AI</span>
-        </a>
-    </div>
+ <div class="flex-1 lg:hidden items-center gap-2">
+ <a th:href="@{/}" class="flex items-center gap-2">
+ <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F27123] via-[#FF8A3D] to-[#FFB03A] flex items-center justify-center text-white text-xs font-bold shadow-sm">
+ <i class="fa-solid fa-graduation-cap"></i>
+ </div>
+ <span class="font-extrabold text-base tracking-tight bg-[#F27123] hover:bg-[#D45B12] bg-clip-text text-transparent">StudyHub AI</span>
+ </a>
+ </div>
 
-    <div class="flex-1 hidden lg:flex"></div>
+ <div class="flex-1 hidden lg:flex"></div>
 
-    <div class="flex-none flex items-center gap-2.5">
-        <button th:if="${(canCreateCourse == null or canCreateCourse) and (session.currentUser == null or session.currentUser.role != 'ROLE_ADMIN')}" 
-                onclick="const m = document.getElementById('modal-create-course'); if(m) m.showModal(); else window.location.href='/courses';" 
-                class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white border-none rounded-xl text-xs font-semibold shadow-xs hidden sm:inline-flex gap-1.5 transition-all">
-            <i class="fa-solid fa-plus text-[11px]"></i> Tạo Môn Mới
-        </button>
+ <div class="flex-none flex items-center gap-2.5">
+ <button th:if="${(canCreateCourse == null or canCreateCourse) and (session.currentUser == null or session.currentUser.role != 'ROLE_ADMIN')}" 
+ onclick="const m = document.getElementById('modal-create-course'); if(m) m.showModal(); else window.location.href='/courses';" 
+ class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white border-none rounded-xl text-xs font-semibold shadow-xs hidden sm:inline-flex gap-1.5 transition-all">
+ <i class="fa-solid fa-plus text-[11px]"></i> Tạo Môn Mới
+ </button>
 
-        <div class="flex-none ml-1">
-            <div th:if="${session.currentUser != null}" class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar ring-2 ring-[#F27123]/30 hover:ring-[#F27123]/50 transition-all">
-                    <div class="w-9 h-9 rounded-full">
-                        <img th:src="${session.currentUser.avatar != null ? session.currentUser.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=student'}"
-                             alt="Avatar" />
-                    </div>
-                </div>
-                <ul tabindex="0" class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-white text-slate-700 rounded-2xl w-56 border border-slate-200">
-                    <li class="menu-title px-4 py-2 border-b border-slate-100">
-                        <div class="flex items-center justify-between">
-                            <span class="font-extrabold text-slate-900 text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
-                            <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge bg-[#F27123] text-white border-none badge-xs text-[9px] font-bold">SQUAD</span>
-                            <span th:if="${session.currentUser.subscriptionTier == 'PRO'}" class="badge bg-[#F27123] text-white border-none badge-xs text-[9px] font-bold">PRO</span>
-                            <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
-                        </div>
-                        <span class="text-[10px] text-slate-400 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>
-                    </li>
-                    <li><a th:href="@{/profile}" class="hover:text-[#F27123]"><i class="fa-solid fa-user text-[#F27123]"></i> Hồ Sơ Cá Nhân</a></li>
-                    <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/dashboard}" class="hover:text-[#F27123]"><i class="fa-solid fa-chart-line text-[#F27123]"></i> Quản Trị Admin</a></li>
-                    <li th:if="${session.currentUser.role != 'ROLE_ADMIN' and !session.currentUser.isPro()}"><a th:href="@{/pricing}" class="text-[#F27123] font-bold hover:bg-orange-50"><i class="fa-solid fa-bolt text-[#F27123]"></i> Nâng Cấp Gói Pro</a></li>
-                    <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/settings}" class="hover:text-[#F27123]"><i class="fa-solid fa-key text-[#F27123]"></i> Cài Đặt Hệ Thống</a></li>
-                    <li class="border-t border-slate-100 mt-1 pt-1">
-                        <a th:href="@{/logout}" class="text-rose-600 hover:bg-rose-50"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a>
-                    </li>
-                </ul>
-            </div>
+ <div class="flex-none ml-1">
+ <div th:if="${session.currentUser != null}" class="dropdown dropdown-end">
+ <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar ring-2 ring-[#F27123]/30 hover:ring-[#F27123]/50 transition-all">
+ <div class="w-9 h-9 rounded-full">
+ <img th:src="${session.currentUser.avatar != null ? session.currentUser.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=student'}"
+ alt="Avatar" />
+ </div>
+ </div>
+ <ul tabindex="0" class="mt-3 z-[1] p-2 shadow-xl menu menu-sm dropdown-content bg-white text-slate-700 rounded-lg w-56 border border-slate-200">
+ <li class="menu-title px-4 py-2 border-b border-slate-100">
+ <div class="flex items-center justify-between">
+ <span class="font-extrabold text-slate-900 text-xs" th:text="${session.currentUser.fullName}">Tên Người Dùng</span>
+ <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge bg-[#F27123] text-white border-none badge-xs text-[9px] font-bold">SQUAD</span>
+ <span th:if="${session.currentUser.subscriptionTier == 'PRO'}" class="badge bg-[#F27123] text-white border-none badge-xs text-[9px] font-bold">PRO</span>
+ <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-ghost badge-xs text-[9px]">FREE</span>
+ </div>
+ <span class="text-[10px] text-slate-400 font-mono" th:text="'@' + ${session.currentUser.username}">@username</span>
+ </li>
+ <li><a th:href="@{/profile}" class="hover:text-[#F27123]"><i class="fa-solid fa-user text-[#F27123]"></i> Hồ Sơ Cá Nhân</a></li>
+ <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/dashboard}" class="hover:text-[#F27123]"><i class="fa-solid fa-chart-line text-[#F27123]"></i> Quản Trị Admin</a></li>
+ <li th:if="${session.currentUser.role != 'ROLE_ADMIN' and !session.currentUser.isPro()}"><a th:href="@{/pricing}" class="text-[#F27123] font-bold hover:bg-orange-50"><i class="fa-solid fa-bolt text-[#F27123]"></i> Nâng Cấp Gói Pro</a></li>
+ <li th:if="${session.currentUser.role == 'ROLE_ADMIN'}"><a th:href="@{/admin/settings}" class="hover:text-[#F27123]"><i class="fa-solid fa-key text-[#F27123]"></i> Cài Đặt Hệ Thống</a></li>
+ <li class="border-t border-slate-100 mt-1 pt-1">
+ <a th:href="@{/logout}" class="text-rose-600 hover:bg-rose-50"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng Xuất</a>
+ </li>
+ </ul>
+ </div>
 
-            <div th:unless="${session.currentUser != null}">
-                <a th:href="@{/login}" class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white border-none rounded-xl text-xs font-bold shadow-md shadow-[#F27123]/20">
-                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
-                </a>
-            </div>
-        </div>
-    </div>
+ <div th:unless="${session.currentUser != null}">
+ <a th:href="@{/login}" class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white border-none rounded-xl text-xs font-bold shadow-md shadow-[#F27123]/20">
+ <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
+ </a>
+ </div>
+ </div>
+ </div>
 </div>
 </body>
 </html>

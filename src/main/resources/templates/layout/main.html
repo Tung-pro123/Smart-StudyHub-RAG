@@ -3,21 +3,21 @@
 <head th:replace="~{fragments/head :: common-head(${pageTitle})}"></head>
 <body class="bg-slate-50/80 min-h-screen text-slate-800 flex flex-col font-sans antialiased">
 
-    <div class="drawer lg:drawer-open flex-grow">
-        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
-        
-        <div class="drawer-content flex flex-col min-h-screen">
-            <div th:replace="~{fragments/navbar :: navbar}"></div>
+ <div class="drawer lg:drawer-open flex-grow">
+ <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+ 
+ <div class="drawer-content flex flex-col min-h-screen">
+ <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-            <main class="flex-grow container mx-auto px-4 md:px-8 py-8 max-w-7xl">
-                <th:block th:replace="${content}"></th:block>
-            </main>
+ <main class="flex-grow container mx-auto px-4 md:px-8 py-8 max-w-7xl">
+ <th:block th:replace="${content}"></th:block>
+ </main>
 
-            <div th:replace="~{fragments/footer :: footer}"></div>
-        </div>
+ <div th:replace="~{fragments/footer :: footer}"></div>
+ </div>
 
-        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    </div>
+ <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+ </div>
 
 </body>
 </html>

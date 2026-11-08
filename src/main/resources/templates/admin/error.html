@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main :: main-layout('Không thể thực hiện yêu cầu', ~{::section})}">
 <body><section class="max-w-6xl mx-auto min-w-0 space-y-6 text-slate-800">
-    <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-2xl p-5 max-w-xl mx-auto text-center space-y-4 py-10">
-        <p class="text-xs font-bold uppercase tracking-wider text-[#F27123]">Quyền truy cập</p>
-        <p class="text-5xl font-black text-[#F27123]" th:text="${statusCode}"></p>
-        <h1 class="font-black text-slate-900 tracking-tight text-xl md:text-2xl">Không thể thực hiện yêu cầu</h1>
-        <p role="alert" class="text-sm text-slate-500 leading-relaxed break-words" th:text="${errorMessage}"></p>
-        <a th:href="@{/}" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#F27123]/20 transition-all">Về trang chủ</a>
-    </div>
+ <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-lg p-5 max-w-xl mx-auto text-center space-y-4 py-10">
+ <p class="text-xs font-bold uppercase tracking-wider text-[#F27123]">Quyền truy cập</p>
+ <p class="text-5xl font-black text-[#F27123]" th:text="${statusCode}"></p>
+ <h1 class="font-black text-slate-900 tracking-tight text-xl md:text-2xl">Không thể thực hiện yêu cầu</h1>
+ <p role="alert" class="text-sm text-slate-500 leading-relaxed break-words" th:text="${errorMessage}"></p>
+ <a th:href="@{/}" class="btn btn-sm h-10 px-5 bg-[#F27123] hover:bg-[#D45B12] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#F27123]/20 transition-all">Về trang chủ</a>
+ </div>
 </section></body></html>
 
 
