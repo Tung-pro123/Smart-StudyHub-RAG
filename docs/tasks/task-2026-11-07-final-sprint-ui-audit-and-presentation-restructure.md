@@ -211,17 +211,20 @@ Chúng ta đang bước vào giai đoạn quyết định cuối cùng trước 
 ---
 
 ### 4️⃣ HUỲNH NHẬT (QUIZ ENGINE & XUẤT ĐỀ THI PDF)
-* [ ] **Rà soát AI Sinh Đề Thi Trắc Nghiệm (`/courses/{id}/quizzes`)**:
+* [x] **Rà soát AI Sinh Đề Thi Trắc Nghiệm (`/courses/{id}/quizzes`)**:
   * Bấm "Tạo Đề Thi Bằng AI" $\rightarrow$ Chọn mức độ (EASY / MEDIUM / HARD) và số câu: Xác nhận bộ câu hỏi sinh ra có đầy đủ 4 đáp án A/B/C/D hợp lý, câu hỏi chuẩn kiến thức giáo trình.
-* [ ] **Rà soát Phòng Thi Bấm Giờ & Chấm Điểm Tự Động**:
+  * *(Đã kiểm chứng thực tế: Sinh đề thành công ID 41 từ giáo trình ISTQB Software Testing, gồm 5 câu hỏi chuẩn 4 đáp án A/B/C/D).*
+* [x] **Rà soát Phòng Thi Bấm Giờ & Chấm Điểm Tự Động**:
   * Vào thi (`takeQuiz`): Kiểm tra đồng hồ đếm ngược (Countdown Timer) chạy lùi chuẩn từng giây.
   * Nộp bài: Chấm điểm thang 10 tức thì, hiển thị huy hiệu Đạt/Chưa đạt, thống kê câu đúng/sai và lời giải thích chi tiết cho từng câu.
-* [ ] **Rà soát Xuất Đề Thi PDF Chuẩn In Ấn (Gói Pro)**:
+  * *(Đã kiểm chứng: Timer 15 phút đếm lùi chuẩn 1s/1s, nộp bài chấm 4.0/10 tức thì, hiển thị đầy đủ giải thích và filter câu đúng/sai, giao diện scorecard đã được fix track 360°).*
+* [x] **Rà soát Xuất Đề Thi PDF Chuẩn In Ấn (Gói Pro)**:
   * Đăng nhập tài khoản Pro/Admin, bấm nút **"Xuất Đề Thi Ra PDF"**.
   * Tải file `.pdf` về máy, mở bằng Chrome hoặc Adobe Acrobat:
     - Kiểm tra Header chuẩn FPT University, watermark, bảng câu hỏi và ô vuông checkbox A/B/C/D.
     - **Đặc biệt kiểm tra font chữ tiếng Việt**: Không bị lỗi mã hóa, không bị ô vuông hay dấu hỏi chấm `?`.
     - Kiểm tra cả 2 bản xuất: Đề thi trắng và Bản có Answer Key kèm lời giải.
+  * *(Đã kiểm chứng & lưu bằng chứng: `docs/evidence/nhat/de-thi-trang-swt301.pdf` (64KB) và `de-thi-dap-an-swt301.pdf` (70KB). Font Arial Unicode tiếng Việt 100% chuẩn nét. Feature Gating chặn tài khoản Free với mã lỗi 403 Forbidden).*
 
 ---
 
