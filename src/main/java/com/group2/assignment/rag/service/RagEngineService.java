@@ -306,10 +306,19 @@ public class RagEngineService {
      * Gọi LLM với cơ chế xoay vòng Multi-Key Round-Robin & Cooldown khi gặp 429
      */
     public String callLlmWithRotation(String prompt) throws Exception {
-        // 1. Nếu cấu hình LiteLLM Base URL -> Gọi qua LiteLLM / OpenAI endpoint
+        // 1. Nếu cấu hình LiteLLM Base URL -> Gọi qua LiteLLM / OpenAI endpoint (với auto-fallback sang Gemini nếu thất bại)
         String baseUrl = llmProperties.getBaseUrl();
         if (baseUrl != null && !baseUrl.isBlank()) {
-            return callLiteLlmProxy(baseUrl.trim(), prompt);
+            try {
+                return callLiteLlmProxy(baseUrl.trim(), prompt);
+            } catch (Exception e) {
+                log.warn("Gọi LiteLLM/Local proxy tại '{}' thất bại: {}. Đang tự động chuyển sang Google Gemini API...", baseUrl, e.getMessage());
+                boolean hasGemini = (systemAiKeyService != null && systemAiKeyService.isConfigured())
+                        || llmKeyRotator.hasConfiguredKeys();
+                if (!hasGemini) {
+                    throw e;
+                }
+            }
         }
 
         // 2. Gọi trực tiếp Google Gemini API qua danh sách Multi-Keys
