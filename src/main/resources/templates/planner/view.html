@@ -68,16 +68,16 @@
                 </h1>
                 <div class="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
                     <span th:if="${plan.course != null}">
-                        <i class="fa-solid fa-book mr-1 text-[#08509F]"></i>
+                        <i class="fa-solid fa-book mr-1 text-[#F27123]"></i>
                         <span th:text="${plan.course.name}">Tên môn</span>
                         (<span th:text="${plan.course.code}">Mã</span>)
                     </span>
                     <span>
-                        <i class="fa-solid fa-clock mr-1 text-[#08509F]"></i>
+                        <i class="fa-solid fa-clock mr-1 text-[#F27123]"></i>
                         <span th:text="${plan.hoursPerWeek}">6</span> giờ/tuần
                     </span>
                     <span th:if="${plan.examDate != null}">
-                        <i class="fa-solid fa-calendar-check mr-1 text-[#08509F]"></i>
+                        <i class="fa-solid fa-calendar-check mr-1 text-[#F27123]"></i>
                         Thi: <span th:text="${#temporals.format(plan.examDate, 'dd/MM/yyyy')}">20/12/2024</span>
                     </span>
                     <span th:if="${plan.targetGrade != null}">
@@ -105,7 +105,7 @@
         <!-- Progress Bar -->
         <div class="mt-4 h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
             <div id="plan-progress-bar"
-                 class="h-full rounded-full bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748] transition-all duration-500"
+                 class="h-full rounded-full bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748] transition-all duration-500"
                  th:style="|width:${plan.progressPercent}%|"></div>
         </div>
 
@@ -178,9 +178,9 @@
 
                     <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] text-slate-500">
                         <span th:if="${task.assignee != null and !#strings.isEmpty(task.assignee)}">
-                            <i class="fa-solid fa-user-check mr-1 text-[#08509F]"></i>
+                            <i class="fa-solid fa-user-check mr-1 text-[#F27123]"></i>
                             Phụ trách:
-                            <span class="font-semibold text-[#08509F]" th:text="${task.assignee}">Minh</span>
+                            <span class="font-semibold text-[#F27123]" th:text="${task.assignee}">Minh</span>
                         </span>
                         <span>
                             <i class="fa-regular fa-clock mr-1"></i>
@@ -291,4 +291,5 @@
 </section>
 </body>
 </html>
+
 

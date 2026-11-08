@@ -27,9 +27,9 @@
     <!-- Breadcrumbs Navigation -->
     <div class="text-xs breadcrumbs text-slate-400">
         <ul>
-            <li><a th:href="@{/}" class="hover:text-[#08509F]"><i class="fa-solid fa-house mr-1 text-[#08509F]"></i> Trang Chủ</a></li>
-            <li><a th:href="@{/courses}" class="hover:text-[#08509F]"><i class="fa-solid fa-book mr-1 text-[#08509F]"></i> Không Gian Học Tập</a></li>
-            <li class="font-bold text-[#08509F]">Hồ Sơ Cá Nhân</li>
+            <li><a th:href="@{/}" class="hover:text-[#F27123]"><i class="fa-solid fa-house mr-1 text-[#F27123]"></i> Trang Chủ</a></li>
+            <li><a th:href="@{/courses}" class="hover:text-[#F27123]"><i class="fa-solid fa-book mr-1 text-[#F27123]"></i> Không Gian Học Tập</a></li>
+            <li class="font-bold text-[#F27123]">Hồ Sơ Cá Nhân</li>
         </ul>
     </div>
 
@@ -39,7 +39,7 @@
             <!-- Left: Avatar + Identity -->
             <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
                 <div class="relative group flex-shrink-0">
-                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl ring-4 ring-purple-500/40 ring-offset-4 ring-offset-slate-900 overflow-hidden shadow-2xl shadow-[#08509F]/20 bg-slate-800 transition-transform duration-300 group-hover:scale-105">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl ring-4 ring-purple-500/40 ring-offset-4 ring-offset-slate-900 overflow-hidden shadow-2xl shadow-[#F27123]/20 bg-slate-800 transition-transform duration-300 group-hover:scale-105">
                         <img id="current-avatar-img" th:src="${user.avatar}" alt="Avatar Sinh Viên" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
                     </div>
                     <div class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-full bg-emerald-500 border-2 border-slate-900 flex items-center justify-center text-white text-[11px]" title="Đang hoạt động">
@@ -55,23 +55,23 @@
                             <i class="fa-solid fa-shield-halved"></i> Quản Trị Viên
                         </span>
                         <span th:unless="${user.role == 'ROLE_ADMIN'}" class="badge gap-1 font-bold text-xs py-2.5 px-3 bg-white/10 text-slate-200 border border-white/20 shadow-sm">
-                            <i class="fa-solid fa-graduation-cap text-[#08509F]"></i> Sinh Viên
+                            <i class="fa-solid fa-graduation-cap text-[#F27123]"></i> Sinh Viên
                         </span>
                     </div>
 
                     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-slate-300">
-                        <span class="font-mono bg-white/10 px-2.5 py-1 rounded-lg text-blue-200 border border-white/10" th:text="'@' + ${user.username}">@student</span>
+                        <span class="font-mono bg-white/10 px-2.5 py-1 rounded-lg text-amber-200 border border-white/10" th:text="'@' + ${user.username}">@student</span>
                         <!-- Member Tag Code Badge with 1-click Copy -->
                         <button type="button" 
                                 th:data-copy="${memberTag}" onclick="copyFromElement(this, 'Đã sao chép Member Tag: ' + this.getAttribute('data-copy'))"
-                                class="inline-flex items-center gap-1.5 font-mono font-bold bg-blue-500/20 hover:bg-blue-500/35 text-blue-200 border border-blue-400/30 px-2.5 py-1 rounded-lg transition-all duration-200 cursor-pointer"
+                                class="inline-flex items-center gap-1.5 font-mono font-bold bg-orange-500/20 hover:bg-orange-500/35 text-amber-200 border border-orange-400/30 px-2.5 py-1 rounded-lg transition-all duration-200 cursor-pointer"
                                 title="Nhấn để sao chép Member Tag">
-                            <i class="fa-solid fa-id-badge text-blue-300"></i>
+                            <i class="fa-solid fa-id-badge text-amber-200"></i>
                             <span th:text="${memberTag}">#STU-0001</span>
                             <i class="fa-regular fa-copy text-[10px] opacity-70"></i>
                         </button>
                         <span class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-envelope text-[#08509F]"></i>
+                            <i class="fa-solid fa-envelope text-[#F27123]"></i>
                             <span th:text="${user.email}">student@fpt.edu.vn</span>
                         </span>
                     </div>
@@ -79,11 +79,11 @@
                     <!-- Subscription Tier Badge Row -->
                     <div class="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
                         <!-- Squad Tier Badge -->
-                        <span th:if="${user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] text-white border-none shadow-md shadow-[#08509F]/20">
-                            <i class="fa-solid fa-users text-blue-200"></i> GÓI SQUAD
+                        <span th:if="${user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] text-white border-none shadow-md shadow-[#F27123]/20">
+                            <i class="fa-solid fa-users text-amber-200"></i> GÓI SQUAD
                         </span>
                         <!-- Pro Tier Badge -->
-                        <span th:if="${user.isPro() and !user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-[#08509F] to-[#F27123] text-white border-none shadow-md shadow-[#08509F]/20">
+                        <span th:if="${user.isPro() and !user.isSquad()}" class="badge gap-1.5 font-black text-xs py-3 px-3.5 bg-gradient-to-r from-[#F27123] to-[#FFB03A] text-white border-none shadow-md shadow-[#F27123]/20">
                             <i class="fa-solid fa-bolt text-amber-300"></i> GÓI PRO CÁ NHÂN
                         </span>
                         <!-- Free Tier Badge -->
@@ -103,7 +103,7 @@
                 <!-- 3 Quick Stats Counter -->
                 <div class="grid grid-cols-3 gap-3 w-full lg:w-auto text-center">
                     <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 min-w-[90px]">
-                        <p class="text-[10px] uppercase font-bold text-blue-300">Môn Học</p>
+                        <p class="text-[10px] uppercase font-bold text-amber-200">Môn Học</p>
                         <p class="text-xl font-black text-white mt-0.5" th:text="${myCourseCount != null ? myCourseCount : 0}">2</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 min-w-[90px]">
@@ -127,7 +127,7 @@
             <div class="lg:col-span-5 space-y-3 text-center lg:text-left">
                 <!-- Description for SQUAD -->
                 <div th:if="${user.isSquad()}" class="space-y-1.5 text-xs text-slate-600">
-                    <p class="font-bold text-[#08509F]">Quyền lợi gói Squad</p>
+                    <p class="font-bold text-[#F27123]">Quyền lợi gói Squad</p>
                     <ul class="space-y-1 text-left list-none pl-0">
                         <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Không giới hạn số môn học tự tạo cho cả 5 thành viên</li>
                         <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Không giới hạn tải slide bài giảng PDF &amp; câu hỏi AI không giới hạn</li>
@@ -137,7 +137,7 @@
 
                 <!-- Description for PRO (Cá Nhân) -->
                 <div th:if="${user.isPro() and !user.isSquad()}" class="space-y-1.5 text-xs text-slate-600">
-                    <p class="font-bold text-[#08509F]">Quyền lợi gói PRO</p>
+                    <p class="font-bold text-[#F27123]">Quyền lợi gói PRO</p>
                     <ul class="space-y-1 text-left list-none pl-0">
                         <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Không giới hạn số môn học cá nhân</li>
                         <li class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-500 text-[11px]"></i> Tải lên không giới hạn file PDF slide bài giảng giáo trình</li>
@@ -161,10 +161,10 @@
             <div class="lg:col-span-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200/80 space-y-3">
                 <div class="flex justify-between items-center text-xs">
                     <span class="font-bold text-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-comments text-[#08509F]"></i> Hạn ngạch RAG hôm nay:
+                        <i class="fa-solid fa-comments text-[#F27123]"></i> Hạn ngạch RAG hôm nay:
                     </span>
                     <!-- Pro / Squad Badge Unlimited -->
-                    <span th:if="${user.isPro()}" class="badge font-black text-[10px] bg-gradient-to-r from-[#08509F] to-[#F27123] text-white border-none py-1 px-2.5">
+                    <span th:if="${user.isPro()}" class="badge font-black text-[10px] bg-gradient-to-r from-[#F27123] to-[#FFB03A] text-white border-none py-1 px-2.5">
                         KHÔNG GIỚI HẠN
                     </span>
                     <!-- Free Count -->
@@ -178,7 +178,7 @@
                     <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden p-0.5 border border-slate-300/40">
                         <div class="h-2 rounded-full transition-all duration-500"
                              th:style="'width: ' + (${user.dailyRagCount != null ? (user.dailyRagCount * 100 / 50) : 0} > 100 ? 100 : ${user.dailyRagCount != null ? (user.dailyRagCount * 100 / 50) : 0}) + '%;'"
-                             th:classappend="${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 45} ? 'bg-rose-500' : (${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 30} ? 'bg-amber-500' : 'bg-gradient-to-r from-[#08509F] to-[#F27123]')">
+                             th:classappend="${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 45} ? 'bg-rose-500' : (${(user.dailyRagCount != null ? user.dailyRagCount : 0) >= 30} ? 'bg-amber-500' : 'bg-gradient-to-r from-[#F27123] to-[#FFB03A]')">
                         </div>
                     </div>
                     <div class="flex justify-between text-[10px] text-slate-500">
@@ -189,11 +189,11 @@
 
                 <!-- Progress Bar for Pro / Squad -->
                 <div th:if="${user.isPro()}" class="space-y-1.5">
-                    <div class="w-full bg-blue-50 rounded-full h-3 overflow-hidden p-0.5 border border-blue-200">
-                        <div class="h-2 rounded-full bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] w-full animate-pulse"></div>
+                    <div class="w-full bg-orange-50 rounded-full h-3 overflow-hidden p-0.5 border border-orange-200">
+                        <div class="h-2 rounded-full bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] w-full animate-pulse"></div>
                     </div>
                     <div class="flex justify-between text-[10px] text-slate-600">
-                        <span>Đã hỏi: <strong class="text-[#08509F] font-bold" th:text="${user.dailyRagCount != null ? user.dailyRagCount : 0}">0</strong> câu hôm nay</span>
+                        <span>Đã hỏi: <strong class="text-[#F27123] font-bold" th:text="${user.dailyRagCount != null ? user.dailyRagCount : 0}">0</strong> câu hôm nay</span>
                     </div>
                 </div>
             </div>
@@ -203,13 +203,13 @@
                 <!-- If Free: Show Both Upgrades -->
                 <th:block th:if="${!user.isPro()}">
                     <form th:action="@{/auth/upgrade-pro}" method="post">
-                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white border-none shadow-lg shadow-[#08509F]/20 gap-1.5 transition-transform hover:scale-[1.02]">
+                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 text-white border-none shadow-lg shadow-[#F27123]/20 gap-1.5 transition-transform hover:scale-[1.02]">
                             <i class="fa-solid fa-bolt text-amber-300"></i> Nâng Cấp PRO ($2)
                         </button>
                     </form>
                     <form th:action="@{/auth/upgrade-squad}" method="post">
                         <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white border-none shadow-md gap-1.5 transition-transform hover:scale-[1.02]">
-                            <i class="fa-solid fa-users text-blue-300"></i> Kích Hoạt SQUAD ($5)
+                            <i class="fa-solid fa-users text-amber-200"></i> Kích Hoạt SQUAD ($5)
                         </button>
                     </form>
                 </th:block>
@@ -217,7 +217,7 @@
                 <!-- If Pro (Cá Nhân): Can Upgrade to Squad -->
                 <th:block th:if="${user.isPro() and !user.isSquad() and !user.isAdmin()}">
                     <form th:action="@{/auth/upgrade-squad}" method="post">
-                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white border-none shadow-lg shadow-[#08509F]/20 gap-1.5 transition-transform hover:scale-[1.02]">
+                        <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 text-white border-none shadow-lg shadow-[#F27123]/20 gap-1.5 transition-transform hover:scale-[1.02]">
                             <i class="fa-solid fa-users text-amber-200"></i> Nâng Cấp Lên SQUAD ($5)
                         </button>
                     </form>
@@ -226,8 +226,8 @@
 
                 <!-- If Squad: Badge Active -->
                 <th:block th:if="${user.isSquad()}">
-                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl text-center">
-                        <p class="text-xs font-bold text-[#08509F]">Bạn đang dùng gói Squad</p>
+                    <div class="bg-orange-50 border border-orange-200 p-3 rounded-2xl text-center">
+                        <p class="text-xs font-bold text-[#F27123]">Bạn đang dùng gói Squad</p>
                     </div>
                 </th:block>
             </div>
@@ -239,7 +239,7 @@
     <div class="rounded-2xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-[#08509F] flex items-center justify-center text-lg flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-[#F27123] flex items-center justify-center text-lg flex-shrink-0">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
                 </div>
                 <div>
@@ -252,7 +252,7 @@
             </div>
             <div class="text-right" th:if="${user.isPro()}">
                 <span class="text-xs text-slate-500">Hạn gói cước hiện tại: </span>
-                <span class="badge badge-outline badge-sm font-mono font-bold text-[#08509F]"
+                <span class="badge badge-outline badge-sm font-mono font-bold text-[#F27123]"
                       th:text="${user.tierExpiresAt != null ? #temporals.format(user.tierExpiresAt, 'dd/MM/yyyy HH:mm') : 'Vô Thời Hạn'}">30 ngày</span>
             </div>
         </div>
@@ -312,7 +312,7 @@
                     <span class="badge badge-warning text-[10px] font-bold">CHỜ DUYỆT</span>
                 </div>
                 <p class="text-xs text-amber-800 mt-0.5">
-                    Bạn đã gửi yêu cầu gia nhập Nhóm học tập của Trưởng nhóm <strong class="font-mono text-[#08509F] font-bold">@<span th:text="${pendingSquadLeader}">leader</span></strong>. Khi được phê duyệt, gói SQUAD sẽ tự động được kích hoạt cho bạn.
+                    Bạn đã gửi yêu cầu gia nhập Nhóm học tập của Trưởng nhóm <strong class="font-mono text-[#F27123] font-bold">@<span th:text="${pendingSquadLeader}">leader</span></strong>. Khi được phê duyệt, gói SQUAD sẽ tự động được kích hoạt cho bạn.
                 </p>
             </div>
         </div>
@@ -328,7 +328,7 @@
     <div th:if="${!user.isSquad() and !isSquadPending and !user.isPro()}"
          class="rounded-2xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-4">
         <div class="flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-2xl bg-blue-50 text-[#08509F] flex items-center justify-center text-lg flex-shrink-0">
+            <div class="w-11 h-11 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center text-lg flex-shrink-0">
                 <i class="fa-solid fa-ticket"></i>
             </div>
             <div>
@@ -343,7 +343,7 @@
                 <input type="text" name="inviteCode" required placeholder="Mã mời, ví dụ SQ-0003" 
                        class="input input-bordered input-sm pl-9 w-full rounded-xl text-xs font-mono uppercase border-slate-200 focus:border-purple-500" />
             </div>
-            <button type="submit" class="btn btn-sm bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white rounded-xl text-xs font-bold border-none shadow-md shadow-[#08509F]/20 gap-1.5">
+            <button type="submit" class="btn btn-sm bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 text-white rounded-xl text-xs font-bold border-none shadow-md shadow-[#F27123]/20 gap-1.5">
                 <i class="fa-solid fa-paper-plane"></i> Gửi Yêu Cầu Gia Nhập
             </button>
         </form>
@@ -358,7 +358,7 @@
         
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#08509F] flex items-center justify-center shadow-sm text-xl flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center shadow-sm text-xl flex-shrink-0">
                     <i class="fa-solid fa-users-rectangle"></i>
                 </div>
                 <div>
@@ -371,18 +371,18 @@
             
             <div class="flex flex-wrap items-center gap-2">
                 <!-- Squad Leader Shareable Invite Code Box -->
-                <div th:if="${isSquadLeader}" class="flex items-center gap-2 bg-blue-50 border border-blue-200/80 px-3 py-1.5 rounded-xl shadow-xs">
-                    <span class="text-xs font-semibold text-[#08509F]">Mã Mời Nhóm:</span>
-                    <span class="font-mono font-black text-xs text-slate-900 bg-white px-2 py-0.5 rounded-lg border border-blue-200" th:text="${squadInviteCode}">SQ-0003</span>
-                    <button type="button" class="btn btn-ghost btn-xs text-[#08509F] hover:bg-orange-100 rounded-lg p-1"
+                <div th:if="${isSquadLeader}" class="flex items-center gap-2 bg-orange-50 border border-orange-200/80 px-3 py-1.5 rounded-xl shadow-xs">
+                    <span class="text-xs font-semibold text-[#F27123]">Mã Mời Nhóm:</span>
+                    <span class="font-mono font-black text-xs text-slate-900 bg-white px-2 py-0.5 rounded-lg border border-orange-200" th:text="${squadInviteCode}">SQ-0003</span>
+                    <button type="button" class="btn btn-ghost btn-xs text-[#F27123] hover:bg-orange-100 rounded-lg p-1"
                             th:data-copy="${squadInviteCode}" onclick="copyFromElement(this, 'Đã sao chép Mã Mời Nhóm: ' + this.getAttribute('data-copy'))"
                             title="Sao chép Mã Mời Nhóm">
                         <i class="fa-regular fa-copy"></i>
                     </button>
                 </div>
 
-                <span class="badge font-black text-xs gap-1.5 py-3 px-3.5 shadow-sm text-white bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] border-none">
-                    <i class="fa-solid fa-user-group text-blue-200"></i>
+                <span class="badge font-black text-xs gap-1.5 py-3 px-3.5 shadow-sm text-white bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] border-none">
+                    <i class="fa-solid fa-user-group text-amber-200"></i>
                     <span th:text="${squadMembers != null ? squadMembers.size() : 1}">1</span> / <span th:text="${maxSquadMembers}">5</span> Thành Viên
                 </span>
             </div>
@@ -391,7 +391,7 @@
         <!-- Leader View: Form Mời Thành Viên Mới -->
         <div th:if="${isSquadLeader}" class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
             <label class="label-text font-bold text-xs text-slate-700 flex items-center gap-1.5">
-                <i class="fa-solid fa-user-plus text-[#08509F]"></i> Thêm thành viên:
+                <i class="fa-solid fa-user-plus text-[#F27123]"></i> Thêm thành viên:
             </label>
             <form th:action="@{/auth/squad/add-member}" method="post" class="flex flex-col sm:flex-row gap-2.5">
                 <div class="relative flex-1">
@@ -400,7 +400,7 @@
                            class="input input-bordered input-sm pl-9 w-full rounded-xl text-xs font-mono border-slate-200 focus:border-purple-500"
                            th:disabled="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" />
                 </div>
-                <button type="submit" class="btn btn-sm bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white rounded-xl text-xs font-bold border-none shadow-md shadow-[#08509F]/20 gap-1.5"
+                <button type="submit" class="btn btn-sm bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 text-white rounded-xl text-xs font-bold border-none shadow-md shadow-[#F27123]/20 gap-1.5"
                         th:disabled="${squadMembers != null and squadMembers.size() >= maxSquadMembers}">
                     <i class="fa-solid fa-paper-plane"></i> Thêm Vào Nhóm
                 </button>
@@ -409,7 +409,7 @@
                 <i class="fa-solid fa-circle-exclamation"></i> Nhóm đã đủ 5 thành viên. Hãy xóa bớt thành viên để thêm hoặc duyệt người mới.
             </p>
             <p th:unless="${squadMembers != null and squadMembers.size() >= maxSquadMembers}" class="text-[11px] text-slate-500">
-                Hoặc gửi Mã Mời <strong class="font-mono text-[#08509F]" th:text="${squadInviteCode}">SQ-XXXX</strong> để bạn bè tự gửi yêu cầu tham gia.
+                Hoặc gửi Mã Mời <strong class="font-mono text-[#F27123]" th:text="${squadInviteCode}">SQ-XXXX</strong> để bạn bè tự gửi yêu cầu tham gia.
             </p>
         </div>
 
@@ -439,7 +439,7 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="font-bold text-xs text-slate-900" th:text="${req.fullName}">Tên Bạn Chờ</span>
-                                <span class="font-mono text-[10px] font-bold text-[#08509F] bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-200" th:text="${req.memberTag}">#STU-0005</span>
+                                <span class="font-mono text-[10px] font-bold text-[#F27123] bg-orange-50 px-2 py-0.5 rounded-lg border border-orange-200" th:text="${req.memberTag}">#STU-0005</span>
                             </div>
                             <div class="text-[11px] text-slate-500 flex flex-wrap items-center gap-2 mt-0.5 font-mono">
                                 <span th:text="'@' + ${req.username}">@username</span>
@@ -477,7 +477,7 @@
                 <i class="fa-solid fa-shield-heart"></i>
             </div>
             <div>
-                <span>Bạn đang là thành viên trong nhóm của Trưởng nhóm <strong class="font-mono text-[#08509F] font-bold" th:text="'@' + ${(user.squadLeaderUsername != null ? user.squadLeaderUsername : 'Leader')}">@leader</strong>.</span>
+                <span>Bạn đang là thành viên trong nhóm của Trưởng nhóm <strong class="font-mono text-[#F27123] font-bold" th:text="'@' + ${(user.squadLeaderUsername != null ? user.squadLeaderUsername : 'Leader')}">@leader</strong>.</span>
             </div>
         </div>
 
@@ -507,12 +507,12 @@
                         <td class="py-3">
                             <div class="flex flex-col">
                                 <span class="font-mono text-xs text-slate-700 font-semibold" th:text="'@' + ${m.username}">@user</span>
-                                <span class="font-mono text-[10px] text-[#08509F]" th:text="${m.memberTag}">#STU-0001</span>
+                                <span class="font-mono text-[10px] text-[#F27123]" th:text="${m.memberTag}">#STU-0001</span>
                             </div>
                         </td>
                         <td class="py-3">
                             <span th:if="${m.username == user.squadLeaderUsername or (user.squadLeaderUsername == null and m.username == user.username)}"
-                                  class="badge font-bold text-[10px] gap-1 py-1.5 px-2.5 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] text-white border-none shadow-sm">
+                                  class="badge font-bold text-[10px] gap-1 py-1.5 px-2.5 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] text-white border-none shadow-sm">
                                 <i class="fa-solid fa-crown text-amber-200"></i> Nhóm Trưởng
                             </span>
                             <span th:unless="${m.username == user.squadLeaderUsername or (user.squadLeaderUsername == null and m.username == user.username)}"
@@ -543,7 +543,7 @@
         <!-- Form 1: Cập Nhật Thông Tin Cá Nhân -->
         <div class="rounded-2xl p-6 sm:p-7 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm space-y-5">
             <div class="flex items-center gap-3 border-b border-slate-100 pb-3.5">
-                <div class="w-10 h-10 rounded-2xl bg-blue-50 text-[#08509F] flex items-center justify-center font-bold text-base shadow-sm">
+                <div class="w-10 h-10 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center font-bold text-base shadow-sm">
                     <i class="fa-solid fa-user-pen"></i>
                 </div>
                 <div>
@@ -596,7 +596,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 border-none text-white shadow-lg shadow-[#08509F]/20 mt-2 transition">
+                <button type="submit" class="btn btn-sm h-10 w-full rounded-xl text-xs font-bold bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 border-none text-white shadow-lg shadow-[#F27123]/20 mt-2 transition">
                     <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Cập Nhật Hồ Sơ
                 </button>
             </form>
@@ -741,8 +741,8 @@
                     document.body.appendChild(container);
                 }
                 const toast = document.createElement('div');
-                toast.className = 'alert alert-info bg-[#08509F] text-white shadow-2xl text-xs py-2.5 px-4 rounded-xl flex items-center gap-2 border border-blue-400/30';
-                toast.innerHTML = '<i class="fa-solid fa-circle-check text-blue-200"></i> <span>' + msg + '</span>';
+                toast.className = 'alert alert-info bg-[#F27123] text-white shadow-2xl text-xs py-2.5 px-4 rounded-xl flex items-center gap-2 border border-orange-400/30';
+                toast.innerHTML = '<i class="fa-solid fa-circle-check text-amber-200"></i> <span>' + msg + '</span>';
                 container.appendChild(toast);
                 setTimeout(function() {
                     toast.style.opacity = '0';
@@ -756,4 +756,5 @@
 </section>
 </body>
 </html>
+
 

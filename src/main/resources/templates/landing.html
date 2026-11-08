@@ -541,10 +541,10 @@
     }
   </style>
 </head>
-<body class="min-h-screen relative antialiased selection:bg-[#08509F] selection:text-white overflow-x-hidden">
+<body class="min-h-screen relative antialiased selection:bg-[#F27123] selection:text-white overflow-x-hidden">
 <!-- Background decorative light glow blobs -->
 <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-<div class="absolute -top-32 -left-32 w-96 h-96 bg-[#08509F]/20 rounded-full blur-3xl animate-blob"></div>
+<div class="absolute -top-32 -left-32 w-96 h-96 bg-[#F27123]/20 rounded-full blur-3xl animate-blob"></div>
 <div class="absolute top-1/4 -right-32 w-96 h-96 bg-pink-600/15 rounded-full blur-3xl animate-blob" style="animation-delay: 2s;"></div>
 <div class="absolute top-2/3 left-1/3 w-[30rem] h-[30rem] bg-violet-600/15 rounded-full blur-[100px] animate-blob" style="animation-delay: 4s;"></div>
 <div class="absolute -bottom-20 right-10 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl animate-blob" style="animation-delay: 3s;"></div>
@@ -562,7 +562,7 @@
 <nav class="w-full max-w-6xl pointer-events-auto rounded-2xl px-5 sm:px-6 py-3 flex items-center justify-between bg-slate-900/75 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.45)]">
 <!-- Logo -->
 <a th:href="@{/}" class="flex items-center gap-2.5 group">
-<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#08509F] via-[#0A65C2] to-[#F27123] flex items-center justify-center text-white shadow-lg shadow-[#08509F]/20 group-hover:scale-105 transition-transform">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#F27123] via-[#FF8A3D] to-[#FFB03A] flex items-center justify-center text-white shadow-lg shadow-[#F27123]/20 group-hover:scale-105 transition-transform">
 <i class="fa-solid fa-graduation-cap text-lg"></i>
 </div>
 <span class="text-xl font-extrabold tracking-tight text-white flex items-center">
@@ -585,7 +585,7 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <div class="flex items-center gap-3.5">
 <!-- Nếu đã đăng nhập -->
 <th:block th:if="${session.currentUser != null}">
-<a th:href="@{/courses}" class="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:from-purple-500 hover:to-pink-500 hover:shadow-[0_0_22px_rgba(168,85,247,0.45)] hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
+<a th:href="@{/courses}" class="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:from-purple-500 hover:to-pink-500 hover:shadow-[0_0_22px_rgba(168,85,247,0.45)] hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
 <i class="fa-solid fa-gauge-high"></i>
 <span>Vào Dashboard</span>
 </a>
@@ -596,7 +596,7 @@ StudyHub <span class="text-gradient ml-1">AI</span>
 <a th:href="@{/login}" class="hidden sm:inline-flex text-sm font-medium text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-colors">
               Đăng Nhập
             </a>
-<a th:href="@{/register}" class="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:from-purple-500 hover:to-pink-500 hover:shadow-[0_0_22px_rgba(168,85,247,0.45)] hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
+<a th:href="@{/register}" class="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:from-purple-500 hover:to-pink-500 hover:shadow-[0_0_22px_rgba(168,85,247,0.45)] hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
 <span>Bắt Đầu Ngay</span>
 <i class="fa-solid fa-arrow-right text-xs"></i>
 </a>
@@ -1548,7 +1548,7 @@ Thanh toán theo tháng
 </li>
 </ul>
 </div>
-<button type="button" onclick="document.getElementById('modal-upgrade-pro').showModal()" class="w-full btn-gradient py-3.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-[#08509F]/20 text-center block cursor-pointer">
+<button type="button" onclick="document.getElementById('modal-upgrade-pro').showModal()" class="w-full btn-gradient py-3.5 rounded-xl font-bold text-sm text-white shadow-lg shadow-[#F27123]/20 text-center block cursor-pointer">
 <i class="fa-solid fa-bolt mr-1"></i> Nâng Cấp Gói Pro
 </button>
 </div>
@@ -1859,7 +1859,7 @@ Giải pháp tự học thông minh được thiết kế tối ưu cho sinh vi�
 <!-- Col 1: Brand & Bio (2 cols on md) -->
 <div class="col-span-2">
 <a th:href="@{/}" class="flex items-center gap-2.5 mb-4 group">
-<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#08509F] via-[#0A65C2] to-[#F27123] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+<div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#F27123] via-[#FF8A3D] to-[#FFB03A] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
 <i class="fa-solid fa-graduation-cap text-sm"></i>
 </div>
 <span class="text-xl font-extrabold tracking-tight text-white">
@@ -2641,3 +2641,4 @@ H2 DB &amp; Gemini 1.5 Flash Online
     </div>
 </dialog>
 </body></html>
+

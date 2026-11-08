@@ -29,7 +29,7 @@
         <div class="flex h-2.5 overflow-hidden rounded-full bg-slate-100" aria-hidden="true" th:if="${stats.totalStudents > 0}">
             <span class="bg-slate-400" th:style="|width:${100.0 * stats.freeUsersCount / stats.totalStudents}%|"></span>
             <span class="bg-[#F27123]" th:style="|width:${100.0 * stats.proUsersCount / stats.totalStudents}%|"></span>
-            <span class="bg-blue-500" th:style="|width:${100.0 * stats.squadUsersCount / stats.totalStudents}%|"></span>
+            <span class="bg-orange-500" th:style="|width:${100.0 * stats.squadUsersCount / stats.totalStudents}%|"></span>
         </div>
         <p class="text-xs" th:text="|FREE: ${stats.freeUsersCount} · PRO: ${stats.proUsersCount} · SQUAD: ${stats.squadUsersCount}|"></p>
     </div>
@@ -74,7 +74,7 @@
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
             <h2 class="text-lg font-bold flex items-center gap-2">
-                <i class="fa-solid fa-receipt text-[#08509F]"></i>
+                <i class="fa-solid fa-receipt text-[#F27123]"></i>
                 Lịch Sử Đơn Hàng &amp; Doanh Thu VNPay Sandbox
             </h2>
             <p class="text-xs text-slate-500">Lưu vết trực tiếp các đơn hàng nâng cấp gói Pro và Squad từ cổng sandbox.vnpayment.vn</p>
@@ -85,7 +85,7 @@
             <a th:href="@{/admin/revenue/export-csv}" class="btn btn-xs h-7 px-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold rounded-lg gap-1.5 shadow-xs transition">
                 <i class="fa-solid fa-file-csv text-emerald-600"></i> Xuất CSV Đối Soát
             </a>
-            <a href="https://sandbox.vnpayment.vn/merchantv2/" target="_blank" class="btn btn-xs h-7 px-2.5 bg-blue-50 hover:bg-blue-100 text-[#08509F] border border-blue-200 font-bold rounded-lg gap-1.5 transition">
+            <a href="https://sandbox.vnpayment.vn/merchantv2/" target="_blank" class="btn btn-xs h-7 px-2.5 bg-orange-50 hover:bg-orange-100 text-[#F27123] border border-orange-200 font-bold rounded-lg gap-1.5 transition">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Portal VNPay
             </a>
         </div>
@@ -108,7 +108,7 @@
             <tbody>
                 <tr th:each="tx : ${recentTransactions}">
                     <td class="font-mono font-bold text-slate-800" th:text="${tx.txnRef}"></td>
-                    <td class="font-semibold text-[#08509F]" th:text="${tx.username}"></td>
+                    <td class="font-semibold text-[#F27123]" th:text="${tx.username}"></td>
                     <td>
                         <span th:if="${tx.targetTier == 'SQUAD'}" class="badge badge-info badge-xs font-bold text-[10px]">SQUAD</span>
                         <span th:if="${tx.targetTier == 'PRO'}" class="badge badge-secondary badge-xs font-bold text-[10px]">PRO</span>
@@ -160,4 +160,5 @@
 </section>
 </body>
 </html>
+
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" data-theme="light">
 <head th:replace="~{fragments/head :: common-head('Đăng Ký Tài Khoản - StudyHub AI - FPT University')}"></head>
 <body class="min-h-screen font-sans antialiased text-slate-800">
@@ -6,19 +6,19 @@
 <div class="min-h-screen w-full flex flex-col lg:flex-row">
 
     <!-- Cột trái (Banner FPT Branding) -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#052345] via-[#08509F] to-[#041D3B] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
-        <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#F27123]/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-[#51B748]/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#1C0D02] via-[#A84408] to-[#F27123] text-white p-12 xl:p-16 flex-col justify-between relative overflow-hidden">
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#FFA500]/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-[#FF8A3D]/25 rounded-full blur-3xl pointer-events-none"></div>
 
         <!-- Header: Logo FPT Style -->
         <div class="relative z-10">
             <a th:href="@{/}" class="inline-flex items-center gap-3 group">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#08509F] via-[#0A65C2] to-[#F27123] flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-105 transition-transform border border-white/20">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#F27123] via-[#FF8A3D] to-[#FFB03A] flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-105 transition-transform border border-white/20">
                     <i class="fa-solid fa-graduation-cap text-xl"></i>
                 </div>
                 <div>
                     <span class="font-extrabold text-2xl text-white tracking-tight">StudyHub AI</span>
-                    <p class="text-[11px] text-blue-200 font-semibold tracking-wide flex items-center gap-1.5 mt-0.5">
+                    <p class="text-[11px] text-amber-200 font-semibold tracking-wide flex items-center gap-1.5 mt-0.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-[#51B748]"></span> FPT University Learning Platform
                     </p>
                 </div>
@@ -36,26 +36,26 @@
                     Tạo tài khoản sinh viên<br />
                     <span class="bg-gradient-to-r from-[#FF8A3D] via-[#F27123] to-[#51B748] bg-clip-text text-transparent">Đại học FPT.</span>
                 </h1>
-                <p class="text-sm text-blue-100 leading-relaxed font-normal">
+                <p class="text-sm text-amber-100 leading-relaxed font-normal">
                     Gói miễn phí gồm tối đa 3 môn học, 3 tài liệu PDF mỗi môn và 50 câu hỏi RAG AI đối chứng mỗi ngày.
                 </p>
             </div>
 
             <!-- Danh sách tính năng chính -->
             <div class="space-y-4 max-w-md pt-2">
-                <div class="flex items-center gap-3 text-sm text-blue-50">
+                <div class="flex items-center gap-3 text-sm text-amber-50">
                     <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#F27123] shrink-0 font-bold">
                         <i class="fa-solid fa-book-bookmark text-sm"></i>
                     </div>
                     <span>Quản lý môn học và tải lên slide PDF của bạn</span>
                 </div>
-                <div class="flex items-center gap-3 text-sm text-blue-50">
+                <div class="flex items-center gap-3 text-sm text-amber-50">
                     <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#51B748] shrink-0 font-bold">
                         <i class="fa-solid fa-comments text-sm"></i>
                     </div>
                     <span>Hỏi đáp RAG AI kèm Citation Cards số trang minh chứng</span>
                 </div>
-                <div class="flex items-center gap-3 text-sm text-blue-50">
+                <div class="flex items-center gap-3 text-sm text-amber-50">
                     <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[#FF8A3D] shrink-0 font-bold">
                         <i class="fa-solid fa-list-check text-sm"></i>
                     </div>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <div class="relative z-10 flex items-center gap-3 text-xs text-blue-200">
+        <div class="relative z-10 flex items-center gap-3 text-xs text-amber-200">
             <span class="font-bold text-white">Linh vật Cóc FPT</span>
             <span>•</span>
             <span>Nền tảng sinh viên FPT</span>
@@ -75,11 +75,11 @@
     <div class="w-full lg:w-1/2 bg-white/90 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-12 xl:p-16 overflow-y-auto border-l border-slate-200/80">
         <!-- Nút Quay Lại Trang Chủ -->
         <div class="flex items-center justify-between">
-            <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-[#08509F] transition flex items-center gap-1.5">
+            <a th:href="@{/}" class="text-xs font-bold text-slate-500 hover:text-[#F27123] transition flex items-center gap-1.5">
                 <i class="fa-solid fa-arrow-left text-[10px]"></i> Quay lại Trang Chủ
             </a>
             <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-[#08509F]"></span>
+                <span class="w-2 h-2 rounded-full bg-[#F27123]"></span>
                 <span class="w-2 h-2 rounded-full bg-[#F27123]"></span>
                 <span class="w-2 h-2 rounded-full bg-[#51B748]"></span>
             </div>
@@ -110,7 +110,7 @@
                     <div class="relative">
                         <i class="fa-solid fa-id-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="text" th:field="*{fullName}" required placeholder="Nguyễn Văn A" 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-[#08509F] focus:ring-1 focus:ring-[#08509F] transition" />
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                     <div class="relative">
                         <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="text" th:field="*{username}" required placeholder="nguyenvana (viết liền không dấu)" 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs lowercase focus:bg-white focus:border-[#08509F] focus:ring-1 focus:ring-[#08509F] transition" />
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs lowercase focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
                     </div>
                 </div>
 
@@ -130,7 +130,7 @@
                     <div class="relative">
                         <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input type="email" th:field="*{email}" required placeholder="student@fpt.edu.vn" 
-                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-[#08509F] focus:ring-1 focus:ring-[#08509F] transition" />
+                               class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 w-full rounded-xl text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
                     </div>
                 </div>
 
@@ -141,7 +141,7 @@
                         <div class="relative">
                             <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="password" id="reg-password" th:field="*{password}" required placeholder="••••••••" 
-                                   class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-9 w-full rounded-xl text-xs focus:bg-white focus:border-[#08509F] focus:ring-1 focus:ring-[#08509F] transition" />
+                                   class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-9 w-full rounded-xl text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
                             <button type="button" onclick="togglePasswordVisibility('reg-password', this)" 
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs transition" title="Hiện/ẩn mật khẩu">
                                 <i class="fa-solid fa-eye"></i>
@@ -154,7 +154,7 @@
                         <div class="relative">
                             <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                             <input type="password" id="reg-confirm" th:field="*{confirmPassword}" required placeholder="••••••••" 
-                                   class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-9 w-full rounded-xl text-xs focus:bg-white focus:border-[#08509F] focus:ring-1 focus:ring-[#08509F] transition" />
+                                   class="input input-sm h-11 bg-slate-50/70 border-slate-200 text-slate-900 placeholder:text-slate-400 pl-10 pr-9 w-full rounded-xl text-xs focus:bg-white focus:border-[#F27123] focus:ring-1 focus:ring-[#F27123] transition" />
                             <button type="button" onclick="togglePasswordVisibility('reg-confirm', this)" 
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs transition" title="Hiện/ẩn mật khẩu">
                                 <i class="fa-solid fa-eye"></i>
@@ -164,7 +164,7 @@
                 </div>
 
                 <!-- Nút Đăng Ký FPT Gradient -->
-                <button type="submit" class="btn h-11 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white font-bold rounded-xl border-none shadow-lg shadow-[#08509F]/25 text-xs transition-all w-full flex items-center justify-center gap-2 mt-3">
+                <button type="submit" class="btn h-11 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 text-white font-bold rounded-xl border-none shadow-lg shadow-[#F27123]/25 text-xs transition-all w-full flex items-center justify-center gap-2 mt-3">
                     <span>Tạo Tài Khoản Mới</span>
                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                 </button>
@@ -180,7 +180,7 @@
             <!-- Google OAuth2 Register Button -->
             <div>
                 <a th:href="@{/oauth2/authorization/google}"
-                   class="btn btn-outline w-full border-slate-200 hover:bg-slate-50 hover:border-[#08509F]/40 text-slate-700 rounded-xl text-xs font-bold h-11 flex items-center justify-center gap-2.5 transition">
+                   class="btn btn-outline w-full border-slate-200 hover:bg-slate-50 hover:border-[#F27123]/40 text-slate-700 rounded-xl text-xs font-bold h-11 flex items-center justify-center gap-2.5 transition">
                     <svg class="w-4 h-4" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -194,7 +194,7 @@
             <!-- Chuyển Sang Đăng Nhập -->
             <div class="text-center text-xs text-slate-500 pt-2">
                 Đã có tài khoản sinh viên? 
-                <a th:href="@{/login}" class="font-bold text-[#08509F] hover:text-[#F27123] hover:underline ml-1">Đăng nhập</a>
+                <a th:href="@{/login}" class="font-bold text-[#F27123] hover:text-[#F27123] hover:underline ml-1">Đăng nhập</a>
             </div>
         </div>
 
@@ -227,3 +227,4 @@
 
 </body>
 </html>
+

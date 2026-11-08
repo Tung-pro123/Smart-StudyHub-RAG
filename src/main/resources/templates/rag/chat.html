@@ -165,8 +165,8 @@
                 <a th:href="@{/courses/{id}(id=${course.id})}" class="hover:text-slate-800 font-semibold text-slate-700 transition-colors" th:text="${course.code}">HSF302</a>
                 <span>/</span>
                 <span class="font-medium text-slate-900 truncate" th:text="${currentSession != null} ? ${currentSession.title} : 'Chatbot Giáo Trình'">Chatbot Giáo Trình</span>
-                <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-[#08509F] text-[10px] font-bold border border-blue-200/80">
-                    <i class="fa-solid fa-sparkles text-[#08509F]"></i> RAG AI
+                <span class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-50 text-[#F27123] text-[10px] font-bold border border-orange-200/80">
+                    <i class="fa-solid fa-sparkles text-[#F27123]"></i> RAG AI
                 </span>
             </div>
         </div>
@@ -174,7 +174,7 @@
         <!-- Right Quick Actions -->
         <div class="flex items-center gap-2 flex-shrink-0">
             <a th:href="@{/courses/{id}/documents(id=${course.id})}" 
-               class="btn btn-ghost btn-xs h-8 px-2.5 text-slate-600 hover:text-[#08509F] hover:bg-blue-50 rounded-lg text-xs gap-1.5 font-medium transition-colors">
+               class="btn btn-ghost btn-xs h-8 px-2.5 text-slate-600 hover:text-[#F27123] hover:bg-orange-50 rounded-lg text-xs gap-1.5 font-medium transition-colors">
                 <i class="fa-solid fa-file-pdf text-rose-500 text-xs"></i>
                 <span class="hidden sm:inline">Quản Lý Giáo Trình &amp; Chunks</span>
             </a>
@@ -206,7 +206,7 @@
                 <a th:href="@{/courses/{id}/chat/new(id=${course.id})}" 
                    class="btn flex-1 h-9 bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 rounded-xl font-semibold text-xs shadow-2xs gap-2 transition-all justify-between px-3">
                     <span class="flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-[#08509F] text-xs"></i>
+                        <i class="fa-solid fa-plus text-[#F27123] text-xs"></i>
                         <span>Đoạn chat mới</span>
                     </span>
                     <i class="fa-regular fa-pen-to-square text-slate-400 text-xs"></i>
@@ -224,10 +224,10 @@
                     <span class="font-medium text-slate-600 flex items-center gap-1">
                         <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i> Hạn ngạch RAG
                     </span>
-                    <span id="quotaText" class="text-[#08509F] font-bold text-xs" th:text="${remainingQuota} + '/50'">50/50</span>
+                    <span id="quotaText" class="text-[#F27123] font-bold text-xs" th:text="${remainingQuota} + '/50'">50/50</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                    <div id="quotaProgressBar" class="h-full bg-[#08509F] transition-all duration-500 rounded-full"
+                    <div id="quotaProgressBar" class="h-full bg-[#F27123] transition-all duration-500 rounded-full"
                          th:style="'width: ' + (${remainingQuota} * 2) + '%'"></div>
                 </div>
             </div>
@@ -249,7 +249,7 @@
                      class="group rounded-xl transition-all border flex items-center justify-between px-2.5 py-2 gap-1.5 text-xs"
                      th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'bg-white border-slate-200/90 text-slate-900 font-semibold shadow-2xs' : 'bg-transparent border-transparent hover:bg-slate-200/60 text-slate-600'">
                     <a th:href="@{/courses/{cId}/chat(cId=${course.id}, sessionId=${sess.id})}" class="flex-grow truncate flex items-center gap-2">
-                        <i class="fa-regular fa-message text-[11px] flex-shrink-0" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-[#08509F]' : 'text-slate-400'"></i>
+                        <i class="fa-regular fa-message text-[11px] flex-shrink-0" th:classappend="${currentSession != null and currentSession.id == sess.id} ? 'text-[#F27123]' : 'text-slate-400'"></i>
                         <span class="truncate" th:text="${sess.title}">Tiêu đề cuộc trò chuyện</span>
                     </a>
 
@@ -265,7 +265,7 @@
             <!-- Course Summary Footer Note -->
             <div class="p-3 border-t border-slate-200/70 bg-slate-50 flex-shrink-0">
                 <div class="flex items-center gap-2 text-xs text-slate-500 truncate">
-                    <div class="w-6 h-6 rounded-lg bg-blue-50 text-[#08509F] flex items-center justify-center text-xs font-bold flex-shrink-0">
+                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0">
                         <i class="fa-solid fa-book-open"></i>
                     </div>
                     <div class="truncate">
@@ -285,25 +285,25 @@
 
                     <!-- ChatGPT Empty / Welcome Hero -->
                     <div th:if="${#lists.isEmpty(messages)}" id="welcomeHero" class="py-16 sm:py-24 text-center space-y-5">
-                        <div class="w-16 h-16 rounded-3xl bg-blue-50 border border-blue-200/80 text-[#08509F] flex items-center justify-center text-3xl mx-auto shadow-2xs">
+                        <div class="w-16 h-16 rounded-3xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-3xl mx-auto shadow-2xs">
                             <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                         <div class="space-y-1.5">
                             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Hôm nay bạn cần tra cứu gì?</h2>
                             <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
-                                Trợ lý AI bám sát 100% tài liệu &amp; slide môn học <strong class="text-[#08509F] font-semibold" th:text="${course.code}">HSF302</strong>, cam kết trích dẫn số trang chính xác.
+                                Trợ lý AI bám sát 100% tài liệu &amp; slide môn học <strong class="text-[#F27123] font-semibold" th:text="${course.code}">HSF302</strong>, cam kết trích dẫn số trang chính xác.
                             </p>
                         </div>
 
                         <!-- Quick Prompt Suggestions (ChatGPT Capsule Buttons) -->
                         <div class="pt-4 flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
-                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-blue-50 hover:text-[#08509F] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Môn học này gồm những nội dung chính nào?">
+                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Môn học này gồm những nội dung chính nào?">
                                 📌 Nội dung chính môn học?
                             </button>
-                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-blue-50 hover:text-[#08509F] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
+                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Giải thích các khái niệm quan trọng nhất trong tài liệu?">
                                 💡 Khái niệm quan trọng nhất?
                             </button>
-                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-blue-50 hover:text-[#08509F] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
+                            <button type="button" class="btn btn-sm bg-slate-50 hover:bg-orange-50 hover:text-[#F27123] border border-slate-200/90 text-slate-700 rounded-2xl font-medium text-xs px-3.5 quick-prompt-btn transition-all shadow-2xs" data-prompt="Tóm tắt tài liệu chương 1 cho tôi ôn thi?">
                                 📝 Tóm tắt chương 1 ôn thi?
                             </button>
                         </div>
@@ -317,14 +317,14 @@
                                 <span class="text-[10px] text-slate-400 mb-1 mr-1">
                                     <span class="font-medium text-slate-600">Bạn</span> · <span th:text="${#temporals.format(msg.sentAt, 'HH:mm')}">12:45</span>
                                 </span>
-                                <div class="bg-[#08509F] text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left"
+                                <div class="bg-[#F27123] text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left"
                                      th:text="${msg.content}">Câu hỏi người dùng</div>
                             </div>
                         </div>
 
                         <!-- AI Message -->
                         <div th:if="${msg.sender == 'AI'}" class="flex justify-start gap-3 items-start my-3">
-                            <div class="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200/80 text-[#08509F] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
+                            <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
                                 <i class="fa-solid fa-robot"></i>
                             </div>
                             <div class="flex flex-col items-start max-w-[92%] sm:max-w-[88%] w-full">
@@ -338,8 +338,8 @@
                                     <div th:if="${msg.ragContext != null and !#strings.isEmpty(msg.ragContext)}" 
                                          class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
                                         <input type="checkbox" /> 
-                                        <div class="collapse-title text-[11px] font-semibold text-[#08509F] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
-                                            <i class="fa-solid fa-book-bookmark text-[#08509F]"></i>
+                                        <div class="collapse-title text-[11px] font-semibold text-[#F27123] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
+                                            <i class="fa-solid fa-book-bookmark text-[#F27123]"></i>
                                             <span>📚 Ngữ cảnh trích xuất từ tài liệu</span>
                                         </div>
                                         <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2"> 
@@ -353,11 +353,11 @@
 
                     <!-- Live Typing Indicator -->
                     <div id="typingIndicator" class="hidden flex justify-start gap-3 items-start my-2">
-                        <div class="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200/80 text-[#08509F] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                        <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                             <i class="fa-solid fa-robot"></i>
                         </div>
                         <div class="bg-slate-50 border border-slate-200/80 text-slate-700 py-2.5 px-4 rounded-2xl rounded-tl-xs shadow-2xs flex items-center gap-2">
-                            <span class="loading loading-dots loading-xs text-[#08509F]"></span>
+                            <span class="loading loading-dots loading-xs text-[#F27123]"></span>
                             <span class="text-xs text-slate-500">Đang tra cứu giáo trình và soạn câu trả lời...</span>
                         </div>
                     </div>
@@ -369,7 +369,7 @@
             <div class="flex-shrink-0 px-4 sm:px-6 pb-4 pt-2 bg-gradient-to-t from-white via-white/95 to-transparent z-10">
                 <div class="max-w-3xl w-full mx-auto">
                     <form id="chatForm" 
-                          class="bg-slate-50 hover:bg-slate-100/80 focus-within:bg-white border border-slate-200/90 focus-within:border-[#08509F] focus-within:ring-2 focus-within:ring-blue-100 rounded-3xl p-1.5 pl-4 transition-all shadow-xs flex items-center gap-2"
+                          class="bg-slate-50 hover:bg-slate-100/80 focus-within:bg-white border border-slate-200/90 focus-within:border-[#F27123] focus-within:ring-2 focus-within:ring-blue-100 rounded-3xl p-1.5 pl-4 transition-all shadow-xs flex items-center gap-2"
                           th:action="@{/courses/{id}/chat/send(id=${course.id})}" method="post">
                         
                         <input type="hidden" id="chatSessionIdInput" name="sessionId" th:value="${currentSession != null ? currentSession.id : ''}" />
@@ -380,7 +380,7 @@
                                required autocomplete="off" />
 
                         <button type="submit" id="sendBtn" 
-                                class="w-9 h-9 rounded-full bg-slate-900 hover:bg-[#08509F] disabled:bg-slate-200 disabled:text-slate-400 text-white flex items-center justify-center transition-all flex-shrink-0 cursor-pointer disabled:cursor-not-allowed shadow-2xs"
+                                class="w-9 h-9 rounded-full bg-slate-900 hover:bg-[#F27123] disabled:bg-slate-200 disabled:text-slate-400 text-white flex items-center justify-center transition-all flex-shrink-0 cursor-pointer disabled:cursor-not-allowed shadow-2xs"
                                 title="Gửi câu hỏi">
                             <i class="fa-solid fa-arrow-up text-xs font-bold"></i>
                         </button>
@@ -573,8 +573,8 @@
                     quotaProgressBar.className = 'h-full bg-amber-500 transition-all duration-500 rounded-full';
                     if (quotaText) quotaText.className = 'text-amber-600 font-bold text-xs';
                 } else {
-                    quotaProgressBar.className = 'h-full bg-[#08509F] transition-all duration-500 rounded-full';
-                    if (quotaText) quotaText.className = 'text-[#08509F] font-bold text-xs';
+                    quotaProgressBar.className = 'h-full bg-[#F27123] transition-all duration-500 rounded-full';
+                    if (quotaText) quotaText.className = 'text-[#F27123] font-bold text-xs';
                 }
             }
 
@@ -603,7 +603,7 @@
                     <span class="text-[10px] text-slate-400 mb-1 mr-1">
                         <span class="font-medium text-slate-600">Bạn</span> · <span>${timeStr}</span>
                     </span>
-                    <div class="bg-[#08509F] text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left">${escapeHtml(text)}</div>
+                    <div class="bg-[#F27123] text-white rounded-2xl rounded-tr-xs px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs whitespace-pre-wrap font-normal text-left">${escapeHtml(text)}</div>
                 </div>
             `;
             const wrapper = document.getElementById('chatMessagesWrapper') || typingIndicator.parentElement || chatContainer;
@@ -624,8 +624,8 @@
                 citationsHtml = `
                     <div class="collapse collapse-arrow bg-white rounded-xl border border-slate-200 mt-2 text-xs">
                         <input type="checkbox" /> 
-                        <div class="collapse-title text-[11px] font-semibold text-[#08509F] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
-                            <i class="fa-solid fa-book-bookmark text-[#08509F]"></i>
+                        <div class="collapse-title text-[11px] font-semibold text-[#F27123] flex items-center gap-1.5 py-2 px-3 pr-10 min-h-0">
+                            <i class="fa-solid fa-book-bookmark text-[#F27123]"></i>
                             <span>📚 Nguồn trích dẫn từ giáo trình (${citations.length} đoạn Chunks)</span>
                         </div>
                         <div class="collapse-content text-[11px] text-slate-700 border-t border-slate-100 pt-2">
@@ -636,7 +636,7 @@
             }
 
             messageDiv.innerHTML = `
-                <div class="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200/80 text-[#08509F] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200/80 text-[#F27123] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-2xs">
                     <i class="fa-solid fa-robot"></i>
                 </div>
                 <div class="flex flex-col items-start max-w-[92%] sm:max-w-[88%] w-full">
@@ -667,3 +667,4 @@
 </section>
 </body>
 </html>
+

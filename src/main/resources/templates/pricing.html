@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: main-layout('StudyHub AI - Bảng Giá Gói Cước - FPT University', ~{::section})}">
 <body>
@@ -17,7 +17,7 @@
                 <div class="flex items-center justify-center pt-2">
                     <div class="bg-slate-100 p-1.5 rounded-full inline-flex flex-wrap justify-center gap-1 items-center border border-slate-200 shadow-inner">
                         <button type="button" id="tab-monthly" onclick="switchBillingPeriod('monthly')"
-                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] text-white shadow-sm border-none">
+                                class="btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] text-white shadow-sm border-none">
                             Theo Tháng
                         </button>
                         <button type="button" id="tab-semester" onclick="switchBillingPeriod('semester')"
@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <p class="text-xs text-[#08509F] font-medium flex items-center justify-center gap-1.5 pt-1">
+                <p class="text-xs text-[#F27123] font-medium flex items-center justify-center gap-1.5 pt-1">
                     <i class="fa-solid fa-bolt text-[#F27123]"></i> Mở khóa tối đa năng lực ôn thi A+ bám sát tài liệu giáo trình
                 </p>
             </div>
@@ -167,17 +167,17 @@
                 </div>
 
                 <!-- Card 3: Nhóm Học Tập (Study Squad - FPT Blue & Green) -->
-                <div class="rounded-3xl p-6 bg-slate-50/70 border border-slate-200 flex flex-col justify-between hover:border-[#08509F] transition-all">
+                <div class="rounded-3xl p-6 bg-slate-50/70 border border-slate-200 flex flex-col justify-between hover:border-[#F27123] transition-all">
                     <div class="space-y-4">
                         <div class="flex items-center justify-between">
                             <h4 class="text-lg font-bold text-slate-900">Nhóm Học Tập</h4>
-                            <span class="badge badge-sm font-semibold text-xs bg-blue-100 text-[#08509F] border-none">Study Squad</span>
+                            <span class="badge badge-sm font-semibold text-xs bg-orange-100 text-[#F27123] border-none">Study Squad</span>
                         </div>
                         <p class="text-xs text-slate-500 leading-relaxed min-h-[36px]">
                             Dành cho nhóm bạn cùng lớp hoặc làm đồ án môn học (HSF, SWP, PRJ...).
                         </p>
                         <div class="pt-2">
-                            <span id="card-squad-price" class="text-3xl font-extrabold text-[#08509F]">$5</span>
+                            <span id="card-squad-price" class="text-3xl font-extrabold text-[#F27123]">$5</span>
                             <span id="card-squad-period" class="text-xs text-slate-500 font-semibold">/ tháng (~24k VNĐ/bạn)</span>
                         </div>
 
@@ -186,11 +186,11 @@
                         <!-- Features Checklist -->
                         <ul class="space-y-2.5 text-xs text-slate-700">
                             <li class="flex items-start gap-2.5 font-bold text-slate-900">
-                                <i class="fa-solid fa-circle-check text-[#08509F] mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-[#F27123] mt-0.5"></i>
                                 <span>Mở khóa PRO cho nhóm 5 thành viên</span>
                             </li>
                             <li class="flex items-start gap-2.5">
-                                <i class="fa-solid fa-circle-check text-[#08509F] mt-0.5"></i>
+                                <i class="fa-solid fa-circle-check text-[#F27123] mt-0.5"></i>
                                 <span>Kho tài liệu &amp; Slide giáo trình dùng chung</span>
                             </li>
                             <li class="flex items-start gap-2.5">
@@ -210,15 +210,15 @@
 
                     <div class="pt-6 mt-4 space-y-2">
                         <div th:if="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}">
-                            <button type="button" disabled class="btn btn-sm bg-[#08509F] text-white rounded-xl w-full font-extrabold shadow-md gap-1 border-none">
-                                <i class="fa-solid fa-users text-blue-200"></i> Đang Kích Hoạt Gói Nhóm
+                            <button type="button" disabled class="btn btn-sm bg-[#F27123] text-white rounded-xl w-full font-extrabold shadow-md gap-1 border-none">
+                                <i class="fa-solid fa-users text-amber-200"></i> Đang Kích Hoạt Gói Nhóm
                             </button>
                         </div>
                         <div th:unless="${session.currentUser != null and (session.currentUser.subscriptionTier == 'CAMPUS' or session.currentUser.subscriptionTier == 'SQUAD')}" class="space-y-1.5">
                             <form th:action="@{/payment/create-vnpay}" method="post" class="w-full">
                                 <input type="hidden" name="tier" value="SQUAD">
                                 <input type="hidden" name="bankCode" value="NCB">
-                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-[#08509F] to-[#51B748] hover:opacity-95 text-white font-bold border-none shadow-md shadow-[#08509F]/20">
+                                <button type="submit" class="btn btn-sm rounded-xl w-full bg-gradient-to-r from-[#F27123] to-[#FF9800] hover:opacity-95 text-white font-bold border-none shadow-md shadow-[#F27123]/20">
                                     <i class="fa-solid fa-credit-card mr-1"></i> Thanh Toán VNPay (129.000đ)
                                 </button>
                             </form>
@@ -249,7 +249,7 @@
                         <span class="badge bg-[#F27123] text-white badge-sm font-bold border-none">SANDBOX TEST</span>
                         <span class="font-extrabold text-sm text-slate-900">Thông tin thẻ Test VNPay Sandbox phục vụ chấm điểm &amp; Demo</span>
                     </div>
-                    <span class="text-xs text-[#08509F] font-semibold">Bấm "Sao chép" để điền nhanh</span>
+                    <span class="text-xs text-[#F27123] font-semibold">Bấm "Sao chép" để điền nhanh</span>
                 </div>
 
                 <div class="grid sm:grid-cols-2 gap-3 text-xs">
@@ -257,14 +257,14 @@
                     <div class="p-3.5 rounded-xl bg-white border border-orange-200 shadow-xs space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-bold text-slate-900 flex items-center gap-1.5">
-                                <i class="fa-solid fa-building-columns text-[#08509F]"></i> Thẻ ATM Nội Địa NCB
+                                <i class="fa-solid fa-building-columns text-[#F27123]"></i> Thẻ ATM Nội Địa NCB
                             </span>
                             <span class="badge badge-ghost badge-xs font-mono font-semibold">OTP: 123456</span>
                         </div>
                         <div class="space-y-1.5 font-mono text-xs text-slate-700">
                             <div class="flex items-center justify-between bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200">
                                 <span>Số thẻ: <strong class="text-slate-900 select-all">9704198526191432198</strong></span>
-                                <button type="button" onclick="navigator.clipboard.writeText('9704198526191432198'); alert('Đã chép số thẻ ATM NCB: 9704198526191432198')" class="btn btn-ghost btn-xs text-[#08509F] hover:bg-blue-50 font-sans font-bold">Sao chép</button>
+                                <button type="button" onclick="navigator.clipboard.writeText('9704198526191432198'); alert('Đã chép số thẻ ATM NCB: 9704198526191432198')" class="btn btn-ghost btn-xs text-[#F27123] hover:bg-orange-50 font-sans font-bold">Sao chép</button>
                             </div>
                             <div class="flex items-center justify-between px-1 text-[11px]">
                                 <span>Tên: <strong class="text-slate-800">NGUYEN VAN A</strong></span>
@@ -284,7 +284,7 @@
                         <div class="space-y-1.5 font-mono text-xs text-slate-700">
                             <div class="flex items-center justify-between bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-200">
                                 <span>Số thẻ: <strong class="text-slate-900 select-all">4456530000001005</strong></span>
-                                <button type="button" onclick="navigator.clipboard.writeText('4456530000001005'); alert('Đã chép số thẻ Visa: 4456530000001005')" class="btn btn-ghost btn-xs text-[#08509F] hover:bg-blue-50 font-sans font-bold">Sao chép</button>
+                                <button type="button" onclick="navigator.clipboard.writeText('4456530000001005'); alert('Đã chép số thẻ Visa: 4456530000001005')" class="btn btn-ghost btn-xs text-[#F27123] hover:bg-orange-50 font-sans font-bold">Sao chép</button>
                             </div>
                             <div class="flex items-center justify-between px-1 text-[11px]">
                                 <span>Hết hạn: <strong class="text-slate-800">12/26</strong></span>
@@ -297,7 +297,7 @@
 
             <!-- Footer Note -->
             <div class="text-center mt-8 text-slate-500 text-xs">
-                <span>Cần thanh toán qua chuyển khoản ngân hàng hoặc ví MoMo? Vui lòng gửi yêu cầu hỗ trợ qua <a href="mailto:admin@fpt.edu.vn" class="text-[#08509F] underline font-medium">admin@fpt.edu.vn</a></span>
+                <span>Cần thanh toán qua chuyển khoản ngân hàng hoặc ví MoMo? Vui lòng gửi yêu cầu hỗ trợ qua <a href="mailto:admin@fpt.edu.vn" class="text-[#F27123] underline font-medium">admin@fpt.edu.vn</a></span>
             </div>
     </div>
     <script>
@@ -311,14 +311,14 @@
             const squadPeriod = document.getElementById('card-squad-period');
 
             if (period === 'monthly') {
-                btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] text-white shadow-sm border-none";
+                btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] text-white shadow-sm border-none";
                 btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center gap-1.5 border-none";
                 if (priceLabel) priceLabel.innerText = "$2";
                 if (periodLabel) periodLabel.innerText = "/ tháng (~49k VNĐ)";
                 if (squadPrice) squadPrice.innerText = "$5";
                 if (squadPeriod) squadPeriod.innerText = "/ tháng (~24k VNĐ/bạn)";
             } else {
-                btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] text-white shadow-sm flex items-center gap-1.5 border-none";
+                btnSemester.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] text-white shadow-sm flex items-center gap-1.5 border-none";
                 btnMonthly.className = "btn btn-xs sm:btn-sm rounded-full font-bold px-4 transition-all duration-200 text-slate-600 hover:text-slate-900 border-none";
                 if (priceLabel) priceLabel.innerText = "$6";
                 if (periodLabel) periodLabel.innerText = "/ học kỳ 4 tháng (~149k VNĐ)";
@@ -330,3 +330,4 @@
 </section>
 </body>
 </html>
+

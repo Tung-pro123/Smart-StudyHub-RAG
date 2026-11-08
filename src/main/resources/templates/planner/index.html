@@ -32,7 +32,7 @@
                     <i class="fa-solid fa-pen-to-square mr-2 text-[#51B748]"></i>
                     Tạo kế hoạch học tập
                 </h2>
-                <span th:if="${isPro}" class="badge badge-sm font-bold gap-1 shrink-0 border-none bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748] text-white">
+                <span th:if="${isPro}" class="badge badge-sm font-bold gap-1 shrink-0 border-none bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748] text-white">
                     <i class="fa-solid fa-crown text-amber-300"></i>
                     <span th:text="${subscriptionTier}">PRO</span>
                 </span>
@@ -151,7 +151,7 @@
 
                     <!-- Submit Button -->
                     <button type="submit"
-                            class="btn btn-sm h-11 w-full bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#08509F]/20 transition-all"
+                            class="btn btn-sm h-11 w-full bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#F27123]/20 transition-all"
                             th:disabled="${plannerLocked}">
                         <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
                         Tạo kế hoạch với AI
@@ -161,7 +161,7 @@
                 <!-- Locked Glass Overlay dành cho gói FREE -->
                 <div th:if="${plannerLocked}"
                      class="absolute inset-0 z-20 rounded-2xl backdrop-blur-md bg-white/60 border border-white/40 flex flex-col items-center justify-center text-center p-6 gap-3">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#08509F] via-[#0A65C2] to-[#51B748] text-white flex items-center justify-center text-2xl shadow-lg shadow-[#08509F]/20">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#F27123] via-[#FF9800] to-[#51B748] text-white flex items-center justify-center text-2xl shadow-lg shadow-[#F27123]/20">
                         <i class="fa-solid fa-lock"></i>
                     </div>
                     <h3 class="text-lg font-extrabold text-slate-900">AI Study Planner đang bị khóa</h3>
@@ -169,7 +169,7 @@
                         Phân bổ lộ trình ôn thi theo tuần chỉ dành cho Gói Pro. Nâng cấp để AI tự động xếp lịch học vừa sức với bạn.
                     </p>
                     <a th:href="@{/pricing}"
-                            class="btn btn-sm h-10 px-4 rounded-xl bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748] hover:opacity-95 text-white font-black border-none shadow-lg shadow-[#08509F]/20">
+                            class="btn btn-sm h-10 px-4 rounded-xl bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748] hover:opacity-95 text-white font-black border-none shadow-lg shadow-[#F27123]/20">
                         <i class="fa-solid fa-bolt mr-1"></i>
                         Nâng cấp Gói Pro chỉ 49k/tháng
                     </a>
@@ -183,13 +183,13 @@
             <!-- Info Card -->
             <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-2xl p-5">
                 <h3 class="font-black text-slate-900 tracking-tight text-lg mb-3 flex items-center">
-                    <i class="fa-solid fa-circle-info mr-2 text-[#08509F]"></i>Cách hoạt động
+                    <i class="fa-solid fa-circle-info mr-2 text-[#F27123]"></i>Cách hoạt động
                 </h3>
                 <ul class="text-xs space-y-2 text-slate-500 leading-relaxed">
-                    <li><i class="fa-solid fa-1 text-[#08509F] mr-2"></i>Chọn môn học, mục tiêu điểm và nhập lịch rảnh của bạn</li>
-                    <li><i class="fa-solid fa-2 text-[#08509F] mr-2"></i>AI phân tích nội dung giáo trình đã upload</li>
-                    <li><i class="fa-solid fa-3 text-[#08509F] mr-2"></i>Nhận lộ trình học theo tuần</li>
-                    <li><i class="fa-solid fa-4 text-[#08509F] mr-2"></i>Theo dõi tiến độ và hoàn thành từng nhiệm vụ</li>
+                    <li><i class="fa-solid fa-1 text-[#F27123] mr-2"></i>Chọn môn học, mục tiêu điểm và nhập lịch rảnh của bạn</li>
+                    <li><i class="fa-solid fa-2 text-[#F27123] mr-2"></i>AI phân tích nội dung giáo trình đã upload</li>
+                    <li><i class="fa-solid fa-3 text-[#F27123] mr-2"></i>Nhận lộ trình học theo tuần</li>
+                    <li><i class="fa-solid fa-4 text-[#F27123] mr-2"></i>Theo dõi tiến độ và hoàn thành từng nhiệm vụ</li>
                 </ul>
             </div>
 
@@ -228,7 +228,7 @@
                                 </p>
                             </div>
                             <span class="badge badge-sm shrink-0 font-bold border-none"
-                                  th:classappend="${plan.status == 'COMPLETED'} ? 'bg-emerald-100 text-emerald-700' : (${plan.status == 'ACTIVE'} ? 'bg-blue-100 text-[#08509F]' : 'bg-slate-100 text-slate-500')"
+                                  th:classappend="${plan.status == 'COMPLETED'} ? 'bg-emerald-100 text-emerald-700' : (${plan.status == 'ACTIVE'} ? 'bg-orange-100 text-[#F27123]' : 'bg-slate-100 text-slate-500')"
                                   th:text="${plan.status}">ACTIVE</span>
                         </div>
 
@@ -238,7 +238,7 @@
                                 <span class="font-semibold text-slate-700" th:text="${plan.progressPercent + '%'}">0%</span>
                             </div>
                             <div class="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
-                                <div class="h-full rounded-full bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748]"
+                                <div class="h-full rounded-full bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748]"
                                      th:style="|width:${plan.progressPercent}%|"></div>
                             </div>
                         </div>
@@ -259,7 +259,7 @@
                            th:href="@{/planner(page=${p - 1}, size=${pageSize}, courseId=${selectedCourseId})}"
                            th:text="${p}"
                            class="btn btn-sm h-9 min-h-0 w-9 p-0 rounded-xl font-bold transition-all"
-                           th:classappend="${p - 1 == currentPage} ? 'bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748] border-none text-white shadow-lg shadow-[#08509F]/20' : 'bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600'">1</a>
+                           th:classappend="${p - 1 == currentPage} ? 'bg-gradient-to-r from-[#F27123] via-[#FF9800] to-[#51B748] border-none text-white shadow-lg shadow-[#F27123]/20' : 'bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600'">1</a>
                     </div>
 
                     <a th:href="@{/planner(page=${currentPage + 1}, size=${pageSize}, courseId=${selectedCourseId})}"
@@ -276,4 +276,5 @@
 </section>
 </body>
 </html>
+
 

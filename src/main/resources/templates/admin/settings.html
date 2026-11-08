@@ -6,7 +6,7 @@
         <a th:href="@{/admin/users}" class="btn btn-sm h-10 px-4 rounded-xl border-slate-200 bg-slate-100 text-slate-700">Sinh viên</a>
         <a th:href="@{/admin/settings}" class="btn btn-sm h-10 px-4 rounded-xl border-slate-200 bg-slate-100 text-slate-700">Cấu hình AI</a>
     </nav>
-    <header><p class="text-xs font-bold uppercase tracking-wider text-[#08509F]">Kết nối hệ thống</p><h1 class="font-black text-slate-900 tracking-tight text-xl md:text-2xl mt-2">Cấu hình Gemini</h1><p class="text-xs text-slate-500 leading-relaxed mt-2">Quản lý System Key và kiểm tra kết nối AI.</p></header>
+    <header><p class="text-xs font-bold uppercase tracking-wider text-[#F27123]">Kết nối hệ thống</p><h1 class="font-black text-slate-900 tracking-tight text-xl md:text-2xl mt-2">Cấu hình Gemini</h1><p class="text-xs text-slate-500 leading-relaxed mt-2">Quản lý System Key và kiểm tra kết nối AI.</p></header>
     <div th:if="${successMessage}" role="status" class="alert alert-success break-words" th:text="${successMessage}"></div>
     <div th:if="${errorMessage}" role="alert" class="alert alert-error break-words" th:text="${errorMessage}"></div>
     <div class="grid md:grid-cols-2 gap-5">
@@ -19,14 +19,14 @@
                 <label for="system-key" class="block text-sm font-semibold">Khóa hệ thống mới</label>
                 <input id="system-key" name="apiKey" type="password" required maxlength="512" autocomplete="new-password" spellcheck="false" class="input input-bordered w-full min-w-0 bg-white border-slate-200" aria-describedby="key-help" />
                 <p id="key-help" class="text-xs text-slate-500 leading-relaxed">Khóa mới chỉ có hiệu lực đến khi máy chủ khởi động lại. Khóa không được hiển thị lại hoặc lưu vào database.</p>
-                <button type="submit" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#08509F]/20 transition-all w-full sm:w-auto">Cập nhật System Key</button>
+                <button type="submit" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#F27123]/20 transition-all w-full sm:w-auto">Cập nhật System Key</button>
             </form>
             <details class="text-xs text-slate-500 leading-relaxed"><summary class="cursor-pointer font-semibold text-slate-700">Cấu hình lâu dài</summary><p class="mt-2">Đặt GEMINI_API_KEY trong môi trường máy chủ rồi khởi động lại. Không đưa khóa vào mã nguồn hoặc ảnh minh chứng.</p></details>
         </div>
         <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-2xl p-5 space-y-4 min-w-0">
             <h2 class="font-bold text-slate-900">Kiểm tra kết nối</h2><p class="text-xs text-slate-500 leading-relaxed">Gửi một yêu cầu AI ngắn bằng System Key hiện tại.</p>
             <form th:action="@{/admin/settings/test-ping}" method="post" onsubmit="this.querySelector('button').disabled=true; this.querySelector('.loading').classList.remove('hidden'); this.setAttribute('aria-busy', 'true')">
-                <input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button type="submit" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#08509F]/20 transition-all h-auto min-h-10 py-2 w-full whitespace-normal"><span class="loading loading-spinner loading-sm hidden" aria-hidden="true"></span>Kiểm tra kết nối tức thì</button>
+                <input type="hidden" name="csrfToken" th:value="${csrfToken}" /><button type="submit" class="btn btn-sm h-10 px-5 bg-gradient-to-r from-[#F27123] via-[#FF8A3D] to-[#FFB03A] hover:opacity-95 border-none text-white rounded-xl font-bold shadow-lg shadow-[#F27123]/20 transition-all h-auto min-h-10 py-2 w-full whitespace-normal"><span class="loading loading-spinner loading-sm hidden" aria-hidden="true"></span>Kiểm tra kết nối tức thì</button>
             </form>
             <p class="text-xs text-slate-500 leading-relaxed">Có thể sử dụng quota hoặc phát sinh phí theo tài khoản Gemini.</p>
             <div th:if="${ping != null}" class="alert flex flex-col items-start break-words" th:classappend="${ping.success()} ? 'alert-success' : 'alert-error'" role="status" data-testid="ping-result">
@@ -35,4 +35,5 @@
         </div>
     </div>
 </section></body></html>
+
 
