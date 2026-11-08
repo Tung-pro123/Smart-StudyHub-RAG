@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: main-layout(
         'StudyHub AI - Luyện Thi Trắc Nghiệm AI',
@@ -52,7 +52,7 @@
 
             <!-- Button Mở Modal Tải PDF Sinh Đề -->
             <button onclick="document.getElementById('modal-generate-quiz').showModal()"
-                    class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl shadow-lg shadow-purple-500/25 border-none gap-2">
+                    class="btn btn-sm bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-[#08509F]/20 border-none gap-2">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                 <span>Tạo Đề Thi Mới</span>
             </button>
@@ -62,7 +62,7 @@
     <!-- Bộ Lọc Độ Khó (Difficulty Filter Pills) -->
     <div class="flex items-center justify-between flex-wrap gap-3 bg-white/70 p-3 rounded-2xl border border-slate-200 shadow-sm">
         <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
-            <i class="fa-solid fa-layer-group text-indigo-500 ml-2"></i>
+            <i class="fa-solid fa-layer-group text-[#08509F] ml-2"></i>
             <span>Lọc theo độ khó:</span>
         </div>
 
@@ -94,10 +94,10 @@
     <div class="space-y-4">
         <div class="flex items-center justify-between">
             <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
-                <i class="fa-solid fa-list-check text-indigo-500"></i>
+                <i class="fa-solid fa-list-check text-[#08509F]"></i>
                 <span>Bộ Đề Thi Trắc Nghiệm Môn: </span>
                 <span class="badge badge-primary font-bold" th:text="${selectedCourse != null ? selectedCourse.code : 'Chưa chọn'}">HSF302</span>
-                <span th:if="${selectedCourse != null && selectedCourse.squadShared}" class="badge bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-[10px] gap-1">
+                <span th:if="${selectedCourse != null && selectedCourse.squadShared}" class="badge bg-gradient-to-r from-[#08509F] to-[#F27123] text-white font-bold text-[10px] gap-1">
                     <i class="fa-solid fa-users text-[9px]"></i> SQUAD
                 </span>
             </h2>
@@ -138,8 +138,8 @@
 
                             <span th:if="${selectedCourse != null && selectedCourse.squadShared}"
                                   class="badge text-[10px] font-bold gap-1 py-0.5 px-2"
-                                  th:classappend="${q.solo ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-purple-100 text-purple-700 border border-purple-200'}">
-                                <i class="fa-solid" th:classappend="${q.solo ? 'fa-lock text-slate-500' : 'fa-users text-purple-600'}"></i>
+                                  th:classappend="${q.solo ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-orange-100 text-[#F27123] border border-orange-200'}">
+                                <i class="fa-solid" th:classappend="${q.solo ? 'fa-lock text-slate-500' : 'fa-users text-[#F27123]'}"></i>
                                 <span th:text="${q.solo ? 'SOLO (CÁ NHÂN)' : 'SQUAD'}">SQUAD</span>
                             </span>
                         </div>
@@ -167,8 +167,8 @@
                                 <span th:text="${q.chapterTopic}">Tổng hợp kiến thức</span>
                             </p>
                             <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 flex-shrink-0"
-                                  th:classappend="${q.createdBy != null and q.createdBy.squadLeader} ? 'text-purple-600' : ''">
-                                <i class="fa-solid" th:classappend="${q.createdBy != null and q.createdBy.squadLeader} ? 'fa-crown text-purple-600' : 'fa-user-pen text-slate-400'"></i>
+                                  th:classappend="${q.createdBy != null and q.createdBy.squadLeader} ? 'text-[#F27123]' : ''">
+                                <i class="fa-solid" th:classappend="${q.createdBy != null and q.createdBy.squadLeader} ? 'fa-crown text-[#F27123]' : 'fa-user-pen text-slate-400'"></i>
                                 <span th:text="${q.createdBy != null ? '@' + q.createdBy.username : 'Hệ thống'}">@squad_leader</span>
                             </span>
                         </div>
@@ -176,7 +176,7 @@
 
                     <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
                         <div class="flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-question text-indigo-500"></i>
+                            <i class="fa-solid fa-circle-question text-[#08509F]"></i>
                             <span><strong th:text="${q.totalQuestions}">5</strong> câu hỏi</span>
                         </div>
                         <div class="flex items-center gap-1.5">
@@ -189,7 +189,7 @@
                 <div class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex flex-col gap-3">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] font-semibold text-slate-400">Trắc nghiệm 4 lựa chọn</span>
-                        <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm">
+                        <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-[#08509F] hover:bg-[#063B75] text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm">
                             <span>Làm bài thi</span>
                             <i class="fa-solid fa-arrow-right text-xs"></i>
                         </a>
@@ -207,7 +207,7 @@
                             <ul tabindex="0" class="dropdown-content z-20 menu p-1.5 shadow-xl bg-slate-900 border border-slate-700 text-white rounded-xl w-52 mt-1 text-[11px]">
                                 <li>
                                     <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=false'}" class="py-2 hover:bg-slate-800 rounded-lg flex items-center gap-2">
-                                        <i class="fa-solid fa-file-lines text-indigo-400"></i>
+                                        <i class="fa-solid fa-file-lines text-[#08509F]"></i>
                                         <span>Đề thi (Không đáp án)</span>
                                     </a>
                                 </li>
@@ -265,7 +265,7 @@
     </div>
 
     <!-- Widget BẢNG XẾP HẠNG SQUAD (Chỉ hiển thị cho Gói SQUAD) -->
-    <div th:if="${isSquad}" class="space-y-4 pt-6 border-t border-purple-200/60">
+    <div th:if="${isSquad}" class="space-y-4 pt-6 border-t border-orange-200/60">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
                 <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-400 to-yellow-600 flex items-center justify-center text-white text-sm shadow-md">
@@ -288,7 +288,7 @@
             </div>
             <div th:unless="${#lists.isEmpty(squadLeaderboard)}" class="overflow-x-auto">
                 <table class="table text-xs w-full">
-                    <thead class="bg-purple-50/70 text-purple-900 uppercase font-black tracking-wider">
+                    <thead class="bg-orange-50/70 text-slate-900 uppercase font-black tracking-wider">
                         <tr>
                             <th class="w-16 text-center">Hạng</th>
                             <th>Thành viên</th>
@@ -297,7 +297,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="m, stat : ${squadLeaderboard}" class="hover:bg-purple-50/30 transition-colors"
+                        <tr th:each="m, stat : ${squadLeaderboard}" class="hover:bg-orange-50/30 transition-colors"
                             th:classappend="${stat.count == 1 ? 'bg-amber-50/40' : (stat.count == 2 ? 'bg-slate-50/60' : (stat.count == 3 ? 'bg-orange-50/30' : ''))}">
                             <td class="text-center font-black text-base">
                                 <span th:if="${stat.count == 1}">🥇</span>
@@ -307,7 +307,7 @@
                             </td>
                             <td>
                                 <div class="flex items-center gap-3">
-                                    <img th:src="${m.avatar != null && !m.avatar.isBlank() ? m.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=' + m.username}" class="w-8 h-8 rounded-full border border-purple-200" alt="avatar" />
+                                    <img th:src="${m.avatar != null && !m.avatar.isBlank() ? m.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=' + m.username}" class="w-8 h-8 rounded-full border border-orange-200" alt="avatar" />
                                     <div>
                                         <div class="font-bold text-slate-800 text-sm" th:text="${m.fullName != null && !m.fullName.isBlank() ? m.fullName : m.username}">Họ tên</div>
                                         <div class="text-[11px] text-slate-400 font-mono" th:text="'@' + ${m.username}">@username</div>
@@ -366,7 +366,7 @@
                             <td class="text-slate-500" th:text="${a.timeSpentSeconds} + ' giây'">120 giây</td>
                             <td class="text-slate-400" th:text="${#temporals.format(a.completedAt, 'dd/MM/yyyy HH:mm')}">19/10/2026</td>
                             <td class="text-right">
-                                <a th:href="@{'/quiz/attempt/' + ${a.id}}" class="btn btn-xs btn-outline border-indigo-400 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg font-bold">
+                                <a th:href="@{'/quiz/attempt/' + ${a.id}}" class="btn btn-xs btn-outline border-[#08509F] text-[#08509F] hover:bg-[#08509F] hover:text-white rounded-lg font-bold">
                                     Xem lại bài
                                 </a>
                             </td>
@@ -486,17 +486,17 @@
                 </div>
 
                 <!-- Tùy chọn Phạm vi Đề thi nếu là Môn Nhóm Squad -->
-                <div th:if="${selectedCourse != null && selectedCourse.squadShared}" class="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-200/80 space-y-2">
-                    <label class="label py-0"><span class="label-text text-xs font-bold text-purple-900 flex items-center gap-1.5"><i class="fa-solid fa-users-gear text-purple-600"></i> Phạm vi chia sẻ đề thi trong Squad</span></label>
+                <div th:if="${selectedCourse != null && selectedCourse.squadShared}" class="p-3.5 rounded-2xl bg-orange-50/70 border border-orange-200/80 space-y-2">
+                    <label class="label py-0"><span class="label-text text-xs font-bold text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-users-gear text-[#F27123]"></i> Phạm vi chia sẻ đề thi trong Squad</span></label>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-purple-200 cursor-pointer hover:border-purple-400">
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-orange-200 cursor-pointer hover:border-purple-400">
                             <input type="radio" name="squadShared" value="true" checked class="radio radio-xs radio-primary" />
                             <div>
-                                <span class="font-bold text-purple-900">👥 Cả nhóm cùng thi</span>
+                                <span class="font-bold text-slate-900">👥 Cả nhóm cùng thi</span>
                                 <p class="text-[10px] text-slate-500">Đua top Leaderboard nhóm</p>
                             </div>
                         </label>
-                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-purple-200 cursor-pointer hover:border-purple-400">
+                        <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-orange-200 cursor-pointer hover:border-purple-400">
                             <input type="radio" name="squadShared" value="false" class="radio radio-xs radio-primary" />
                             <div>
                                 <span class="font-bold text-slate-800">🔒 Riêng tư (Solo)</span>
@@ -508,7 +508,7 @@
 
                 <div class="pt-3 flex justify-end gap-2">
                     <button type="button" onclick="document.getElementById('modal-generate-quiz').close()" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold">Hủy bỏ</button>
-                    <button type="submit" class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-xs border-none gap-2 shadow-lg shadow-purple-500/25">
+                    <button type="submit" class="btn btn-sm bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white font-bold rounded-xl text-xs border-none gap-2 shadow-lg shadow-[#08509F]/20">
                         <i class="fa-solid fa-bolt"></i> Bắt Đầu Sinh Đề
                     </button>
                 </div>
@@ -546,3 +546,4 @@
 </section>
 </body>
 </html>
+

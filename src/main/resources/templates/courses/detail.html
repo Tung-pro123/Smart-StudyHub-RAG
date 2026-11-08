@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: main-layout(
         'StudyHub AI - Chi Tiết Môn Học ' + ${course.code},
@@ -46,9 +46,9 @@
     <!-- Breadcrumbs Navigation -->
     <div class="text-xs breadcrumbs text-slate-500">
         <ul>
-            <li><a th:href="@{/}" class="hover:text-white"><i class="fa-solid fa-house mr-1 text-indigo-400"></i> Trang Chủ</a></li>
-            <li><a th:href="@{/courses}" class="hover:text-white"><i class="fa-solid fa-book mr-1 text-indigo-400"></i> Danh Sách Môn Học</a></li>
-            <li class="font-bold text-indigo-400" th:text="${course.code}">HSF302</li>
+            <li><a th:href="@{/}" class="hover:text-white"><i class="fa-solid fa-house mr-1 text-[#08509F]"></i> Trang Chủ</a></li>
+            <li><a th:href="@{/courses}" class="hover:text-white"><i class="fa-solid fa-book mr-1 text-[#08509F]"></i> Danh Sách Môn Học</a></li>
+            <li class="font-bold text-[#08509F]" th:text="${course.code}">HSF302</li>
         </ul>
     </div>
 
@@ -57,13 +57,13 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 relative z-10">
             <!-- Course Identity -->
             <div class="flex items-start gap-4 sm:gap-5">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-2xl shadow-2xs flex-shrink-0">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-50 border border-blue-200 text-[#08509F] flex items-center justify-center font-bold text-2xl shadow-2xs flex-shrink-0">
                     <i class="fa-solid" th:classappend="${course.icon} ?: 'fa-book-open'"></i>
                 </div>
                 <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs" th:text="${course.code}">HSF302</span>
-                        <span th:if="${course.squadShared}" class="px-2 py-0.5 rounded-lg bg-indigo-100 text-indigo-800 text-[11px] font-bold inline-flex items-center gap-1">
+                        <span class="px-2.5 py-0.5 rounded-lg bg-blue-50 text-[#08509F] border border-blue-200 font-bold text-xs" th:text="${course.code}">HSF302</span>
+                        <span th:if="${course.squadShared}" class="px-2 py-0.5 rounded-lg bg-blue-100 text-[#08509F] text-[11px] font-bold inline-flex items-center gap-1">
                             <i class="fa-solid fa-users text-[10px]"></i> SQUAD
                         </span>
                         <span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-medium" th:text="${course.semester}">Fall 2026</span>
@@ -105,7 +105,7 @@
     <div class="space-y-4">
         <div>
             <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-compass text-indigo-600"></i> Các Phân Hệ Chức Năng Của Môn Học
+                <i class="fa-solid fa-compass text-[#08509F]"></i> Các Phân Hệ Chức Năng Của Môn Học
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">Chọn một trong 4 phân hệ dưới đây để tiếp tục học tập, ôn luyện và làm đề kiểm tra</p>
         </div>
@@ -114,10 +114,10 @@
             <!-- 1. RAG Chatbot Gateway (Bình) -->
             <div class="rounded-2xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-lg hover:border-indigo-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
                 <div class="space-y-3">
-                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#08509F] flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-comments"></i>
                     </div>
-                    <h3 class="font-black text-base text-slate-900 group-hover:text-indigo-600 transition-colors">
+                    <h3 class="font-black text-base text-slate-900 group-hover:text-[#08509F] transition-colors">
                         Trợ Lý RAG Giáo Trình
                     </h3>
                     <p class="text-xs text-slate-500 leading-relaxed">
@@ -125,7 +125,7 @@
                     </p>
                 </div>
                 <div class="pt-5 mt-4 border-t border-slate-100">
-                    <a th:href="@{'/courses/' + ${course.id} + '/chat'}" class="btn btn-sm bg-slate-900 hover:bg-indigo-600 border-none text-white w-full rounded-xl text-xs font-bold shadow-md shadow-purple-500/25">
+                    <a th:href="@{'/courses/' + ${course.id} + '/chat'}" class="btn btn-sm bg-slate-900 hover:bg-[#08509F] border-none text-white w-full rounded-xl text-xs font-bold shadow-md shadow-[#08509F]/20">
                         Vào Khung Chat <i class="fa-solid fa-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -134,10 +134,10 @@
             <!-- 2. PDF Documents & Chunks Gateway (Bình) -->
             <div class="rounded-2xl p-6 bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm hover:shadow-lg hover:border-purple-300 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
                 <div class="space-y-3">
-                    <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-50 text-[#F27123] flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-file-pdf"></i>
                     </div>
-                    <h3 class="font-black text-base text-slate-900 group-hover:text-purple-600 transition-colors">
+                    <h3 class="font-black text-base text-slate-900 group-hover:text-[#F27123] transition-colors">
                         Tài Liệu &amp; Slide Môn
                     </h3>
                     <p class="text-xs text-slate-500 leading-relaxed">
@@ -145,7 +145,7 @@
                     </p>
                 </div>
                 <div class="pt-5 mt-4 border-t border-slate-100">
-                    <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-sm bg-slate-100 hover:bg-purple-50 text-purple-700 hover:text-purple-800 border border-purple-200/60 w-full rounded-xl text-xs font-bold transition-all">
+                    <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-sm bg-slate-100 hover:bg-orange-50 text-[#F27123] hover:text-[#D45B12] border border-orange-200 w-full rounded-xl text-xs font-bold transition-all">
                         Quản Lý Slide <i class="fa-solid fa-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -198,12 +198,12 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div>
                 <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-database text-indigo-600"></i> Cơ Sở Tri Thức Của Môn Học
+                    <i class="fa-solid fa-database text-[#08509F]"></i> Cơ Sở Tri Thức Của Môn Học
                 </h3>
                 <p class="text-xs text-slate-500 mt-0.5">Các đoạn trích xuất tài liệu được AI ghi nhớ để trả lời chat và sinh đề thi trắc nghiệm</p>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-                <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold text-xs" th:text="${chunks.size()} + ' Đoạn tri thức đã nạp'">0 Đoạn tri thức</span>
+                <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-[#08509F] border border-blue-200 font-bold text-xs" th:text="${chunks.size()} + ' Đoạn tri thức đã nạp'">0 Đoạn tri thức</span>
                 <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-lg font-medium">
                     <i class="fa-solid fa-file-pdf text-rose-500 mr-1"></i> Quản Lý Tài Liệu
                 </a>
@@ -218,7 +218,7 @@
             <p class="text-xs text-slate-500 max-w-md mx-auto">
                 Môn học này hiện chưa có tài liệu nào được nạp. Hãy vào phân hệ <strong>Tài Liệu &amp; Slide</strong> để tải lên file PDF giáo trình đầu tiên nhé!
             </p>
-            <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs">
+            <a th:href="@{'/courses/' + ${course.id} + '/documents'}" class="btn btn-sm bg-[#08509F] hover:bg-[#063B75] text-white rounded-xl text-xs font-bold shadow-xs">
                 <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Tải Lên Slide Ngay
             </a>
         </div>
@@ -232,7 +232,7 @@
                     <!-- Top bar: Chunk badge, Page Number & Word Count -->
                     <div class="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-slate-200/60">
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            <span class="px-2 py-0.5 rounded-md bg-indigo-100/80 text-indigo-700 font-mono text-[11px] font-bold">
+                            <span class="px-2 py-0.5 rounded-md bg-blue-100/80 text-[#08509F] font-mono text-[11px] font-bold">
                                 Đoạn #<span th:text="${chunk.chunkIndex}">0</span>
                             </span>
                             <span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-600 font-medium text-[11px] flex items-center gap-1" th:if="${chunk.pageNumber != null}">
@@ -264,7 +264,7 @@
                     <span class="text-[10px] text-slate-400 flex items-center gap-1">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã chỉ mục AI
                     </span>
-                    <button type="button" class="btn-view-chunk btn btn-ghost btn-xs text-indigo-600 hover:bg-indigo-50 rounded-lg text-xs font-semibold gap-1 px-2">
+                    <button type="button" class="btn-view-chunk btn btn-ghost btn-xs text-[#08509F] hover:bg-blue-50 rounded-lg text-xs font-semibold gap-1 px-2">
                         <span>Xem toàn văn</span>
                         <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     </button>
@@ -315,11 +315,11 @@
                     <div class="form-control">
                         <label class="label py-1"><span class="label-text font-bold text-xs text-slate-300">Màu Sắc Đại Diện</span></label>
                         <select th:field="*{color}" class="select select-sm bg-slate-900 border-white/20 text-white rounded-xl text-xs focus:border-indigo-500">
-                            <option value="from-indigo-600 to-purple-600">Indigo &amp; Purple</option>
+                            <option value="from-[#08509F] to-[#0A65C2]">Indigo &amp; Purple</option>
                             <option value="from-emerald-600 to-teal-600">Emerald &amp; Teal</option>
                             <option value="from-amber-500 to-rose-600">Amber &amp; Rose</option>
                             <option value="from-blue-600 to-cyan-600">Blue &amp; Cyan</option>
-                            <option value="from-purple-600 to-pink-600">Purple &amp; Pink</option>
+                            <option value="from-[#F27123] to-[#51B748]">Purple &amp; Pink</option>
                         </select>
                     </div>
 
@@ -352,7 +352,7 @@
         <div class="modal-box bg-white text-slate-800 p-6 rounded-2xl border border-slate-200 max-w-2xl shadow-2xl relative">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <span id="modalChunkBadge" class="px-2.5 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-mono text-xs font-bold">#0</span>
+                    <span id="modalChunkBadge" class="px-2.5 py-0.5 rounded-md bg-blue-50 text-[#08509F] font-mono text-xs font-bold">#0</span>
                     <span id="modalChunkDoc" class="text-xs font-semibold text-slate-800">Tài liệu</span>
                     <span id="modalChunkPage" class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">Trang 1</span>
                 </div>
@@ -363,7 +363,7 @@
             <div class="mt-4 space-y-2">
                 <div class="flex items-center justify-between">
                     <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Toàn văn đoạn tri thức</span>
-                    <button type="button" onclick="copyChunkContent()" id="copyChunkBtn" class="btn btn-ghost btn-xs text-slate-500 hover:text-indigo-600 gap-1.5 text-xs font-medium">
+                    <button type="button" onclick="copyChunkContent()" id="copyChunkBtn" class="btn btn-ghost btn-xs text-slate-500 hover:text-[#08509F] gap-1.5 text-xs font-medium">
                         <i class="fa-regular fa-copy"></i>
                         <span>Sao chép</span>
                     </button>

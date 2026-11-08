@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title th:text="${title} ?: 'Smart Multi-Course Study Hub & RAG AI'">Study Hub AI</title>
+    <title th:text="${title} ?: 'Smart Multi-Course Study Hub & RAG AI - FPT University'">Study Hub AI - FPT University</title>
 
-    <!-- Google Fonts: Inter -->
+    <!-- Google Sans Font CDN + Vietnamese Fallback (Be Vietnam Pro) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.cdnfonts.com">
+    <link href="https://fonts.cdnfonts.com/css/google-sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- DaisyUI v4 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -20,35 +22,168 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Tailwind Configuration -->
+    <!-- Tailwind Configuration: FPT University Brand Theme (#08509F, #F27123, #51B748) -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        sans: ['"Google Sans"', '"Be Vietnam Pro"', 'sans-serif'],
                     },
+                    colors: {
+                        fpt: {
+                            blue: '#08509F',
+                            'blue-light': '#0A65C2',
+                            'blue-dark': '#063B75',
+                            'blue-soft': '#EBF3FC',
+                            orange: '#F27123',
+                            'orange-light': '#FF8A3D',
+                            'orange-dark': '#D45B12',
+                            'orange-soft': '#FEF3EC',
+                            green: '#51B748',
+                            'green-light': '#66CA5D',
+                            'green-dark': '#3F9638',
+                            'green-soft': '#EDF7ED',
+                        },
+                        // Overriding default primary/secondary/accent with FPT branding
+                        primary: {
+                            DEFAULT: '#08509F',
+                            focus: '#063B75',
+                            50: '#EBF3FC',
+                            100: '#D0E4F9',
+                            500: '#08509F',
+                            600: '#063B75',
+                        },
+                        secondary: {
+                            DEFAULT: '#F27123',
+                            focus: '#D45B12',
+                            50: '#FEF3EC',
+                            100: '#FDE1D0',
+                            500: '#F27123',
+                            600: '#D45B12',
+                        },
+                        accent: {
+                            DEFAULT: '#51B748',
+                            focus: '#3F9638',
+                            50: '#EDF7ED',
+                            100: '#D5EDD4',
+                            500: '#51B748',
+                            600: '#3F9638',
+                        }
+                    }
                 }
             }
         }
     </script>
 
-    <!-- Custom Glassmorphism Styles -->
+    <!-- Custom FPT Brand Glassmorphism & Gradient Styles -->
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        * {
+            font-family: 'Google Sans', 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
         }
+
+        /* FPT Glassmorphism Canvas */
+        body {
+            font-family: 'Google Sans', 'Be Vietnam Pro', sans-serif;
+            background-color: #F8FAFC;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(8, 80, 159, 0.08) 0px, transparent 45%),
+                radial-gradient(at 100% 0%, rgba(242, 113, 35, 0.07) 0px, transparent 45%),
+                radial-gradient(at 100% 100%, rgba(81, 183, 72, 0.07) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(8, 80, 159, 0.06) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(8, 80, 159, 0.12);
+            box-shadow: 0 10px 30px -5px rgba(8, 80, 159, 0.05);
         }
-        [data-theme="dark"] .glass-card,
-        [data-theme="night"] .glass-card,
-        [data-theme="synthwave"] .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .glass-card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-2px);
+            border-color: rgba(242, 113, 35, 0.35);
+            box-shadow: 0 14px 34px -5px rgba(242, 113, 35, 0.12);
+        }
+
+        /* FPT Core Brand Gradients (Loại bỏ AI Slope Tím Hồng) */
+        .bg-fpt-gradient {
+            background: linear-gradient(135deg, #08509F 0%, #0A65C2 55%, #F27123 100%);
+        }
+        .bg-fpt-gradient-reverse {
+            background: linear-gradient(135deg, #F27123 0%, #0A65C2 50%, #08509F 100%);
+        }
+        .bg-fpt-blue-green {
+            background: linear-gradient(135deg, #08509F 0%, #0A65C2 60%, #51B748 100%);
+        }
+        .bg-fpt-orange-green {
+            background: linear-gradient(135deg, #F27123 0%, #FF8A3D 60%, #51B748 100%);
+        }
+
+        .text-fpt-gradient {
+            background: linear-gradient(135deg, #08509F 0%, #0A65C2 60%, #F27123 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-fpt-gradient-leaf {
+            background: linear-gradient(135deg, #08509F 0%, #51B748 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* FPT Buttons */
+        .btn-fpt-primary {
+            background-color: #08509F;
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-fpt-primary:hover {
+            background-color: #063B75;
+            box-shadow: 0 4px 14px rgba(8, 80, 159, 0.35);
+        }
+
+        .btn-fpt-secondary {
+            background-color: #F27123;
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-fpt-secondary:hover {
+            background-color: #D45B12;
+            box-shadow: 0 4px 14px rgba(242, 113, 35, 0.35);
+        }
+
+        .btn-fpt-accent {
+            background-color: #51B748;
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-fpt-accent:hover {
+            background-color: #3F9638;
+            box-shadow: 0 4px 14px rgba(81, 183, 72, 0.35);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #08509F;
         }
     </style>
 </head>

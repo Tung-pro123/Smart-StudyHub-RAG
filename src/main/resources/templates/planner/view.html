@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: main-layout('Chi tiết kế hoạch - Smart Study Hub', ~{::section})}">
 <body>
@@ -44,7 +44,7 @@
     <!-- Breadcrumb -->
     <nav class="text-sm">
         <ul class="flex items-center gap-2">
-            <li><a th:href="@{/planner}" class="text-purple-600 hover:underline"><i class="fa-solid fa-calendar-days mr-1"></i>Study Planner</a></li>
+            <li><a th:href="@{/planner}" class="text-[#51B748] hover:underline"><i class="fa-solid fa-calendar-days mr-1"></i>Study Planner</a></li>
             <li class="text-slate-300"><i class="fa-solid fa-chevron-right text-xs"></i></li>
             <li class="text-slate-500">Chi tiết kế hoạch</li>
         </ul>
@@ -68,16 +68,16 @@
                 </h1>
                 <div class="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
                     <span th:if="${plan.course != null}">
-                        <i class="fa-solid fa-book mr-1 text-indigo-500"></i>
+                        <i class="fa-solid fa-book mr-1 text-[#08509F]"></i>
                         <span th:text="${plan.course.name}">Tên môn</span>
                         (<span th:text="${plan.course.code}">Mã</span>)
                     </span>
                     <span>
-                        <i class="fa-solid fa-clock mr-1 text-indigo-500"></i>
+                        <i class="fa-solid fa-clock mr-1 text-[#08509F]"></i>
                         <span th:text="${plan.hoursPerWeek}">6</span> giờ/tuần
                     </span>
                     <span th:if="${plan.examDate != null}">
-                        <i class="fa-solid fa-calendar-check mr-1 text-indigo-500"></i>
+                        <i class="fa-solid fa-calendar-check mr-1 text-[#08509F]"></i>
                         Thi: <span th:text="${#temporals.format(plan.examDate, 'dd/MM/yyyy')}">20/12/2024</span>
                     </span>
                     <span th:if="${plan.targetGrade != null}">
@@ -86,7 +86,7 @@
                     </span>
                 </div>
                 <p th:if="${plan.goal != null and !#strings.isEmpty(plan.goal)}" class="mt-3 text-xs text-slate-600 leading-relaxed">
-                    <i class="fa-solid fa-bullseye mr-2 text-purple-500"></i>
+                    <i class="fa-solid fa-bullseye mr-2 text-[#51B748]"></i>
                     <span th:text="${plan.goal}">Mục tiêu điểm 8+</span>
                 </p>
             </div>
@@ -96,7 +96,7 @@
                       th:attr="data-status=${plan.status}"
                       th:text="${plan.status}">ACTIVE</span>
                 <div class="text-left md:text-right">
-                    <div class="text-2xl font-black text-purple-600" id="plan-progress-text" th:text="${plan.progressPercent + '%'}">0%</div>
+                    <div class="text-2xl font-black text-[#51B748]" id="plan-progress-text" th:text="${plan.progressPercent + '%'}">0%</div>
                     <div class="text-[11px] text-slate-400">tiến độ</div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
         <!-- Progress Bar -->
         <div class="mt-4 h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
             <div id="plan-progress-bar"
-                 class="h-full rounded-full bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 transition-all duration-500"
+                 class="h-full rounded-full bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#51B748] transition-all duration-500"
                  th:style="|width:${plan.progressPercent}%|"></div>
         </div>
 
@@ -123,7 +123,7 @@
     <!-- Weekly Plan Section -->
     <div class="bg-white/95 backdrop-blur-xl border border-slate-200/80 text-slate-800 shadow-sm rounded-2xl p-5">
         <h2 class="font-black text-slate-900 tracking-tight text-lg mb-4 flex items-center">
-            <i class="fa-solid fa-list-check mr-2 text-purple-600"></i>
+            <i class="fa-solid fa-list-check mr-2 text-[#51B748]"></i>
             Lộ trình học tập theo tuần
         </h2>
 
@@ -178,9 +178,9 @@
 
                     <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] text-slate-500">
                         <span th:if="${task.assignee != null and !#strings.isEmpty(task.assignee)}">
-                            <i class="fa-solid fa-user-check mr-1 text-indigo-500"></i>
+                            <i class="fa-solid fa-user-check mr-1 text-[#08509F]"></i>
                             Phụ trách:
-                            <span class="font-semibold text-indigo-600" th:text="${task.assignee}">Minh</span>
+                            <span class="font-semibold text-[#08509F]" th:text="${task.assignee}">Minh</span>
                         </span>
                         <span>
                             <i class="fa-regular fa-clock mr-1"></i>
@@ -291,3 +291,4 @@
 </section>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main :: main-layout(
         'StudyHub AI - Phòng Thi Trực Tuyến: ' + ${quiz.title},
@@ -27,7 +27,7 @@
             <a th:href="@{'/quiz?courseId=' + ${quiz.course != null ? quiz.course.id : 1}}" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold text-slate-500 gap-1.5">
                 <i class="fa-solid fa-arrow-left"></i> Rời phòng thi
             </a>
-            <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-sm bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl border-none shadow-lg shadow-purple-500/25 gap-2">
+            <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-sm bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white font-bold rounded-xl border-none shadow-lg shadow-[#08509F]/20 gap-2">
                 <i class="fa-solid fa-paper-plane"></i>
                 <span>Nộp Bài Thi</span>
             </button>
@@ -46,7 +46,7 @@
                 <!-- Card Nhập Tên Thí Sinh -->
                 <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-50 text-[#08509F] flex items-center justify-center text-lg">
                             <i class="fa-solid fa-user-graduate"></i>
                         </div>
                         <div>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-info text-indigo-500"></i>
+                        <i class="fa-solid fa-circle-info text-[#08509F]"></i>
                         Tích chọn 1 đáp án cho mỗi câu. Có thể đổi trước khi nộp.
                     </div>
                 </div>
@@ -68,57 +68,57 @@
                      class="card bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 scroll-mt-24 transition-all duration-200 hover:border-indigo-300">
 
                     <div class="flex items-start gap-3">
-                        <div class="w-9 h-9 rounded-2xl bg-indigo-600 text-white font-black flex items-center justify-center text-sm flex-shrink-0 shadow-sm" th:text="${qStat.count}">
+                        <div class="w-9 h-9 rounded-2xl bg-[#08509F] text-white font-black flex items-center justify-center text-sm flex-shrink-0 shadow-sm" th:text="${qStat.count}">
                             1
                         </div>
                         <div class="flex-grow">
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-500">Câu hỏi số [[${qStat.count}]] / [[${#lists.size(questions)}]]</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-[#08509F]">Câu hỏi số [[${qStat.count}]] / [[${#lists.size(questions)}]]</span>
                             <h2 class="text-base font-bold text-slate-800 leading-relaxed mt-0.5" th:text="${q.questionText}">Nội dung câu hỏi?</h2>
                         </div>
                     </div>
 
                     <!-- 4 Lựa chọn A, B, C, D dạng Thẻ Radio Lớn -->
                     <div class="grid grid-cols-1 gap-3 pt-2">
-                        <label class="cursor-pointer border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-600">
+                        <label class="cursor-pointer border border-slate-200 hover:border-[#08509F] hover:bg-blue-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-[#08509F] has-[:checked]:bg-blue-50/50 has-[:checked]:ring-1 has-[:checked]:ring-[#08509F]">
                             <input type="radio" th:name="'answer_' + ${q.id}" value="A"
                                    th:attr="data-qid=${q.id}"
                                    onchange="onAnswerSelected(this)"
                                    class="radio radio-primary radio-sm mt-0.5" />
                             <div class="text-xs text-slate-700 leading-normal">
-                                <strong class="text-indigo-600 mr-1.5 font-bold">A.</strong>
+                                <strong class="text-[#08509F] mr-1.5 font-bold">A.</strong>
                                 <span th:text="${q.optionA}">Đáp án A</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-600">
+                        <label class="cursor-pointer border border-slate-200 hover:border-[#08509F] hover:bg-blue-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-[#08509F] has-[:checked]:bg-blue-50/50 has-[:checked]:ring-1 has-[:checked]:ring-[#08509F]">
                             <input type="radio" th:name="'answer_' + ${q.id}" value="B"
                                    th:attr="data-qid=${q.id}"
                                    onchange="onAnswerSelected(this)"
                                    class="radio radio-primary radio-sm mt-0.5" />
                             <div class="text-xs text-slate-700 leading-normal">
-                                <strong class="text-indigo-600 mr-1.5 font-bold">B.</strong>
+                                <strong class="text-[#08509F] mr-1.5 font-bold">B.</strong>
                                 <span th:text="${q.optionB}">Đáp án B</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-600">
+                        <label class="cursor-pointer border border-slate-200 hover:border-[#08509F] hover:bg-blue-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-[#08509F] has-[:checked]:bg-blue-50/50 has-[:checked]:ring-1 has-[:checked]:ring-[#08509F]">
                             <input type="radio" th:name="'answer_' + ${q.id}" value="C"
                                    th:attr="data-qid=${q.id}"
                                    onchange="onAnswerSelected(this)"
                                    class="radio radio-primary radio-sm mt-0.5" />
                             <div class="text-xs text-slate-700 leading-normal">
-                                <strong class="text-indigo-600 mr-1.5 font-bold">C.</strong>
+                                <strong class="text-[#08509F] mr-1.5 font-bold">C.</strong>
                                 <span th:text="${q.optionC}">Đáp án C</span>
                             </div>
                         </label>
 
-                        <label class="cursor-pointer border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50/50 has-[:checked]:ring-1 has-[:checked]:ring-indigo-600">
+                        <label class="cursor-pointer border border-slate-200 hover:border-[#08509F] hover:bg-blue-50/20 p-4 rounded-2xl flex items-start gap-3 transition-all duration-150 has-[:checked]:border-[#08509F] has-[:checked]:bg-blue-50/50 has-[:checked]:ring-1 has-[:checked]:ring-[#08509F]">
                             <input type="radio" th:name="'answer_' + ${q.id}" value="D"
                                    th:attr="data-qid=${q.id}"
                                    onchange="onAnswerSelected(this)"
                                    class="radio radio-primary radio-sm mt-0.5" />
                             <div class="text-xs text-slate-700 leading-normal">
-                                <strong class="text-indigo-600 mr-1.5 font-bold">D.</strong>
+                                <strong class="text-[#08509F] mr-1.5 font-bold">D.</strong>
                                 <span th:text="${q.optionD}">Đáp án D</span>
                             </div>
                         </label>
@@ -128,7 +128,7 @@
                 <!-- Nút nộp bài ở cuối trang -->
                 <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <span class="text-xs text-slate-500">Kiểm tra kỹ trước khi gửi bài chấm điểm</span>
-                    <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-md bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-2xl border-none shadow-lg shadow-purple-500/25 px-8 gap-2">
+                    <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-md bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white font-bold rounded-2xl border-none shadow-lg shadow-[#08509F]/20 px-8 gap-2">
                         <i class="fa-solid fa-paper-plane"></i>
                         <span>Nộp Bài Thi Ngay</span>
                     </button>
@@ -139,13 +139,13 @@
             <div class="w-full lg:w-1/4 order-first lg:sticky lg:top-6 space-y-4">
 
                 <!-- Widget Đồng Hồ Đếm Ngược -->
-                <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-5 rounded-3xl shadow-lg border border-indigo-800">
+                <div class="bg-gradient-to-br from-[#052345] to-[#08509F] text-white p-5 rounded-3xl shadow-lg border border-indigo-800">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-amber-400">
                                 <i class="fa-solid fa-stopwatch animate-pulse"></i>
                             </div>
-                            <span class="text-xs font-bold tracking-wider uppercase text-indigo-200">Thời gian làm bài</span>
+                            <span class="text-xs font-bold tracking-wider uppercase text-blue-200">Thời gian làm bài</span>
                         </div>
                         <div id="quiz-timer" class="text-2xl font-mono font-black text-amber-400" th:attr="data-minutes=${quiz.timeLimitMinutes}">
                             15:00
@@ -155,7 +155,7 @@
                     <!-- Thanh Tiến Độ % Hoàn Thành -->
                     <div class="mt-4 pt-4 border-t border-white/10 space-y-1.5">
                         <div class="flex items-center justify-between text-xs">
-                            <span class="text-indigo-200">Tiến độ hoàn thành:</span>
+                            <span class="text-blue-200">Tiến độ hoàn thành:</span>
                             <span id="progress-text" class="font-bold text-white">0 / [[${#lists.size(questions)}]] câu (0%)</span>
                         </div>
                         <progress id="quiz-progress-bar" class="progress progress-warning w-full bg-white/10 h-2 rounded-full" value="0" th:max="${#lists.size(questions)}"></progress>
@@ -166,7 +166,7 @@
                 <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-grip text-indigo-500"></i>
+                            <i class="fa-solid fa-grip text-[#08509F]"></i>
                             <span>Bảng câu hỏi</span>
                         </h3>
                         <span class="text-[11px] text-slate-400">Bấm số để nhảy tới câu</span>
@@ -186,7 +186,7 @@
                     <!-- Chú thích màu sắc -->
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-around text-[11px] text-slate-500 font-medium">
                         <div class="flex items-center gap-1.5">
-                            <span class="w-3 h-3 rounded-md bg-indigo-600 inline-block"></span>
+                            <span class="w-3 h-3 rounded-md bg-[#08509F] inline-block"></span>
                             <span>Đã trả lời</span>
                         </div>
                         <div class="flex items-center gap-1.5">
@@ -197,7 +197,7 @@
                 </div>
 
                 <!-- Nút nộp bài trực tiếp ở Sidebar -->
-                <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-block bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-2xl border-none shadow-lg shadow-purple-500/25 gap-2">
+                <button type="button" onclick="handlePreSubmitCheck()" class="btn btn-block bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] hover:opacity-95 text-white font-bold rounded-2xl border-none shadow-lg shadow-[#08509F]/20 gap-2">
                     <i class="fa-solid fa-check"></i>
                     <span>Nộp Bài Thi</span>
                 </button>
@@ -273,7 +273,7 @@
             const navBtn = document.getElementById('nav-btn-' + qid);
             if (navBtn) {
                 navBtn.classList.remove('btn-outline', 'border-slate-200', 'text-slate-600');
-                navBtn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600', 'shadow-sm');
+                navBtn.classList.add('bg-[#08509F]', 'text-white', 'border-[#08509F]', 'shadow-sm');
             }
 
             // Cập nhật progress bar
@@ -315,3 +315,4 @@
 </section>
 </body>
 </html>
+

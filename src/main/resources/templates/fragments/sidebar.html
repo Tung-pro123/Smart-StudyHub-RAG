@@ -7,11 +7,15 @@
         <div class="space-y-6">
             <div class="flex items-center gap-3 pb-5 border-b border-slate-100">
                 <a th:href="@{/}" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-violet-600 to-pink-600 flex items-center justify-center text-white shadow-md shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#08509F] via-[#0A65C2] to-[#F27123] flex items-center justify-center text-white shadow-md shadow-[#08509F]/20 group-hover:scale-105 transition-transform">
                         <i class="fa-solid fa-graduation-cap text-lg"></i>
                     </div>
                     <div>
-                        <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-purple-600 via-violet-600 to-pink-600 bg-clip-text text-transparent">StudyHub AI</span>
+                        <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-[#08509F] via-[#0A65C2] to-[#F27123] bg-clip-text text-transparent">StudyHub AI</span>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#51B748]"></span>
+                            <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase">FPT University</span>
+                        </div>
                     </div>
                 </a>
             </div>
@@ -19,29 +23,29 @@
             <div class="space-y-4">
                 <th:block th:if="${session.currentUser != null and session.currentUser.role == 'ROLE_ADMIN'}">
                     <div>
-                        <p class="px-3 text-[11px] font-black uppercase tracking-wider text-purple-600 mb-1.5">Quản Trị Admin</p>
+                        <p class="px-3 text-[11px] font-black uppercase tracking-wider text-[#08509F] mb-1.5">Quản Trị Admin</p>
                         <ul class="menu p-0 gap-1 text-xs font-bold text-slate-700">
                             <li>
-                                <a th:href="@{/admin/dashboard}" class="py-2.5 px-3 rounded-xl hover:bg-purple-50 hover:text-purple-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-chart-line text-purple-600 text-sm w-5 text-center"></i>
+                                <a th:href="@{/admin/dashboard}" class="py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-[#08509F] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-chart-line text-[#08509F] text-sm w-5 text-center"></i>
                                     <span>Command Center</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/admin/users}" class="py-2.5 px-3 rounded-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-users text-indigo-600 text-sm w-5 text-center"></i>
+                                <a th:href="@{/admin/users}" class="py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-[#08509F] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-users text-[#08509F] text-sm w-5 text-center"></i>
                                     <span>Quản Lý Sinh Viên</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/courses}" class="py-2.5 px-3 rounded-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-book-open text-indigo-600 text-sm w-5 text-center"></i>
+                                <a th:href="@{/courses}" class="py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-[#08509F] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-book-open text-[#08509F] text-sm w-5 text-center"></i>
                                     <span>Quản Lý Môn Học</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/admin/settings}" class="py-2.5 px-3 rounded-xl hover:bg-amber-50 hover:text-amber-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-key text-amber-500 text-sm w-5 text-center"></i>
+                                <a th:href="@{/admin/settings}" class="py-2.5 px-3 rounded-xl hover:bg-orange-50 hover:text-[#F27123] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-key text-[#F27123] text-sm w-5 text-center"></i>
                                     <span>Cấu Hình AI Key</span>
                                 </a>
                             </li>
@@ -54,20 +58,20 @@
                         <p class="px-3 text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Không Gian Học Tập</p>
                         <ul class="menu p-0 gap-1 text-xs font-bold text-slate-700">
                             <li>
-                                <a th:href="@{/courses}" class="py-2.5 px-3 rounded-xl hover:bg-indigo-50 hover:text-indigo-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-book-open text-indigo-600 text-sm w-5 text-center"></i>
+                                <a th:href="@{/courses}" class="py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-[#08509F] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-book-open text-[#08509F] text-sm w-5 text-center"></i>
                                     <span>Quản Lý Môn Học</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/planner}" class="py-2.5 px-3 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-calendar-check text-emerald-600 text-sm w-5 text-center"></i>
+                                <a th:href="@{/planner}" class="py-2.5 px-3 rounded-xl hover:bg-green-50 hover:text-[#51B748] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-calendar-check text-[#51B748] text-sm w-5 text-center"></i>
                                     <span>Lịch Học</span>
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/quiz}" class="py-2.5 px-3 rounded-xl hover:bg-amber-50 hover:text-amber-700 transition-all flex items-center gap-3">
-                                    <i class="fa-solid fa-list-check text-amber-600 text-sm w-5 text-center"></i>
+                                <a th:href="@{/quiz}" class="py-2.5 px-3 rounded-xl hover:bg-orange-50 hover:text-[#F27123] transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-list-check text-[#F27123] text-sm w-5 text-center"></i>
                                     <span>Luyện Đề Trắc Nghiệm</span>
                                 </a>
                             </li>
@@ -80,8 +84,8 @@
                     <ul class="menu p-0 gap-1 text-xs font-bold text-slate-700">
                         <li>
                             <a th:href="@{/pricing}"
-                               class="py-2.5 px-3 rounded-xl hover:bg-pink-50 hover:text-pink-700 transition-all flex items-center gap-3 w-full text-left">
-                                <i class="fa-solid fa-gem text-pink-500 text-sm w-5 text-center"></i>
+                               class="py-2.5 px-3 rounded-xl hover:bg-orange-50 hover:text-[#F27123] transition-all flex items-center gap-3 w-full text-left">
+                                <i class="fa-solid fa-gem text-[#F27123] text-sm w-5 text-center"></i>
                                 <span>Bảng Giá Gói Cước</span>
                             </a>
                         </li>
@@ -97,14 +101,15 @@
         </div>
 
         <div class="pt-5 border-t border-slate-100 space-y-3">
-            <div th:if="${session.currentUser != null}" class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 flex items-center gap-3">
+            <div th:if="${session.currentUser != null}" class="p-3 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3">
                 <img th:src="${session.currentUser.avatar != null ? session.currentUser.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=student'}" 
-                     class="w-10 h-10 rounded-xl border border-indigo-200 bg-white object-cover" alt="Avatar" />
+                     class="w-10 h-10 rounded-xl border border-[#08509F]/30 bg-white object-cover" alt="Avatar" />
                 <div class="min-w-0 flex-1">
                     <p class="text-xs font-extrabold text-slate-900 truncate" th:text="${session.currentUser.fullName}">Sinh Viên</p>
                     <div class="flex items-center gap-1.5 mt-0.5">
-                        <span th:if="${session.currentUser.role == 'ROLE_ADMIN'}" class="badge badge-xs bg-purple-100 text-purple-700 font-black border-none text-[9px]">ADMIN</span>
-                        <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.role != 'ROLE_ADMIN'}" class="badge badge-xs bg-pink-100 text-pink-700 font-black border-none text-[9px]">PRO</span>
+                        <span th:if="${session.currentUser.role == 'ROLE_ADMIN'}" class="badge badge-xs bg-[#08509F]/10 text-[#08509F] font-black border-none text-[9px]">ADMIN</span>
+                        <span th:if="${session.currentUser.subscriptionTier == 'PRO' and session.currentUser.role != 'ROLE_ADMIN'}" class="badge badge-xs bg-[#F27123]/10 text-[#F27123] font-black border-none text-[9px]">PRO</span>
+                        <span th:if="${session.currentUser.subscriptionTier == 'SQUAD' or session.currentUser.subscriptionTier == 'CAMPUS'}" class="badge badge-xs bg-[#51B748]/10 text-[#51B748] font-black border-none text-[9px]">SQUAD</span>
                         <span th:if="${session.currentUser.subscriptionTier == null or session.currentUser.subscriptionTier == 'FREE'}" class="badge badge-xs bg-slate-200 text-slate-700 font-bold border-none text-[9px]">FREE</span>
                         <span class="text-[10px] text-slate-400 font-mono truncate" th:text="'@' + ${session.currentUser.username}">@user</span>
                     </div>
@@ -112,9 +117,17 @@
             </div>
             
             <div th:unless="${session.currentUser != null}">
-                <a th:href="@{/login}" class="btn btn-sm btn-primary w-full rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20">
+                <a th:href="@{/login}" class="btn btn-sm bg-[#08509F] hover:bg-[#063B75] text-white w-full rounded-xl text-xs font-bold shadow-md shadow-[#08509F]/20 border-none">
                     <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
                 </a>
+            </div>
+
+            <!-- FPT Mascot Mini Badge -->
+            <div class="flex items-center justify-center gap-2 pt-1 opacity-70 hover:opacity-100 transition-opacity">
+                <span class="w-2 h-2 rounded-full bg-[#08509F]"></span>
+                <span class="w-2 h-2 rounded-full bg-[#F27123]"></span>
+                <span class="w-2 h-2 rounded-full bg-[#51B748]"></span>
+                <span class="text-[10px] font-bold text-slate-400">Cóc FPT AI Platform</span>
             </div>
         </div>
     </aside>
