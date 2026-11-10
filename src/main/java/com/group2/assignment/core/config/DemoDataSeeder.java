@@ -114,7 +114,13 @@ public class DemoDataSeeder implements CommandLineRunner {
 
     private Course assignOrCreateCourse(String code, String name, String desc, String color, String icon,
                                         String semester, int credits, User owner, boolean squadShared) {
-        Course existing = courseRepository.findByCodeIgnoreCase(code).orElse(null);
+        Course existing = null;
+        if (owner != null && owner.getId() != null) {
+            existing = courseRepository.findByCodeIgnoreCaseAndUserId(code, owner.getId()).orElse(null);
+        }
+        if (existing == null) {
+            existing = courseRepository.findFirstByCodeIgnoreCase(code).orElse(null);
+        }
         if (existing != null) {
             if (existing.getUser() == null) {
                 existing.setUser(owner);

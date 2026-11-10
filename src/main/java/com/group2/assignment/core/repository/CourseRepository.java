@@ -15,6 +15,13 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     Optional<Course> findByCodeIgnoreCase(String code);
 
+    Optional<Course> findFirstByCodeIgnoreCase(String code);
+
+    List<Course> findAllByCodeIgnoreCase(String code);
+
+    @Query("SELECT c FROM Course c WHERE LOWER(c.code) = LOWER(:code) AND c.user.id = :userId")
+    Optional<Course> findByCodeIgnoreCaseAndUserId(@Param("code") String code, @Param("userId") Long userId);
+
     boolean existsByCodeIgnoreCase(String code);
 
     boolean existsByCodeIgnoreCaseAndIdNot(String code, Long id);

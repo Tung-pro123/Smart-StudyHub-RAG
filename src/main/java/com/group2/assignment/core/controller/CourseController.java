@@ -110,6 +110,10 @@ public class CourseController {
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("showUpgradeModal", true);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mã môn học '" + course.getCode() + "' đã tồn tại trong hệ thống! Vui lòng chọn mã môn khác.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
@@ -136,8 +140,10 @@ public class CourseController {
             courseService.updateCourse(id, course, currentUser);
             redirectAttributes.addFlashAttribute("successMessage",
                     "Cập nhật thành công thông tin môn học " + course.getCode() + "!");
-        } catch (SecurityException e) {
+        } catch (SecurityException | IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "⛔ " + e.getMessage());
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mã môn học '" + course.getCode() + "' đã tồn tại trong hệ thống! Vui lòng chọn mã môn khác.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
