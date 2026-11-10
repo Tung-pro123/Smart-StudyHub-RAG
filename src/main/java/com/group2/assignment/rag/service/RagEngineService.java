@@ -191,10 +191,7 @@ public class RagEngineService {
         if (chunks == null) return citations;
 
         for (Chunk chunk : chunks) {
-            String snippet = chunk.getContent();
-            if (snippet.length() > 220) {
-                snippet = snippet.substring(0, 220) + "...";
-            }
+            String snippet = (chunk.getContent() != null) ? chunk.getContent().trim() : "";
             citations.add(CitationDto.builder()
                     .chunkIndex(chunk.getChunkIndex())
                     .pageNumber(chunk.getPageNumber())
@@ -203,6 +200,25 @@ public class RagEngineService {
                     .build());
         }
         return citations;
+    }
+
+    /**
+     * Định dạng các đoạn Chunks sạch sẽ làm dẫn chứng hiển thị cho người dùng (không chứa system prompt nội bộ)
+     */
+    public String buildCleanRagContext(List<Chunk> chunks) {
+        if (chunks == null || chunks.isEmpty()) return null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < chunks.size(); i++) {
+            Chunk c = chunks.get(i);
+            String docName = (c.getDocument() != null && c.getDocument().getFileName() != null)
+                    ? c.getDocument().getFileName() : "Tài liệu môn học";
+            sb.append(String.format("[#Chunk %d | %s - Trang %d]\n", i + 1, docName, c.getPageNumber()));
+            sb.append(c.getContent().trim());
+            if (i < chunks.size() - 1) {
+                sb.append("\n\n--------------------\n\n");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -240,7 +256,8 @@ public class RagEngineService {
         // 2. Tìm kiếm Chunks liên quan
         List<Chunk> relevantChunks = findRelevantChunks(courseId, question, 4);
         List<CitationDto> citations = buildCitations(relevantChunks);
-        String ragContextText = buildSystemPrompt(relevantChunks, question);
+        String systemPrompt = buildSystemPrompt(relevantChunks, question);
+        String cleanRagContext = buildCleanRagContext(relevantChunks);
 
         // 3. Kiểm tra xem hệ thống đã nạp Centralized System Key chưa
         boolean hasKey = (systemAiKeyService != null && systemAiKeyService.isConfigured())
@@ -253,7 +270,7 @@ public class RagEngineService {
                     "> **Gợi ý trích xuất từ tài liệu:** Tìm thấy " + relevantChunks.size() + " đoạn văn bản có khả năng liên quan đến câu hỏi của bạn.";
 
             // Lưu tin nhắn USER và thông báo cảnh báo
-            saveMessages(chatSession, question, fallbackAnswer, ragContextText);
+            saveMessages(chatSession, question, fallbackAnswer, cleanRagContext);
 
             return ChatResponseDto.builder()
                     .answer(fallbackAnswer)
@@ -268,10 +285,10 @@ public class RagEngineService {
 
         // 4. Gọi AI với cơ chế xoay vòng Multi-Key hoặc LiteLLM Gateway
         try {
-            String aiAnswer = callLlmWithRotation(ragContextText);
+            String aiAnswer = callLlmWithRotation(systemPrompt);
 
-            // Lưu tin nhắn của Sinh viên và AI
-            saveMessages(chatSession, question, aiAnswer, ragContextText);
+            // Lưu tin nhắn của Sinh viên và AI (chỉ lưu ngữ cảnh Chunks sạch, không lưu System Prompt)
+            saveMessages(chatSession, question, aiAnswer, cleanRagContext);
 
             return ChatResponseDto.builder()
                     .answer(aiAnswer)
@@ -288,7 +305,7 @@ public class RagEngineService {
                     "Chi tiết: " + e.getMessage() + "\n\n" +
                     "Hệ thống đang tự động điều phối lại cụm API Keys. Vui lòng thử lại sau giây lát.";
 
-            saveMessages(chatSession, question, errorAnswer, ragContextText);
+            saveMessages(chatSession, question, errorAnswer, cleanRagContext);
 
             return ChatResponseDto.builder()
                     .answer(errorAnswer)

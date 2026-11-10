@@ -13,15 +13,20 @@
  </p>
  </div>
 
- <!-- Alert Messages -->
- <div th:if="${success}" class="alert alert-success rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm">
- <i class="fa-solid fa-check-circle"></i>
- <span th:text="${success}">Thành công!</span>
- </div>
- <div th:if="${error}" class="alert alert-error rounded-lg border border-rose-200 bg-rose-50 text-rose-700 shadow-sm">
- <i class="fa-solid fa-circle-exclamation"></i>
- <span th:text="${error}">Lỗi!</span>
- </div>
+    <!-- Alert Messages -->
+    <div th:if="${success}" class="alert alert-success rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 shadow-sm">
+        <i class="fa-solid fa-check-circle"></i>
+        <span th:text="${success}">Thành công!</span>
+    </div>
+    <div th:if="${error}" class="alert alert-error rounded-lg border border-rose-200 bg-rose-50 text-rose-700 shadow-sm">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span th:text="${error}">Lỗi!</span>
+        <a th:if="${missingSourceCourseId != null}"
+           th:href="@{/courses/{courseId}/documents(courseId=${missingSourceCourseId})}"
+           class="btn btn-sm ml-auto rounded-lg border-rose-300 bg-white text-rose-700 hover:bg-rose-100">
+            Thêm tài liệu môn học
+        </a>
+    </div>
 
  <!-- Main Content: 2 Columns -->
  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">

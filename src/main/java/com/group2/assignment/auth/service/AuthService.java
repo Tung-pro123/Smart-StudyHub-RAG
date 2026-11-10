@@ -528,7 +528,7 @@ public class AuthService {
             userRepository.save(User.builder()
                     .username("student")
                     .email("student@fpt.edu.vn")
-                    .fullName("Nguyễn Văn Sinh Viên")
+                    .fullName("Nguyễn Văn Gia Bình")
                     .password(passwordEncoder.encode("123456"))
                     .role("ROLE_STUDENT")
                     .subscriptionTier("FREE")

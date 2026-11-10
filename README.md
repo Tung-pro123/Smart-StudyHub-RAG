@@ -1,5 +1,6 @@
 # 🎓 Smart Multi-Course Study Hub & RAG AI Platform
-> **Môn học**: HSF302 - JPA and Spring Framework | **FPT University**  
+
+> **Môn học**: HSF302 - JPA and Spring Framework | **FPT University**
 > **Học kỳ**: Fall 2026 | **Nhóm phát triển**: 6 thành viên (Leader: Tùng)
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg?style=for-the-badge&logo=openjdk)](https://openjdk.org/)
@@ -65,14 +66,14 @@ com.group2.assignment/
 
 ## 👥 PHÂN CÔNG NHIỆM VỤ 6 THÀNH VIÊN (TEAM ASSIGNMENTS)
 
-| Thành viên | Vai trò & Module phụ trách | Trách nhiệm Fullstack chính |
-|:---|:---|:---|
-| **TÙNG (Leader)** 👑 | **Core & Master Layout Module** | Thiết kế nền móng dự án, Master Layout Glassmorphism, CRUD Môn học, Quản lý CSDL dùng chung. |
-| **BÌNH** 🌟 | **RAG Knowledge & Chatbot Module** | Upload PDF giáo trình theo môn, Apache PDFBox Chunking, Khung Chat RAG riêng của môn, lưu lịch sử chat. |
-| **ÂN** | **Settings & Security Module** | Giao diện cài đặt API Key, Test Connection Ping, lưu an toàn trong `HttpSession` (không lộ vào DB/Git). |
-| **THẮNG** | **AI Study Planner Module** | Form nhập lịch rảnh & ngày thi, phân bổ thời gian học theo Chunks giáo trình, Timeline học DaisyUI. |
-| **NHẬT** 🚀 | **AI Quiz Generator Module** | Bộ lọc chọn chương & độ khó, sinh trắc nghiệm A/B/C/D từ Chunks, giao diện thi, chấm điểm và lưu kết quả. |
-| **TRƯỜNG** | **Master Lead, QA & Presentation** | Chủ biên tài liệu User Guide Word/PDF, Thiết kế bộ Slide thuyết trình 15 trang, Master QA kiểm thử và điều phối Demo. |
+| Thành viên                | Vai trò & Module phụ trách            | Trách nhiệm Fullstack chính                                                                                                       |
+| :-------------------------- | :--------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
+| **TÙNG (Leader)** 👑 | **Core & Master Layout Module**    | Thiết kế nền móng dự án, Master Layout Glassmorphism, CRUD Môn học, Quản lý CSDL dùng chung.                              |
+| **BÌNH** 🌟          | **RAG Knowledge & Chatbot Module** | Upload PDF giáo trình theo môn, Apache PDFBox Chunking, Khung Chat RAG riêng của môn, lưu lịch sử chat.                     |
+| **ÂN**               | **Settings & Security Module**     | Giao diện cài đặt API Key, Test Connection Ping, lưu an toàn trong `HttpSession` (không lộ vào DB/Git).                   |
+| **THẮNG**            | **AI Study Planner Module**        | Form nhập lịch rảnh & ngày thi, phân bổ thời gian học theo Chunks giáo trình, Timeline học DaisyUI.                       |
+| **NHẬT** 🚀          | **AI Quiz Generator Module**       | Bộ lọc chọn chương & độ khó, sinh trắc nghiệm A/B/C/D từ Chunks, giao diện thi, chấm điểm và lưu kết quả.         |
+| **TRƯỜNG**          | **Master Lead, QA & Presentation** | Chủ biên tài liệu User Guide Word/PDF, Thiết kế bộ Slide thuyết trình 15 trang, Master QA kiểm thử và điều phối Demo. |
 
 ---
 
@@ -90,23 +91,28 @@ com.group2.assignment/
 ## ⚡ HƯỚNG DẪN CÀI ĐẶT & CHẠY DỰ ÁN (QUICK START)
 
 ### 1. Yêu cầu môi trường
+
 * **Java Development Kit (JDK)**: Phiên bản 17 trở lên.
 * **Apache Maven**: Phiên bản 3.8+ (hoặc dùng Maven nhúng sẵn trong IntelliJ IDEA).
 * **IDE khuyên dùng**: IntelliJ IDEA (Ultimate hoặc Community).
 
 ### 2. Khởi chạy ứng dụng
+
 1. Clone dự án về máy:
+
    ```bash
    git clone <URL_REPO_CUA_BAN>
    cd Assignment
    ```
 2. Chạy ứng dụng bằng Maven:
+
    ```bash
    mvn spring-boot:run
    ```
-   *(Hoặc mở dự án trong IntelliJ IDEA, tìm đến file `AssignmentApplication.java` và bấm nút **Run** ▶️)*.
 
+   *(Hoặc mở dự án trong IntelliJ IDEA, tìm đến file `AssignmentApplication.java` và bấm nút **Run** ▶️)*.
 3. Mở trình duyệt web và trải nghiệm:
+
    * **Giao diện chính**: [http://localhost:8080](http://localhost:8080)
    * **H2 Database Web Console**: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
      * JDBC URL: `jdbc:h2:file:./data/studyhubdb`
@@ -117,6 +123,7 @@ com.group2.assignment/
 ## 📚 TÀI LIỆU QUY CHUẨN NỘI BỘ (DOCUMENTATION)
 
 Toàn bộ quy trình và đặc tả kỹ thuật chi tiết được lưu trong thư mục [`docs/`](docs/):
+
 * [`01-system-specification.md`](docs/01-system-specification.md): Đặc tả yêu cầu hệ thống (SRS), luồng kiến trúc, CSDL Entity và ma trận API/Routes.
 * [`02-git-workflow.md`](docs/02-git-workflow.md): Quy chuẩn phân nhánh Git (`feature/`), chuẩn Commit Message và Merge PR.
 * [`03-business-rules.md`](docs/03-business-rules.md): Cẩm nang quy tắc nghiệp vụ (BRD) từ BR-CORE, BR-AUTH, BR-SET, BR-RAG, BR-PLAN đến BR-QUIZ.
@@ -130,7 +137,8 @@ Toàn bộ quy trình và đặc tả kỹ thuật chi tiết được lưu tron
 ---
 
 ## 📄 BẢN QUYỀN & GIẢNG VIÊN HƯỚNG DẪN
-Dự án được thực hiện phục vụ học phần **HSF302 - JPA and Spring Framework** tại **Đại học FPT**.  
+
+Dự án được thực hiện phục vụ học phần **HSF302 - JPA and Spring Framework** tại **Đại học FPT**.
 © Fall 2026 - Nhóm sinh viên thực hiện: Tùng (Leader), Bình, Nhật, Thắng, Ân, Trường.
 
 <!-- Test PR verification bot -->

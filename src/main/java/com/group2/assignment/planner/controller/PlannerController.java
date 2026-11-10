@@ -10,6 +10,7 @@ import com.group2.assignment.planner.dto.TaskToggleResultDto;
 import com.group2.assignment.planner.entity.StudyPlan;
 import com.group2.assignment.planner.entity.StudyTask;
 import com.group2.assignment.planner.service.StudyPlannerService;
+import com.group2.assignment.planner.service.StudySourceMissingException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -94,6 +95,11 @@ public class PlannerController {
             StudyPlan plan = studyPlannerService.generateStudyPlan(dto, currentUser);
             redirectAttributes.addFlashAttribute("success", "Tạo kế hoạch học tập thành công!");
             return "redirect:/planner/" + plan.getId();
+        } catch (StudySourceMissingException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Môn học này chưa có dữ liệu nguồn đã trích xuất. Hãy tải lên giáo trình PDF hoặc tài liệu học tập để tạo chunks trước khi sinh kế hoạch.");
+            redirectAttributes.addFlashAttribute("missingSourceCourseId", dto.getCourseId());
+            return "redirect:/planner?courseId=" + dto.getCourseId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi khi tạo kế hoạch: " + e.getMessage());
             return "redirect:/planner";

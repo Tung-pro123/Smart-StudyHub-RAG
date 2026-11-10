@@ -47,6 +47,11 @@ test-fixtures/*.class
 
 .originkit/
 
+### Agent Skills & Artifacts ###
+.agents/
+.archify/
+skills-lock.json
+
 # E2E Scripts & Test Fixtures
 e2e/
 test-fixtures/
