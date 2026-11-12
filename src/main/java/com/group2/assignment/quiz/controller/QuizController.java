@@ -23,13 +23,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.Objects;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping({"/quiz", "/api/quiz"})
+@RequestMapping({ "/quiz", "/api/quiz" })
 @Slf4j
 public class QuizController {
 
@@ -68,7 +69,9 @@ public class QuizController {
             selectedCourse = courses.get(0);
         }
 
-        List<Quiz> quizzes = selectedCourse != null ? quizService.getQuizzesByCourse(selectedCourse.getId(), currentUser) : List.of();
+        List<Quiz> quizzes = selectedCourse != null
+                ? quizService.getQuizzesByCourse(selectedCourse.getId(), currentUser)
+                : List.of();
         if (difficulty != null && !difficulty.equalsIgnoreCase("ALL")) {
             quizzes = quizzes.stream()
                     .filter(q -> q.getDifficulty() != null && q.getDifficulty().equalsIgnoreCase(difficulty))
@@ -87,7 +90,7 @@ public class QuizController {
         boolean isSquad = currentUser != null && currentUser.isSquad();
 
         List<QuizService.SquadLeaderboardDto> squadLeaderboard = List.of();
-        if (isSquad) {
+        if (isSquad && currentUser != null) {
             String leaderUsername = currentUser.getEffectiveSquadLeader();
             Long activeCourseId = selectedCourse != null ? selectedCourse.getId() : null;
             squadLeaderboard = quizService.getSquadLeaderboard(leaderUsername, activeCourseId);
@@ -105,15 +108,13 @@ public class QuizController {
         model.addAttribute("squadLeaderboard", squadLeaderboard);
         model.addAttribute("currentUser", currentUser);
 
-        // Quyền xóa đề thi: Admin hoặc (nếu môn squad -> squadLeader, nếu môn cá nhân -> chủ môn)
-        boolean canDeleteQuiz = (currentUser != null) && (
-                currentUser.isAdmin()
-                || (selectedCourse != null && (
-                        Boolean.TRUE.equals(selectedCourse.getSquadShared())
-                                ? currentUser.isSquadLeader()
-                                : (selectedCourse.getUser() == null || (currentUser.getId() != null && currentUser.getId().equals(selectedCourse.getUser().getId())))
-                ))
-        );
+        // Quyền xóa đề thi: Admin hoặc (nếu môn squad -> squadLeader, nếu môn cá nhân
+        // -> chủ môn)
+        boolean canDeleteQuiz = (currentUser != null) && (currentUser.isAdmin()
+                || (selectedCourse != null && (Boolean.TRUE.equals(selectedCourse.getSquadShared())
+                        ? currentUser.isSquadLeader()
+                        : (selectedCourse.getUser() == null || (currentUser.getId() != null
+                                && currentUser.getId().equals(selectedCourse.getUser().getId()))))));
         model.addAttribute("canDeleteQuiz", canDeleteQuiz);
 
         return "quiz/index";
@@ -189,12 +190,15 @@ public class QuizController {
         try {
             Quiz quiz;
             if (documentId != null && documentId > 0) {
-                quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, squadShared);
+                quiz = quizService.createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty,
+                        totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, squadShared);
             } else {
-                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, squadShared);
+                quiz = quizService.createQuizFromPdf(courseId, pdfFile, title, chapterTopic, difficulty, totalQuestions,
+                        timeLimitMinutes, fromPage, toPage, currentUser, squadShared);
             }
 
-            redirectAttributes.addFlashAttribute("successMessage", "Sinh đề trắc nghiệm thành công với " + quiz.getTotalQuestions() + " câu hỏi!");
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Sinh đề trắc nghiệm thành công với " + quiz.getTotalQuestions() + " câu hỏi!");
             return "redirect:/quiz/" + quiz.getId();
         } catch (Exception e) {
             log.error("Lỗi khi sinh đề thi", e);
@@ -204,7 +208,8 @@ public class QuizController {
     }
 
     @GetMapping("/{id}")
-    public String takeQuiz(@PathVariable("id") Long id, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+    public String takeQuiz(@PathVariable("id") Long id, HttpSession session, Model model,
+            RedirectAttributes redirectAttributes) {
         Quiz quiz = quizService.getQuizById(id);
         User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
         if (!quiz.isAccessibleBy(currentUser)) {
@@ -235,7 +240,8 @@ public class QuizController {
         Quiz quiz = quizService.getQuizById(id);
         User currentUser = session != null ? (User) session.getAttribute(AuthController.SESSION_USER) : null;
         if (!quiz.isAccessibleBy(currentUser)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "⛔ Bạn không có quyền nộp bài cho đề thi riêng tư này!");
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "⛔ Bạn không có quyền nộp bài cho đề thi riêng tư này!");
             return "redirect:/quiz?courseId=" + (quiz.getCourse() != null ? quiz.getCourse().getId() : "");
         }
 
@@ -272,7 +278,7 @@ public class QuizController {
         return "quiz/result";
     }
 
-    @GetMapping({"/api/quiz/{id}/export-pdf", "/{id}/export-pdf", "/quiz/{id}/export-pdf"})
+    @GetMapping({ "/api/quiz/{id}/export-pdf", "/{id}/export-pdf", "/quiz/{id}/export-pdf" })
     public ResponseEntity<byte[]> exportQuizPdf(
             @PathVariable("id") Long id,
             @RequestParam(value = "showAnswers", defaultValue = "false") boolean showAnswers,
@@ -311,7 +317,7 @@ public class QuizController {
         String filename = cleanTitle + (showAnswers ? "_kem_dap_an" : "") + ".pdf";
 
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
+                .contentType(Objects.requireNonNull(MediaType.APPLICATION_PDF))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(pdfBytes);
     }

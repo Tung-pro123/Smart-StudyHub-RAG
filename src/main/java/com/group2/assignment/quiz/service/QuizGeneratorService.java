@@ -46,32 +46,40 @@ public class QuizGeneratorService {
     private String buildDifficultyPromptRubric(String difficulty) {
         String level = difficulty != null ? difficulty.toUpperCase().trim() : "MEDIUM";
         return switch (level) {
-            case "EASY" -> """
-                [TIÊU CHÍ ĐỘ KHÓ: DỄ (EASY) - NHẬN BIẾT & GHI NHỚ]
-                - Mục tiêu nhận thức: Kiểm tra khả năng ghi nhớ thuật ngữ, định nghĩa, sự kiện cốt lõi xuất hiện trực tiếp trong tài liệu.
-                - Dạng câu hỏi: 'Khái niệm X là gì?', 'Thành phần nào sau đây thuộc về Y?', 'Từ khóa nào phản ánh đúng...'.
-                - Thiết kế đáp án: 1 đáp án đúng trực diện, 3 đáp án nhiễu (distractors) phải rõ ràng sai, không mang tính đánh đố.
-                """;
-            case "HARD" -> """
-                [TIÊU CHÍ ĐỘ KHÓ: NÂNG CAO (HARD) - PHÂN TÍCH, ĐÁNH GIÁ & TÌNH HUỐNG]
-                - Mục tiêu nhận thức: Đòi hỏi phân tích ngữ cảnh, xử lý tình huống thực tế (mini case study / scenario) hoặc so sánh đánh đổi (trade-offs / edge cases).
-                - Dạng câu hỏi: 'Trong tình huống hệ thống gặp lỗi X khi thực thi Y, nguyên nhân cốt lõi là gì?', 'Phương án kiến trúc nào sau đây là tối ưu nhất khi...?', 'Khẳng định nào sau đây là SAI về mặt bản chất kỹ thuật?'.
-                - Thiết kế đáp án: Cả 4 phương án A, B, C, D đều phải có vẻ hợp lý và chặt chẽ (Plausible Distractors). Thí sinh phải suy luận logic sâu sắc mới chọn đúng.
-                """;
-            default -> """
-                [TIÊU CHÍ ĐỘ KHÓ: TRUNG BÌNH (MEDIUM) - THÔNG HIỂU & VẬN DỤNG]
-                - Mục tiêu nhận thức: Kiểm tra khả năng giải thích nguyên lý, so sánh sự khác nhau giữa 2 khái niệm hoặc vận dụng quy tắc vào kịch bản ngắn.
-                - Dạng câu hỏi: 'Tại sao nên áp dụng cơ chế X thay vì Y?', 'Điểm khác biệt cốt lõi giữa A và B là gì?', 'Khi thực hiện thao tác sau, kết quả nhận được sẽ là gì?'.
-                - Thiết kế đáp án: Các đáp án sai phải chứa các lỗi tư duy phổ biến mà sinh viên thường nhầm lẫn.
-                """;
+            case "EASY" ->
+                """
+                        [TIÊU CHÍ ĐỘ KHÓ: DỄ (EASY) - NHẬN BIẾT & GHI NHỚ]
+                        - Mục tiêu nhận thức: Kiểm tra khả năng ghi nhớ thuật ngữ, định nghĩa, sự kiện cốt lõi xuất hiện trực tiếp trong tài liệu.
+                        - Dạng câu hỏi: 'Khái niệm X là gì?', 'Thành phần nào sau đây thuộc về Y?', 'Từ khóa nào phản ánh đúng...'.
+                        - Thiết kế đáp án: 1 đáp án đúng trực diện, 3 đáp án nhiễu (distractors) phải rõ ràng sai, không mang tính đánh đố.
+                        """;
+            case "HARD" ->
+                """
+                        [TIÊU CHÍ ĐỘ KHÓ: NÂNG CAO (HARD) - PHÂN TÍCH, ĐÁNH GIÁ & TÌNH HUỐNG]
+                        - Mục tiêu nhận thức: Đòi hỏi phân tích ngữ cảnh, xử lý tình huống thực tế (mini case study / scenario) hoặc so sánh đánh đổi (trade-offs / edge cases).
+                        - Dạng câu hỏi: 'Trong tình huống hệ thống gặp lỗi X khi thực thi Y, nguyên nhân cốt lõi là gì?', 'Phương án kiến trúc nào sau đây là tối ưu nhất khi...?', 'Khẳng định nào sau đây là SAI về mặt bản chất kỹ thuật?'.
+                        - Thiết kế đáp án: Cả 4 phương án A, B, C, D đều phải có vẻ hợp lý và chặt chẽ (Plausible Distractors). Thí sinh phải suy luận logic sâu sắc mới chọn đúng.
+                        """;
+            default ->
+                """
+                        [TIÊU CHÍ ĐỘ KHÓ: TRUNG BÌNH (MEDIUM) - THÔNG HIỂU & VẬN DỤNG]
+                        - Mục tiêu nhận thức: Kiểm tra khả năng giải thích nguyên lý, so sánh sự khác nhau giữa 2 khái niệm hoặc vận dụng quy tắc vào kịch bản ngắn.
+                        - Dạng câu hỏi: 'Tại sao nên áp dụng cơ chế X thay vì Y?', 'Điểm khác biệt cốt lõi giữa A và B là gì?', 'Khi thực hiện thao tác sau, kết quả nhận được sẽ là gì?'.
+                        - Thiết kế đáp án: Các đáp án sai phải chứa các lỗi tư duy phổ biến mà sinh viên thường nhầm lẫn.
+                        """;
+
         };
+
     }
 
-    private List<QuizQuestion> callGeminiAi(String contextText, int count, String difficulty, String apiKey) throws Exception {
+    private List<QuizQuestion> callGeminiAi(String contextText, int count, String difficulty, String apiKey)
+            throws Exception {
         String truncatedContext = contextText.length() > 8000 ? contextText.substring(0, 8000) : contextText;
+
         String rubric = buildDifficultyPromptRubric(difficulty);
 
-        String systemPrompt = "Bạn là trợ lý giảng viên đại học chuyên ngành. Hãy phân tích kỹ tài liệu được cung cấp và sinh chính xác " + count + " câu hỏi trắc nghiệm 4 lựa chọn (A, B, C, D).\n"
+        String systemPrompt = "Bạn là trợ lý giảng viên đại học chuyên ngành. Hãy phân tích kỹ tài liệu được cung cấp và sinh chính xác "
+                + count + " câu hỏi trắc nghiệm 4 lựa chọn (A, B, C, D).\n"
                 + rubric + "\n"
                 + "Quy tắc bắt buộc: Phải trả về một mảng JSON thuần túy (JSON Array) gồm các đối tượng có cấu trúc:\n"
                 + "[\n"
@@ -87,18 +95,14 @@ public class QuizGeneratorService {
                 + "]\n"
                 + "Không bao gồm markdown backticks (```json), chỉ trả về chuỗi JSON thô.\n\n"
                 + "Nội dung tài liệu:\n" + truncatedContext;
-
         Map<String, Object> generationConfig = Map.of(
                 "responseMimeType", "application/json",
-                "temperature", 0.4
-        );
+                "temperature", 0.4);
 
         Map<String, Object> requestBody = Map.of(
                 "contents", List.of(
-                        Map.of("parts", List.of(Map.of("text", systemPrompt)))
-                ),
-                "generationConfig", generationConfig
-        );
+                        Map.of("parts", List.of(Map.of("text", systemPrompt)))),
+                "generationConfig", generationConfig);
 
         String jsonPayload = objectMapper.writeValueAsString(requestBody);
         List<String> models = List.of(
@@ -107,14 +111,14 @@ public class QuizGeneratorService {
                 "gemini-1.5-flash-latest",
                 "gemini-1.5-flash",
                 "gemini-1.5-pro",
-                "gemini-2.5-flash-lite"
-        );
+                "gemini-2.5-flash-lite");
 
         Exception lastException = null;
 
         for (String model : models) {
             try {
-                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent";
+                String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model
+                        + ":generateContent";
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(endpoint))
@@ -131,11 +135,14 @@ public class QuizGeneratorService {
                 }
 
                 JsonNode rootNode = objectMapper.readTree(response.body());
-                String rawContent = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+                String rawContent = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text")
+                        .asText();
 
                 String cleanJson = rawContent.replaceAll("^```json\\s*", "").replaceAll("```\\s*$", "").trim();
 
-                List<Map<String, String>> rawQuestions = objectMapper.readValue(cleanJson, new TypeReference<List<Map<String, String>>>() {});
+                List<Map<String, String>> rawQuestions = objectMapper.readValue(cleanJson,
+                        new TypeReference<List<Map<String, String>>>() {
+                        });
                 List<QuizQuestion> questions = new ArrayList<>();
                 int order = 1;
 
@@ -154,7 +161,8 @@ public class QuizGeneratorService {
 
                 return questions;
             } catch (Exception e) {
-                log.warn("Thử sinh câu hỏi với Gemini model '{}' thất bại: {}. Đang thử model tiếp theo...", model, e.getMessage());
+                log.warn("Thử sinh câu hỏi với Gemini model '{}' thất bại: {}. Đang thử model tiếp theo...", model,
+                        e.getMessage());
                 lastException = e;
             }
         }
@@ -188,22 +196,30 @@ public class QuizGeneratorService {
             String explanation;
 
             if ("EASY".equals(level)) {
+
                 if (targetSentence.contains(" là ") || targetSentence.contains(" is ")) {
                     String[] parts = targetSentence.split(" là | is ", 2);
-                    questionPrompt = "Theo giáo trình, thuật ngữ \"" + parts[0].trim() + "\" được định nghĩa như thế nào?";
+                    questionPrompt = "Theo giáo trình, thuật ngữ \"" + parts[0].trim()
+                            + "\" được định nghĩa như thế nào?";
                 } else {
                     questionPrompt = "Khẳng định nào sau đây phản ánh đúng nguyên văn tài liệu học tập?";
                 }
+
                 explanation = "Đáp án A trích dẫn chuẩn xác định nghĩa cốt lõi trong giáo trình môn học.";
             } else if ("HARD".equals(level)) {
-                questionPrompt = "Trong kịch bản thực tế áp dụng kiến thức: \"" + targetSentence + "\", nhận định nào sau đây đánh giá ĐÚNG nguyên lý và tránh được rủi ro tiềm ẩn?";
+                questionPrompt = "Trong kịch bản thực tế áp dụng kiến thức: \"" + targetSentence
+                        + "\", nhận định nào sau đây đánh giá ĐÚNG nguyên lý và tránh được rủi ro tiềm ẩn?";
                 explanation = "Đáp án A phân tích sâu sắc bản chất kỹ thuật và các ràng buộc vận hành, các đáp án còn lại chứa lỗi tư duy thiết kế.";
             } else {
+
                 if (targetSentence.contains(" là ") || targetSentence.contains(" is ")) {
                     String[] parts = targetSentence.split(" là | is ", 2);
-                    questionPrompt = "Theo tài liệu, phát biểu nào sau đây làm rõ chính xác về \"" + parts[0].trim() + "\"?";
+
+                    questionPrompt = "Theo tài liệu, phát biểu nào sau đây làm rõ chính xác về \"" + parts[0].trim()
+                            + "\"?";
                 } else {
-                    questionPrompt = "Dựa trên nội dung giáo trình: \"" + targetSentence + "\", khẳng định nào sau đây là ĐÚNG?";
+                    questionPrompt = "Dựa trên nội dung giáo trình: \"" + targetSentence
+                            + "\", khẳng định nào sau đây là ĐÚNG?";
                 }
                 explanation = "Đáp án A phản ánh chính xác 100% nguyên văn nội dung trích xuất từ tài liệu học tập.";
             }

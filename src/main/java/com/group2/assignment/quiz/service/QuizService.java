@@ -14,6 +14,7 @@ import com.group2.assignment.quiz.entity.QuizQuestion;
 import com.group2.assignment.quiz.repository.QuizAttemptRepository;
 import com.group2.assignment.quiz.repository.QuizQuestionRepository;
 import com.group2.assignment.quiz.repository.QuizRepository;
+import com.group2.assignment.rag.repository.DocumentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +22,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
+@SuppressWarnings("null")
 public class QuizService {
 
     private final QuizRepository quizRepository;
@@ -34,7 +40,7 @@ public class QuizService {
     private final QuizGeneratorService quizGeneratorService;
     private final PdfTextExtractor pdfTextExtractor;
     private final ObjectMapper objectMapper;
-    private final com.group2.assignment.rag.repository.DocumentRepository documentRepository;
+    private final DocumentRepository documentRepository;
 
     public QuizService(
             QuizRepository quizRepository,
@@ -44,7 +50,7 @@ public class QuizService {
             QuizGeneratorService quizGeneratorService,
             PdfTextExtractor pdfTextExtractor,
             ObjectMapper objectMapper,
-            com.group2.assignment.rag.repository.DocumentRepository documentRepository) {
+            DocumentRepository documentRepository) {
         this.quizRepository = quizRepository;
         this.quizQuestionRepository = quizQuestionRepository;
         this.quizAttemptRepository = quizAttemptRepository;
@@ -53,92 +59,6 @@ public class QuizService {
         this.pdfTextExtractor = pdfTextExtractor;
         this.objectMapper = objectMapper;
         this.documentRepository = documentRepository;
-    }
-
-    @jakarta.annotation.PostConstruct
-    public void initSampleQuiz() {
-        try {
-            if (quizRepository.count() == 0) {
-                List<Course> courses = courseRepository.findAll();
-                if (courses.isEmpty()) return;
-                Course hsf = courses.get(0);
-
-                Quiz sampleQuiz = Quiz.builder()
-                        .course(hsf)
-                        .title("Đề Ôn Tập: Kiến Trúc Spring Boot 3 & JPA Nền Tảng")
-                        .chapterTopic("Chương 1: IoC Container & Dependency Injection")
-                        .difficulty("MEDIUM")
-                        .totalQuestions(5)
-                        .timeLimitMinutes(15)
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
-                        .build();
-
-                Quiz saved = quizRepository.save(sampleQuiz);
-
-                List<QuizQuestion> questions = List.of(
-                        QuizQuestion.builder()
-                                .quiz(saved)
-                                .sortOrder(1)
-                                .questionText("Trong Spring Framework, Annotation nào được sử dụng để đánh dấu một Class là Spring Bean thuộc tầng xử lý nghiệp vụ (Business Logic)?")
-                                .optionA("@Repository")
-                                .optionB("@Service")
-                                .optionC("@Controller")
-                                .optionD("@Configuration")
-                                .correctAnswer("B")
-                                .explanation("@Service là annotation chuyên biệt trong Spring stereotyping để chỉ định lớp đảm nhận nghiệp vụ (Business Service).")
-                                .build(),
-                        QuizQuestion.builder()
-                                .quiz(saved)
-                                .sortOrder(2)
-                                .questionText("Annotation nào của Jakarta Persistence được dùng để chỉ định khóa chính (Primary Key) của một Entity?")
-                                .optionA("@Id")
-                                .optionB("@Key")
-                                .optionC("@GeneratedValue")
-                                .optionD("@Column")
-                                .correctAnswer("A")
-                                .explanation("@Id đánh dấu trường dữ liệu làm khóa chính cho thực thể trong chuẩn JPA.")
-                                .build(),
-                        QuizQuestion.builder()
-                                .quiz(saved)
-                                .sortOrder(3)
-                                .questionText("Lợi ích chính của việc sử dụng Dependency Injection (DI) trong Spring Boot là gì?")
-                                .optionA("Giúp ứng dụng chạy nhanh hơn 100 lần")
-                                .optionB("Giảm sự phụ thuộc chặt chẽ (Loose Coupling) giữa các thành phần và dễ dàng viết Unit Test")
-                                .optionC("Tự động tạo cơ sở dữ liệu trên đám mây")
-                                .optionD("Bắt buộc mọi phương thức phải là static")
-                                .correctAnswer("B")
-                                .explanation("DI đảo ngược quyền điều khiển việc khởi tạo đối tượng, giúp các class lỏng lẻo (loose coupling) và dễ mock khi test.")
-                                .build(),
-                        QuizQuestion.builder()
-                                .quiz(saved)
-                                .sortOrder(4)
-                                .questionText("Trong Spring Data JPA, interface nào cung cấp sẵn các phương thức CRUD cơ bản và phân trang (Paging/Sorting)?")
-                                .optionA("CrudRepository")
-                                .optionB("JpaRepository")
-                                .optionC("PagingAndSortingRepository")
-                                .optionD("Tất cả các đáp án trên đều đúng")
-                                .correctAnswer("D")
-                                .explanation("JpaRepository kế thừa từ PagingAndSortingRepository, và PagingAndSortingRepository kế thừa từ CrudRepository, do đó cả 3 đều cung cấp các năng lực này.")
-                                .build(),
-                        QuizQuestion.builder()
-                                .quiz(saved)
-                                .sortOrder(5)
-                                .questionText("Trong kiến trúc RESTful Web Service, HTTP Method nào thường được sử dụng để gửi dữ liệu bài thi lên server để chấm điểm?")
-                                .optionA("GET")
-                                .optionB("POST")
-                                .optionC("PUT")
-                                .optionD("DELETE")
-                                .correctAnswer("B")
-                                .explanation("POST được thiết kế để gửi payload dữ liệu lên server xử lý và tạo mới tài nguyên (ở đây là QuizAttempt).")
-                                .build()
-                );
-
-                quizQuestionRepository.saveAll(questions);
-            }
-        } catch (Exception e) {
-            log.warn("Không thể khởi tạo dữ liệu mẫu bài thi: {}", e.getMessage());
-        }
     }
 
     public Quiz getQuizById(Long id) {
@@ -197,24 +117,33 @@ public class QuizService {
     }
 
     @Transactional
-    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage) throws IOException {
-        return createQuizFromPdf(courseId, file, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, null);
+    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic,
+            String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage)
+            throws IOException {
+        return createQuizFromPdf(courseId, file, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes,
+                fromPage, toPage, null);
     }
 
     @Transactional
-    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser) throws IOException {
-        return createQuizFromPdf(courseId, file, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, null);
+    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic,
+            String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage,
+            User currentUser) throws IOException {
+        return createQuizFromPdf(courseId, file, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes,
+                fromPage, toPage, currentUser, null);
     }
 
     @Transactional
-    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser, Boolean squadShared) throws IOException {
+    public Quiz createQuizFromPdf(Long courseId, MultipartFile file, String title, String chapterTopic,
+            String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage,
+            User currentUser, Boolean squadShared) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
         String text = pdfTextExtractor.extractText(file, fromPage, toPage);
         List<QuizQuestion> questions = quizGeneratorService.generateQuestions(text, totalQuestions, difficulty);
 
-        String defaultTitle = (title != null && !title.isBlank()) ? title.trim() : "Đề trắc nghiệm: " + file.getOriginalFilename();
+        String defaultTitle = (title != null && !title.isBlank()) ? title.trim()
+                : "Đề trắc nghiệm: " + file.getOriginalFilename();
         if (fromPage != null && toPage != null) {
             defaultTitle += " (Trang " + fromPage + "-" + toPage + ")";
         }
@@ -228,7 +157,8 @@ public class QuizService {
                 .createdBy(currentUser)
                 .squadShared(resolvedSquadShared)
                 .title(defaultTitle)
-                .chapterTopic(chapterTopic != null && !chapterTopic.isBlank() ? chapterTopic.trim() : "Toàn bộ tài liệu")
+                .chapterTopic(
+                        chapterTopic != null && !chapterTopic.isBlank() ? chapterTopic.trim() : "Toàn bộ tài liệu")
                 .difficulty(difficulty != null ? difficulty : "MEDIUM")
                 .totalQuestions(questions.size())
                 .timeLimitMinutes(timeLimitMinutes > 0 ? timeLimitMinutes : 15)
@@ -247,17 +177,25 @@ public class QuizService {
     }
 
     @Transactional
-    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage) throws IOException {
-        return createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, null);
+    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic,
+            String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage)
+            throws IOException {
+        return createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions,
+                timeLimitMinutes, fromPage, toPage, null);
     }
 
     @Transactional
-    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser) throws IOException {
-        return createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions, timeLimitMinutes, fromPage, toPage, currentUser, null);
+    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic,
+            String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage,
+            User currentUser) throws IOException {
+        return createQuizFromDocument(courseId, documentId, title, chapterTopic, difficulty, totalQuestions,
+                timeLimitMinutes, fromPage, toPage, currentUser, null);
     }
 
     @Transactional
-    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic, String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage, User currentUser, Boolean squadShared) throws IOException {
+    public Quiz createQuizFromDocument(Long courseId, Long documentId, String title, String chapterTopic,
+            String difficulty, int totalQuestions, int timeLimitMinutes, Integer fromPage, Integer toPage,
+            User currentUser, Boolean squadShared) throws IOException {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy môn học ID: " + courseId));
 
@@ -276,7 +214,8 @@ public class QuizService {
         String text = pdfTextExtractor.extractText(physicalFile, fromPage, toPage);
         List<QuizQuestion> questions = quizGeneratorService.generateQuestions(text, totalQuestions, difficulty);
 
-        String defaultTitle = (title != null && !title.isBlank()) ? title.trim() : "Đề thi từ tài liệu: " + doc.getFileName();
+        String defaultTitle = (title != null && !title.isBlank()) ? title.trim()
+                : "Đề thi từ tài liệu: " + doc.getFileName();
         if (fromPage != null && toPage != null) {
             defaultTitle += " (Trang " + fromPage + "-" + toPage + ")";
         }
@@ -314,18 +253,34 @@ public class QuizService {
             String fullName,
             String avatar,
             Double maxScore,
-            Long attemptCount
-    ) {
+            Long attemptCount) {
         public SquadLeaderboardDto(Long userId, String username, String avatar, Double maxScore, Long attemptCount) {
             this(userId, username, username, avatar, maxScore, attemptCount);
         }
 
-        public Long getUserId() { return userId; }
-        public String getUsername() { return username; }
-        public String getFullName() { return fullName != null && !fullName.isBlank() ? fullName : username; }
-        public String getAvatar() { return avatar; }
-        public Double getMaxScore() { return maxScore; }
-        public Long getAttemptCount() { return attemptCount; }
+        public Long getUserId() {
+            return userId;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getFullName() {
+            return fullName != null && !fullName.isBlank() ? fullName : username;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public Double getMaxScore() {
+            return maxScore;
+        }
+
+        public Long getAttemptCount() {
+            return attemptCount;
+        }
     }
 
     public List<SquadLeaderboardDto> getSquadLeaderboard(String leaderUsername, Long courseId) {
@@ -336,7 +291,8 @@ public class QuizService {
         if (leaderUsername == null || leaderUsername.isBlank()) {
             return List.of();
         }
-        String member = (memberUsername != null && !memberUsername.isBlank()) ? memberUsername.trim() : leaderUsername.trim();
+        String member = (memberUsername != null && !memberUsername.isBlank()) ? memberUsername.trim()
+                : leaderUsername.trim();
         List<Object[]> rawList = quizAttemptRepository.findSquadLeaderboardRaw(leaderUsername.trim(), member, courseId);
         if (rawList == null || rawList.isEmpty()) {
             return List.of();
@@ -369,32 +325,10 @@ public class QuizService {
         Quiz quiz = getQuizById(quizId);
         List<QuizQuestion> questions = getQuestionsByQuizId(quizId);
 
-        Map<Long, String> userAnswers = submission.getAnswers() != null ? submission.getAnswers() : Collections.emptyMap();
-        int correctCount = 0;
-        List<QuestionResultDto> details = new ArrayList<>();
-
-        for (QuizQuestion q : questions) {
-            String selected = userAnswers.get(q.getId());
-            boolean isCorrect = selected != null && selected.trim().equalsIgnoreCase(q.getCorrectAnswer().trim());
-            if (isCorrect) {
-                correctCount++;
-            }
-
-            details.add(QuestionResultDto.builder()
-                    .questionId(q.getId())
-                    .sortOrder(q.getSortOrder())
-                    .questionText(q.getQuestionText())
-                    .optionA(q.getOptionA())
-                    .optionB(q.getOptionB())
-                    .optionC(q.getOptionC())
-                    .optionD(q.getOptionD())
-                    .selectedAnswer(selected != null ? selected.trim().toUpperCase() : "")
-                    .correctAnswer(q.getCorrectAnswer().trim().toUpperCase())
-                    .isCorrect(isCorrect)
-                    .explanation(q.getExplanation())
-                    .build());
-        }
-
+        Map<Long, String> userAnswers = submission.getAnswers() != null ? submission.getAnswers()
+                : Collections.emptyMap();
+        List<QuestionResultDto> details = buildQuestionDetails(questions, userAnswers);
+        int correctCount = (int) details.stream().filter(QuestionResultDto::isCorrect).count();
         int totalCount = questions.size();
         double score = totalCount == 0 ? 0.0 : Math.round(((double) correctCount / totalCount * 10.0) * 10.0) / 10.0;
 
@@ -408,7 +342,9 @@ public class QuizService {
         QuizAttempt attempt = QuizAttempt.builder()
                 .quiz(quiz)
                 .user(currentUser)
-                .studentName(submission.getStudentName() != null && !submission.getStudentName().isBlank() ? submission.getStudentName().trim() : "Sinh viên")
+                .studentName(submission.getStudentName() != null && !submission.getStudentName().isBlank()
+                        ? submission.getStudentName().trim()
+                        : "Sinh viên")
                 .totalScore(score)
                 .correctCount(correctCount)
                 .totalCount(totalCount)
@@ -434,7 +370,6 @@ public class QuizService {
                 .build();
     }
 
-
     public QuizResultDto getAttemptResult(Long attemptId) {
         QuizAttempt attempt = quizAttemptRepository.findById(attemptId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy kết quả làm bài với ID: " + attemptId));
@@ -445,12 +380,31 @@ public class QuizService {
         Map<Long, String> userAnswers = new HashMap<>();
         try {
             if (attempt.getUserAnswers() != null && !attempt.getUserAnswers().isBlank()) {
-                userAnswers = objectMapper.readValue(attempt.getUserAnswers(), new TypeReference<Map<Long, String>>() {});
+                userAnswers = objectMapper.readValue(attempt.getUserAnswers(), new TypeReference<Map<Long, String>>() {
+                });
             }
         } catch (Exception e) {
             log.warn("Không thể parse userAnswers JSON cho attempt {}", attemptId);
         }
 
+        List<QuestionResultDto> details = buildQuestionDetails(questions, userAnswers);
+
+        return QuizResultDto.builder()
+                .attemptId(attempt.getId())
+                .quizId(quiz.getId())
+                .quizTitle(quiz.getTitle())
+                .courseName(quiz.getCourse() != null ? quiz.getCourse().getName() : "")
+                .studentName(attempt.getStudentName())
+                .totalScore(attempt.getTotalScore())
+                .correctCount(attempt.getCorrectCount())
+                .totalCount(attempt.getTotalCount())
+                .timeSpentSeconds(attempt.getTimeSpentSeconds())
+                .completedAt(attempt.getCompletedAt())
+                .details(details)
+                .build();
+    }
+
+    private List<QuestionResultDto> buildQuestionDetails(List<QuizQuestion> questions, Map<Long, String> userAnswers) {
         List<QuestionResultDto> details = new ArrayList<>();
         for (QuizQuestion q : questions) {
             String selected = userAnswers.get(q.getId());
@@ -469,19 +423,6 @@ public class QuizService {
                     .explanation(q.getExplanation())
                     .build());
         }
-
-        return QuizResultDto.builder()
-                .attemptId(attempt.getId())
-                .quizId(quiz.getId())
-                .quizTitle(quiz.getTitle())
-                .courseName(quiz.getCourse() != null ? quiz.getCourse().getName() : "")
-                .studentName(attempt.getStudentName())
-                .totalScore(attempt.getTotalScore())
-                .correctCount(attempt.getCorrectCount())
-                .totalCount(attempt.getTotalCount())
-                .timeSpentSeconds(attempt.getTimeSpentSeconds())
-                .completedAt(attempt.getCompletedAt())
-                .details(details)
-                .build();
+        return details;
     }
 }
