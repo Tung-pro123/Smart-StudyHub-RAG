@@ -128,7 +128,7 @@
 
  <!-- Grid Cards Đề Thi -->
  <div th:if="${not #lists.isEmpty(quizzes)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
- <div th:each="q : ${quizzes}" class="card bg-white rounded-xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col justify-between">
+ <div th:each="q : ${quizzes}" class="card bg-white rounded-xl border border-slate-200/90 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
  <div class="p-6 space-y-4">
  <div class="flex items-start justify-between gap-2">
  <div class="flex items-center gap-1.5 flex-wrap">
@@ -186,54 +186,67 @@
  </div>
  </div>
 
- <div class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex flex-col gap-3">
- <div class="flex items-center justify-between">
+ <div class="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex flex-col gap-3 rounded-b-xl">
+ <div class="flex items-center justify-between gap-2">
  <span class="text-[11px] font-semibold text-slate-400">Trắc nghiệm 4 lựa chọn</span>
- <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm">
+ <a th:href="@{'/quiz/' + ${q.id}}" class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white font-bold rounded-xl text-xs gap-1.5 shadow-sm whitespace-nowrap">
  <span>Làm bài thi</span>
  <i class="fa-solid fa-arrow-right text-xs"></i>
  </a>
  </div>
 
  <!-- Các nút tính năng PRO (Xuất PDF & Flashcards) -->
- <div class="flex items-center gap-2 pt-2 border-t border-slate-200/60 justify-end">
- <!-- Dropdown Xuất PDF cho PRO & SQUAD -->
- <div th:if="${isPro}" class="dropdown dropdown-bottom dropdown-end">
- <label tabindex="0" class="btn btn-xs btn-outline btn-primary rounded-lg font-bold gap-1 cursor-pointer">
- <i class="fa-solid fa-file-pdf"></i>
+ <div class="flex items-center gap-2 pt-2.5 border-t border-slate-200/60 justify-end">
+ <!-- Dropdown Xuất PDF cho PRO & SQUAD (Pop up upward để không bị che khuất) -->
+ <div th:if="${isPro}" class="dropdown dropdown-top dropdown-end">
+ <label tabindex="0" class="btn btn-xs bg-white hover:bg-orange-50 text-slate-700 hover:text-[#F27123] border border-slate-300 hover:border-orange-300 rounded-lg font-bold gap-1.5 cursor-pointer shadow-2xs transition-all">
+ <i class="fa-solid fa-file-pdf text-[#F27123]"></i>
  <span>Tải PDF</span>
- <i class="fa-solid fa-chevron-down text-[9px]"></i>
+ <i class="fa-solid fa-chevron-up text-[9px] text-slate-400"></i>
  </label>
- <ul tabindex="0" class="dropdown-content z-20 menu p-1.5 shadow-xl bg-slate-900 border border-slate-700 text-white rounded-xl w-52 mt-1 text-[11px]">
+ <ul tabindex="0" class="dropdown-content z-30 menu p-1.5 shadow-xl bg-white border border-slate-200 text-slate-800 rounded-xl w-56 mb-2 text-xs">
+ <li class="menu-title px-2 py-1 text-[10px] text-slate-400 font-bold uppercase tracking-wider">Tùy chọn tải PDF in ấn</li>
  <li>
- <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=false'}" class="py-2 hover:bg-slate-800 rounded-lg flex items-center gap-2">
+ <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=false'}" class="py-2 hover:bg-orange-50 hover:text-[#F27123] rounded-lg flex items-center gap-2 font-medium">
  <i class="fa-solid fa-file-lines text-[#F27123]"></i>
  <span>Đề thi (Không đáp án)</span>
  </a>
  </li>
  <li>
- <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=true'}" class="py-2 hover:bg-slate-800 rounded-lg flex items-center gap-2">
- <i class="fa-solid fa-file-circle-check text-emerald-400"></i>
+ <a th:href="@{'/api/quiz/' + ${q.id} + '/export-pdf?showAnswers=true'}" class="py-2 hover:bg-emerald-50 hover:text-emerald-600 rounded-lg flex items-center gap-2 font-medium">
+ <i class="fa-solid fa-file-circle-check text-emerald-500"></i>
  <span>Đề kèm đáp án &amp; lời giải</span>
  </a>
  </li>
  </ul>
  </div>
- <div th:unless="${isPro}" class="indicator">
- <span class="indicator-item badge badge-secondary text-[10px] scale-90">PRO</span>
- <button type="button" disabled class="btn btn-xs btn-disabled opacity-50 rounded-lg gap-1 cursor-not-allowed">
- <i class="fa-solid fa-file-pdf"></i> Tải PDF
+
+ <!-- Nút Tải PDF cho Free User (Click mở Modal Nâng Cấp Pro) -->
+ <div th:unless="${isPro}">
+ <button type="button" onclick="document.getElementById('modal-upgrade-pro-quiz').showModal()" 
+ class="btn btn-xs bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-amber-300 hover:border-amber-400 rounded-lg font-bold gap-1.5 shadow-2xs transition-all"
+ title="Tính năng xuất đề thi PDF chuẩn FPT dành cho gói PRO">
+ <i class="fa-solid fa-file-pdf text-[#F27123]"></i>
+ <span>Tải PDF</span>
+ <span class="badge badge-warning badge-xs text-[9px] font-black px-1 py-0 h-4">PRO</span>
  </button>
  </div>
 
- <!-- Nút Flashcards -->
- <button th:if="${isPro}" type="button" onclick="showFlashcardToast()" class="btn btn-xs btn-outline btn-warning rounded-lg font-bold gap-1">
- <i class="fa-solid fa-layer-group"></i> Flashcards
+ <!-- Nút Flashcards cho PRO -->
+ <button th:if="${isPro}" type="button" onclick="showFlashcardToast()" 
+ class="btn btn-xs bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-300 hover:border-amber-300 rounded-lg font-bold gap-1.5 shadow-2xs transition-all">
+ <i class="fa-solid fa-layer-group text-amber-500"></i>
+ <span>Flashcards</span>
  </button>
- <div th:unless="${isPro}" class="indicator">
- <span class="indicator-item badge badge-secondary text-[10px] scale-90">PRO</span>
- <button type="button" disabled class="btn btn-xs btn-disabled opacity-50 rounded-lg gap-1 cursor-not-allowed">
- <i class="fa-solid fa-layer-group"></i> Flashcards
+
+ <!-- Nút Flashcards cho Free User (Click mở Modal Nâng Cấp Pro) -->
+ <div th:unless="${isPro}">
+ <button type="button" onclick="document.getElementById('modal-upgrade-pro-quiz').showModal()"
+ class="btn btn-xs bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-300 hover:border-slate-400 rounded-lg font-bold gap-1.5 shadow-2xs transition-all"
+ title="Tính năng học thẻ Flashcards thông minh dành cho gói PRO">
+ <i class="fa-solid fa-layer-group text-slate-400"></i>
+ <span>Flashcards</span>
+ <span class="badge badge-ghost badge-xs text-[9px] font-bold px-1 py-0 h-4">PRO</span>
  </button>
  </div>
  </div>
@@ -288,24 +301,24 @@
  </div>
  <div th:unless="${#lists.isEmpty(squadLeaderboard)}" class="overflow-x-auto">
  <table class="table text-xs w-full">
- <thead class="bg-orange-50/70 text-slate-900 uppercase font-black tracking-wider">
+ <thead class="bg-orange-50/70 text-slate-900 uppercase font-black tracking-wider border-b border-orange-200/60">
  <tr>
- <th class="w-16 text-center">Hạng</th>
- <th>Thành viên</th>
- <th class="text-center">Số lần làm bài</th>
- <th class="text-right">Điểm cao nhất</th>
+ <th class="w-16 text-center whitespace-nowrap px-4 py-3">Hạng</th>
+ <th class="whitespace-nowrap px-4 py-3">Thành viên</th>
+ <th class="text-center whitespace-nowrap px-4 py-3">Số lần làm bài</th>
+ <th class="text-right whitespace-nowrap px-4 py-3">Điểm cao nhất</th>
  </tr>
  </thead>
- <tbody>
+ <tbody class="divide-y divide-orange-100/50">
  <tr th:each="m, stat : ${squadLeaderboard}" class="hover:bg-orange-50/30 transition-colors"
  th:classappend="${stat.count == 1 ? 'bg-amber-50/40' : (stat.count == 2 ? 'bg-slate-50/60' : (stat.count == 3 ? 'bg-orange-50/30' : ''))}">
- <td class="text-center font-black text-base">
+ <td class="text-center font-black text-base whitespace-nowrap px-4 py-3">
  <span th:if="${stat.count == 1}">🥇</span>
  <span th:if="${stat.count == 2}">🥈</span>
  <span th:if="${stat.count == 3}">🥉</span>
  <span th:if="${stat.count > 3}" class="text-slate-400 font-bold text-xs" th:text="${stat.count}">4</span>
  </td>
- <td>
+ <td class="whitespace-nowrap px-4 py-3">
  <div class="flex items-center gap-3">
  <img th:src="${m.avatar != null && !m.avatar.isBlank() ? m.avatar : 'https://api.dicebear.com/7.x/bottts/svg?seed=' + m.username}" class="w-8 h-8 rounded-full border border-orange-200" alt="avatar" />
  <div>
@@ -314,11 +327,11 @@
  </div>
  </div>
  </td>
- <td class="text-center font-bold text-slate-600" th:text="${m.attemptCount} + ' lượt'">3 lượt</td>
- <td class="text-right">
- <span class="badge font-black text-sm px-3 py-3"
- th:classappend="${m.maxScore >= 8.0 ? 'badge-success text-white' : (m.maxScore >= 5.0 ? 'badge-warning text-white' : 'badge-error text-white')}"
- th:text="${m.maxScore} + ' / 10'">10.0 / 10</span>
+ <td class="text-center font-bold text-slate-600 whitespace-nowrap px-4 py-3" th:text="${m.attemptCount} + ' lượt'">3 lượt</td>
+ <td class="text-right whitespace-nowrap px-4 py-3">
+ <span class="inline-flex items-center justify-center font-bold text-xs px-2.5 py-1 rounded-lg min-w-[68px] whitespace-nowrap shadow-2xs"
+ th:classappend="${m.maxScore >= 8.0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : (m.maxScore >= 5.0 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-rose-50 text-rose-700 border border-rose-200')}"
+ th:text="${#numbers.formatDecimal(m.maxScore, 1, 1)} + ' / 10'">10.0 / 10</span>
  </td>
  </tr>
  </tbody>
@@ -339,34 +352,38 @@
 
  <div class="bg-white rounded-xl border border-slate-200/90 shadow-sm overflow-hidden">
  <div class="overflow-x-auto">
- <table class="table table-zebra text-xs w-full">
- <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold">
+ <table class="table text-xs w-full">
+ <thead class="bg-slate-50 text-slate-600 uppercase tracking-wider font-bold border-b border-slate-200">
  <tr>
- <th>Thí sinh</th>
- <th>Đề thi</th>
- <th>Điểm số</th>
- <th>Số câu đúng</th>
- <th>Thời gian làm</th>
- <th>Ngày hoàn thành</th>
- <th class="text-right">Chi tiết</th>
+ <th class="whitespace-nowrap px-4 py-3.5">Thí sinh</th>
+ <th class="min-w-[220px] px-4 py-3.5">Đề thi</th>
+ <th class="whitespace-nowrap text-center px-4 py-3.5">Điểm số</th>
+ <th class="whitespace-nowrap text-center px-4 py-3.5">Số câu đúng</th>
+ <th class="whitespace-nowrap text-center px-4 py-3.5">Thời gian làm</th>
+ <th class="whitespace-nowrap text-center px-4 py-3.5">Ngày hoàn thành</th>
+ <th class="whitespace-nowrap text-right px-4 py-3.5">Chi tiết</th>
  </tr>
  </thead>
- <tbody>
- <tr th:each="a : ${recentAttempts}" class="hover:bg-slate-50/80">
- <td class="font-bold text-slate-700" th:text="${a.studentName}">Sinh viên</td>
- <td class="font-semibold text-slate-800" th:text="${a.quiz != null ? a.quiz.title : 'Đề thi'}">Đề thi</td>
- <td>
- <span class="badge font-black text-xs"
- th:classappend="${a.totalScore >= 8.0 ? 'badge-success text-white' : (a.totalScore >= 5.0 ? 'badge-warning text-white' : 'badge-error text-white')}"
- th:text="${a.totalScore} + ' / 10'">8.0 / 10</span>
+ <tbody class="divide-y divide-slate-100">
+ <tr th:each="a : ${recentAttempts}" class="hover:bg-slate-50/80 transition-colors">
+ <td class="font-bold text-slate-700 whitespace-nowrap px-4 py-3.5" th:text="${a.studentName}">Sinh viên</td>
+ <td class="font-semibold text-slate-800 px-4 py-3.5" th:text="${a.quiz != null ? a.quiz.title : 'Đề thi'}">Đề thi</td>
+ <td class="whitespace-nowrap text-center px-4 py-3.5">
+ <span class="inline-flex items-center justify-center font-bold text-xs px-2.5 py-1 rounded-lg min-w-[68px] whitespace-nowrap shadow-2xs"
+ th:classappend="${a.totalScore >= 8.0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : (a.totalScore >= 5.0 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-rose-50 text-rose-700 border border-rose-200')}"
+ th:text="${#numbers.formatDecimal(a.totalScore, 1, 1)} + ' / 10'">8.0 / 10</span>
  </td>
- <td>
- <span class="font-semibold text-slate-700" th:text="${a.correctCount} + ' / ' + ${a.totalCount}">4 / 5</span>
+ <td class="whitespace-nowrap text-center font-semibold text-slate-700 px-4 py-3.5" th:text="${a.correctCount} + ' / ' + ${a.totalCount}">
+ 4 / 5
  </td>
- <td class="text-slate-500" th:text="${a.timeSpentSeconds} + ' giây'">120 giây</td>
- <td class="text-slate-400" th:text="${#temporals.format(a.completedAt, 'dd/MM/yyyy HH:mm')}">19/10/2026</td>
- <td class="text-right">
- <a th:href="@{'/quiz/attempt/' + ${a.id}}" class="btn btn-xs btn-outline border-[#F27123] text-[#F27123] hover:bg-[#F27123] hover:text-white rounded-lg font-bold">
+ <td class="whitespace-nowrap text-center text-slate-500 px-4 py-3.5" th:text="${a.timeSpentSeconds} + ' giây'">
+ 120 giây
+ </td>
+ <td class="whitespace-nowrap text-center text-slate-400 font-medium px-4 py-3.5" th:text="${#temporals.format(a.completedAt, 'dd/MM/yyyy HH:mm')}">
+ 19/10/2026 15:30
+ </td>
+ <td class="whitespace-nowrap text-right px-4 py-3.5">
+ <a th:href="@{'/quiz/attempt/' + ${a.id}}" class="btn btn-xs bg-white hover:bg-[#F27123] text-[#F27123] hover:text-white border border-[#F27123] rounded-lg font-bold whitespace-nowrap px-3 shadow-2xs transition-colors">
  Xem lại bài
  </a>
  </td>
@@ -542,6 +559,46 @@
  }
  }
  </script>
+
+ <!-- Modal Gợi Ý Nâng Cấp Gói PRO cho Tính Năng Đề Thi & PDF -->
+ <dialog id="modal-upgrade-pro-quiz" class="modal modal-bottom sm:modal-middle">
+ <div class="modal-box bg-white rounded-xl p-6 sm:p-7 border border-slate-200 max-w-md shadow-2xl relative">
+ <form method="dialog">
+ <button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3 text-slate-400">✕</button>
+ </form>
+ <div class="flex items-center gap-3 mb-4">
+ <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#F27123] to-[#FFB03A] text-white flex items-center justify-center text-xl shadow-md">
+ <i class="fa-solid fa-crown"></i>
+ </div>
+ <div>
+ <h3 class="font-black text-lg text-slate-800">Mở Khóa Tính Năng PRO</h3>
+ <p class="text-xs text-slate-500">Nâng cấp để trải nghiệm toàn bộ tiện ích ôn thi FPT</p>
+ </div>
+ </div>
+
+ <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs text-slate-700">
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+ <span><strong>Xuất PDF đề thi không giới hạn</strong> (Bản in trắng &amp; Bản đáp án chi tiết chuẩn FPT)</span>
+ </div>
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+ <span><strong>Sinh đề nâng cao lên tới 20 câu</strong> bám sát giáo trình</span>
+ </div>
+ <div class="flex items-center gap-2">
+ <i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>
+ <span><strong>Luyện thẻ ghi nhớ thông minh (Flashcards)</strong></span>
+ </div>
+ </div>
+
+ <div class="modal-action mt-6 flex items-center justify-end gap-2">
+ <button type="button" onclick="document.getElementById('modal-upgrade-pro-quiz').close()" class="btn btn-sm btn-ghost rounded-xl text-xs font-bold text-slate-500">Để sau</button>
+ <a th:href="@{/pricing}" class="btn btn-sm bg-[#F27123] hover:bg-[#D45B12] text-white font-bold rounded-xl text-xs border-none gap-2 shadow-md">
+ <i class="fa-solid fa-bolt"></i> Nâng Cấp Gói PRO Ngay
+ </a>
+ </div>
+ </div>
+ </dialog>
 
 </section>
 </body>
