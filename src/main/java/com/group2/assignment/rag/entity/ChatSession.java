@@ -8,6 +8,16 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
+/**
+ * Tóm tắt nhanh các thuộc tính của Entity {@link ChatSession} (bảng {@code chat_sessions}):
+ * <ul>
+ *   <li>{@code id}: Khóa chính tự tăng (IDENTITY).</li>
+ *   <li>{@code course}: Môn học của phiên hỏi đáp RAG (ManyToOne LAZY, CASCADE delete).</li>
+ *   <li>{@code title}: Tiêu đề phiên hội thoại (tối đa 255 ký tự, tự sinh từ câu hỏi đầu hoặc mặc định).</li>
+ *   <li>{@code createdAt}: Thời điểm tạo phiên chat (tự gán khi {@code @PrePersist}).</li>
+ *   <li>{@code updatedAt}: Thời điểm cập nhật gần nhất ({@code @PrePersist} / {@code @PreUpdate}).</li>
+ * </ul>
+ */
 @Entity
 @Table(name = "chat_sessions", indexes = {
         @Index(name = "idx_chat_sessions_course", columnList = "course_id")

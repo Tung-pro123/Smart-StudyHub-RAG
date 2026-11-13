@@ -32,29 +32,15 @@ build/
 ### VS Code ###
 .vscode/
 
-### H2 Database Local & Environment Helpers ###
-data/
-uploads/
+### Environment Helpers & Local Locks ###
+*.lock.db
 powershell.bat
 CLAUDE.md
 .env
 .superpowers/
 
-
-### Node.js & Temporary Test Fixtures ###
+### Node.js & Compiled Fixtures ###
 node_modules/
 test-fixtures/*.class
 
 .originkit/
-
-### Agent Skills & Artifacts ###
-.agents/
-.archify/
-skills-lock.json
-
-# E2E Scripts & Test Fixtures
-e2e/
-test-fixtures/
-package.json
-package-lock.json
-node_modules/

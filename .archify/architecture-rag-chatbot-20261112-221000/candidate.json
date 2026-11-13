@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Kiến Trúc Hệ Thống Phân Hệ RAG Chatbot",
+    "subtitle": "Smart StudyHub RAG — 4 Lớp Từ Thymeleaf SSR, Spring Boot Backend Đến H2 & Ollama / Gemini",
+    "output": ".archify/architecture-rag-chatbot-20261112-221000/rag-chatbot-architecture.html",
+    "locale": "vi",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/Tung-pro123/Smart-StudyHub-RAG.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dd77f4d719e09ed54c1ead4321a96486e9a90c0f"
+    },
+    "views": [
+      {
+        "id": "overview",
+        "label": "Tổng quan 4 lớp",
+        "focus": [
+          "ui_chat",
+          "ui_docs",
+          "web_guard",
+          "ai_config",
+          "pdf_pipeline",
+          "rag_retrieval",
+          "llm_gateway",
+          "local_files",
+          "h2_db",
+          "ollama_engine",
+          "gemini_api"
+        ],
+        "note": "Toàn bộ kiến trúc 4 lớp của phân hệ RAG Chatbot bám sát mã nguồn thực tế."
+      },
+      {
+        "id": "pdf-ingestion",
+        "label": "Luồng nạp & cắt PDF",
+        "focus": ["ui_docs", "web_guard", "pdf_pipeline", "local_files", "h2_db"],
+        "note": "Kiểm tra hạn mức 3 PDF/môn, lưu file gốc và tách chunk 300-500 từ kèm pageNumber."
+      },
+      {
+        "id": "rag-llm",
+        "label": "Truy xuất & Gọi LLM",
+        "focus": [
+          "ui_chat",
+          "web_guard",
+          "rag_retrieval",
+          "h2_db",
+          "ai_config",
+          "llm_gateway",
+          "ollama_engine",
+          "gemini_api"
+        ],
+        "note": "Chấm điểm Lexical Top-4 Chunks, đóng gói Prompt và định tuyến Ollama -> Gemini."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "ui_chat",
+      "type": "frontend",
+      "label": "Giao Diện Chat RAG",
+      "sublabel": "chat.html · Fetch JSON & marked.js",
+      "tag": "Citations từ ragContext",
+      "pos": [180, 40],
+      "size": [230, 74],
+      "sources": [
+        {
+          "path": "src/main/resources/templates/rag/chat.html",
+          "line": 334,
+          "end_line": 343,
+          "label": "Render Markdown & ragContext"
+        },
+        {
+          "path": "src/main/resources/templates/rag/chat.html",
+          "line": 489,
+          "end_line": 540,
+          "label": "Fetch POST /chat/send & marked.js"
+        },
+        {
+          "path": "src/main/resources/templates/rag/chat.html",
+          "line": 617,
+          "end_line": 685,
+          "label": "Citations accordion parser"
+        }
+      ]
+    },
+    {
+      "id": "ui_docs",
+      "type": "frontend",
+      "label": "Quản Lý Tài Liệu & Chunks",
+      "sublabel": "documents.html · Upload PDF & Xem",
+      "tag": "Trực quan hóa Chunk",
+      "pos": [520, 40],
+      "size": [230, 74],
+      "sources": [
+        {
+          "path": "src/main/resources/templates/rag/documents.html",
+          "line": 168,
+          "end_line": 205,
+          "label": "Form upload PDF & quota UI"
+        },
+        {
+          "path": "src/main/resources/templates/rag/documents.html",
+          "line": 308,
+          "end_line": 335,
+          "label": "Trực quan hóa danh sách Chunk"
+        }
+      ]
+    },
+    {
+      "id": "web_guard",
+      "type": "security",
+      "label": "Web API & Guard",
+      "sublabel": "ChatController / DocumentController",
+      "tag": "Session · 50 câu/ngày · 3 PDF",
+      "pos": [335, 210],
+      "size": [250, 76],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/ChatController.java",
+          "line": 104,
+          "end_line": 183,
+          "label": "ChatController.sendChatMessageJson"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/DocumentController.java",
+          "line": 72,
+          "end_line": 120,
+          "label": "DocumentController upload & delete"
+        }
+      ]
+    },
+    {
+      "id": "ai_config",
+      "type": "security",
+      "label": "Cấu Hình & Kho Key AI",
+      "sublabel": "LlmProperties · SystemAiKeyService",
+      "tag": ".env · application.properties",
+      "pos": [825, 210],
+      "size": [240, 76],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/config/LlmProperties.java",
+          "line": 12,
+          "end_line": 86,
+          "label": "LlmProperties (studyhub.ai.*)"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/settings/service/SystemAiKeyService.java",
+          "line": 8,
+          "end_line": 51,
+          "label": "SystemAiKeyService"
+        },
+        {
+          "path": "src/main/resources/application.properties",
+          "line": 59,
+          "end_line": 62,
+          "label": "Cấu hình LITELLM_BASE_URL & Model"
+        }
+      ]
+    },
+    {
+      "id": "pdf_pipeline",
+      "type": "backend",
+      "label": "Nạp & Cắt PDF Giáo Trình",
+      "sublabel": "PdfChunkingService · PDFBox 2.0.31",
+      "tag": "300-500 từ/chunk · pageNumber",
+      "pos": [100, 380],
+      "size": [240, 78],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/PdfChunkingService.java",
+          "line": 52,
+          "end_line": 161,
+          "label": "PdfChunkingService.processPdf"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/PdfChunkingService.java",
+          "line": 184,
+          "end_line": 239,
+          "label": "splitTextIntoChunks (300-500 từ)"
+        },
+        {
+          "path": "pom.xml",
+          "line": 46,
+          "end_line": 51,
+          "label": "Apache PDFBox 2.0.31"
+        }
+      ]
+    },
+    {
+      "id": "rag_retrieval",
+      "type": "backend",
+      "label": "Truy Xuất & Prompt RAG",
+      "sublabel": "RagEngineService · Lexical Top-4",
+      "tag": "+10 cụm · 1+ln(1+tf) · cleanContext",
+      "pos": [420, 380],
+      "size": [240, 78],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 55,
+          "end_line": 146,
+          "label": "findRelevantChunks & Scoring"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 161,
+          "end_line": 222,
+          "label": "buildSystemPrompt & cleanRagContext"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 236,
+          "end_line": 320,
+          "label": "RagEngineService.chatWithCourse"
+        }
+      ]
+    },
+    {
+      "id": "llm_gateway",
+      "type": "backend",
+      "label": "LLM Gateway & Failover",
+      "sublabel": "callLlmWithRotation · LlmKeyRotator",
+      "tag": "RestClient · Round-Robin · 60s",
+      "pos": [825, 380],
+      "size": [240, 78],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 325,
+          "end_line": 362,
+          "label": "callLlmWithRotation & Auto-fallback"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/LlmKeyRotator.java",
+          "line": 45,
+          "end_line": 90,
+          "label": "Round-Robin & 60s Cooldown (429)"
+        }
+      ]
+    },
+    {
+      "id": "local_files",
+      "type": "database",
+      "label": "Lưu Trữ File Cục Bộ",
+      "sublabel": "./uploads/courses/{courseId}/",
+      "tag": "File PDF giáo trình gốc",
+      "pos": [40, 560],
+      "size": [220, 76],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/PdfChunkingService.java",
+          "line": 68,
+          "end_line": 79,
+          "label": "Lưu file ./uploads/courses/{id}/"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/PdfChunkingService.java",
+          "line": 276,
+          "end_line": 292,
+          "label": "Xóa file vật lý PDF"
+        }
+      ]
+    },
+    {
+      "id": "h2_db",
+      "type": "database",
+      "label": "H2 File Database",
+      "sublabel": "jdbc:h2:file:./data/studyhubdb",
+      "tag": "Course, Document, Chunk, Chat*",
+      "pos": [340, 560],
+      "size": [250, 76],
+      "sources": [
+        {
+          "path": "src/main/resources/application.properties",
+          "line": 8,
+          "end_line": 11,
+          "label": "jdbc:h2:file:./data/studyhubdb"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/core/entity/Chunk.java",
+          "line": 22,
+          "end_line": 63,
+          "label": "Chunk entity (hasEmbedding=false)"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/entity/ChatMessage.java",
+          "line": 20,
+          "end_line": 46,
+          "label": "ChatMessage (ragContext CLOB)"
+        }
+      ]
+    },
+    {
+      "id": "ollama_engine",
+      "type": "external",
+      "label": "Ollama Local Engine",
+      "sublabel": "localhost:11434/v1 · qwen3:8b",
+      "tag": "Ưu tiên · Tương thích LiteLLM",
+      "pos": [700, 560],
+      "size": [225, 76],
+      "sources": [
+        {
+          "path": "src/main/resources/application.properties",
+          "line": 60,
+          "end_line": 61,
+          "label": "Default Ollama URL & qwen3:8b"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 367,
+          "end_line": 394,
+          "label": "callLiteLlmProxy (/chat/completions)"
+        }
+      ]
+    },
+    {
+      "id": "gemini_api",
+      "type": "cloud",
+      "label": "Google Gemini REST API",
+      "sublabel": "generativelanguage.googleapis",
+      "tag": "Auto-fallback & Multi-model",
+      "pos": [975, 560],
+      "size": [225, 76],
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 43,
+          "end_line": 50,
+          "label": "Danh sách GEMINI_MODELS fallback"
+        },
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 399,
+          "end_line": 438,
+          "label": "callGeminiApi (:generateContent)"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "1. Lớp Giao Diện (Thymeleaf SSR + Browser)",
+      "wraps": ["ui_chat", "ui_docs"]
+    },
+    {
+      "kind": "security-group",
+      "label": "2. Application Boundary — Spring Boot 3.3.4 (:8080)",
+      "wraps": ["web_guard", "ai_config", "pdf_pipeline", "rag_retrieval", "llm_gateway"]
+    },
+    {
+      "kind": "region",
+      "label": "3. Tầng Lưu Trữ (Storage Layer)",
+      "wraps": ["local_files", "h2_db"]
+    },
+    {
+      "kind": "region",
+      "label": "4. Tầng Mô Hình AI (External / AI Layer)",
+      "wraps": ["ollama_engine", "gemini_api"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "chat-to-guard",
+      "from": "ui_chat",
+      "to": "web_guard",
+      "label": "POST /chat/send",
+      "variant": "emphasis"
+    },
+    {
+      "id": "docs-to-guard",
+      "from": "ui_docs",
+      "to": "web_guard",
+      "label": "Upload / Xóa PDF"
+    },
+    {
+      "id": "guard-to-pdf",
+      "from": "web_guard",
+      "to": "pdf_pipeline",
+      "label": "processPdf() [<=3 PDF]",
+      "variant": "security"
+    },
+    {
+      "id": "guard-to-rag",
+      "from": "web_guard",
+      "to": "rag_retrieval",
+      "label": "chatWithCourse() [<=50/ngày]",
+      "variant": "emphasis"
+    },
+    {
+      "id": "config-to-gateway",
+      "from": "ai_config",
+      "to": "llm_gateway",
+      "label": "base-url, model, keys",
+      "variant": "security"
+    },
+    {
+      "id": "rag-to-gateway",
+      "from": "rag_retrieval",
+      "to": "llm_gateway",
+      "label": "callLlmWithRotation()",
+      "variant": "emphasis"
+    },
+    {
+      "id": "pdf-to-files",
+      "from": "pdf_pipeline",
+      "to": "local_files",
+      "label": "Ghi/Xóa PDF gốc"
+    },
+    {
+      "id": "pdf-to-h2",
+      "from": "pdf_pipeline",
+      "to": "h2_db",
+      "label": "Lưu Document & Chunk"
+    },
+    {
+      "id": "rag-to-h2",
+      "from": "rag_retrieval",
+      "to": "h2_db",
+      "label": "Top-4 Chunk & Chat*",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gateway-to-ollama",
+      "from": "llm_gateway",
+      "to": "ollama_engine",
+      "label": "1. /v1/chat/completions",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gateway-to-gemini",
+      "from": "llm_gateway",
+      "to": "gemini_api",
+      "label": "2. Fallback :generateContent",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "1. Giao Diện & Kiểm Soát Truy Cập",
+      "items": [
+        "chat.html gửi JSON qua Fetch API (/courses/{id}/chat/send), render Markdown bằng marked.js và mở rộng Citations từ ChatMessage.ragContext.",
+        "documents.html tải lên PDF và xem danh sách Chunk đã cắt kèm số trang.",
+        "ChatController & DocumentController xác thực HttpSession, chặn Free Tier (50 câu/ngày, 3 PDF/môn) và kiểm tra quyền xóa squadShared."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "2. Nạp PDF & Truy Xuất Lexical (Thực Tế Trong Code)",
+      "items": [
+        "PdfChunkingService dùng Apache PDFBox (2.0.31 trong pom.xml) trích xuất từng trang và chia chunk 300–500 từ gắn pageNumber.",
+        "RagEngineService chấm điểm Lexical: khớp cụm nguyên văn (+10), lọc stop words, tần suất 1+ln(1+tf) + độ phủ từ khóa, lấy Top-4 (fallback chunk đầu).",
+        "Chunk.embeddingVector mới khai báo cột CLOB ở schema với hasEmbedding=false; hệ thống hiện chưa gọi Vector DB hay embedding search."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "3. LLM Gateway & Lưu Trữ Bền Vững",
+      "items": [
+        "Ưu tiên gọi Ollama local (qwen3:8b tại localhost:11434/v1) qua RestClient; nếu thất bại tự auto-fallback sang Google Gemini REST API.",
+        "LlmKeyRotator xoay vòng nhiều Gemini API key theo Round-Robin, tự Cooldown 60s khi gặp lỗi 429 và thử lần lượt danh sách GEMINI_MODELS.",
+        "H2 File Database (./data/studyhubdb) lưu Course, Document, Chunk, ChatSession, ChatMessage; file PDF gốc nằm tại ./uploads/courses/{courseId}/."
+      ]
+    }
+  ]
+}

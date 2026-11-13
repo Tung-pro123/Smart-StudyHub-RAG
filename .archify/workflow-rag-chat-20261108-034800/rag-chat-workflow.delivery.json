@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "742a689e-ab73-47f2-a5f9-0ee21882f71d",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\Users\\admin\\Documents\\A_FPT\\Tempory_Project\\Smart-StudyHub-RAG\\.archify\\workflow-rag-chat-20261108-034800\\candidate.json",
+  "output": "C:\\Users\\admin\\Documents\\A_FPT\\Tempory_Project\\Smart-StudyHub-RAG\\.archify\\workflow-rag-chat-20261108-034800\\rag-chat-workflow.html",
+  "specification": {
+    "sha256": "8961c775a58c6b652a21ecf3233609c6103ca0806661f6c02b4a6276fd05f9de",
+    "bytes": 13110
+  },
+  "artifact": {
+    "sha256": "f16731eb4cbf0b50ee24fd7aa0c3c91c408d032e1f8b5c9b0c9e9ac1b0c8f4a0",
+    "bytes": 871128
+  }
+}

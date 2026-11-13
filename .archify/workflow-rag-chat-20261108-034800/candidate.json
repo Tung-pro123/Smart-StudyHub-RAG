@@ -1,0 +1,506 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Quy trình Xử lý Logic Chat với AI (RAG Workflow & Fallback)",
+    "output": ".archify/workflow-rag-chat-20261108-034800/rag-chat-workflow.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "repository": {
+      "url": "https://github.com/Tung-pro123/Smart-StudyHub-RAG.git",
+      "revision": "3d67235cfda2a17410ec77f68b4f474ef4343754"
+    }
+  },
+  "lanes": [
+    {
+      "id": "ui",
+      "label": "1. Giao diện Web (User & Chat UI)"
+    },
+    {
+      "id": "controller",
+      "label": "2. ChatController (Điều phối & Hạn ngạch)"
+    },
+    {
+      "id": "policy",
+      "label": "3. Recovery & Fallback (Chịu lỗi & Hạn ngạch)",
+      "variant": "exception"
+    },
+    {
+      "id": "rag",
+      "label": "4. RAG Engine (Retrieval & Prompt)"
+    },
+    {
+      "id": "llm",
+      "label": "5. Multi-Key AI (Rotator & Gemini API)"
+    }
+  ],
+  "phases": [
+    {
+      "id": "phase_intake",
+      "label": "1. Tiếp nhận & Validate",
+      "fromCol": 0,
+      "toCol": 0,
+      "variant": "default"
+    },
+    {
+      "id": "phase_quota",
+      "label": "2. Kiểm soát Hạn ngạch",
+      "fromCol": 1,
+      "toCol": 1,
+      "variant": "security"
+    },
+    {
+      "id": "phase_retrieval",
+      "label": "3. Truy vấn Giáo trình",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "phase_prompt",
+      "label": "4. Prompt & Key Rotator",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "default"
+    },
+    {
+      "id": "phase_llm",
+      "label": "5. Gọi Gemini & Chịu lỗi",
+      "fromCol": 4,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "phase_delivery",
+      "label": "6. Lưu DB, Quota & Render",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "groups": [
+    {
+      "id": "grp_auth",
+      "label": "Kiểm soát truy cập & Hạn ngạch",
+      "lane": "controller",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "security"
+    },
+    {
+      "id": "grp_rag",
+      "label": "Truy xuất giáo trình & Tiêm Prompt",
+      "lane": "rag",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "grp_llm",
+      "label": "Điều phối AI Key & Gọi Gemini API",
+      "lane": "llm",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "default"
+    },
+    {
+      "id": "grp_delivery",
+      "label": "Cập nhật Quota & Trả kết quả",
+      "lane": "controller",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    },
+    {
+      "id": "grp_policy",
+      "label": "Cơ chế chịu lỗi & Fallback",
+      "lane": "policy",
+      "fromCol": 2,
+      "toCol": 4,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "node_user",
+    "node_validate",
+    "node_quota_gate",
+    "node_chunk_search",
+    "node_prompt_builder",
+    "node_key_rotator",
+    "node_llm_call",
+    "node_save_persist",
+    "node_quota_update",
+    "node_ui_render"
+  ],
+  "semanticChecks": {
+    "allowedRoots": [
+      "node_user"
+    ],
+    "allowedTerminals": [
+      "node_ui_render",
+      "node_quota_blocked"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "node_user",
+      "lane": "ui",
+      "col": 0,
+      "type": "external",
+      "label": "Nhập Prompt",
+      "sublabel": "Sinh viên gửi câu hỏi",
+      "sources": [
+        {
+          "path": "src/main/resources/templates/rag/chat.html",
+          "line": 486,
+          "end_line": 520,
+          "label": "chatForm submit"
+        }
+      ]
+    },
+    {
+      "id": "node_validate",
+      "lane": "controller",
+      "col": 0,
+      "type": "backend",
+      "label": "Validate Request",
+      "sublabel": "Check rỗng & Auth user",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/ChatController.java",
+          "line": 109,
+          "end_line": 122,
+          "label": "validation & auth"
+        }
+      ]
+    },
+    {
+      "id": "node_quota_gate",
+      "lane": "controller",
+      "col": 1,
+      "type": "security",
+      "label": "Kiểm tra Hạn ngạch",
+      "sublabel": "Reset ngày / Limit 50",
+      "tag": "Daily Quota",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/ChatController.java",
+          "line": 124,
+          "end_line": 141,
+          "label": "checkAndResetDailyQuota"
+        }
+      ]
+    },
+    {
+      "id": "node_quota_blocked",
+      "lane": "policy",
+      "col": 1,
+      "type": "security",
+      "label": "Hết hạn ngạch (Free)",
+      "sublabel": "Chặn và báo nâng cấp Pro",
+      "tag": "Early Return",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/ChatController.java",
+          "line": 131,
+          "end_line": 141,
+          "label": "quota limit blocked"
+        }
+      ]
+    },
+    {
+      "id": "node_chunk_search",
+      "lane": "rag",
+      "col": 2,
+      "type": "backend",
+      "label": "Tìm kiếm Chunks",
+      "sublabel": "Session & TF-IDF Search",
+      "tag": "Top 4 Chunks",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 55,
+          "end_line": 89,
+          "label": "findRelevantChunks"
+        }
+      ]
+    },
+    {
+      "id": "node_chunk_fallback",
+      "lane": "policy",
+      "col": 2,
+      "type": "database",
+      "label": "Dự phòng Giáo trình",
+      "sublabel": "Lấy 4 chunk mặc định",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 83,
+          "end_line": 87,
+          "label": "empty match fallback"
+        }
+      ]
+    },
+    {
+      "id": "node_prompt_builder",
+      "lane": "rag",
+      "col": 3,
+      "type": "backend",
+      "label": "Đóng gói Prompt",
+      "sublabel": "Tiêm Chunks + Citation",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 161,
+          "end_line": 184,
+          "label": "buildSystemPrompt"
+        }
+      ]
+    },
+    {
+      "id": "node_key_rotator",
+      "lane": "llm",
+      "col": 3,
+      "type": "security",
+      "label": "LlmKeyRotator",
+      "sublabel": "Round-Robin Key",
+      "tag": "Multi-Key",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/LlmKeyRotator.java",
+          "line": 45,
+          "end_line": 70,
+          "label": "getNextKey"
+        }
+      ]
+    },
+    {
+      "id": "node_llm_call",
+      "lane": "llm",
+      "col": 4,
+      "type": "cloud",
+      "label": "Gọi Gemini API",
+      "sublabel": "Thử 6 Gemini models",
+      "tag": "gemini-2.5-flash",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 373,
+          "end_line": 412,
+          "label": "callGeminiApi"
+        }
+      ]
+    },
+    {
+      "id": "node_ai_failover",
+      "lane": "policy",
+      "col": 4,
+      "type": "messagebus",
+      "label": "Cơ chế Chịu lỗi AI",
+      "sublabel": "429 Cooldown 60s & Xoay",
+      "tag": "Failover",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/LlmKeyRotator.java",
+          "line": 75,
+          "end_line": 90,
+          "label": "markKeyFailed"
+        }
+      ]
+    },
+    {
+      "id": "node_save_persist",
+      "lane": "rag",
+      "col": 5,
+      "type": "database",
+      "label": "Lưu ChatMessage",
+      "sublabel": "USER, AI & cleanContext",
+      "tag": "JPA Save",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 414,
+          "end_line": 448,
+          "label": "saveMessages"
+        }
+      ]
+    },
+    {
+      "id": "node_quota_update",
+      "lane": "controller",
+      "col": 5,
+      "type": "backend",
+      "label": "Cập nhật Quota",
+      "sublabel": "dailyCount + 1 & sync",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/ChatController.java",
+          "line": 164,
+          "end_line": 172,
+          "label": "update quota"
+        }
+      ]
+    },
+    {
+      "id": "node_ui_render",
+      "lane": "ui",
+      "col": 5,
+      "type": "frontend",
+      "label": "Render UI Client",
+      "sublabel": "Markdown, Citations, Bar",
+      "tag": "marked.js",
+      "sources": [
+        {
+          "path": "src/main/resources/templates/rag/chat.html",
+          "line": 526,
+          "end_line": 556,
+          "label": "appendAiMessage"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_user_val",
+      "from": "node_user",
+      "to": "node_validate",
+      "role": "main",
+      "variant": "emphasis",
+      "label": "POST /chat/send"
+    },
+    {
+      "id": "e_val_quota",
+      "from": "node_validate",
+      "to": "node_quota_gate",
+      "role": "main",
+      "variant": "default",
+      "label": "Auth & input OK"
+    },
+    {
+      "id": "e_quota_block",
+      "from": "node_quota_gate",
+      "to": "node_quota_blocked",
+      "role": "error",
+      "variant": "security",
+      "label": "Hết 50 câu (Free)"
+    },
+    {
+      "id": "e_quota_pass",
+      "from": "node_quota_gate",
+      "to": "node_chunk_search",
+      "role": "main",
+      "variant": "emphasis",
+      "label": "Còn quota / Pro"
+    },
+    {
+      "id": "e_search_fallback",
+      "from": "node_chunk_search",
+      "to": "node_chunk_fallback",
+      "role": "branch",
+      "variant": "dashed",
+      "label": "Score == 0"
+    },
+    {
+      "id": "e_fallback_prompt",
+      "from": "node_chunk_fallback",
+      "to": "node_prompt_builder",
+      "role": "branch",
+      "variant": "dashed",
+      "label": "Lấy 4 chunk đầu"
+    },
+    {
+      "id": "e_search_prompt",
+      "from": "node_chunk_search",
+      "to": "node_prompt_builder",
+      "role": "main",
+      "variant": "emphasis",
+      "label": "Top 4 chunks"
+    },
+    {
+      "id": "e_prompt_rotator",
+      "from": "node_prompt_builder",
+      "to": "node_key_rotator",
+      "role": "main",
+      "variant": "default",
+      "label": "SystemPrompt"
+    },
+    {
+      "id": "e_rotator_call",
+      "from": "node_key_rotator",
+      "to": "node_llm_call",
+      "role": "main",
+      "variant": "emphasis",
+      "label": "Healthy Key"
+    },
+    {
+      "id": "e_call_429",
+      "from": "node_llm_call",
+      "to": "node_ai_failover",
+      "role": "error",
+      "variant": "security",
+      "label": "Lỗi 429 / Timeout"
+    },
+    {
+      "id": "e_failover_save",
+      "from": "node_ai_failover",
+      "to": "node_save_persist",
+      "role": "branch",
+      "variant": "dashed",
+      "label": "Lưu error answer"
+    },
+    {
+      "id": "e_call_save",
+      "from": "node_llm_call",
+      "to": "node_save_persist",
+      "role": "main",
+      "variant": "emphasis",
+      "label": "AI Answer OK"
+    },
+    {
+      "id": "e_save_quota",
+      "from": "node_save_persist",
+      "to": "node_quota_update",
+      "role": "main",
+      "variant": "default",
+      "label": "Lưu messages OK"
+    },
+    {
+      "id": "e_quota_render",
+      "from": "node_quota_update",
+      "to": "node_ui_render",
+      "role": "main",
+      "variant": "emphasis",
+      "label": "200 JSON & Render"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Hạn ngạch & Early Return",
+      "items": [
+        "ChatController kiểm tra phiên đăng nhập và tự động reset dailyRagCount về 0 khi sang ngày mới",
+        "Sinh viên gói FREE bị chặn ở ngưỡng 50 câu/ngày, bảo vệ ngân sách API và tài nguyên hệ thống",
+        "Khi hết hạn ngạch, hệ thống trả về thông báo nâng cấp Pro ngay lập tức mà không tiêu tốn tài nguyên RAG"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Tìm kiếm RAG & Dự phòng Nội dung",
+      "items": [
+        "RagEngineService trích xuất từ khóa loại bỏ stop words tiếng Việt và tiếng Anh",
+        "Tính điểm độ liên quan kết hợp khớp chuỗi trực tiếp (+10) và log tần suất từ khóa",
+        "Cơ chế dự phòng: Nếu không tìm thấy đoạn văn bản liên quan, tự động nạp 4 đoạn đầu tiên của giáo trình"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Cơ chế Tự phục hồi LLM (Failover)",
+      "items": [
+        "LlmKeyRotator chọn API Key theo Round-Robin và tự động bỏ qua các Key đang bị Cooldown",
+        "Khi gặp lỗi HTTP 429 hoặc Resource Exhausted, Key được đưa vào Cooldown 60 giây và xoay sang Key kế tiếp",
+        "Thử tuần tự danh sách 6 mô hình Gemini và lưu trữ câu trả lời kèm Clean RAG Context vào DB"
+      ]
+    }
+  ]
+}

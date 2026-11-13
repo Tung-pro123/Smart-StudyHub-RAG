@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a2974b98-5e71-4315-9ca7-8f023c84190a",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "C:\\Users\\admin\\Documents\\A_FPT\\Tempory_Project\\Smart-StudyHub-RAG\\.archify\\sequence-rag-chat-20261108-034800\\candidate.json",
+  "output": "C:\\Users\\admin\\Documents\\A_FPT\\Tempory_Project\\Smart-StudyHub-RAG\\.archify\\sequence-rag-chat-20261108-034800\\rag-chat-sequence.html",
+  "specification": {
+    "sha256": "5fc973f8b74da6dbf84e062c0ee5ad8b30a50e98b0e989ee2bb296eee4282331",
+    "bytes": 9900
+  },
+  "artifact": {
+    "sha256": "ed4174e2469eaebf780674026cda85deda6bf02f6433f236fa0987ebb4b3ddaa",
+    "bytes": 854724
+  }
+}

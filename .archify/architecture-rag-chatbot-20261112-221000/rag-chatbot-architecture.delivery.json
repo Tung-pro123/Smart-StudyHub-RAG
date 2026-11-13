@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "f1631d02-9165-4d54-a139-de66e52ad190",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\admin\\Documents\\A_FPT\\Tempory_Project\\Smart-StudyHub-RAG\\.archify\\architecture-rag-chatbot-20261112-221000\\candidate.json",
+  "output": "C:\\Users\\admin\\Documents\\A_FPT\\Tempory_Project\\Smart-StudyHub-RAG\\.archify\\architecture-rag-chatbot-20261112-221000\\rag-chatbot-architecture.html",
+  "specification": {
+    "sha256": "245ba85db7642923819483ba27b8348feade78abafdee217403a81ebb1760a60",
+    "bytes": 14648
+  },
+  "artifact": {
+    "sha256": "b62dda46466b93604c74427d5db268b35c4db08e2e7ef6d3b1e2218c8c0f8ccb",
+    "bytes": 868948
+  }
+}

@@ -9,6 +9,24 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
+/**
+ * Tóm tắt nhanh các thuộc tính của Entity {@link Document} (bảng {@code documents}):
+ * <ul>
+ *   <li>{@code id}: Khóa chính tự tăng (IDENTITY).</li>
+ *   <li>{@code course}: Môn học chứa tài liệu (ManyToOne LAZY, CASCADE delete).</li>
+ *   <li>{@code uploadedBy}: Người tải tài liệu lên (ManyToOne LAZY, {@code null} nếu do seeder/hệ thống tạo).</li>
+ *   <li>{@code fileName}: Tên file PDF gốc (tối đa 255 ký tự).</li>
+ *   <li>{@code filePath}: Đường dẫn vật lý lưu file trên server ({@code ./uploads/courses/{courseId}/...}).</li>
+ *   <li>{@code fileType}: Định dạng MIME của file (mặc định {@code application/pdf}).</li>
+ *   <li>{@code fileSize}: Dung lượng file tính theo bytes.</li>
+ *   <li>{@code totalPages}: Tổng số trang PDF đọc được (mặc định 0).</li>
+ *   <li>{@code totalChunks}: Tổng số đoạn {@code Chunk} đã cắt từ tài liệu (mặc định 0).</li>
+ *   <li>{@code status}: Trạng thái xử lý ({@code UPLOADED}, {@code CHUNKING}, {@code INDEXED}, {@code ERROR}).</li>
+ *   <li>{@code errorMessage}: Mô tả lỗi nếu trích xuất/cắt chunk thất bại.</li>
+ *   <li>{@code uploadedAt}: Thời điểm tải lên (tự gán khi {@code @PrePersist}).</li>
+ *   <li>{@code updatedAt}: Thời điểm cập nhật gần nhất ({@code @PrePersist} / {@code @PreUpdate}).</li>
+ * </ul>
+ */
 @Entity
 @Table(name = "documents", indexes = {
         @Index(name = "idx_documents_course", columnList = "course_id"),

@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Vòng đời Yêu cầu Chat với AI (RAG Sequence Lifecycle)",
+    "output": ".archify/sequence-rag-chat-20261108-034800/rag-chat-sequence.html",
+    "quality_profile": "showcase",
+    "animation": "trace",
+    "repository": {
+      "url": "https://github.com/Tung-pro123/Smart-StudyHub-RAG.git",
+      "revision": "3d67235cfda2a17410ec77f68b4f474ef4343754"
+    }
+  },
+  "participants": [
+    {
+      "id": "user",
+      "type": "external",
+      "label": "User (Sinh viên)",
+      "sublabel": "Web Browser"
+    },
+    {
+      "id": "web",
+      "type": "frontend",
+      "label": "Chat UI",
+      "sublabel": "templates/rag/chat.html",
+      "sources": [
+        {
+          "path": "src/main/resources/templates/rag/chat.html",
+          "line": 486,
+          "end_line": 556,
+          "label": "Fetch API submit"
+        }
+      ]
+    },
+    {
+      "id": "controller",
+      "type": "backend",
+      "label": "ChatController",
+      "sublabel": "Spring MVC REST",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/controller/ChatController.java",
+          "line": 106,
+          "end_line": 182,
+          "label": "sendChatMessageJson"
+        }
+      ]
+    },
+    {
+      "id": "ragService",
+      "type": "backend",
+      "label": "RagEngineService",
+      "sublabel": "RAG Orchestrator",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 220,
+          "end_line": 300,
+          "label": "chatWithCourse"
+        }
+      ]
+    },
+    {
+      "id": "rotator",
+      "type": "security",
+      "label": "LlmKeyRotator",
+      "sublabel": "Round-Robin & Cooldown",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/LlmKeyRotator.java",
+          "line": 45,
+          "end_line": 90,
+          "label": "Key failover logic"
+        }
+      ]
+    },
+    {
+      "id": "llm",
+      "type": "cloud",
+      "label": "Gemini / LLM API",
+      "sublabel": "Google AI Endpoint",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/service/RagEngineService.java",
+          "line": 373,
+          "end_line": 412,
+          "label": "callGeminiApi"
+        }
+      ]
+    },
+    {
+      "id": "database",
+      "type": "database",
+      "label": "JPA Database",
+      "sublabel": "MySQL / H2 Storage",
+      "sources": [
+        {
+          "path": "src/main/java/com/group2/assignment/rag/repository/ChatMessageRepository.java",
+          "line": 14,
+          "end_line": 22,
+          "label": "ChatMessageRepository"
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "from": 155,
+      "to": 385,
+      "label": "1. Tiếp nhận & Kiểm tra Hạn ngạch (Auth & Quota Check)"
+    },
+    {
+      "from": 395,
+      "to": 650,
+      "label": "2. Quản lý Session & Tìm kiếm Ngữ cảnh RAG (Retrieval)"
+    },
+    {
+      "from": 660,
+      "to": 915,
+      "label": "3. Điều phối API Key & Gọi LLM (Generation)"
+    },
+    {
+      "from": 925,
+      "to": 1275,
+      "label": "4. Lưu trữ Hội thoại & Trả Phản hồi (Persistence & UI)"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-user-submit",
+      "from": "user",
+      "to": "web",
+      "y": 170,
+      "label": "Nhập prompt và bấm gửi",
+      "variant": "default",
+      "note": "Bắt sự kiện submit tại #chatForm và khóa input"
+    },
+    {
+      "id": "msg-web-post",
+      "from": "web",
+      "to": "controller",
+      "y": 235,
+      "label": "POST /courses/{id}/chat/send",
+      "variant": "emphasis",
+      "note": "Body JSON { question, sessionId }, hiển thị typingIndicator"
+    },
+    {
+      "id": "msg-quota-check",
+      "from": "controller",
+      "to": "database",
+      "y": 300,
+      "label": "checkAndResetDailyQuota()",
+      "variant": "security",
+      "note": "Kiểm tra sang ngày mới và reset dailyRagCount về 0"
+    },
+    {
+      "id": "msg-quota-return",
+      "from": "database",
+      "to": "controller",
+      "y": 365,
+      "label": "User entity (quota hợp lệ)",
+      "variant": "return"
+    },
+    {
+      "id": "msg-chat-with-course",
+      "from": "controller",
+      "to": "ragService",
+      "y": 410,
+      "label": "chatWithCourse(courseId, sessionId, question)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "msg-find-session",
+      "from": "ragService",
+      "to": "database",
+      "y": 455,
+      "label": "findById(sessionId) / save(new)",
+      "variant": "default",
+      "note": "Truy vấn phiên hiện tại hoặc tạo ChatSession mới"
+    },
+    {
+      "id": "msg-session-return",
+      "from": "database",
+      "to": "ragService",
+      "y": 520,
+      "label": "ChatSession entity",
+      "variant": "return"
+    },
+    {
+      "id": "msg-find-chunks",
+      "from": "ragService",
+      "to": "database",
+      "y": 565,
+      "label": "findAllByCourseId(courseId)",
+      "variant": "default",
+      "note": "Lấy tất cả các đoạn văn bản (Chunks) của môn học"
+    },
+    {
+      "id": "msg-chunks-return",
+      "from": "database",
+      "to": "ragService",
+      "y": 630,
+      "label": "List<Chunk> tài liệu",
+      "variant": "return"
+    },
+    {
+      "id": "msg-get-key",
+      "from": "ragService",
+      "to": "rotator",
+      "y": 675,
+      "label": "getNextKey()",
+      "variant": "security",
+      "note": "Round-Robin key khả dụng, bỏ qua 429"
+    },
+    {
+      "id": "msg-key-return",
+      "from": "rotator",
+      "to": "ragService",
+      "y": 755,
+      "label": "Active Gemini API Key",
+      "variant": "return"
+    },
+    {
+      "id": "msg-llm-call",
+      "from": "ragService",
+      "to": "llm",
+      "y": 805,
+      "label": "POST :generateContent",
+      "variant": "emphasis",
+      "note": "Tiêm Top 4 Chunks vào System Prompt"
+    },
+    {
+      "id": "msg-llm-return",
+      "from": "llm",
+      "to": "ragService",
+      "y": 885,
+      "label": "AI Response Text",
+      "variant": "return"
+    },
+    {
+      "id": "msg-save-msgs",
+      "from": "ragService",
+      "to": "database",
+      "y": 935,
+      "label": "saveMessages(userMsg, aiMsg)",
+      "variant": "default",
+      "note": "Lưu USER, AI message và cleanRagContext"
+    },
+    {
+      "id": "msg-save-confirm",
+      "from": "database",
+      "to": "ragService",
+      "y": 1005,
+      "label": "Saved confirmation",
+      "variant": "return"
+    },
+    {
+      "id": "msg-rag-return",
+      "from": "ragService",
+      "to": "controller",
+      "y": 1050,
+      "label": "ChatResponseDto (answer, citations)",
+      "variant": "return"
+    },
+    {
+      "id": "msg-update-quota",
+      "from": "controller",
+      "to": "database",
+      "y": 1095,
+      "label": "userRepository.save(dailyCount + 1)",
+      "variant": "security",
+      "note": "Tăng số câu đã dùng và cập nhật session"
+    },
+    {
+      "id": "msg-quota-saved",
+      "from": "database",
+      "to": "controller",
+      "y": 1165,
+      "label": "Updated User",
+      "variant": "return"
+    },
+    {
+      "id": "msg-ctrl-return",
+      "from": "controller",
+      "to": "web",
+      "y": 1205,
+      "label": "HTTP 200 { answer, citations, quota }",
+      "variant": "return"
+    },
+    {
+      "id": "msg-web-render",
+      "from": "web",
+      "to": "user",
+      "y": 1250,
+      "label": "Render câu trả lời & Nguồn trích dẫn",
+      "variant": "return",
+      "note": "Parse marked.js, hiển thị nguồn PDF, mở lại input"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "web",
+      "from": 170,
+      "to": 1260,
+      "type": "frontend"
+    },
+    {
+      "participant": "controller",
+      "from": 235,
+      "to": 1215,
+      "type": "backend"
+    },
+    {
+      "participant": "database",
+      "from": 295,
+      "to": 375,
+      "type": "database"
+    },
+    {
+      "participant": "database",
+      "from": 450,
+      "to": 640,
+      "type": "database"
+    },
+    {
+      "participant": "database",
+      "from": 930,
+      "to": 1015,
+      "type": "database"
+    },
+    {
+      "participant": "database",
+      "from": 1090,
+      "to": 1175,
+      "type": "database"
+    },
+    {
+      "participant": "ragService",
+      "from": 405,
+      "to": 1060,
+      "type": "backend"
+    },
+    {
+      "participant": "rotator",
+      "from": 670,
+      "to": 765,
+      "type": "security"
+    },
+    {
+      "participant": "llm",
+      "from": 800,
+      "to": 895,
+      "type": "cloud"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Luồng RAG Retrieval & Trích dẫn",
+      "items": [
+        "ChatController tiếp nhận câu hỏi qua API POST không làm reload trang web",
+        "RagEngineService tìm kiếm Chunks theo thuật toán TF-IDF và Term Overlap",
+        "Top 4 Chunks có điểm cao nhất được trích xuất thành CitationDto kèm số trang"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Kiểm soát Hạn ngạch (Quota Gate)",
+      "items": [
+        "Tự động kiểm tra reset số lượt dùng về 0 khi sang ngày mới",
+        "Chặn người dùng Free khi chạm trần 50 câu/ngày, bảo vệ tài nguyên máy chủ",
+        "Người dùng Pro được chat không giới hạn và mở khóa đầy đủ tính năng"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Xoay vòng Multi-Key & Phục hồi lỗi",
+      "items": [
+        "LlmKeyRotator điều phối nhiều Gemini API Keys theo cơ chế Round-Robin",
+        "Tự động đưa Key gặp lỗi 429 (Rate Limit) vào thời gian Cooldown 60 giây",
+        "Toàn bộ lịch sử trao đổi của sinh viên và AI được lưu bền vững vào Database"
+      ]
+    }
+  ]
+}
